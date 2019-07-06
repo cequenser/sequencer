@@ -3,3 +3,5 @@
 [![Documentation](https://codedocs.xyz/cequenser/sequencer.svg)](https://codedocs.xyz/cequenser/sequencer/)
 
 # sequencer
+
+Clone repo: git clone "ssh://cequenser@review.gerrithub.io:29418/cequenser/sequencer" && scp -p -P 29418 cequenser@review.gerrithub.io:hooks/commit-msg "sequencer/.git/hooks/"

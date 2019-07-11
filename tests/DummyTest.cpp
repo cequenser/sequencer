@@ -2,5 +2,5 @@
 
 TEST_CASE( "dummy test", "" )
 {
-    REQUIRE( ( true ^ false ) == not false );
+    REQUIRE( ( true ^ false ) == false );
 }

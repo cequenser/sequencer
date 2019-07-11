@@ -17,5 +17,5 @@ install:
   - docker pull cequenser/sequencer-ci-linux:latest
 
 script:
-  - docker run --rm -ti -v ${TRAVIS_BUILD_DIR}:${SHARED_DIR} -w ${SHARED_DIR} cequenser/sequencer-ci-linux ${SHARED_DIR}/run_test.sh ${COMPILER}
+  - docker run --rm -ti -v ${TRAVIS_BUILD_DIR}:${SHARED_DIR} -w ${SHARED_DIR} cequenser/sequencer-ci-linux ${SHARED_DIR}/tests/run.sh ${COMPILER}
 

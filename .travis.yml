@@ -1,0 +1,21 @@
+language: c++
+
+services: docker
+  
+matrix:
+  include:
+    # gcc
+    - os: linux
+      env: COMPILER=g++-9
+
+    # clang
+    - os: linux
+      env: COMPILER=clang++-8
+     
+install:
+  - SHARED_DIR=/home/shared
+  - docker pull cequenser/sequencer-ci-linux:latest
+
+script:
+  - docker run --rm -ti -v ${TRAVIS_BUILD_DIR}:${SHARED_DIR} -w ${SHARED_DIR} cequenser/sequencer-ci-linux run_test.sh ${COMPILER}
+

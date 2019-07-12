@@ -10,6 +10,9 @@ cd build
 rm -rf *
 
 cmake .. -DBuildTests=ON -DCMAKE_CXX_COMPILER=${COMPILER}
+if [ "${COMPUTE_COVERAGE}" = "true" ]; then
+    cmake . -DCoverage=ON
+fi
 cmake --build .
 
 tests/tests

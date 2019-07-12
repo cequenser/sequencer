@@ -6,4 +6,4 @@ namespace tst
     {
         return 0;
     }
-}
+} // namespace tst

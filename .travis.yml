@@ -6,7 +6,7 @@ matrix:
   include:
     # gcc
     - os: linux
-      env: COMPILER=g++-9 COMPUTE_COVERAGE="true" GCOV=gcov-9
+      env: COMPILER=g++-8 COMPUTE_COVERAGE="true" GCOV=gcov-8
 
     # clang
     - os: linux

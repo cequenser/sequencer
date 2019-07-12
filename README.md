@@ -6,3 +6,7 @@
 # sequencer
 
 Clone repo: git clone "ssh://cequenser@review.gerrithub.io:29418/cequenser/sequencer" && scp -p -P 29418 cequenser@review.gerrithub.io:hooks/commit-msg "sequencer/.git/hooks/"
+
+Add new CI images:
+ * Add Dockerfile to a new branch in https://github.com/cequenser/docker
+ * Configure dockerhub (https://hub.docker.com/?namespace=cequenser) to automatically generate images on pushes to the newly created branch

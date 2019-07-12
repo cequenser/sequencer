@@ -6,7 +6,7 @@ matrix:
   include:
     # gcc
     - os: linux
-      env: COMPILER=g++-9
+      env: COMPILER=g++-9 COMPUTE_COVERAGE="true" GCOV=gcov-9
 
     # clang
     - os: linux
@@ -17,5 +17,5 @@ install:
   - docker pull cequenser/sequencer-ci-linux:latest
 
 script:
-  - docker run --rm -ti -v ${TRAVIS_BUILD_DIR}:${SHARED_DIR} -w ${SHARED_DIR} cequenser/sequencer-ci-linux ${SHARED_DIR}/tests/run.sh ${COMPILER}
+  - docker run --rm -ti -e COVERALLS_TOKEN -v ${TRAVIS_BUILD_DIR}:${SHARED_DIR} -w ${SHARED_DIR} cequenser/sequencer-ci-linux ${SHARED_DIR}/tests/run.sh ${COMPILER} ${COMPUTE_COVERAGE} ${GCOV}
 

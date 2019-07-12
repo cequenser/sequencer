@@ -10,10 +10,17 @@ option(Coverage "gather coverage data" OFF)
 
 project(sequencer VERSION 0.0.1 LANGUAGES CXX)
 
+list(APPEND CMAKE_MODULE_PATH
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake
+)
+
 if(Coverage)
     set(CMAKE_BUILD_TYPE Debug)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -coverage")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
 endif()
+
+add_subdirectory(include)
 
 if(BuildTests)
     add_subdirectory(tests)

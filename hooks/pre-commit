@@ -53,8 +53,8 @@ fi
 # are installed, and if so, uses the installed version to format
 # the staged changes.
 
-maj_min=1
-maj_max=4
+maj_min=6
+maj_max=6
 
 base=clang-format
 format=""

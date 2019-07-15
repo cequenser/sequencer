@@ -23,6 +23,7 @@ endif()
 add_subdirectory(include)
 
 if(BuildTests)
+    enable_testing()
     add_subdirectory(tests)
 endif()
 

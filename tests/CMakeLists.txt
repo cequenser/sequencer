@@ -4,3 +4,6 @@ add_executable(tests
 )
 target_include_directories(tests PRIVATE ${PROJECT_SOURCE_DIR}/external/include)
 target_link_libraries(tests PRIVATE Sequencer::Sequencer)
+add_test(NAME tests COMMAND tests)
+add_test(NAME tests-random COMMAND tests --order rand)
+add_test(NAME tests-lex COMMAND tests --order lex)

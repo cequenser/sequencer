@@ -1,5 +1,6 @@
-#include <catch.hpp>
 #include <sequencer/Test.h>
+
+#include <catch2/catch.hpp>
 
 TEST_CASE( "dummy test", "" )
 {

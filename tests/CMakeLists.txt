@@ -1,6 +1,9 @@
 add_executable(tests
     main.cpp
     DummyTest.cpp
+    sequencer/chrono/sequencer_clock_test.cpp
+    sequencer/chrono/testing_clock_test.cpp
+    sequencer/chrono/testing_clock.hpp
 )
 target_include_directories(tests PRIVATE ${PROJECT_SOURCE_DIR}/external/include)
 target_link_libraries(tests PRIVATE Sequencer::Sequencer)

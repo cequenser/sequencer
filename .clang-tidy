@@ -1,4 +1,4 @@
-Checks:          '-*,readability-*,cppcoreguidelines-*,bugprone-*,-readability-uppercase-literal-suffix,-readability-named-parameter,-cppcoreguidelines-owning-memory,-cppcoreguidelines-special-member-functions'
+Checks:          '-*,readability-*,cppcoreguidelines-*,bugprone-*,-readability-uppercase-literal-suffix,-readability-named-parameter,-cppcoreguidelines-owning-memory,-cppcoreguidelines-special-member-functions,-readability-braces-around-statements,-bugprone-suspicious-semicolon,-readability-misleading-indentation'
 WarningsAsErrors: '*'
 HeaderFilterRegex: ''
 AnalyzeTemporaryDtors: false

@@ -49,10 +49,13 @@ ForEachMacros:   [ foreach, Q_FOREACH, BOOST_FOREACH ]
 IncludeCategories:
   - Regex:           '^"'
     Priority:        5
+  - Regex:           '^<sequencer/.*'
+    Priority:        10
+  - Regex:           '^<boost/.*'
     Priority:        20
-  - Regex:           '^((<|")(catch.h)/)'
-    Priority:        30
   - Regex:           '^(<(algorithm|any|array|atomic|bitset|cassert|cerrno|cfloat|chrono|clocale|cmath|condition_variable|cstdint|cinttypes|cstdlib|ctime|exception|filesystem|forward_list|functional|future|initializer_list|ios|iosfwd|iomanip|istream|iterator|locale|thread|optional|variant|ostream|queue|fstream|iostream|limits|list|map|memory|numeric|random|regex|set|shared_mutex|sstream|stack|stdexcept|system_error|string|vector|tuple|typeinfo|typeindex|type_traits|utility|unordered_map|unordered_set)>)'
+    Priority:        30
+  - Regex:           '^((<|")(catch2/catch.h)/)'
     Priority:        40
   - Regex:           '.*'
     Priority:        50

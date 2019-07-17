@@ -1,6 +1,6 @@
 Checks:          '-*,readability-*,cppcoreguidelines-*,-readability-uppercase-literal-suffix,-readability-named-parameter,-cppcoreguidelines-owning-memory,-cppcoreguidelines-special-member-functions'
 WarningsAsErrors: '*'
-HeaderFilterRegex: ''
+HeaderFilterRegex: '.*\/(include\/sequencer|tests)\/.*'
 AnalyzeTemporaryDtors: false
 User:            cequenser
 CheckOptions:    

@@ -2,5 +2,5 @@
 
 namespace tst
 {
-    int getZero() noexcept;
+    int get_zero() noexcept;
 }

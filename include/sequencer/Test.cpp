@@ -2,7 +2,7 @@
 
 namespace tst
 {
-    int getZero() noexcept
+    int get_zero() noexcept
     {
         return 0;
     }

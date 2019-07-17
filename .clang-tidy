@@ -3,7 +3,7 @@ WarningsAsErrors: '*'
 HeaderFilterRegex: ''
 AnalyzeTemporaryDtors: false
 User:            cequenser
-CheckOptions:    
+CheckOptions:
   - key:             readability-identifier-naming.PrivateMemberSuffix
     value:           '_'
   - key:             readability-identifier-naming.ProtectedMemberSuffix

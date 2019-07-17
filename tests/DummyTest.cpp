@@ -1,8 +1,7 @@
-#include <sequencer/Test.h>
-
 #include <catch.hpp>
+#include <sequencer/Test.h>
 
 TEST_CASE( "dummy test", "" )
 {
-    REQUIRE( tst::getZero() == 0 );
+    REQUIRE( tst::get_zero() == 0 );
 }

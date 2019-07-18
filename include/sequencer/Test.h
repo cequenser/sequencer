@@ -1,6 +1,5 @@
 #pragma once
 
-namespace tst
-{
+namespace tst {
     int get_zero() noexcept;
 }

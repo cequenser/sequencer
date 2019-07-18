@@ -1,0 +1,153 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7521b97e_d77d03ed",
+        "filename": "include/sequencer/chrono/chrono_adapter.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1009832
+      },
+      "writtenOn": "2019-07-18T18:38:32Z",
+      "side": 1,
+      "message": "Habe ich dir erzählt, dass ich versions-namespaces gruselig finde:) Wäre \u0027adapter\u0027 eine annehmbare alternative? Ach eigentlich verstehe ich gar nicht genau warum der \u0027inline namespace\u0027 da ist;)",
+      "range": {
+        "startLine": 7,
+        "startChar": 21,
+        "endLine": 7,
+        "endChar": 23
+      },
+      "revId": "73a654586d207c667212187e0ac2fedc2929d128",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b2c80273_16e6cff4",
+        "filename": "include/sequencer/chrono/chrono_adapter.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1009832
+      },
+      "writtenOn": "2019-07-18T18:38:32Z",
+      "side": 1,
+      "message": "(+1) Das sollte nicht nötig sein, i.e. time_point\u003cclock_object_adapter\u003e sollte reichen.",
+      "range": {
+        "startLine": 18,
+        "startChar": 76,
+        "endLine": 18,
+        "endChar": 85
+      },
+      "revId": "73a654586d207c667212187e0ac2fedc2929d128",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "901eb895_58a1deae",
+        "filename": "include/sequencer/chrono/sequencer_clock.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1009832
+      },
+      "writtenOn": "2019-07-18T18:38:32Z",
+      "side": 1,
+      "message": "ich hätte hier die high_resolution_clock erwartet. Warum steady?",
+      "range": {
+        "startLine": 12,
+        "startChar": 81,
+        "endLine": 12,
+        "endChar": 93
+      },
+      "revId": "73a654586d207c667212187e0ac2fedc2929d128",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e3a65e07_0158f8a4",
+        "filename": "include/sequencer/chrono/sequencer_clock.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1009832
+      },
+      "writtenOn": "2019-07-18T18:38:32Z",
+      "side": 1,
+      "message": "In der sequencer_clock sollte alles ohne time_since_epoch auskommen. Das ist ja mehr der interne state der chrono-representation. Die Umrechnung macht chrono.",
+      "range": {
+        "startLine": 69,
+        "startChar": 64,
+        "endLine": 69,
+        "endChar": 83
+      },
+      "revId": "73a654586d207c667212187e0ac2fedc2929d128",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0d0ea541_8ab8b94e",
+        "filename": "tests/sequencer/chrono/sequencer_clock_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1009832
+      },
+      "writtenOn": "2019-07-18T18:38:32Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 114,
+        "startChar": 43,
+        "endLine": 114,
+        "endChar": 46
+      },
+      "revId": "73a654586d207c667212187e0ac2fedc2929d128",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "225a9240_47abd5c9",
+        "filename": "tests/sequencer/chrono/testing_clock.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1009832
+      },
+      "writtenOn": "2019-07-18T18:38:32Z",
+      "side": 1,
+      "message": "#include \u003ccstdint\u003e :)",
+      "revId": "73a654586d207c667212187e0ac2fedc2929d128",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a00315c3_3d6a3382",
+        "filename": "tests/sequencer/chrono/testing_clock_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1009832
+      },
+      "writtenOn": "2019-07-18T18:38:32Z",
+      "side": 1,
+      "message": ":D viel schöner als mit gtest!",
+      "revId": "73a654586d207c667212187e0ac2fedc2929d128",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}

@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "e55b0e10_c1b25f6d",
+        "filename": "include/sequencer/chrono/chrono_adapter.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1016785
+      },
+      "writtenOn": "2019-07-19T15:11:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b2c80273_16e6cff4",
+      "range": {
+        "startLine": 18,
+        "startChar": 76,
+        "endLine": 18,
+        "endChar": 85
+      },
+      "revId": "73a654586d207c667212187e0ac2fedc2929d128",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "901eb895_58a1deae",
         "filename": "include/sequencer/chrono/sequencer_clock.hpp",
         "patchSetId": 1
@@ -59,6 +83,30 @@
       "writtenOn": "2019-07-18T18:38:32Z",
       "side": 1,
       "message": "ich hätte hier die high_resolution_clock erwartet. Warum steady?",
+      "range": {
+        "startLine": 12,
+        "startChar": 81,
+        "endLine": 12,
+        "endChar": 93
+      },
+      "revId": "73a654586d207c667212187e0ac2fedc2929d128",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2dd4e6c5_098b99db",
+        "filename": "include/sequencer/chrono/sequencer_clock.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1016785
+      },
+      "writtenOn": "2019-07-19T15:11:36Z",
+      "side": 1,
+      "message": "high_resolution_clock ist normalerweise ein alias von steady_clock oder system_clock, je nach implementierung (msvc: using high_resolution_clock \u003d steady_clock;). steady_clock ist immer \"monotonic clock. The time points of this clock cannot decrease as physical time moves forward and the time between ticks of this clock is constant. This clock is not related to wall clock time (for example, it can be time since last reboot), and is most suitable for measuring intervals.\" - system_clock: \"It may not be monotonic: on most systems, the system time can be adjusted at any moment.\"",
+      "parentUuid": "901eb895_58a1deae",
       "range": {
         "startLine": 12,
         "startChar": 81,
@@ -94,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "1eec3661_c1895124",
+        "filename": "include/sequencer/chrono/sequencer_clock.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1016785
+      },
+      "writtenOn": "2019-07-19T15:11:36Z",
+      "side": 1,
+      "message": "time_since_epoch gibt ja eine duration zurück, also machte chrono hier auch die umrechnung. das problem war, das start_time_ den falschen typ hatte, und chrono konvertiert keine timepoints von verschiedenen clocks, weil die clocks keine relation zueinander haben (müssen). daher war das time_since_epoch nötig, aber mit dem richtigen typ fällt alles weg :)",
+      "parentUuid": "e3a65e07_0158f8a4",
+      "range": {
+        "startLine": 69,
+        "startChar": 64,
+        "endLine": 69,
+        "endChar": 83
+      },
+      "revId": "73a654586d207c667212187e0ac2fedc2929d128",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0d0ea541_8ab8b94e",
         "filename": "tests/sequencer/chrono/sequencer_clock_test.cpp",
         "patchSetId": 1
@@ -117,6 +189,30 @@
     },
     {
       "key": {
+        "uuid": "56215a0e_7515fc87",
+        "filename": "tests/sequencer/chrono/sequencer_clock_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1016785
+      },
+      "writtenOn": "2019-07-19T15:11:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0d0ea541_8ab8b94e",
+      "range": {
+        "startLine": 114,
+        "startChar": 43,
+        "endLine": 114,
+        "endChar": 46
+      },
+      "revId": "73a654586d207c667212187e0ac2fedc2929d128",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "225a9240_47abd5c9",
         "filename": "tests/sequencer/chrono/testing_clock.hpp",
         "patchSetId": 1
@@ -134,6 +230,24 @@
     },
     {
       "key": {
+        "uuid": "78294dc2_09959ad2",
+        "filename": "tests/sequencer/chrono/testing_clock.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1016785
+      },
+      "writtenOn": "2019-07-19T15:11:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "225a9240_47abd5c9",
+      "revId": "73a654586d207c667212187e0ac2fedc2929d128",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a00315c3_3d6a3382",
         "filename": "tests/sequencer/chrono/testing_clock_test.cpp",
         "patchSetId": 1
@@ -148,6 +262,24 @@
       "revId": "73a654586d207c667212187e0ac2fedc2929d128",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3b0b7ab5_75eeb46b",
+        "filename": "tests/sequencer/chrono/testing_clock_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1016785
+      },
+      "writtenOn": "2019-07-19T15:11:36Z",
+      "side": 1,
+      "message": "find ich auch :)",
+      "parentUuid": "a00315c3_3d6a3382",
+      "revId": "73a654586d207c667212187e0ac2fedc2929d128",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }

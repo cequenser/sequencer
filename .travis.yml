@@ -4,6 +4,10 @@ services: docker
 
 os: linux
 
+branches:
+  only:
+  - master
+
 env:
   global:
     - SHARED_DIR=/home/shared

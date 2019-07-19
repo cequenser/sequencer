@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/cequenser/sequencer.svg?branch=master)](https://travis-ci.org/cequenser/sequencer)
 [![Build status](https://ci.appveyor.com/api/projects/status/pd5v7f02b2xc94n9/branch/master?svg=true)](https://ci.appveyor.com/project/cequenser/sequencer/branch/master)
-[![Coverage Status](https://coveralls.io/repos/github/cequenser/sequencer/badge.svg?branch=master)](https://coveralls.io/github/cequenser/sequencer?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/cequenser/sequencer/badge.svg?branch=HEAD)](https://coveralls.io/github/cequenser/sequencer?branch=HEAD)
 [![Documentation](https://codedocs.xyz/cequenser/sequencer.svg)](https://codedocs.xyz/cequenser/sequencer/)
 
 # sequencer

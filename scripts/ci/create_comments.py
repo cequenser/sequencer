@@ -98,7 +98,7 @@ def create_comment_section_clang_format(comments, robot_id, robot_run_id):
 
 
 def create_comments(clang_filename, newline_placeholder, robot_id, robot_run_id, base_path):
-    if robot_id is 'clang-tidy':
+    if robot_id == 'clang-tidy':
         comments = extract_filename_dictionary_clang_tidy(clang_filename, newline_placeholder, base_path)
         comment_section = create_comment_section_clang_tidy(comments, robot_id, robot_run_id)
     else:

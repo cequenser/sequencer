@@ -2,6 +2,26 @@
   "comments": [
     {
       "robotId": "clang-tidy",
+      "robotRunId": "http://localhost:8080/job/psv/job/clang-tidy/107/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "2e8ad0bd_620309a1",
+        "filename": "include/sequencer/Test.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-07-20T16:05:44Z",
+      "side": 1,
+      "message": "invalid case style for function \u0027getOne\u0027 [readability-identifier-naming,-warnings-as-errors]\n    inline int getOne() noexcept\n               ^~~~~~\n               get_one",
+      "revId": "7dbaf01e719bfcf6ded0d9362168460d13571ce0",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
       "robotRunId": "42",
       "fixSuggestions": [],
       "key": {

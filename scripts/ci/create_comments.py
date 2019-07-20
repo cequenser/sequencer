@@ -12,19 +12,15 @@ def extract_filename_dictionary(clang_filename, newline_placeholder, base_path):
     for line in clang_file:
         if not line.startswith(base_path):
             continue
-        print "line: " + line
         firstColon = line.find(':')
         filename = line[len(base_path):firstColon]
-        print "filename: " + filename
         line_number = line[firstColon+1:line.find(':', firstColon+1)]
-        print "line number: " + str(line_number)
         message_start = line.find('error:')+7
         message_end = max(line.find(base_path, message_start), line.find('Suppressed', message_start))
         m = re.match(".*(" + newline_placeholder + "\s*[0-9]+\s*warnings\s+generated.).*", line[message_start:])
         if m:
             message_end = line.find(m.groups()[0], message_start)
         message = line[message_start:message_end].replace(newline_placeholder, '\n')
-        print "message: " + message
         
         if filename in comments.keys():
             if not [line_number, message] in comments[filename]:

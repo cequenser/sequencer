@@ -56,4 +56,4 @@ def create__clang_format_comments(clang_filename, robot_id, robot_run_id):
 
 
 if len(sys.argv) == 4:
-    create_comments(sys.argv[1], sys.argv[2], sys.argv[3])
+    create__clang_format_comments(sys.argv[1], sys.argv[2], sys.argv[3])

@@ -19,6 +19,26 @@
       "revId": "7dbaf01e719bfcf6ded0d9362168460d13571ce0",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "42",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "7b45d741_84fa86b3",
+        "filename": "include/sequencer/Test.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-07-20T15:21:58Z",
+      "side": 1,
+      "message": "trailing whitespace.",
+      "revId": "7dbaf01e719bfcf6ded0d9362168460d13571ce0",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }

@@ -1,0 +1,24 @@
+{
+  "comments": [
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://localhost:8080/job/psv/job/clang-tidy/110/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "959b4376_65abc52a",
+        "filename": "include/sequencer/Test.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-07-20T16:35:04Z",
+      "side": 1,
+      "message": "invalid case style for function \u0027getOne\u0027 [readability-identifier-naming,-warnings-as-errors]\n    inline int getOne() noexcept\n               ^~~~~~\n               get_one",
+      "revId": "0750eb2e053e8860f3a3b5bbc692865b59bb88f9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}

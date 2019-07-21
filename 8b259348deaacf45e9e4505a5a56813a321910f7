@@ -1,0 +1,10 @@
+Code-Review+2: Lars Lubkoll <lars.lubkoll@posteo.de>
+ClangFormat+1: Lars Lubkoll <lars.lubkoll@posteo.de>
+ClangTidy+1: Lars Lubkoll <lars.lubkoll@posteo.de>
+Linux-GCC+1: Lars Lubkoll <lars.lubkoll@posteo.de>
+Linux-Clang+1: Lars Lubkoll <lars.lubkoll@posteo.de>
+Submitted-by: Lars Lubkoll <lars.lubkoll@posteo.de>
+Submitted-at: Sun, 21 Jul 2019 17:52:34 +0000
+Reviewed-on: https://review.gerrithub.io/c/cequenser/sequencer/+/462763
+Project: cequenser/sequencer
+Branch: refs/heads/ci-jenkins-slave

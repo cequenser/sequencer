@@ -2,7 +2,5 @@
   "labels": {
     "<Label>": "<VERIFIED>"
   },
-  "message": "<MESSAGE>",
-  "robot_id": "<ROBOT_ID>",
-  "robot_run_id": "<ROBOT_RUN_ID>"
+  "message": "<MESSAGE>"
 }

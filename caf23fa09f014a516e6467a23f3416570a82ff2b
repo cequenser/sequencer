@@ -19,6 +19,26 @@
       "revId": "caf23fa09f014a516e6467a23f3416570a82ff2b",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://localhost:8080/job/psv/job/clang-tidy/164/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "eb3b0f47_493654dd",
+        "filename": "tests/sequencer/chrono/sequencer_clock_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-07-21T17:02:46Z",
+      "side": 1,
+      "message": "invalid operands to binary expression (\u0027int\u0027 and \u0027underlying_clock_type\u0027 (aka \u0027testing_clock\u003clong, std::ratio\u003c1, 1000000000\u003e, true\u003e\u0027)) [clang-diagnostic-error]",
+      "revId": "caf23fa09f014a516e6467a23f3416570a82ff2b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }

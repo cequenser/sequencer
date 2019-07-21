@@ -17,7 +17,7 @@ SCENARIO( "creating a sequencer clock", "[sequencer_clock]" )
 
         WHEN( "a sequencer_clock is created with said clock" )
         {
-            sequencer_clock_type sequencer_clock( underlying_clock );
+            sequencer_clock_type sequencer_clock( 2*underlying_clock );
 
             THEN( "the sequencer_clock is not running" )
             {

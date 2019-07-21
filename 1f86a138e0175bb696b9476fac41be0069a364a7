@@ -359,6 +359,86 @@
       "revId": "1f86a138e0175bb696b9476fac41be0069a364a7",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://localhost:8080/job/psv/job/clang-tidy/153/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "83c84797_42528095",
+        "filename": "include/sequencer/Test.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-07-21T14:04:09Z",
+      "side": 1,
+      "message": "narrowing conversion from \u0027double\u0027 to \u0027int\u0027 [bugprone-narrowing-conversions,-warnings-as-errors]",
+      "revId": "1f86a138e0175bb696b9476fac41be0069a364a7",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://localhost:8080/job/psv/job/clang-tidy/153/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "0e3ed9c5_3cf96142",
+        "filename": "include/sequencer/Test.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-07-21T14:04:09Z",
+      "side": 1,
+      "message": "invalid case style for variable \u0027ABD_D\u0027 [readability-identifier-naming,-warnings-as-errors]",
+      "revId": "1f86a138e0175bb696b9476fac41be0069a364a7",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://localhost:8080/job/psv/job/clang-tidy/153/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "cdcccd5c_6f337646",
+        "filename": "include/sequencer/Test.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-07-21T14:04:09Z",
+      "side": 1,
+      "message": "invalid case style for variable \u0027avdEdf\u0027 [readability-identifier-naming,-warnings-as-errors]",
+      "revId": "1f86a138e0175bb696b9476fac41be0069a364a7",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://localhost:8080/job/psv/job/clang-tidy/153/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "da310ebe_a24809d4",
+        "filename": "include/sequencer/Test.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-07-21T14:04:09Z",
+      "side": 1,
+      "message": "invalid case style for function \u0027getOne\u0027 [readability-identifier-naming,-warnings-as-errors]",
+      "revId": "1f86a138e0175bb696b9476fac41be0069a364a7",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }

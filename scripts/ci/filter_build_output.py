@@ -4,7 +4,7 @@ import os
 import re
 import sys
 
-def filter_build_output(build_log_name):
+def filter_build_output(build_log_name, output_file_name):
     build_log = open(build_log_name, 'r')
     filtered_output = ""
     for line in build_log:
@@ -15,8 +15,10 @@ def filter_build_output(build_log_name):
         if m:
             continue
         filtered_output = filtered_output + line
-    print filtered_output
+
+    output_file = open(output_file_name, 'w')
+    output_file.write(filtered_output)
 
 
-if len(sys.argv) == 2:
-    filter_build_output(sys.argv[1])
+if len(sys.argv) == 3:
+    filter_build_output(sys.argv[1], sys.argv[2])

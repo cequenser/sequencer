@@ -22,6 +22,26 @@
     },
     {
       "robotId": "clang-format",
+      "robotRunId": "http://localhost:8080/job/psv/job/clang-format/84/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "3fca9888_3ed025fb",
+        "filename": "include/sequencer/Test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-07-21T12:52:14Z",
+      "side": 1,
+      "message": "int get_zero() noexcept\n     {\n         return 0;\n-  }\n+    }\n \n-int a;\n+    int a;\n \n-int b;\n-\n-\n+    int b;\n \n } // namespace tst",
+      "revId": "1f86a138e0175bb696b9476fac41be0069a364a7",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-format",
       "robotRunId": "http://localhost:8080/job/psv/job/clang-format/82/",
       "fixSuggestions": [],
       "key": {
@@ -34,6 +54,26 @@
         "id": 1016797
       },
       "writtenOn": "2019-07-20T22:22:49Z",
+      "side": 1,
+      "message": "#pragma once\n \n-namespace tst {\n-  int get_zero() noexcept;\n+namespace tst\n+{\n+    int get_zero() noexcept;\n \n-    inline int getOne() noexcept { int ABD_D \u003d 3; double avdEdf \u003d 5.0; return ABD_D*avdEdf;\n+    inline int getOne() noexcept\n+    {\n+        int ABD_D \u003d 3;\n+        double avdEdf \u003d 5.0;\n+        return ABD_D * avdEdf;\n     }\n } // namespace tst",
+      "revId": "1f86a138e0175bb696b9476fac41be0069a364a7",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-format",
+      "robotRunId": "http://localhost:8080/job/psv/job/clang-format/84/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "4ba8c1c6_9a312899",
+        "filename": "include/sequencer/Test.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-07-21T12:52:14Z",
       "side": 1,
       "message": "#pragma once\n \n-namespace tst {\n-  int get_zero() noexcept;\n+namespace tst\n+{\n+    int get_zero() noexcept;\n \n-    inline int getOne() noexcept { int ABD_D \u003d 3; double avdEdf \u003d 5.0; return ABD_D*avdEdf;\n+    inline int getOne() noexcept\n+    {\n+        int ABD_D \u003d 3;\n+        double avdEdf \u003d 5.0;\n+        return ABD_D * avdEdf;\n     }\n } // namespace tst",
       "revId": "1f86a138e0175bb696b9476fac41be0069a364a7",

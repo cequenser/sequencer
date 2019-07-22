@@ -48,6 +48,7 @@ namespace sequencer::chrono
 
         void reset() noexcept
         {
+            elapsed_ = duration::zero();
             is_running_ = false;
         }
 

@@ -167,6 +167,37 @@ SCENARIO( "running a sequencer clock", "[sequencer_clock]" )
                 }
             }
         }
+
+        WHEN( "sequencer_clock is started, stopped and reset" )
+        {
+            sequencer_clock.start();
+            underlying_clock.set( underlying_clock.now() + std::chrono::seconds( 4 ) );
+            sequencer_clock.stop();
+            sequencer_clock.reset();
+
+            THEN( "the sequencer_clock is not running" )
+            {
+
+                REQUIRE( !sequencer_clock.is_running() );
+            }
+
+            THEN( "the sequencer_clock returns zero" )
+            {
+                REQUIRE( sequencer_clock.now().time_since_epoch() ==
+                         sequencer_clock_type::duration::zero() );
+            }
+
+            WHEN( "sequencer_clock is restarted after reset" )
+            {
+                sequencer_clock.start();
+
+                THEN( "the sequencer_clock returns zero" )
+                {
+                    REQUIRE( sequencer_clock.now().time_since_epoch() ==
+                             sequencer_clock_type::duration::zero() );
+                }
+            }
+        }
     }
 }
 

@@ -1,6 +1,26 @@
 {
   "comments": [
     {
+      "robotId": "clang-format",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-format/133/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "ec75f1e5_e5db2d2d",
+        "filename": "tests/sequencer/chrono/sequencer_clock_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-07-22T14:58:42Z",
+      "side": 1,
+      "message": "WHEN( \"a sequencer_clock is created with said clock\" )\n         {\n-            sequencer_clock_type sequencer_clock( 2*underlying_clock );\n+            sequencer_clock_type sequencer_clock( 2 * underlying_clock );\n \n             THEN( \"the sequencer_clock is not running\" )\n             {",
+      "revId": "174764b314855af7f2b994b5070e009100088518",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
       "robotId": "clang-tidy",
       "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/183/",
       "fixSuggestions": [],

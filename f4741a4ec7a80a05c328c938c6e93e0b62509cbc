@@ -41,6 +41,26 @@
       "unresolved": false
     },
     {
+      "robotId": "clang-format",
+      "robotRunId": "http://localhost:8080/job/psv/job/clang-format/109/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "a1351bf9_557636f8",
+        "filename": "tests/sequencer/chrono/sequencer_clock_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-07-22T09:31:13Z",
+      "side": 1,
+      "message": "WHEN( \"a sequencer_clock is created with said clock\" )\n         {\n-            sequencer_clock_type sequencer_clock( 2*underlying_clock );\n+            sequencer_clock_type sequencer_clock( 2 * underlying_clock );\n \n             THEN( \"the sequencer_clock is not running\" )\n             {",
+      "revId": "f4741a4ec7a80a05c328c938c6e93e0b62509cbc",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
       "robotId": "clang-tidy",
       "robotRunId": "http://localhost:8080/job/psv/job/clang-tidy/166/",
       "fixSuggestions": [],

@@ -2,6 +2,7 @@
   "labels": {
     "<Label>": "<VERIFIED>"
   },
+  "message": "<MESSAGE>",
   "robot_comments": {
     <COMMENTS>  }
 }

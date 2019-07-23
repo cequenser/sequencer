@@ -6,6 +6,7 @@ add_executable(tests
     sequencer/chrono/sequencer_clock_test.cpp
     sequencer/chrono/testing_clock_test.cpp
     sequencer/chrono/testing_clock.hpp
+    sequencer/midi/midi_message_test.cpp
 )
 target_include_directories(tests PRIVATE ${PROJECT_SOURCE_DIR}/external/include)
 target_link_libraries(tests PRIVATE Sequencer::Sequencer)

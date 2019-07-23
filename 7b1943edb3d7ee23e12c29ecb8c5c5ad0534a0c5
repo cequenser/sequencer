@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/187/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "d8cddac0_5bbe9dd5",
+        "filename": "tests/sequencer/beat_duration_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-07-23T07:30:58Z",
+      "side": 1,
+      "message": "invalid case style for variable \u0027beat_duration_\u0027 [readability-identifier-naming,-warnings-as-errors]",
+      "revId": "7b1943edb3d7ee23e12c29ecb8c5c5ad0534a0c5",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/187/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "f57839e2_b2891d76",
+        "filename": "tests/sequencer/beat_duration_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-07-23T07:30:58Z",
+      "side": 1,
+      "message": "invalid case style for variable \u0027beat_duration_\u0027 [readability-identifier-naming,-warnings-as-errors]",
+      "revId": "7b1943edb3d7ee23e12c29ecb8c5c5ad0534a0c5",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}

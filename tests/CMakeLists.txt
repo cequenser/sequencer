@@ -1,6 +1,7 @@
 add_executable(tests
     main.cpp
     DummyTest.cpp
+    sequencer/beat_duration_test.cpp
     sequencer/chrono/sequencer_clock_test.cpp
     sequencer/chrono/testing_clock_test.cpp
     sequencer/chrono/testing_clock.hpp

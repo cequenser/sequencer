@@ -1,0 +1,24 @@
+{
+  "comments": [
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/190/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "c763c62e_7a6c9f0a",
+        "filename": "tests/sequencer/chrono/chrono_matchers.hpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-07-23T11:34:45Z",
+      "side": 1,
+      "message": "invalid case style for class \u0027WithinDuration\u0027 [readability-identifier-naming,-warnings-as-errors]",
+      "revId": "dce2569b1bf4267cda8f9c0457659325c7302b21",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}

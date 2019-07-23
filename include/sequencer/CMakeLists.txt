@@ -1,6 +1,8 @@
 add_library(sequencer
     Test.h
     Test.cpp
+    beat_duration.hpp
+    beat_tempo.hpp
     chrono/chrono_adapter.hpp
     chrono/sequencer_clock.hpp
 )

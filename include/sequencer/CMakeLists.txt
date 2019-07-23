@@ -5,6 +5,7 @@ add_library(sequencer
     beat_tempo.hpp
     chrono/chrono_adapter.hpp
     chrono/sequencer_clock.hpp
+    midi/message.hpp
 )
 target_compile_features(sequencer PUBLIC cxx_std_17)
 set_target_properties(sequencer PROPERTIES CXX_EXTENSIONS OFF)

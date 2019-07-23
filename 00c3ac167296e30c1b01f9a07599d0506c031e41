@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "c8acc25e_c66d2dbd",
+        "filename": "include/sequencer/beat_tempo.hpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1016785
+      },
+      "writtenOn": "2019-07-23T13:23:38Z",
+      "side": 1,
+      "message": "invalid literal operator parameter type \u0027double\u0027, did you mean \u0027long double\u0027?",
+      "parentUuid": "0704f763_2e3f8d80",
+      "revId": "00c3ac167296e30c1b01f9a07599d0506c031e41",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d7ead77a_2e2ce717",
         "filename": "tests/sequencer/beat_duration_test.cpp",
         "patchSetId": 2
@@ -39,6 +57,30 @@
       "revId": "00c3ac167296e30c1b01f9a07599d0506c031e41",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4d2ab5b7_d1d598d2",
+        "filename": "tests/sequencer/beat_duration_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1016785
+      },
+      "writtenOn": "2019-07-23T13:23:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d7ead77a_2e2ce717",
+      "range": {
+        "startLine": 38,
+        "startChar": 16,
+        "endLine": 39,
+        "endChar": 64
+      },
+      "revId": "00c3ac167296e30c1b01f9a07599d0506c031e41",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }

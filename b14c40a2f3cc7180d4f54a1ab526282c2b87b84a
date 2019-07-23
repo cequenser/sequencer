@@ -1,0 +1,104 @@
+{
+  "comments": [
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/189/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "60ed583b_6e906137",
+        "filename": "tests/sequencer/chrono/chrono_matchers.hpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-07-23T11:32:05Z",
+      "side": 1,
+      "message": "jenkins/workspace/psv/clang-tidy/tests/sequencer/chrono/chrono_matchers.hpp:5:21: note: template parameter is declared here",
+      "revId": "b14c40a2f3cc7180d4f54a1ab526282c2b87b84a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/189/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "0dcce549_cc5f50fd",
+        "filename": "tests/sequencer/chrono/chrono_matchers.hpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-07-23T11:32:05Z",
+      "side": 1,
+      "message": "jenkins/workspace/psv/clang-tidy/tests/sequencer/chrono/chrono_matchers.hpp:5:36: note: template parameter is declared here",
+      "revId": "b14c40a2f3cc7180d4f54a1ab526282c2b87b84a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/189/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "4fedc628_6d736bf1",
+        "filename": "tests/sequencer/chrono/chrono_matchers.hpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-07-23T11:32:05Z",
+      "side": 1,
+      "message": "invalid case style for class \u0027WithinDuration\u0027 [readability-identifier-naming,-warnings-as-errors]",
+      "revId": "b14c40a2f3cc7180d4f54a1ab526282c2b87b84a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/189/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "61217c19_4862bb7d",
+        "filename": "tests/sequencer/chrono/chrono_matchers.hpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-07-23T11:32:05Z",
+      "side": 1,
+      "message": "declaration of \u0027RepT\u0027 shadows template parameter [clang-diagnostic-error]",
+      "revId": "b14c40a2f3cc7180d4f54a1ab526282c2b87b84a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/189/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "ecae68fb_93228bc7",
+        "filename": "tests/sequencer/chrono/chrono_matchers.hpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-07-23T11:32:05Z",
+      "side": 1,
+      "message": "declaration of \u0027PeriodT\u0027 shadows template parameter [clang-diagnostic-error]",
+      "revId": "b14c40a2f3cc7180d4f54a1ab526282c2b87b84a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}

@@ -1,3 +1,4 @@
+#include "chrono_to_string.hpp"
 #include "testing_clock.hpp"
 
 #include <catch2/catch.hpp>
@@ -18,6 +19,10 @@ SCENARIO( "testing_clock.now() returns a specified value", "[testing_clock]" )
         {
             THEN( "now() returns zero" )
             {
+                CHECK( std::chrono::seconds( 1 ) == clock_type::duration::zero() );
+                CHECK( std::chrono::milliseconds( 1 ) == clock_type::duration::zero() );
+                CHECK( std::chrono::microseconds( 1 ) == clock_type::duration::zero() );
+                CHECK( std::chrono::nanoseconds( 1 ) == clock_type::duration::zero() );
                 REQUIRE( clock.now().time_since_epoch() == clock_type::duration::zero() );
             }
         }

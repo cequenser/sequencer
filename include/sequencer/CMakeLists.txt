@@ -1,13 +1,13 @@
 add_library(sequencer
-    Test.h
-    Test.cpp
     beat_duration.hpp
     beat_tempo.hpp
     chrono/chrono_adapter.hpp
     chrono/sequencer_clock.hpp
 )
 target_compile_features(sequencer PUBLIC cxx_std_17)
-set_target_properties(sequencer PROPERTIES CXX_EXTENSIONS OFF)
+set_target_properties(sequencer PROPERTIES
+    CXX_EXTENSIONS OFF
+    LINKER_LANGUAGE CXX)
 target_include_directories(sequencer PUBLIC
     $<INSTALL_INTERFACE:include>
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>)

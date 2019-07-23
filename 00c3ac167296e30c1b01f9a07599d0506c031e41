@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0704f763_2e3f8d80",
+        "filename": "include/sequencer/beat_tempo.hpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1009832
+      },
+      "writtenOn": "2019-07-23T09:30:29Z",
+      "side": 1,
+      "message": ":) wird langsam alles schön in C++. \u0027long-double\u0027 -\u003e double?",
+      "revId": "00c3ac167296e30c1b01f9a07599d0506c031e41",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d7ead77a_2e2ce717",
+        "filename": "tests/sequencer/beat_duration_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1009832
+      },
+      "writtenOn": "2019-07-23T09:30:29Z",
+      "side": 1,
+      "message": "what about\nREQUIRE_THAT( duration, WithinAbs(std::chrono::seconds(5.51), std::chrono::seconds(0.01)))\n?",
+      "range": {
+        "startLine": 38,
+        "startChar": 16,
+        "endLine": 39,
+        "endChar": 64
+      },
+      "revId": "00c3ac167296e30c1b01f9a07599d0506c031e41",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}

@@ -5,7 +5,7 @@
 #include <cassert>
 #include <chrono>
 
-namespace sequencer::chrono
+namespace sequencer
 {
 
     class beat_duration
@@ -56,4 +56,4 @@ namespace sequencer::chrono
     static_assert( beat_duration( std::chrono::seconds( 30 ), 120.0_bpm ).duration() ==
                    std::chrono::seconds( 30 ) );
 
-} // namespace sequencer::chrono
+} // namespace sequencer

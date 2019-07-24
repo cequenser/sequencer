@@ -1,6 +1,6 @@
 #pragma once
 
-namespace sequencer::chrono
+namespace sequencer
 {
 
     class beat_tempo
@@ -29,4 +29,4 @@ namespace sequencer::chrono
 
     static_assert( ( 120.0_bpm ).beats_per_minute() == 120.0 );
 
-} // namespace sequencer::chrono
+} // namespace sequencer

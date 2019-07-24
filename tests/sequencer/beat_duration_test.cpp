@@ -8,10 +8,11 @@
 
 SCENARIO( "Convert beat_duration to std::chrono::duration<>", "[beat_duration]" )
 {
-    using namespace sequencer::chrono;
+    using namespace sequencer;
     using namespace std::chrono_literals;
 
     using Catch::Matchers::WithinULP;
+    using sequencer::chrono::within_abs;
 
     GIVEN( "A beat_duration of 16 beats at 174 beats per minute" )
     {
@@ -60,8 +61,10 @@ SCENARIO( "Convert beat_duration to std::chrono::duration<>", "[beat_duration]" 
 
 SCENARIO( "Convert std::chrono::duration<> to beat_duration", "[beat_duration]" )
 {
-    using namespace sequencer::chrono;
+    using namespace sequencer;
+
     using Catch::Matchers::WithinULP;
+    using sequencer::chrono::within_abs;
 
     GIVEN( "a duration of 3 seconds" )
     {

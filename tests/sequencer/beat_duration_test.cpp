@@ -14,24 +14,24 @@ SCENARIO( "Convert beat_duration to std::chrono::duration<>", "[beat_duration]" 
     using Catch::Matchers::WithinULP;
     using sequencer::chrono::within_abs;
 
-    GIVEN( "A beat_duration of 16 beats at 174 beats per minute" )
+    GIVEN( "A beat_duration of 16 beats" )
     {
-        constexpr beat_duration sixteen_beats{16.0, 174.0_bpm};
+        constexpr beat_duration sixteen_beats{16.0};
         static_assert( sixteen_beats.beats() == 16.0 );
 
-        WHEN( "the duration is calculated" )
+        WHEN( "the duration is calculated at 174 beats per minute" )
         {
-            constexpr auto duration = sixteen_beats.duration();
+            constexpr auto duration = sixteen_beats.duration( 174.0_bpm );
             using duration_type = decltype( duration );
 
             THEN( "the result is represented as double" )
             {
-                static_assert( std::is_same_v< duration_type::rep, double > );
+                STATIC_REQUIRE( std::is_same_v< duration_type::rep, double > );
             }
 
             THEN( "the result is represented in seconds" )
             {
-                static_assert(
+                STATIC_REQUIRE(
                     std::is_same_v< duration_type::period, std::chrono::seconds::period > );
             }
 
@@ -40,16 +40,51 @@ SCENARIO( "Convert beat_duration to std::chrono::duration<>", "[beat_duration]" 
                 REQUIRE_THAT( duration, within_abs( 5.51724s, 0.00001s ) );
             }
         }
+
+        WHEN( "there is another duration of 13 beats" )
+        {
+            beat_duration another_duration{13.0};
+            THEN( "in-place summation yields 29 beats" )
+            {
+                another_duration += sixteen_beats;
+                REQUIRE( another_duration == beat_duration{29.0} );
+            }
+        }
+
+        WHEN( "there is another constexpr duration of 13 beats" )
+        {
+            constexpr beat_duration thirteen_beats{13.0};
+            THEN( "summation yields 29 beats" )
+            {
+                constexpr auto twenty_nine_beats = thirteen_beats + sixteen_beats;
+                STATIC_REQUIRE( twenty_nine_beats == beat_duration{29.0} );
+            }
+
+            THEN( "thirteen beats is smaller than sixteen beats" )
+            {
+                STATIC_REQUIRE( thirteen_beats < sixteen_beats );
+            }
+
+            THEN( "sixteen beats is not smaller than thirteen beats" )
+            {
+                STATIC_REQUIRE_FALSE( sixteen_beats < thirteen_beats );
+            }
+
+            THEN( "thirteen beats is not smaller than thirteen beats" )
+            {
+                STATIC_REQUIRE_FALSE( thirteen_beats < thirteen_beats );
+            }
+        }
     }
 
-    GIVEN( "A beat_duration of 30 beats at 120 beats per minute" )
+    GIVEN( "A beat_duration of 30 beats" )
     {
-        constexpr beat_duration thirty_beats{30.0, 120.0_bpm};
+        constexpr beat_duration thirty_beats{30.0};
         static_assert( thirty_beats.beats() == 30.0 );
 
-        WHEN( "the duration is calculated" )
+        WHEN( "the duration is calculated at 120 beats per minute" )
         {
-            constexpr auto duration = thirty_beats.duration();
+            constexpr auto duration = thirty_beats.duration( 120.0_bpm );
 
             THEN( "the duration is 15.0 seconds" )
             {

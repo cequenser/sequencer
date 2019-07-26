@@ -1,14 +1,19 @@
+find_package(rtmidi REQUIRED)
+
 add_executable(tests
     main.cpp
     DummyTest.cpp
     sequencer/beat_duration_test.cpp
+    sequencer/beat_time_point_test.cpp
+    sequencer/midi_clock_test.cpp
+    sequencer/rtmidi_sender_test.cpp
     sequencer/chrono/chrono_matchers.hpp
     sequencer/chrono/sequencer_clock_test.cpp
     sequencer/chrono/testing_clock_test.cpp
     sequencer/chrono/testing_clock.hpp
 )
-target_include_directories(tests PRIVATE ${PROJECT_SOURCE_DIR}/external/include)
-target_link_libraries(tests PRIVATE Sequencer::Sequencer)
+target_include_directories(tests PRIVATE ${PROJECT_SOURCE_DIR}/external/include ${PROJECT_SOURCE_DIR}/external/repo/install/include)
+target_link_libraries(tests PRIVATE Sequencer::Sequencer RtMidi::rtmidi)
 target_compile_definitions(tests PRIVATE CATCH_CONFIG_ENABLE_ALL_STRINGMAKERS)
 add_test(NAME tests COMMAND tests)
 add_test(NAME tests-random COMMAND tests --order rand)

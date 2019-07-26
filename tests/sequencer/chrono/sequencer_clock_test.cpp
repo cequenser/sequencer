@@ -146,7 +146,6 @@ SCENARIO( "running a sequencer clock", "[sequencer_clock]" )
 
             THEN( "the sequencer_clock is not running" )
             {
-
                 REQUIRE( !sequencer_clock.is_running() );
             }
 

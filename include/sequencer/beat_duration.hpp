@@ -4,6 +4,7 @@
 
 #include <cassert>
 #include <chrono>
+#include <ostream>
 
 namespace sequencer
 {
@@ -16,16 +17,14 @@ namespace sequencer
         using rep = double;
         using seconds = std::chrono::duration< double, std::ratio< 1, 1 > >;
 
-        constexpr explicit beat_duration( rep beats, beat_tempo tempo )
-            : beats_( beats ), tempo_( tempo )
+        constexpr explicit beat_duration( rep beats ) : beats_( beats )
         {
         }
 
         template < typename Duration >
         constexpr explicit beat_duration( Duration duration, beat_tempo tempo )
             : beats_( std::chrono::duration_cast< minutes >( duration ).count() *
-                      tempo.beats_per_minute() ),
-              tempo_( tempo )
+                      tempo.beats_per_minute() )
         {
         }
 
@@ -34,26 +33,52 @@ namespace sequencer
             return beats_;
         }
 
-        constexpr beat_tempo tempo() const noexcept
+        constexpr seconds duration( beat_tempo tempo ) const noexcept
         {
-            return tempo_;
+            return minutes{beats_ / tempo.beats_per_minute()};
         }
 
-        constexpr seconds duration() const noexcept
+        constexpr bool operator==( beat_duration other ) const noexcept
         {
-            return minutes{beats_ / tempo_.beats_per_minute()};
+            return beats() == other.beats();
+        }
+
+        constexpr beat_duration& operator+=( beat_duration other ) noexcept
+        {
+            beats_ += other.beats();
+            return *this;
+        }
+
+        constexpr beat_duration operator-() noexcept
+        {
+            return beat_duration( -beats_ );
         }
 
     private:
         rep beats_;
-        beat_tempo tempo_;
     };
 
-    static_assert( beat_duration( std::chrono::seconds( 30 ), 120.0_bpm ).beats() == 60.0 );
-    static_assert(
-        beat_duration( std::chrono::seconds( 30 ), 120.0_bpm ).tempo().beats_per_minute() ==
-        120.0 );
-    static_assert( beat_duration( std::chrono::seconds( 30 ), 120.0_bpm ).duration() ==
-                   std::chrono::seconds( 30 ) );
+    constexpr beat_duration operator+( beat_duration lhs, beat_duration rhs ) noexcept
+    {
+        return lhs += rhs;
+    }
 
+    constexpr bool operator<( beat_duration lhs, beat_duration rhs ) noexcept
+    {
+        return lhs.beats() < rhs.beats();
+    }
+
+    inline std::ostream& operator<<( std::ostream& os, beat_duration duration )
+    {
+        return os << duration.beats() << " beats";
+    }
+
+    constexpr beat_duration operator"" _beats( long double value )
+    {
+        return beat_duration( value );
+    }
+
+    static_assert( beat_duration( std::chrono::seconds( 30 ), 120.0_bpm ).beats() == 60.0 );
+    static_assert( beat_duration( std::chrono::seconds( 30 ), 120.0_bpm ).duration( 120.0_bpm ) ==
+                   std::chrono::seconds( 30 ) );
 } // namespace sequencer

@@ -1,0 +1,24 @@
+{
+  "comments": [
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/216/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "9593a92a_4593ed86",
+        "filename": "include/sequencer/midi_clock.hpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-07-31T13:09:31Z",
+      "side": 1,
+      "message": "return type \u0027const std::string_view\u0027 (aka \u0027const basic_string_view\u003cchar\u003e\u0027) is \u0027const\u0027-qualified at the top level, which may reduce code readability without improving const correctness [readability-const-return-type,-warnings-as-errors]",
+      "revId": "90749275128f9ecf862c10032741574a1d77eee0",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}

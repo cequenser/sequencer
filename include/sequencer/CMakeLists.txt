@@ -10,10 +10,13 @@ add_library(sequencer
 )
 target_compile_features(sequencer PUBLIC cxx_std_17)
 set_target_properties(sequencer PROPERTIES CXX_EXTENSIONS OFF)
-target_include_directories(sequencer PUBLIC
+target_include_directories(sequencer
+  PUBLIC
     $<INSTALL_INTERFACE:include>
-    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>)
-
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+  PRIVATE
+    ${PROJECT_SOURCE_DIR}/external/repo/install/rtmidi/include
+)
 
 # configure installation and registration
 set_target_properties(sequencer PROPERTIES EXPORT_NAME Sequencer)

@@ -1,91 +1,140 @@
 #pragma once
 
-#include <sequencer/beat_time_point.hpp>
-#include <sequencer/midi/message_type.hpp>
+#include <sequencer/beat_duration.hpp>
+#include <sequencer/beat_tempo.hpp>
+#include <sequencer/chrono/sequencer_clock.hpp>
+#include <sequencer/midi/clock_base.hpp>
 
-#include <cassert>
+#include <atomic>
+#include <memory>
+
 namespace sequencer::midi
 {
+    template < class Sender >
     class clock
     {
+        using underlying_clock = chrono::clock_object_adapter< std::chrono::steady_clock >;
+        using sequencer_clock = chrono::sequencer_clock< underlying_clock >;
+
     public:
-        constexpr clock() = default;
-
-        constexpr explicit clock( beat_time_point start_time )
-            : last_update_( start_time ), start_time_( start_time )
+        clock( const Sender& sender, beat_duration max_duration )
+            : sender_( sender ), max_duration_( max_duration )
         {
         }
 
-        template < typename Sender >
-        void update( beat_time_point t, Sender sender )
+        clock( Sender&& sender, beat_duration max_duration )
+            : sender_( std::move( sender ) ), max_duration_( max_duration )
         {
-            if ( !running_ && started_ )
-            {
-                sender( continue_ ? midi::message_type::realtime_continue
-                                  : midi::message_type::realtime_start );
-                running_ = true;
-                continue_ = true;
-            }
-            else if ( running_ && !started_ )
-            {
-                sender( midi::message_type::realtime_stop );
-                running_ = false;
-            }
-
-            if ( running_ )
-            {
-                const auto tick = beat_duration( 1.0 / pulses_per_quarter_note_ );
-                while ( last_update_ + tick < t + abs_accuracy_ )
-                {
-                    last_update_ += tick;
-                    abs_accuracy_ += std::numeric_limits< beat_duration >::epsilon();
-                    sender( midi::message_type::realtime_clock );
-                }
-            }
         }
 
-        constexpr bool is_started() const noexcept
+        explicit clock( const Sender& sender ) : sender_( sender )
         {
-            return started_;
+        }
+
+        explicit clock( Sender&& sender ) : sender_( std::move( sender ) )
+        {
+        }
+
+        void start() noexcept
+        {
+            clock_base_.start();
+            sequencer_clock_.start();
+        }
+
+        void stop() noexcept
+        {
+            clock_base_.stop();
+            sequencer_clock_.stop();
         }
 
         void reset() noexcept
         {
-            started_ = false;
-            continue_ = false;
-            last_update_ = start_time_;
-            abs_accuracy_ = std::numeric_limits< beat_duration >::epsilon();
+            clock_base_.reset();
+            sequencer_clock_.reset();
         }
 
-        constexpr void start() noexcept
+        void shut_down() noexcept
         {
-            started_ = true;
+            stop();
+            shut_down_ = true;
         }
 
-        constexpr void stop() noexcept
+        void run()
         {
-            started_ = false;
-        }
-
-        void set_pulses_per_quarter_note( int pulses_per_quarter_note ) noexcept
-        {
-            assert( pulses_per_quarter_note > 0 );
-            pulses_per_quarter_note_ = pulses_per_quarter_note;
-        }
-
-        int pulses_per_quarter_note() const noexcept
-        {
-            return pulses_per_quarter_note_;
+            clock_base_.update( beat_time_point{0.0_beats}, sender_ );
+            while ( !shut_down_ )
+            {
+                using time_point = typename sequencer_clock::time_point;
+                const auto dt = beat_duration( sequencer_clock_.now() - time_point{}, tempo_ );
+                if ( max_duration_ < dt )
+                {
+                    shut_down();
+                }
+                const auto t = beat_time_point{dt};
+                clock_base_.update( t, sender_ );
+            }
         }
 
     private:
-        beat_time_point last_update_;
-        beat_time_point start_time_;
-        beat_duration abs_accuracy_ = std::numeric_limits< beat_duration >::epsilon();
-        int pulses_per_quarter_note_{24};
-        bool started_ = false;
-        bool running_ = false;
-        bool continue_ = false;
+        underlying_clock underlying_clock_;
+        sequencer_clock sequencer_clock_{underlying_clock_};
+        clock_base clock_base_{beat_time_point{beat_duration{-1.0 / 24}}};
+        Sender sender_;
+        beat_duration max_duration_ = std::numeric_limits< beat_duration >::max();
+        beat_tempo tempo_ = 120.0_bpm;
+        std::atomic_bool shut_down_{false};
     };
 
+    template < class Sender >
+    class clock_controller
+    {
+    public:
+        clock_controller() = default;
+
+        explicit clock_controller( std::weak_ptr< clock< Sender > > weak_clock ) noexcept
+            : weak_clock_( weak_clock )
+        {
+        }
+
+        void start_clock() noexcept
+        {
+            if ( auto shared_clock = weak_clock_.lock() )
+            {
+                shared_clock->start();
+            }
+        }
+
+        void stop_clock() noexcept
+        {
+            if ( auto shared_clock = weak_clock_.lock() )
+            {
+                shared_clock->stop();
+            }
+        }
+
+        void reset_clock() noexcept
+        {
+            if ( auto shared_clock = weak_clock_.lock() )
+            {
+                shared_clock->reset();
+            }
+        }
+
+        void shut_down_clock() noexcept
+        {
+            if ( auto shared_clock = weak_clock_.lock() )
+            {
+                shared_clock->shut_down();
+            }
+        }
+
+    private:
+        std::weak_ptr< clock< Sender > > weak_clock_;
+    };
+
+    template < class Sender >
+    clock_controller< Sender > get_controller( std::shared_ptr< clock< Sender > > clock )
+    {
+        return clock_controller< Sender >( clock );
+    }
 } // namespace sequencer::midi

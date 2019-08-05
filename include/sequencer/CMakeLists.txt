@@ -5,6 +5,7 @@ add_library(sequencer
     beat_tempo.hpp
     beat_time_point.hpp
     midi_clock.hpp
+    midi_sender.hpp
     chrono/chrono_adapter.hpp
     chrono/sequencer_clock.hpp
 )

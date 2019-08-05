@@ -1,4 +1,4 @@
-#include <sequencer/midi_clock.hpp>
+#include <sequencer/midi/clock.hpp>
 
 #include <catch2/catch.hpp>
 
@@ -8,7 +8,7 @@ SCENARIO( "start and stop messages", "[midi_clock]" )
 
     GIVEN( "A midi_clock" )
     {
-        midi_clock clock;
+        midi::clock clock;
 
         WHEN( "the clock is not started" )
         {
@@ -110,9 +110,9 @@ SCENARIO( "start and stop messages", "[midi_clock]" )
         }
     }
 
-    GIVEN( "A midi_clock that starts at -4.0 beats" )
+    GIVEN( "A midi clock that starts at -4.0 beats" )
     {
-        midi_clock clock( beat_time_point( -4.0_beats ) );
+        midi::clock clock( beat_time_point( -4.0_beats ) );
         clock.start();
 
         WHEN( "update is called at 1.0 beat " )
@@ -155,9 +155,9 @@ SCENARIO( "continue", "[midi_clock]" )
 {
     using namespace sequencer;
 
-    GIVEN( "a started midi_clock" )
+    GIVEN( "a started midi clock" )
     {
-        midi_clock clock;
+        midi::clock clock;
         clock.start();
         clock.update( beat_time_point( 0.0_beats ), []( midi::message_type ) {} );
 
@@ -203,9 +203,9 @@ SCENARIO( "pulses", "[midi_clock]" )
 {
     using namespace sequencer;
 
-    GIVEN( "a started midi_clock" )
+    GIVEN( "a started midi clock" )
     {
-        midi_clock clock;
+        midi::clock clock;
         clock.start();
         WHEN( "update is called " )
         {

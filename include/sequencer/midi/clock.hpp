@@ -1,54 +1,16 @@
 #pragma once
 
 #include <sequencer/beat_time_point.hpp>
+#include <sequencer/midi/message_type.hpp>
 
-#include <ostream>
-#include <string_view>
-
-namespace sequencer
+namespace sequencer::midi
 {
-    namespace midi
-    {
-        enum class message_type : std::uint8_t
-        {
-            invalid = 0,
-            realtime_clock = 0xF8,
-            realtime_start = 0xFA,
-            realtime_continue = 0xFB,
-            realtime_stop = 0XFC
-        };
-
-        inline constexpr std::string_view to_string( message_type type ) noexcept
-        {
-            switch ( type )
-            {
-            case message_type::realtime_clock:
-                return "clock";
-            case message_type::realtime_start:
-                return "start";
-            case message_type::realtime_continue:
-                return "continue";
-            case message_type::realtime_stop:
-                return "stop";
-            default:
-                return "invalid";
-            }
-        }
-
-        inline std::ostream& operator<<( std::ostream& stream, message_type type )
-        {
-            stream << to_string( type );
-            return stream;
-        }
-
-    } // namespace midi
-
-    class midi_clock
+    class clock
     {
     public:
-        constexpr midi_clock() = default;
+        constexpr clock() = default;
 
-        constexpr explicit midi_clock( beat_time_point start_time )
+        constexpr explicit clock( beat_time_point start_time )
             : last_update_( start_time ), start_time_( start_time )
         {
         }
@@ -80,7 +42,7 @@ namespace sequencer
             }
         }
 
-        bool is_started() const noexcept
+        constexpr bool is_started() const noexcept
         {
             return started_;
         }
@@ -92,12 +54,12 @@ namespace sequencer
             last_update_ = start_time_;
         }
 
-        void start() noexcept
+        constexpr void start() noexcept
         {
             started_ = true;
         }
 
-        void stop() noexcept
+        constexpr void stop() noexcept
         {
             started_ = false;
         }
@@ -111,4 +73,4 @@ namespace sequencer
         bool continue_ = false;
     };
 
-} // namespace sequencer
+} // namespace sequencer::midi

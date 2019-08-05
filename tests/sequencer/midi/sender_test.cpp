@@ -1,5 +1,4 @@
-#include <sequencer/midi_clock.hpp>
-#include <sequencer/midi_sender.hpp>
+#include <sequencer/midi/sender.hpp>
 
 #include <catch2/catch.hpp>
 

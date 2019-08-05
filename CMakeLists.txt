@@ -7,6 +7,7 @@ if(CCACHE_PROGRAM)
 endif()
 
 option(BuildTests "build tests" OFF)
+option(BuildExamples "build examples" OFF)
 option(Coverage "gather coverage data" OFF)
 
 project(sequencer VERSION 0.0.1 LANGUAGES CXX)
@@ -28,5 +29,9 @@ add_subdirectory(include)
 if(BuildTests)
     enable_testing()
     add_subdirectory(tests)
+endif()
+
+if(BuildExamples)
+    add_subdirectory(examples)
 endif()
 

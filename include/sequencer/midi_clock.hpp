@@ -103,12 +103,12 @@ namespace sequencer
         }
 
     private:
-        bool started_ = false;
-        bool running_ = false;
-        bool continue_ = false;
         beat_time_point last_update_;
         beat_time_point start_time_;
         double pulses_per_quarter_note_{24.0};
+        bool started_ = false;
+        bool running_ = false;
+        bool continue_ = false;
     };
 
 } // namespace sequencer

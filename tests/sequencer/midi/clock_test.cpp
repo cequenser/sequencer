@@ -1,282 +1,214 @@
 #include <sequencer/midi/clock.hpp>
+#include <sequencer/midi/message_type.hpp>
 
 #include <catch2/catch.hpp>
 
-SCENARIO( "start and stop messages", "[midi_clock]" )
+#include <condition_variable>
+#include <functional>
+#include <future>
+#include <memory>
+#include <mutex>
+#include <vector>
+
+SCENARIO( "A midi clock running for 1 beat", "[midi_clock]" )
 {
     using namespace sequencer;
 
-    GIVEN( "A midi_clock" )
+    GIVEN( "a midi clock that runs for 1 beat and a test sender" )
     {
-        midi::clock clock;
-
-        WHEN( "the clock is not started" )
-        {
-            THEN( "nothing happens when update is called" )
-            {
-                clock.update( beat_time_point( 1.0_beats ), []( midi::message_type ) { throw 1; } );
-            }
-            THEN( "is_started returns false" )
-            {
-                REQUIRE_FALSE( clock.is_started() );
-            }
-            THEN( "is_started still returns false after stop" )
-            {
-                clock.stop();
-                REQUIRE_FALSE( clock.is_started() );
-
-                THEN( "nothing happens when update is called" )
-                {
-                    clock.update( beat_time_point( 1.0_beats ),
-                                  []( midi::message_type ) { throw 1; } );
-                }
-            }
-            THEN( "is_started still returns false after reset" )
-            {
-                clock.reset();
-                REQUIRE_FALSE( clock.is_started() );
-
-                THEN( "nothing happens when update is called" )
-                {
-                    clock.update( beat_time_point( 1.0_beats ),
-                                  []( midi::message_type ) { throw 1; } );
-                }
-            }
-        }
+        std::vector< midi::message_type > received_messages;
+        const auto sender = [&received_messages]( midi::message_type message ) {
+            received_messages.push_back( message );
+        };
+        auto clock = midi::clock{sender, 1.0_beats};
 
         WHEN( "the clock is started" )
         {
             clock.start();
-            THEN( "a start message is sent when update is called" )
-            {
-                midi::message_type message = midi::message_type::invalid;
-                clock.update( beat_time_point( 0.0_beats ),
-                              [& msg = message]( midi::message_type message ) { msg = message; } );
-                REQUIRE( message == midi::message_type::realtime_start );
+            clock.run();
 
-                THEN( "nothing happens when update is called again" )
+            THEN( "one start message, 24 clock messages and one stop message are sent" )
+            {
+
+                REQUIRE( received_messages.size() >= 2u + 24u );
+                CHECK( received_messages.front() == midi::message_type::realtime_start );
+                for ( auto i = 1u; i + 1u < received_messages.size(); ++i )
                 {
-                    clock.update( beat_time_point( 0.0_beats ),
-                                  []( midi::message_type ) { throw 1; } );
+                    CHECK( received_messages[ i ] == midi::message_type::realtime_clock );
+                }
+                CHECK( received_messages.back() == midi::message_type::realtime_stop );
+            }
+        }
+    }
+}
+
+namespace
+{
+    struct test_sender
+    {
+        test_sender( std::vector< sequencer::midi::message_type >& received_messages )
+            : received_messages( received_messages )
+        {
+        }
+
+        void operator()( sequencer::midi::message_type message ) const
+        {
+            received_messages.push_back( message );
+            if ( message == sequencer::midi::message_type::realtime_start )
+            {
+                std::unique_lock lock( shared->message_mutex );
+                ++shared->start_message_count;
+                lock.unlock();
+                shared->message_received.notify_one();
+            }
+            if ( message == sequencer::midi::message_type::realtime_continue )
+            {
+                std::unique_lock lock( shared->message_mutex );
+                ++shared->continue_message_count;
+                lock.unlock();
+                shared->message_received.notify_one();
+            }
+            if ( message == sequencer::midi::message_type::realtime_stop )
+            {
+                std::unique_lock lock( shared->message_mutex );
+                ++shared->stop_message_count;
+                lock.unlock();
+                shared->message_received.notify_one();
+            }
+        }
+
+        std::vector< sequencer::midi::message_type >& received_messages;
+
+        struct shared
+        {
+            std::mutex message_mutex;
+            int start_message_count{0};
+            int continue_message_count{0};
+            int stop_message_count{0};
+            std::condition_variable message_received;
+        };
+
+        std::shared_ptr< shared > shared = std::make_shared< shared >();
+    };
+} // namespace
+
+SCENARIO( "Asynchronous control of midi-clock", "[midi_clock]" )
+{
+    using namespace sequencer;
+    using sender_type = std::function< void( midi::message_type ) >;
+
+    GIVEN( "A midi clock running in a separate thread with a clock controller" )
+    {
+        auto controller_ready_promise = std::make_shared< std::promise< void > >();
+        const auto controller_ready = controller_ready_promise->get_future();
+
+        std::vector< midi::message_type > received_messages;
+        auto sender = test_sender{received_messages};
+
+        midi::clock_controller< sender_type > clock_controller;
+        const auto clock_done = std::async(
+            std::launch::async,
+            [&clock_controller, sender, controller_ready = std::move( controller_ready_promise )] {
+                const auto clock = std::make_shared< midi::clock< sender_type > >( sender );
+                clock_controller = midi::get_controller( clock );
+                controller_ready->set_value();
+                clock->run();
+            } );
+        controller_ready.wait();
+
+        WHEN( "clock is started" )
+        {
+            clock_controller.start_clock();
+            {
+                std::unique_lock lock( sender.shared->message_mutex );
+                sender.shared->message_received.wait(
+                    lock, [&sender] { return sender.shared->start_message_count == 1; } );
+            }
+
+            WHEN( "clock is stopped" )
+            {
+                clock_controller.stop_clock();
+                {
+                    std::unique_lock lock( sender.shared->message_mutex );
+                    sender.shared->message_received.wait(
+                        lock, [&sender] { return sender.shared->stop_message_count == 1; } );
                 }
 
-                THEN( "is_started returns false after stop" )
+                THEN( "start and stop messages are sent" )
                 {
-                    clock.stop();
-                    REQUIRE_FALSE( clock.is_started() );
+                    CHECK( received_messages.size() >= 2 );
+                    CHECK( received_messages.front() == midi::message_type::realtime_start );
+                    CHECK( received_messages.back() == midi::message_type::realtime_stop );
 
-                    THEN( "a stop message is sent when update is called again" )
+                    received_messages.clear();
+
+                    WHEN( "clock is started again" )
                     {
-                        midi::message_type received = midi::message_type::invalid;
-                        clock.update( beat_time_point( 1.0_beats ),
-                                      [&received]( midi::message_type message ) {
-                                          REQUIRE( received == midi::message_type::invalid );
-                                          received = message;
-                                      } );
-                        REQUIRE( received == midi::message_type::realtime_stop );
-
-                        THEN( "nothing happens when update is called again" )
+                        clock_controller.start_clock();
                         {
-                            clock.update( beat_time_point( 1.0_beats ),
-                                          []( midi::message_type ) { throw 1; } );
+                            std::unique_lock lock( sender.shared->message_mutex );
+                            sender.shared->message_received.wait( lock, [&sender] {
+                                return sender.shared->continue_message_count == 1;
+                            } );
+                        }
+
+                        WHEN( "clock is stopped again" )
+                        {
+                            clock_controller.stop_clock();
+                            {
+                                std::unique_lock lock( sender.shared->message_mutex );
+                                sender.shared->message_received.wait( lock, [&sender] {
+                                    return sender.shared->stop_message_count == 2;
+                                } );
+                            }
+
+                            THEN( "continue and stop messages are sent" )
+                            {
+                                CHECK( received_messages.size() >= 2 );
+                                CHECK( received_messages.front() ==
+                                       midi::message_type::realtime_continue );
+                                CHECK( received_messages.back() ==
+                                       midi::message_type::realtime_stop );
+                            }
+                        }
+                    }
+
+                    WHEN( "clock is reset and then restarted again" )
+                    {
+                        clock_controller.reset_clock();
+                        clock_controller.start_clock();
+                        {
+                            std::unique_lock lock( sender.shared->message_mutex );
+                            sender.shared->message_received.wait( lock, [&sender] {
+                                return sender.shared->start_message_count == 2;
+                            } );
+                        }
+
+                        WHEN( "clock is stopped again" )
+                        {
+                            clock_controller.stop_clock();
+                            {
+                                std::unique_lock lock( sender.shared->message_mutex );
+                                sender.shared->message_received.wait( lock, [&sender] {
+                                    return sender.shared->stop_message_count == 2;
+                                } );
+                            }
+
+                            THEN( "start and stop messages are sent" )
+                            {
+                                CHECK( received_messages.size() >= 2 );
+                                CHECK( received_messages.front() ==
+                                       midi::message_type::realtime_start );
+                                CHECK( received_messages.back() ==
+                                       midi::message_type::realtime_stop );
+                            }
                         }
                     }
                 }
-
-                THEN( "is_started returns false after reset" )
-                {
-                    clock.reset();
-                    REQUIRE_FALSE( clock.is_started() );
-
-                    midi::message_type received = midi::message_type::invalid;
-                    clock.update( beat_time_point( 1.0_beats ),
-                                  [&received]( midi::message_type message ) {
-                                      REQUIRE( received == midi::message_type::invalid );
-                                      received = message;
-                                  } );
-                    REQUIRE( received == midi::message_type::realtime_stop );
-
-                    THEN( "nothing happens when update is called again" )
-                    {
-                        clock.update( beat_time_point( 1.0_beats ),
-                                      []( midi::message_type ) { throw 1; } );
-                    }
-                }
-            }
-            THEN( "is_started returns true" )
-            {
-                REQUIRE( clock.is_started() );
-            }
-        }
-    }
-
-    GIVEN( "A midi clock that starts at -4.0 beats" )
-    {
-        midi::clock clock( beat_time_point( -4.0_beats ) );
-        CHECK( clock.pulses_per_quarter_note() == 24 );
-        clock.start();
-
-        WHEN( "update is called at 1.0 beat " )
-        {
-            THEN( "the clock sends 5 x 24 pulses" )
-            {
-                int pulse_count = 0;
-                clock.update( beat_time_point( 1.0_beats ),
-                              [&pulse_count]( midi::message_type message ) {
-                                  if ( message == midi::message_type::realtime_clock )
-                                  {
-                                      pulse_count++;
-                                  }
-                              } );
-                REQUIRE( pulse_count == 5 * clock.pulses_per_quarter_note() );
-
-                WHEN( "update is called at 1.0 beat after reset" )
-                {
-                    clock.reset();
-                    clock.start();
-                    THEN( "the clock sends 5 x 24 pulses again" )
-                    {
-                        int pulse_count = 0;
-                        clock.update( beat_time_point( 1.0_beats ),
-                                      [&pulse_count]( midi::message_type message ) {
-                                          if ( message == midi::message_type::realtime_clock )
-                                          {
-                                              pulse_count++;
-                                          }
-                                      } );
-                        REQUIRE( pulse_count == 5 * clock.pulses_per_quarter_note() );
-                    }
-                }
-            }
-        }
-    }
-}
-
-SCENARIO( "continue", "[midi_clock]" )
-{
-    using namespace sequencer;
-
-    GIVEN( "a started midi clock" )
-    {
-        midi::clock clock;
-        clock.start();
-        clock.update( beat_time_point( 0.0_beats ), []( midi::message_type ) {} );
-
-        WHEN( "the clock is stopped" )
-        {
-            clock.stop();
-            clock.update( beat_time_point( 0.0_beats ), []( midi::message_type ) {} );
-
-            THEN( "starting the clock again sends a continue message" )
-            {
-                clock.start();
-                midi::message_type received = midi::message_type::invalid;
-                clock.update( beat_time_point( 0.0_beats ),
-                              [&received]( midi::message_type message ) {
-                                  REQUIRE( received == midi::message_type::invalid );
-                                  received = message;
-                              } );
-                REQUIRE( received == midi::message_type::realtime_continue );
             }
         }
 
-        WHEN( "the clock is reset" )
-        {
-            clock.reset();
-            clock.update( beat_time_point( 0.0_beats ), []( midi::message_type ) {} );
-
-            THEN( "starting the clock again sends a start message" )
-            {
-                clock.start();
-                midi::message_type received = midi::message_type::invalid;
-                clock.update( beat_time_point( 0.0_beats ),
-                              [&received]( midi::message_type message ) {
-                                  REQUIRE( received == midi::message_type::invalid );
-                                  received = message;
-                              } );
-                REQUIRE( received == midi::message_type::realtime_start );
-            }
-        }
-    }
-}
-
-SCENARIO( "pulses", "[midi_clock]" )
-{
-    using namespace sequencer;
-
-    GIVEN( "a started midi clock" )
-    {
-        midi::clock clock;
-        clock.start();
-        WHEN( "update is called " )
-        {
-            THEN( "the clock sends 24 pulses" )
-            {
-                int pulse_count = 0;
-                clock.update( beat_time_point( 1.0_beats ),
-                              [&pulse_count]( midi::message_type message ) {
-                                  if ( message == midi::message_type::realtime_clock )
-                                  {
-                                      pulse_count++;
-                                  }
-                              } );
-                REQUIRE( pulse_count == 24 );
-                WHEN( "update is called again with duration of 1 beat" )
-                {
-                    THEN( "no pulses are send" )
-                    {
-                        pulse_count = 0;
-                        clock.update( beat_time_point( 1.0_beats ),
-                                      [&pulse_count]( midi::message_type message ) {
-                                          if ( message == midi::message_type::realtime_clock )
-                                          {
-                                              pulse_count++;
-                                          }
-                                      } );
-                        REQUIRE( pulse_count == 0 );
-                    }
-                }
-
-                WHEN( "update is called again with time point of 1 beat after reset" )
-                {
-                    clock.reset();
-                    clock.start();
-                    THEN( "24 pulses are send" )
-                    {
-                        pulse_count = 0;
-                        clock.update( beat_time_point( 1.0_beats ),
-                                      [&pulse_count]( midi::message_type message ) {
-                                          if ( message == midi::message_type::realtime_clock )
-                                          {
-                                              pulse_count++;
-                                          }
-                                      } );
-                        REQUIRE( pulse_count == 24 );
-                    }
-                }
-            }
-        }
-
-        WHEN( "pulses per quarter are changed to 36" )
-        {
-            REQUIRE( clock.pulses_per_quarter_note() == 24 );
-            clock.set_pulses_per_quarter_note( 36 );
-            REQUIRE( clock.pulses_per_quarter_note() == 36 );
-            WHEN( "update is called at 1.0 beat " )
-            {
-                THEN( "the clock sends 36 pulses" )
-                {
-                    int pulse_count = 0;
-                    clock.update( beat_time_point( 1.0_beats ),
-                                  [&pulse_count]( midi::message_type message ) {
-                                      if ( message == midi::message_type::realtime_clock )
-                                      {
-                                          pulse_count++;
-                                      }
-                                  } );
-                    REQUIRE( pulse_count == clock.pulses_per_quarter_note() );
-                }
-            }
-        }
+        clock_controller.shut_down_clock();
+        clock_done.wait();
     }
 }

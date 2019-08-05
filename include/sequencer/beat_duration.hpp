@@ -94,5 +94,10 @@ namespace std
         {
             return sequencer::beat_duration{std::numeric_limits< double >::epsilon()};
         }
+
+        static sequencer::beat_duration max() noexcept
+        {
+            return sequencer::beat_duration{std::numeric_limits< double >::max()};
+        }
     };
 } // namespace std

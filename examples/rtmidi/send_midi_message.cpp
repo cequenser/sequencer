@@ -1,4 +1,4 @@
-#include <sequencer/midi_clock.hpp>
+#include <sequencer/midi/message_type.hpp>
 
 #include <RtMidi.h>
 #include <chrono>

@@ -40,6 +40,11 @@ namespace sequencer
         return lhs.time_since_epoch() < rhs.time_since_epoch();
     }
 
+    constexpr bool operator<=( beat_time_point lhs, beat_time_point rhs ) noexcept
+    {
+        return lhs.time_since_epoch() <= rhs.time_since_epoch();
+    }
+
     inline std::ostream& operator<<( std::ostream& os, beat_time_point time_point )
     {
         return os << time_point.time_since_epoch() << " since epoch";

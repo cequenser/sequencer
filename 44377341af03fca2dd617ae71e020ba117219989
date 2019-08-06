@@ -1,0 +1,24 @@
+{
+  "comments": [
+    {
+      "robotId": "clang-format",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-format/218/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "a1450b60_b0c198c3",
+        "filename": "include/sequencer/beat_duration.hpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-06T20:26:47Z",
+      "side": 1,
+      "message": "static constexpr double eps \u003d 1.0 / ( 1024 * 1024 * 9 );\n         using rep \u003d double;\n         using seconds \u003d std::chrono::duration\u003c double, std::ratio\u003c 1, 1 \u003e \u003e;\n-\n \n         constexpr explicit beat_duration( rep beats ) noexcept\n             : tick_count_( constexpr_round( beats / eps ) + std::numeric_limits\u003c rep \u003e::epsilon() )",
+      "revId": "44377341af03fca2dd617ae71e020ba117219989",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}

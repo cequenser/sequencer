@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/272/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "fe51f6f9_05dd245c",
+        "filename": "include/sequencer/beat_duration.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-06T19:46:17Z",
+      "side": 1,
+      "message": "casting (double + 0.5) to integer leads to incorrect rounding; consider using lround (#include \u003ccmath\u003e) instead [bugprone-incorrect-roundings,-warnings-as-errors]",
+      "revId": "e1b079646ccda5481b06e904cc9d5a4055bc5cc0",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/272/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "6fafe190_2e57397c",
+        "filename": "include/sequencer/beat_duration.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-06T19:46:17Z",
+      "side": 1,
+      "message": "constructor does not initialize these fields: tick_count_ [cppcoreguidelines-pro-type-member-init,-warnings-as-errors]",
+      "revId": "e1b079646ccda5481b06e904cc9d5a4055bc5cc0",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}

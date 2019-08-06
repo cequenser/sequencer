@@ -111,7 +111,7 @@ SCENARIO( "Convert std::chrono::duration<> to beat_duration", "[beat_duration]" 
 
             THEN( "the beat_duration is (2 beats per second * 3 seconds) = 6.0 beats" )
             {
-                REQUIRE_THAT( duration.beats(), WithinULP( 6.0, 1 ) );
+                REQUIRE( duration.beats() == 6.0 );
             }
         }
 
@@ -121,7 +121,7 @@ SCENARIO( "Convert std::chrono::duration<> to beat_duration", "[beat_duration]" 
 
             THEN( "the beat_duration is (2.9 beats per second * 3 seconds) = 8.7 beats" )
             {
-                REQUIRE_THAT( duration.beats(), WithinULP( 8.7, 1 ) );
+                REQUIRE( duration == beat_duration{8.7} );
             }
         }
     }
@@ -146,7 +146,7 @@ SCENARIO( "Convert std::chrono::duration<> to beat_duration", "[beat_duration]" 
 
             THEN( "the beat_duration is (2.9 beats per second * 0.25 seconds) = 0.725 beats" )
             {
-                REQUIRE_THAT( duration.beats(), WithinULP( 0.725, 1 ) );
+                REQUIRE( duration == beat_duration{0.725} );
             }
         }
     }

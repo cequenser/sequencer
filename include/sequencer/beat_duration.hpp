@@ -9,64 +9,76 @@
 
 namespace sequencer
 {
+    template < class T >
+    constexpr int constexpr_round( T a ) noexcept
+    {
+        return ( a > 0 ) ? int( a + T{0.5} ) : int( a - T{0.5} );
+    }
 
     class beat_duration
     {
         using minutes = std::chrono::duration< double, std::ratio< 60, 1 > >;
 
     public:
+        static constexpr double eps = 1.0 / ( 1024 * 1024 * 9 );
         using rep = double;
         using seconds = std::chrono::duration< double, std::ratio< 1, 1 > >;
 
-        constexpr explicit beat_duration( rep beats ) noexcept : beats_( beats )
+        constexpr explicit beat_duration( rep beats ) noexcept
+            : tick_count_( constexpr_round( beats / eps ) + std::numeric_limits< rep >::epsilon() )
         {
         }
 
         template < typename Duration >
         constexpr explicit beat_duration( Duration duration, beat_tempo tempo ) noexcept
-            : beats_( std::chrono::duration_cast< minutes >( duration ).count() *
-                      tempo.beats_per_minute() )
+            : beat_duration( std::chrono::duration_cast< minutes >( duration ).count() *
+                             tempo.beats_per_minute() )
         {
         }
 
         constexpr rep beats() const noexcept
         {
-            return beats_;
+            return tick_count_ * eps;
         }
 
         constexpr seconds duration( beat_tempo tempo ) const noexcept
         {
-            return minutes{beats_ / tempo.beats_per_minute()};
+            return minutes{beats() / tempo.beats_per_minute()};
         }
 
         constexpr bool operator==( beat_duration other ) const noexcept
         {
-            return beats() == other.beats();
+            return tick_count_ == other.tick_count_;
         }
 
         constexpr beat_duration& operator+=( beat_duration other ) noexcept
         {
-            beats_ += other.beats();
+            tick_count_ += other.tick_count_;
             return *this;
         }
 
         constexpr beat_duration operator-() noexcept
         {
-            return beat_duration( -beats_ );
+            return beat_duration( -beats() );
+        }
+
+        constexpr bool operator<( beat_duration other ) const noexcept
+        {
+            return tick_count_ < other.tick_count_;
+        }
+
+        constexpr bool operator<=( beat_duration other ) const noexcept
+        {
+            return tick_count_ <= other.tick_count_;
         }
 
     private:
-        rep beats_;
+        std::int64_t tick_count_;
     };
 
     constexpr beat_duration operator+( beat_duration lhs, beat_duration rhs ) noexcept
     {
         return lhs += rhs;
-    }
-
-    constexpr bool operator<( beat_duration lhs, beat_duration rhs ) noexcept
-    {
-        return lhs.beats() < rhs.beats();
     }
 
     inline std::ostream& operator<<( std::ostream& os, beat_duration duration )

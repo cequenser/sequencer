@@ -9,14 +9,20 @@ indent = '  '
 def extract_filename_dictionary_clang_tidy(clang_filename, newline_placeholder, base_path):
     clang_file = open(clang_filename, 'r')
     comments = {}
+    relative_base_path = '../include/'
     for line in clang_file:
-        if not line.startswith(base_path):
+        offset = 0
+        if line.startswith(base_path):
+            offset = len(base_path)
+        elif line.startswith(relative_base_path):
+            offset = len(relative_base_path)
+        else:
             continue
         firstColon = line.find(':')
-        filename = line[len(base_path):firstColon]
+        filename = line[offset:firstColon]
         line_number = line[firstColon+1:line.find(':', firstColon+1)]
         message_start = line.find('error:')+7
-        message_end = max(line.find(base_path, message_start), line.find('Suppressed', message_start))
+        message_end = max(line.find(base_path, message_start), line.find(relative_base_path, message_start), line.find('Suppressed', message_start))
         m = re.match(".*(" + newline_placeholder + "\s*[0-9]+\s*warnings\s+generated.).*", line[message_start:])
         if m:
             message_end = line.find(m.groups()[0], message_start)

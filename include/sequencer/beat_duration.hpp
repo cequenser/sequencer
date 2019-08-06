@@ -4,6 +4,7 @@
 
 #include <cassert>
 #include <chrono>
+#include <limits>
 #include <ostream>
 
 namespace sequencer
@@ -82,3 +83,16 @@ namespace sequencer
     static_assert( beat_duration( std::chrono::seconds( 30 ), 120.0_bpm ).duration( 120.0_bpm ) ==
                    std::chrono::seconds( 30 ) );
 } // namespace sequencer
+
+namespace std
+{
+    template <>
+    class numeric_limits< sequencer::beat_duration >
+    {
+    public:
+        static constexpr sequencer::beat_duration epsilon() noexcept
+        {
+            return sequencer::beat_duration{std::numeric_limits< double >::epsilon()};
+        }
+    };
+} // namespace std

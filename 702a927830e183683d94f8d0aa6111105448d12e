@@ -1,0 +1,24 @@
+{
+  "comments": [
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/263/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "aa4b375f_2f2d3f70",
+        "filename": "include/sequencer/midi_clock.hpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-06T10:52:10Z",
+      "side": 1,
+      "message": "do not implicitly decay an array into a pointer; consider using gsl::array_view or an explicit cast instead [cppcoreguidelines-pro-bounds-array-to-pointer-decay,-warnings-as-errors]",
+      "revId": "702a927830e183683d94f8d0aa6111105448d12e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}

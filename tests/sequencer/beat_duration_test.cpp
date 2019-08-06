@@ -91,6 +91,27 @@ SCENARIO( "Convert beat_duration to std::chrono::duration<>", "[beat_duration]" 
                 REQUIRE( duration == std::chrono::seconds( 15 ) );
             }
         }
+
+        WHEN( "another duration of 1e-10 beats is added" )
+        {
+            constexpr auto still_thirty_beats = thirty_beats + beat_duration{1e-10};
+            static_assert( still_thirty_beats.beats() == 30.0 );
+        }
+    }
+
+    GIVEN( "A beat_duration of 30 + 1e-10 beats" )
+    {
+        constexpr beat_duration thirty_beats{30.0 + 1e-10};
+        static_assert( thirty_beats.beats() == 30.0 );
+    }
+
+    GIVEN( "A beat_duration of -4 beats" )
+    {
+        const auto duration = -4.0_beats;
+        THEN( "the duration is -4.0 beats" )
+        {
+            REQUIRE( duration.beats() == -4.0 );
+        }
     }
 }
 
@@ -111,7 +132,7 @@ SCENARIO( "Convert std::chrono::duration<> to beat_duration", "[beat_duration]" 
 
             THEN( "the beat_duration is (2 beats per second * 3 seconds) = 6.0 beats" )
             {
-                REQUIRE_THAT( duration.beats(), WithinULP( 6.0, 1 ) );
+                REQUIRE( duration.beats() == 6.0 );
             }
         }
 
@@ -121,7 +142,7 @@ SCENARIO( "Convert std::chrono::duration<> to beat_duration", "[beat_duration]" 
 
             THEN( "the beat_duration is (2.9 beats per second * 3 seconds) = 8.7 beats" )
             {
-                REQUIRE_THAT( duration.beats(), WithinULP( 8.7, 1 ) );
+                REQUIRE( duration == beat_duration{8.7} );
             }
         }
     }
@@ -146,7 +167,7 @@ SCENARIO( "Convert std::chrono::duration<> to beat_duration", "[beat_duration]" 
 
             THEN( "the beat_duration is (2.9 beats per second * 0.25 seconds) = 0.725 beats" )
             {
-                REQUIRE_THAT( duration.beats(), WithinULP( 0.725, 1 ) );
+                REQUIRE( duration == beat_duration{0.725} );
             }
         }
     }

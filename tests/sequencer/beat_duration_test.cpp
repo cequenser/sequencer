@@ -208,3 +208,47 @@ SCENARIO( "Convert std::chrono::duration<> to beat_duration", "[beat_duration]" 
         }
     }
 }
+
+SCENARIO( "round", "[round]" )
+{
+    using namespace sequencer;
+    GIVEN( "constexpr auto a = 0.5" )
+    {
+        constexpr auto a = 0.5;
+
+        THEN( "constexpr_round returns 1" )
+        {
+            STATIC_REQUIRE( constexpr_round( a ) == 1 );
+        }
+    }
+
+    GIVEN( "constexpr auto a = 0.499" )
+    {
+        constexpr auto a = 0.499;
+
+        THEN( "constexpr_round returns 0" )
+        {
+            STATIC_REQUIRE( constexpr_round( a ) == 0 );
+        }
+    }
+
+    GIVEN( "constexpr auto a = -0.499" )
+    {
+        constexpr auto a = -0.499;
+
+        THEN( "constexpr_round returns 0" )
+        {
+            STATIC_REQUIRE( constexpr_round( a ) == 0 );
+        }
+    }
+
+    GIVEN( "constexpr auto a = -0.5" )
+    {
+        constexpr auto a = -0.5;
+
+        THEN( "constexpr_round returns -1" )
+        {
+            STATIC_REQUIRE( constexpr_round( a ) == -1 );
+        }
+    }
+}

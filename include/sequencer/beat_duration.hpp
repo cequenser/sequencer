@@ -4,12 +4,15 @@
 
 #include <cassert>
 #include <chrono>
-#include <cmath>
 #include <limits>
 #include <ostream>
 
 namespace sequencer
 {
+    constexpr int constexpr_round( double a ) noexcept
+    {
+        return ( a > 0 ) ? int( a + 0.5 ) : int( a - 0.5 );
+    }
 
     class beat_duration
     {
@@ -21,7 +24,7 @@ namespace sequencer
         using seconds = std::chrono::duration< double, std::ratio< 1, 1 > >;
 
         constexpr explicit beat_duration( rep beats )
-            : tick_count_( std::round( beats / eps ) + std::numeric_limits< rep >::epsilon() )
+            : tick_count_( constexpr_round( beats / eps ) + std::numeric_limits< rep >::epsilon() )
         {
         }
 

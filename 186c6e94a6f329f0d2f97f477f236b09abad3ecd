@@ -1,0 +1,24 @@
+{
+  "comments": [
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/251/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "6936a373_f5dd3084",
+        "filename": "tests/sequencer/midi_clock_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-06T09:24:26Z",
+      "side": 1,
+      "message": "constant value should be of type of type \u0027int\u0027 instead of \u0027double\u0027 [cppcoreguidelines-narrowing-conversions,-warnings-as-errors]",
+      "revId": "186c6e94a6f329f0d2f97f477f236b09abad3ecd",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}

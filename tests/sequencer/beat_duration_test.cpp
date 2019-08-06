@@ -91,6 +91,63 @@ SCENARIO( "Convert beat_duration to std::chrono::duration<>", "[beat_duration]" 
                 REQUIRE( duration == std::chrono::seconds( 15 ) );
             }
         }
+
+        WHEN( "another duration of 1e-10 beats is added" )
+        {
+            constexpr auto still_thirty_beats = thirty_beats + beat_duration{1e-10};
+            static_assert( still_thirty_beats.beats() == 30.0 );
+        }
+    }
+
+    GIVEN( "A beat_duration of 30 + 1e-10 beats" )
+    {
+        constexpr beat_duration thirty_beats{30.0 + 1e-10};
+        static_assert( thirty_beats.beats() == 30.0 );
+    }
+
+    GIVEN( "A beat_duration of 30" )
+    {
+        beat_duration thirty_beats{30.0};
+        WHEN( "the duration is increased by beat_duration::eps 1/beat_duration::eps times" )
+        {
+            for ( auto i = 0;
+                  i < int( 1 / beat_duration::eps + std::numeric_limits< double >::epsilon() );
+                  ++i )
+            {
+                thirty_beats += beat_duration{beat_duration::eps};
+            }
+
+            THEN( "duration is 31 beats" )
+            {
+                REQUIRE( thirty_beats == beat_duration{31} );
+            }
+        }
+    }
+
+    GIVEN( "A beat_duration of 0" )
+    {
+        beat_duration duration{0};
+        WHEN( "the duration is increased by 1.0/24 12 times" )
+        {
+            for ( auto i = 0; i < 12; ++i )
+            {
+                duration += beat_duration{1.0 / 24};
+            }
+
+            THEN( "duration is 0.5 beat" )
+            {
+                REQUIRE( duration == beat_duration{0.5} );
+            }
+        }
+    }
+
+    GIVEN( "A beat_duration of -4 beats" )
+    {
+        const auto duration = -4.0_beats;
+        THEN( "the duration is -4.0 beats" )
+        {
+            REQUIRE( duration.beats() == -4.0 );
+        }
     }
 }
 
@@ -111,7 +168,7 @@ SCENARIO( "Convert std::chrono::duration<> to beat_duration", "[beat_duration]" 
 
             THEN( "the beat_duration is (2 beats per second * 3 seconds) = 6.0 beats" )
             {
-                REQUIRE_THAT( duration.beats(), WithinULP( 6.0, 1 ) );
+                REQUIRE( duration.beats() == 6.0 );
             }
         }
 
@@ -121,7 +178,7 @@ SCENARIO( "Convert std::chrono::duration<> to beat_duration", "[beat_duration]" 
 
             THEN( "the beat_duration is (2.9 beats per second * 3 seconds) = 8.7 beats" )
             {
-                REQUIRE_THAT( duration.beats(), WithinULP( 8.7, 1 ) );
+                REQUIRE( duration == beat_duration{8.7} );
             }
         }
     }
@@ -146,8 +203,52 @@ SCENARIO( "Convert std::chrono::duration<> to beat_duration", "[beat_duration]" 
 
             THEN( "the beat_duration is (2.9 beats per second * 0.25 seconds) = 0.725 beats" )
             {
-                REQUIRE_THAT( duration.beats(), WithinULP( 0.725, 1 ) );
+                REQUIRE( duration == beat_duration{0.725} );
             }
+        }
+    }
+}
+
+SCENARIO( "round", "[round]" )
+{
+    using namespace sequencer;
+    GIVEN( "constexpr auto a = 0.5" )
+    {
+        constexpr auto a = 0.5;
+
+        THEN( "constexpr_round returns 1" )
+        {
+            STATIC_REQUIRE( constexpr_round( a ) == 1 );
+        }
+    }
+
+    GIVEN( "constexpr auto a = 0.499" )
+    {
+        constexpr auto a = 0.499;
+
+        THEN( "constexpr_round returns 0" )
+        {
+            STATIC_REQUIRE( constexpr_round( a ) == 0 );
+        }
+    }
+
+    GIVEN( "constexpr auto a = -0.499" )
+    {
+        constexpr auto a = -0.499;
+
+        THEN( "constexpr_round returns 0" )
+        {
+            STATIC_REQUIRE( constexpr_round( a ) == 0 );
+        }
+    }
+
+    GIVEN( "constexpr auto a = -0.5" )
+    {
+        constexpr auto a = -0.5;
+
+        THEN( "constexpr_round returns -1" )
+        {
+            STATIC_REQUIRE( constexpr_round( a ) == -1 );
         }
     }
 }

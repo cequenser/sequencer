@@ -4,6 +4,7 @@
 #include <sequencer/midi/message_type.hpp>
 
 #include <cassert>
+
 namespace sequencer::midi
 {
     class clock
@@ -34,11 +35,10 @@ namespace sequencer::midi
 
             if ( running_ )
             {
-                const auto tick = beat_duration( 1.0 / pulses_per_quarter_note_ );
-                while ( last_update_ + tick < t + abs_accuracy_ )
+                const auto dt = tick();
+                while ( last_update_ + dt <= t )
                 {
-                    last_update_ += tick;
-                    abs_accuracy_ += std::numeric_limits< beat_duration >::epsilon();
+                    last_update_ += dt;
                     sender( midi::message_type::realtime_clock );
                 }
             }
@@ -54,7 +54,6 @@ namespace sequencer::midi
             started_ = false;
             continue_ = false;
             last_update_ = start_time_;
-            abs_accuracy_ = std::numeric_limits< beat_duration >::epsilon();
         }
 
         constexpr void start() noexcept
@@ -67,21 +66,25 @@ namespace sequencer::midi
             started_ = false;
         }
 
-        void set_pulses_per_quarter_note( int pulses_per_quarter_note ) noexcept
+        constexpr void set_pulses_per_quarter_note( int pulses_per_quarter_note ) noexcept
         {
             assert( pulses_per_quarter_note > 0 );
             pulses_per_quarter_note_ = pulses_per_quarter_note;
         }
 
-        int pulses_per_quarter_note() const noexcept
+        constexpr int pulses_per_quarter_note() const noexcept
         {
             return pulses_per_quarter_note_;
         }
 
     private:
+        constexpr beat_duration tick() const noexcept
+        {
+            return beat_duration( 1.0 / pulses_per_quarter_note() );
+        }
+
         beat_time_point last_update_;
         beat_time_point start_time_;
-        beat_duration abs_accuracy_ = std::numeric_limits< beat_duration >::epsilon();
         int pulses_per_quarter_note_{24};
         bool started_ = false;
         bool running_ = false;

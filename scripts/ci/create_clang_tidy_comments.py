@@ -10,7 +10,9 @@ def extract_filename_dictionary_clang_tidy(clang_filename, newline_placeholder, 
     clang_file = open(clang_filename, 'r')
     comments = {}
     for line in clang_file:
-        if not line.startswith(base_path):
+        print line
+        print base_path
+        if not line.startswith(base_path) and not line.startswith('../include'):
             continue
         firstColon = line.find(':')
         filename = line[len(base_path):firstColon]

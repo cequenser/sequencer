@@ -1,0 +1,504 @@
+{
+  "comments": [
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/269/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "b19a55ae_4496dcad",
+        "filename": "tests/sequencer/midi/clock_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-06T16:57:54Z",
+      "side": 1,
+      "message": "expected \u0027)\u0027 [clang-diagnostic-error]",
+      "revId": "760c7ad437e209fe6bb1d7831376d4ccfc951401",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/269/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "304db1a8_85ca5909",
+        "filename": "tests/sequencer/midi/clock_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-06T16:57:54Z",
+      "side": 1,
+      "message": "jenkins/workspace/psv/clang-tidy/tests/sequencer/midi/clock_test.cpp:59:38: note: to match this \u0027(\u0027",
+      "revId": "760c7ad437e209fe6bb1d7831376d4ccfc951401",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/269/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "6beb52eb_e5a559ae",
+        "filename": "tests/sequencer/midi/clock_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-06T16:57:54Z",
+      "side": 1,
+      "message": "use of class template \u0027unique_lock\u0027 requires template arguments; argument deduction not allowed in function return type [clang-diagnostic-error]",
+      "revId": "760c7ad437e209fe6bb1d7831376d4ccfc951401",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/269/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "c7ae05f4_ec53720c",
+        "filename": "tests/sequencer/midi/clock_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-06T16:57:54Z",
+      "side": 1,
+      "message": "\u0027shared\u0027 does not refer to a value [clang-diagnostic-error]",
+      "revId": "760c7ad437e209fe6bb1d7831376d4ccfc951401",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/269/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "037ee90a_32e3a956",
+        "filename": "tests/sequencer/midi/clock_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-06T16:57:54Z",
+      "side": 1,
+      "message": "cannot use arrow operator on a type [clang-diagnostic-error]",
+      "revId": "760c7ad437e209fe6bb1d7831376d4ccfc951401",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/269/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "23be581d_985448c9",
+        "filename": "tests/sequencer/midi/clock_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-06T16:57:54Z",
+      "side": 1,
+      "message": "jenkins/workspace/psv/clang-tidy/tests/sequencer/midi/clock_test.cpp:66:38: note: to match this \u0027(\u0027",
+      "revId": "760c7ad437e209fe6bb1d7831376d4ccfc951401",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/269/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "eea27076_f3073105",
+        "filename": "tests/sequencer/midi/clock_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-06T16:57:54Z",
+      "side": 1,
+      "message": "expected \u0027)\u0027 [clang-diagnostic-error]",
+      "revId": "760c7ad437e209fe6bb1d7831376d4ccfc951401",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/269/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "b246044c_7f88c6cc",
+        "filename": "tests/sequencer/midi/clock_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-06T16:57:54Z",
+      "side": 1,
+      "message": "use of class template \u0027unique_lock\u0027 requires template arguments; argument deduction not allowed in function return type [clang-diagnostic-error]",
+      "revId": "760c7ad437e209fe6bb1d7831376d4ccfc951401",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/269/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "6504c005_d123df3d",
+        "filename": "tests/sequencer/midi/clock_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-06T16:57:54Z",
+      "side": 1,
+      "message": "\u0027shared\u0027 does not refer to a value [clang-diagnostic-error]",
+      "revId": "760c7ad437e209fe6bb1d7831376d4ccfc951401",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/269/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "2c24bc2f_1024c2eb",
+        "filename": "tests/sequencer/midi/clock_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-06T16:57:54Z",
+      "side": 1,
+      "message": "cannot use arrow operator on a type [clang-diagnostic-error]",
+      "revId": "760c7ad437e209fe6bb1d7831376d4ccfc951401",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/269/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "c536b92d_d2b41754",
+        "filename": "tests/sequencer/midi/clock_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-06T16:57:54Z",
+      "side": 1,
+      "message": "use of class template \u0027unique_lock\u0027 requires template arguments; argument deduction not allowed in function return type [clang-diagnostic-error]",
+      "revId": "760c7ad437e209fe6bb1d7831376d4ccfc951401",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/269/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "a763ed02_06b8769b",
+        "filename": "tests/sequencer/midi/clock_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-06T16:57:54Z",
+      "side": 1,
+      "message": "jenkins/workspace/psv/clang-tidy/tests/sequencer/midi/clock_test.cpp:73:38: note: to match this \u0027(\u0027",
+      "revId": "760c7ad437e209fe6bb1d7831376d4ccfc951401",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/269/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "eaf21fec_155fb099",
+        "filename": "tests/sequencer/midi/clock_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-06T16:57:54Z",
+      "side": 1,
+      "message": "expected \u0027)\u0027 [clang-diagnostic-error]",
+      "revId": "760c7ad437e209fe6bb1d7831376d4ccfc951401",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/269/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "0beadb6f_a8f37527",
+        "filename": "tests/sequencer/midi/clock_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-06T16:57:54Z",
+      "side": 1,
+      "message": "\u0027shared\u0027 does not refer to a value [clang-diagnostic-error]",
+      "revId": "760c7ad437e209fe6bb1d7831376d4ccfc951401",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/269/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "786f9142_f406fa3d",
+        "filename": "tests/sequencer/midi/clock_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-06T16:57:54Z",
+      "side": 1,
+      "message": "cannot use arrow operator on a type [clang-diagnostic-error]",
+      "revId": "760c7ad437e209fe6bb1d7831376d4ccfc951401",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/269/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "b21e8e57_7f52d956",
+        "filename": "tests/sequencer/midi/clock_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-06T16:57:54Z",
+      "side": 1,
+      "message": "jenkins/workspace/psv/clang-tidy/tests/sequencer/midi/clock_test.cpp:82:16: note: member \u0027shared\u0027 declared here",
+      "revId": "760c7ad437e209fe6bb1d7831376d4ccfc951401",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/269/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "d9e54f03_0652ecb3",
+        "filename": "tests/sequencer/midi/clock_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-06T16:57:54Z",
+      "side": 1,
+      "message": "jenkins/workspace/psv/clang-tidy/tests/sequencer/midi/clock_test.cpp:82:16: not9261 warnings and 20 errors generated.",
+      "revId": "760c7ad437e209fe6bb1d7831376d4ccfc951401",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/269/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "af473d8d_0a386b89",
+        "filename": "tests/sequencer/midi/clock_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-06T16:57:54Z",
+      "side": 1,
+      "message": "jenkins/workspace/psv/clang-tidy/tests/sequencer/midi/clock_test.cpp:82:16: note: declared here",
+      "revId": "760c7ad437e209fe6bb1d7831376d4ccfc951401",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/269/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "fb9ea68f_953e7b2c",
+        "filename": "tests/sequencer/midi/clock_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-06T16:57:54Z",
+      "side": 1,
+      "message": "no matching function for call to \u0027make_shared\u0027 [clang-diagnostic-error]",
+      "revId": "760c7ad437e209fe6bb1d7831376d4ccfc951401",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/269/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "0171abe0_88dd55c0",
+        "filename": "tests/sequencer/midi/clock_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-06T16:57:54Z",
+      "side": 1,
+      "message": "cannot refer to type member \u0027shared\u0027 in \u0027(anonymous namespace)::test_sender\u0027 with \u0027.\u0027 [clang-diagnostic-error]",
+      "revId": "760c7ad437e209fe6bb1d7831376d4ccfc951401",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/269/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "157d3025_cff7d295",
+        "filename": "tests/sequencer/midi/clock_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-06T16:57:54Z",
+      "side": 1,
+      "message": "cannot refer to type member \u0027shared\u0027 in \u0027(anonymous namespace)::test_sender\u0027 with \u0027.\u0027 [clang-diagnostic-error]",
+      "revId": "760c7ad437e209fe6bb1d7831376d4ccfc951401",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/269/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "cf6cb80c_83b0f144",
+        "filename": "tests/sequencer/midi/clock_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-06T16:57:54Z",
+      "side": 1,
+      "message": "cannot refer to type member \u0027shared\u0027 in \u0027(anonymous namespace)::test_sender\u0027 with \u0027.\u0027 [clang-diagnostic-error]",
+      "revId": "760c7ad437e209fe6bb1d7831376d4ccfc951401",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/269/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "c6e69f6c_2bea4386",
+        "filename": "tests/sequencer/midi/clock_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-06T16:57:54Z",
+      "side": 1,
+      "message": "cannot refer to type member \u0027shared\u0027 in \u0027(anonymous namespace)::test_sender\u0027 with \u0027.\u0027 [clang-diagnostic-error]",
+      "revId": "760c7ad437e209fe6bb1d7831376d4ccfc951401",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/269/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "66e9b1bf_b0835e95",
+        "filename": "tests/sequencer/midi/clock_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-06T16:57:54Z",
+      "side": 1,
+      "message": "cannot refer to type member \u0027shared\u0027 in \u0027(anonymous namespace)::test_sender\u0027 with \u0027.\u0027 [clang-diagnostic-error]",
+      "revId": "760c7ad437e209fe6bb1d7831376d4ccfc951401",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/269/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "02934ca8_6cd41b4a",
+        "filename": "tests/sequencer/midi/clock_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-06T16:57:54Z",
+      "side": 1,
+      "message": "cannot refer to type member \u0027shared\u0027 in \u0027(anonymous namespace)::test_sender\u0027 with \u0027.\u0027 [clang-diagnostic-error]",
+      "revId": "760c7ad437e209fe6bb1d7831376d4ccfc951401",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}

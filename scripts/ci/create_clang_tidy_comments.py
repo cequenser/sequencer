@@ -18,7 +18,7 @@ def extract_filename_dictionary_clang_tidy(clang_filename, newline_placeholder, 
         filename = line[len(base_path):firstColon]
         line_number = line[firstColon+1:line.find(':', firstColon+1)]
         message_start = line.find('error:')+7
-        message_end = max(line.find(base_path, message_start), message_start), line.find('Suppressed', message_start))
+        message_end = max(line.find(base_path, message_start), line.find('Suppressed', message_start))
         m = re.match(".*(" + newline_placeholder + "\s*[0-9]+\s*warnings\s+generated.).*", line[message_start:])
         if m:
             message_end = line.find(m.groups()[0], message_start)

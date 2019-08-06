@@ -17,9 +17,9 @@ namespace sequencer::chrono
 
         static constexpr bool is_steady = clock::is_steady;
 
-        time_point now()
+        time_point now() const noexcept
         {
-            return clock::now();
+            return time_point{clock::now().time_since_epoch()};
         }
     };
 

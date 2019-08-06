@@ -2,6 +2,7 @@
 
 #include <sequencer/beat_time_point.hpp>
 
+#include <cassert>
 #include <ostream>
 #include <string_view>
 
@@ -72,9 +73,10 @@ namespace sequencer
             if ( running_ )
             {
                 const auto tick = beat_duration( 1.0 / pulses_per_quarter_note_ );
-                while ( last_update_ + tick < t )
+                while ( last_update_ + tick < t + abs_accuracy_ )
                 {
                     last_update_ += tick;
+                    abs_accuracy_ += std::numeric_limits< beat_duration >::epsilon();
                     sender( midi::message_type::realtime_clock );
                 }
             }
@@ -90,6 +92,7 @@ namespace sequencer
             started_ = false;
             continue_ = false;
             last_update_ = start_time_;
+            abs_accuracy_ = std::numeric_limits< beat_duration >::epsilon();
         }
 
         void start() noexcept
@@ -102,10 +105,22 @@ namespace sequencer
             started_ = false;
         }
 
+        void set_pulses_per_quarter_note( int pulses_per_quarter_note ) noexcept
+        {
+            assert( pulses_per_quarter_note > 0 );
+            pulses_per_quarter_note_ = pulses_per_quarter_note;
+        }
+
+        int pulses_per_quarter_note() const noexcept
+        {
+            return pulses_per_quarter_note_;
+        }
+
     private:
         beat_time_point last_update_;
         beat_time_point start_time_;
-        double pulses_per_quarter_note_{24.0};
+        beat_duration abs_accuracy_ = std::numeric_limits< beat_duration >::epsilon();
+        int pulses_per_quarter_note_{24};
         bool started_ = false;
         bool running_ = false;
         bool continue_ = false;

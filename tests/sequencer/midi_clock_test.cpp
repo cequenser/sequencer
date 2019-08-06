@@ -113,6 +113,7 @@ SCENARIO( "start and stop messages", "[midi_clock]" )
     GIVEN( "A midi_clock that starts at -4.0 beats" )
     {
         midi_clock clock( beat_time_point( -4.0_beats ) );
+        CHECK( clock.pulses_per_quarter_note() == 24.0 );
         clock.start();
 
         WHEN( "update is called at 1.0 beat " )
@@ -127,7 +128,7 @@ SCENARIO( "start and stop messages", "[midi_clock]" )
                                       pulse_count++;
                                   }
                               } );
-                REQUIRE( pulse_count == 5 * 24 );
+                REQUIRE( pulse_count == 5 * clock.pulses_per_quarter_note() );
 
                 WHEN( "update is called at 1.0 beat after reset" )
                 {
@@ -143,7 +144,7 @@ SCENARIO( "start and stop messages", "[midi_clock]" )
                                               pulse_count++;
                                           }
                                       } );
-                        REQUIRE( pulse_count == 5 * 24 );
+                        REQUIRE( pulse_count == 5 * clock.pulses_per_quarter_note() );
                     }
                 }
             }
@@ -252,6 +253,28 @@ SCENARIO( "pulses", "[midi_clock]" )
                                       } );
                         REQUIRE( pulse_count == 24 );
                     }
+                }
+            }
+        }
+
+        WHEN( "pulses per quarter are changed to 36" )
+        {
+            REQUIRE( clock.pulses_per_quarter_note() == 24.0 );
+            clock.set_pulses_per_quarter_note( 36.0 );
+            REQUIRE( clock.pulses_per_quarter_note() == 36.0 );
+            WHEN( "update is called at 1.0 beat " )
+            {
+                THEN( "the clock sends 36 pulses" )
+                {
+                    int pulse_count = 0;
+                    clock.update( beat_time_point( 1.0_beats ),
+                                  [&pulse_count]( midi::message_type message ) {
+                                      if ( message == midi::message_type::realtime_clock )
+                                      {
+                                          pulse_count++;
+                                      }
+                                  } );
+                    REQUIRE( pulse_count == clock.pulses_per_quarter_note() );
                 }
             }
         }

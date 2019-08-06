@@ -18,12 +18,12 @@ namespace sequencer
         using rep = double;
         using seconds = std::chrono::duration< double, std::ratio< 1, 1 > >;
 
-        constexpr explicit beat_duration( rep beats ) : beats_( beats )
+        constexpr explicit beat_duration( rep beats ) noexcept : beats_( beats )
         {
         }
 
         template < typename Duration >
-        constexpr explicit beat_duration( Duration duration, beat_tempo tempo )
+        constexpr explicit beat_duration( Duration duration, beat_tempo tempo ) noexcept
             : beats_( std::chrono::duration_cast< minutes >( duration ).count() *
                       tempo.beats_per_minute() )
         {
@@ -74,7 +74,7 @@ namespace sequencer
         return os << duration.beats() << " beats";
     }
 
-    constexpr beat_duration operator"" _beats( long double value )
+    constexpr beat_duration operator"" _beats( long double value ) noexcept
     {
         return beat_duration( value );
     }

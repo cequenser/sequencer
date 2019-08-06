@@ -22,7 +22,7 @@ namespace sequencer
         rep beats_per_minute_;
     };
 
-    constexpr beat_tempo operator"" _bpm( long double value )
+    constexpr beat_tempo operator"" _bpm( long double value ) noexcept
     {
         return beat_tempo( value );
     }

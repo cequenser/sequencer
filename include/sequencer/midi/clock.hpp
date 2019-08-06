@@ -11,7 +11,7 @@ namespace sequencer::midi
     public:
         constexpr clock() = default;
 
-        constexpr explicit clock( beat_time_point start_time )
+        constexpr explicit clock( beat_time_point start_time ) noexcept
             : last_update_( start_time ), start_time_( start_time )
         {
         }
@@ -67,13 +67,13 @@ namespace sequencer::midi
             started_ = false;
         }
 
-        void set_pulses_per_quarter_note( int pulses_per_quarter_note ) noexcept
+        constexpr void set_pulses_per_quarter_note( int pulses_per_quarter_note ) noexcept
         {
             assert( pulses_per_quarter_note > 0 );
             pulses_per_quarter_note_ = pulses_per_quarter_note;
         }
 
-        int pulses_per_quarter_note() const noexcept
+        constexpr int pulses_per_quarter_note() const noexcept
         {
             return pulses_per_quarter_note_;
         }

@@ -1,0 +1,24 @@
+{
+  "comments": [
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/285/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "2c425efc_40479f76",
+        "filename": "include/sequencer/float_type.hpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-07T19:15:54Z",
+      "side": 1,
+      "message": "narrowing conversion from constant value 9223372036854775807 of type \u0027long\u0027 to \u0027double\u0027 [bugprone-narrowing-conversions,-warnings-as-errors]",
+      "revId": "c137516af4b2fcde52ad3138854d5782c0cdfe18",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}

@@ -5,6 +5,7 @@ add_executable(tests
     sequencer/beat_time_point_test.cpp
     sequencer/float_type_test.cpp
     sequencer/midi/clock_test.cpp
+    sequencer/midi/clock_base_test.cpp
     sequencer/chrono/chrono_matchers.hpp
     sequencer/chrono/sequencer_clock_test.cpp
     sequencer/chrono/testing_clock_test.cpp

@@ -14,10 +14,12 @@ namespace sequencer
     class beat_duration
     {
         using minutes = std::chrono::duration< double, std::ratio< 60, 1 > >;
-        static constexpr auto ticks_per_unit = 1024 * 1024 * 9;
 
     public:
+        static constexpr auto ticks_per_unit = 1024 * 1024 * 9;
+
         using rep = double;
+        using internal_rep = float_type< ticks_per_unit >;
         using seconds = std::chrono::duration< double, std::ratio< 1, 1 > >;
 
         constexpr explicit beat_duration( rep beats ) noexcept : duration_( beats )
@@ -68,7 +70,7 @@ namespace sequencer
         }
 
     private:
-        float_type< ticks_per_unit > duration_;
+        internal_rep duration_;
     };
 
     constexpr beat_duration operator+( beat_duration lhs, beat_duration rhs ) noexcept
@@ -78,7 +80,7 @@ namespace sequencer
 
     inline std::ostream& operator<<( std::ostream& os, beat_duration duration )
     {
-        return os << duration.beats() << " beats";
+        return os << "<" << duration.beats() << " beats>";
     }
 
     constexpr beat_duration operator"" _beats( long double value ) noexcept
@@ -100,6 +102,12 @@ namespace std
         static constexpr sequencer::beat_duration epsilon() noexcept
         {
             return sequencer::beat_duration{std::numeric_limits< double >::epsilon()};
+        }
+
+        static constexpr sequencer::beat_duration max() noexcept
+        {
+            return sequencer::beat_duration{
+                std::numeric_limits< sequencer::beat_duration::internal_rep >::max().to_double()};
         }
     };
 } // namespace std

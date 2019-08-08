@@ -7,9 +7,9 @@
 namespace sequencer
 {
     template < class T >
-    constexpr int constexpr_round( T a ) noexcept
+    constexpr std::int64_t constexpr_round( T a ) noexcept
     {
-        return ( a > 0 ) ? int( a + T{0.5} ) : int( a - T{0.5} );
+        return ( a > 0 ) ? std::int64_t( a + T{0.5} ) : std::int64_t( a - T{0.5} );
     }
 
     template < int ticks_per_unit >
@@ -17,6 +17,7 @@ namespace sequencer
     {
     public:
         using rep = double;
+        using internal_rep = std::int64_t;
         static constexpr rep eps = 1.0 / ticks_per_unit;
 
         constexpr explicit float_type( rep value = 0 ) noexcept
@@ -60,8 +61,18 @@ namespace sequencer
             return count_ <= other.count_;
         }
 
+        static constexpr float_type from_count( internal_rep count ) noexcept
+        {
+            return float_type( count * eps );
+        }
+
+        static constexpr float_type max() noexcept
+        {
+            return from_count( std::numeric_limits< internal_rep >::max() - ticks_per_unit );
+        }
+
     private:
-        std::int64_t count_;
+        internal_rep count_;
     };
 
     template < int ticks_per_unit >
@@ -77,3 +88,16 @@ namespace sequencer
         return os << value.to_double();
     }
 } // namespace sequencer
+
+namespace std
+{
+    template < int ticks_per_unit >
+    class numeric_limits< sequencer::float_type< ticks_per_unit > >
+    {
+    public:
+        static constexpr sequencer::float_type< ticks_per_unit > max() noexcept
+        {
+            return sequencer::float_type< ticks_per_unit >::max();
+        }
+    };
+} // namespace std

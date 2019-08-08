@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "8db1be68_0357faf8",
+        "filename": "include/sequencer/midi/clock.hpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1009832
+      },
+      "writtenOn": "2019-08-08T20:10:20Z",
+      "side": 1,
+      "message": "richtig. Ist aber noch nicht richtig schön.. Die clock_base könnte natürlich auch das korrigieren um 1 Tick übernehmen, aber ich bin mir noch nicht sicher ob das die richtige Lösung ist",
+      "parentUuid": "72acdb99_bf4535e8",
+      "range": {
+        "startLine": 81,
+        "startChar": 68,
+        "endLine": 81,
+        "endChar": 70
+      },
+      "revId": "ad6804b5ab99dadb87752e4a995812cad340b0a0",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "44759372_d4962165",
         "filename": "include/sequencer/midi/clock_base.hpp",
         "patchSetId": 6
@@ -36,6 +60,30 @@
       "writtenOn": "2019-08-08T19:16:47Z",
       "side": 1,
       "message": "brauchen wir das? ppqn im laufenden betrieb ändern?",
+      "range": {
+        "startLine": 68,
+        "startChar": 0,
+        "endLine": 73,
+        "endChar": 9
+      },
+      "revId": "ad6804b5ab99dadb87752e4a995812cad340b0a0",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "06c90c48_8e96f0f2",
+        "filename": "include/sequencer/midi/clock_base.hpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1009832
+      },
+      "writtenOn": "2019-08-08T20:10:20Z",
+      "side": 1,
+      "message": "nein, das hatte ich zum testen eingebaut, war aber natürlich Quatsch.",
+      "parentUuid": "44759372_d4962165",
       "range": {
         "startLine": 68,
         "startChar": 0,

@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "72acdb99_bf4535e8",
+        "filename": "include/sequencer/midi/clock.hpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1016785
+      },
+      "writtenOn": "2019-08-08T19:16:47Z",
+      "side": 1,
+      "message": "wäre gut wenn wir den default ppqn nur an einer Stelle definieren könnten",
+      "range": {
+        "startLine": 81,
+        "startChar": 68,
+        "endLine": 81,
+        "endChar": 70
+      },
+      "revId": "ad6804b5ab99dadb87752e4a995812cad340b0a0",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "44759372_d4962165",
+        "filename": "include/sequencer/midi/clock_base.hpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1016785
+      },
+      "writtenOn": "2019-08-08T19:16:47Z",
+      "side": 1,
+      "message": "brauchen wir das? ppqn im laufenden betrieb ändern?",
+      "range": {
+        "startLine": 68,
+        "startChar": 0,
+        "endLine": 73,
+        "endChar": 9
+      },
+      "revId": "ad6804b5ab99dadb87752e4a995812cad340b0a0",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}

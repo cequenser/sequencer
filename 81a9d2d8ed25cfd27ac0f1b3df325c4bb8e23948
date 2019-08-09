@@ -1,0 +1,24 @@
+{
+  "comments": [
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/295/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "7f8a851a_a99ab2d5",
+        "filename": "include/sequencer/midi/clock.hpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-09T10:53:55Z",
+      "side": 1,
+      "message": "invalid case style for private member \u0027clock_mutex\u0027 [readability-identifier-naming,-warnings-as-errors]",
+      "revId": "81a9d2d8ed25cfd27ac0f1b3df325c4bb8e23948",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}

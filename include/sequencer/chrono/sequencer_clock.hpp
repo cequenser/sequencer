@@ -3,6 +3,7 @@
 #include <sequencer/chrono/chrono_adapter.hpp>
 
 #include <chrono>
+#include <type_traits>
 
 namespace sequencer::chrono
 {
@@ -11,7 +12,7 @@ namespace sequencer::chrono
     class sequencer_clock
     {
     public:
-        using underlying_clock_type = UnderlyingClock;
+        using underlying_clock_type = std::decay_t< UnderlyingClock >;
         using underlying_time_point = typename underlying_clock_type::time_point;
         using rep = typename underlying_clock_type::rep;
         using period = typename underlying_clock_type::period;
@@ -26,11 +27,6 @@ namespace sequencer::chrono
             : underlying_clock_( underlying_clock )
         {
         }
-
-        sequencer_clock( const sequencer_clock& ) = delete;
-        sequencer_clock( sequencer_clock&& ) = delete;
-        sequencer_clock& operator=( const sequencer_clock& ) = delete;
-        sequencer_clock& operator=( sequencer_clock&& ) = delete;
 
         bool is_running() noexcept
         {
@@ -71,7 +67,7 @@ namespace sequencer::chrono
         }
 
     private:
-        const underlying_clock_type& underlying_clock_;
+        UnderlyingClock underlying_clock_;
         bool is_running_ = false;
         underlying_time_point start_time_ = underlying_time_point{duration::zero()};
         duration elapsed_ = duration::zero();

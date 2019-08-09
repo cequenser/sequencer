@@ -6,11 +6,11 @@
 
 SCENARIO( "creating a sequencer clock", "[sequencer_clock]" )
 {
+    using underlying_clock_type = sequencer::chrono::steady_testing_clock<>;
+    using sequencer_clock_type = sequencer::chrono::sequencer_clock< const underlying_clock_type& >;
+
     GIVEN( "a steady clock object" )
     {
-        using underlying_clock_type = sequencer::chrono::steady_testing_clock<>;
-        using sequencer_clock_type = sequencer::chrono::sequencer_clock< underlying_clock_type >;
-
         underlying_clock_type underlying_clock;
         underlying_clock.set(
             underlying_clock_type::time_point{underlying_clock_type::duration{42}} );
@@ -37,7 +37,7 @@ SCENARIO( "creating a sequencer clock", "[sequencer_clock]" )
 SCENARIO( "starting and stopping a sequencer clock", "[sequencer_clock]" )
 {
     using underlying_clock_type = sequencer::chrono::steady_testing_clock<>;
-    using sequencer_clock_type = sequencer::chrono::sequencer_clock< underlying_clock_type >;
+    using sequencer_clock_type = sequencer::chrono::sequencer_clock< const underlying_clock_type& >;
 
     GIVEN( "a sequencer clock object" )
     {
@@ -71,7 +71,7 @@ SCENARIO( "starting and stopping a sequencer clock", "[sequencer_clock]" )
 SCENARIO( "running a sequencer clock", "[sequencer_clock]" )
 {
     using underlying_clock_type = sequencer::chrono::steady_testing_clock<>;
-    using sequencer_clock_type = sequencer::chrono::sequencer_clock< underlying_clock_type >;
+    using sequencer_clock_type = sequencer::chrono::sequencer_clock< const underlying_clock_type& >;
 
     GIVEN( "a started sequencer clock" )
     {
@@ -203,7 +203,7 @@ SCENARIO( "running a sequencer clock", "[sequencer_clock]" )
 SCENARIO( "restarting a running sequencer clock has no effect", "[sequencer_clock]" )
 {
     using underlying_clock_type = sequencer::chrono::steady_testing_clock<>;
-    using sequencer_clock_type = sequencer::chrono::sequencer_clock< underlying_clock_type >;
+    using sequencer_clock_type = sequencer::chrono::sequencer_clock< const underlying_clock_type& >;
 
     GIVEN( "a started sequencer clock" )
     {

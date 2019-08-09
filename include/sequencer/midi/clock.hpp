@@ -114,8 +114,7 @@ namespace sequencer::midi
         }
 
         std::mutex clock_mutex_;
-        underlying_clock underlying_clock_;
-        sequencer_clock sequencer_clock_{underlying_clock_};
+        sequencer_clock sequencer_clock_{underlying_clock{}};
         clock_base clock_base_{beat_time_point{-clock_base{}.tick()}};
         Sender sender_;
         beat_duration max_duration_ = std::numeric_limits< beat_duration >::max();

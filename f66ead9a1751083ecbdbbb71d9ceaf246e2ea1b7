@@ -1,0 +1,24 @@
+{
+  "comments": [
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/301/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "8958aee1_d2c1f82f",
+        "filename": "tests/sequencer/midi/clock_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-09T12:54:05Z",
+      "side": 1,
+      "message": "narrowing conversion from \u0027unsigned long\u0027 to \u0027double\u0027 [bugprone-narrowing-conversions,-warnings-as-errors]",
+      "revId": "f66ead9a1751083ecbdbbb71d9ceaf246e2ea1b7",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}

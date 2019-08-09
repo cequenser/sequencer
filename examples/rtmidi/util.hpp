@@ -1,5 +1,6 @@
 #pragma once
 
+#include <fstream>
 #include <ios>
 #include <iostream>
 #include <memory>
@@ -16,6 +17,18 @@ namespace sequencer::rtmidi
                       << ", ";
         if ( nBytes > 0 )
             std::cout << "expired since last message = " << time_delta << "s" << std::endl;
+    }
+
+    void log_file_callback( double time_delta, std::vector< unsigned char >* message,
+                            void* /*userData*/ )
+    {
+        std::ofstream log_file( "midi_messages.log" );
+        const auto nBytes = message->size();
+        for ( decltype( message->size() ) i = 0; i < nBytes; ++i )
+            log_file << "Byte " << i << " = " << std::hex << static_cast< int >( message->at( i ) )
+                     << ", ";
+        if ( nBytes > 0 )
+            log_file << "expired since last message = " << time_delta << "s" << std::endl;
     }
 
     template < class RtMidi >

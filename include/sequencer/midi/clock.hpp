@@ -63,6 +63,11 @@ namespace sequencer::midi
             sequencer_clock_.stop();
         }
 
+        constexpr int pulses_per_quarter_note() const noexcept
+        {
+            return clock_base_.pulses_per_quarter_note();
+        }
+
         void run()
         {
             update_clock_base( 0.0_beats );

@@ -6,10 +6,10 @@
 #include <condition_variable>
 #include <functional>
 #include <future>
+#include <iostream>
 #include <memory>
 #include <mutex>
 #include <vector>
-
 SCENARIO( "A midi clock running for 1 beat", "[midi_clock]" )
 {
     using namespace sequencer;
@@ -44,9 +44,9 @@ SCENARIO( "A midi clock running for 1 beat", "[midi_clock]" )
 
 namespace
 {
-    struct test_sender
+    struct message_counting_sender
     {
-        test_sender( std::vector< sequencer::midi::message_type >& received_messages )
+        message_counting_sender( std::vector< sequencer::midi::message_type >& received_messages )
             : received_messages( received_messages )
         {
         }
@@ -90,28 +90,41 @@ namespace
 
         std::shared_ptr< shared_data > shared = std::make_shared< shared_data >();
     };
+
+    template < class Clock, class Dummy >
+    auto make_midi_clock_raii_shutdown( Clock& clock, Dummy& dummy )
+    {
+        const auto shut_down_clock_impl = [&clock]( const std::future< void >* ) {
+            clock.shut_down();
+        };
+        return std::unique_ptr< Dummy, decltype( shut_down_clock_impl ) >( &dummy,
+                                                                           shut_down_clock_impl );
+    }
 } // namespace
 
 SCENARIO( "Asynchronous control of midi-clock", "[midi_clock]" )
 {
     using namespace sequencer;
-    using sender_type = std::function< void( midi::message_type ) >;
 
-    GIVEN( "A midi clock running in a separate thread with a clock controller" )
+    GIVEN( "A midi clock running in a separate thread" )
     {
         auto controller_ready_promise = std::make_shared< std::promise< void > >();
         const auto controller_ready = controller_ready_promise->get_future();
 
         std::vector< midi::message_type > received_messages;
-        auto sender = test_sender{received_messages};
+        const auto sender = message_counting_sender{received_messages};
 
-        midi::clock< sender_type > midi_clock{sender};
+        midi::clock< decltype( sender ) > midi_clock{sender};
         const auto clock_done =
             std::async( std::launch::async,
                         [&midi_clock, controller_ready = std::move( controller_ready_promise )] {
                             controller_ready->set_value();
                             midi_clock.run();
                         } );
+        // make sure that midi_clock.shut_down() is called before the blocking destructor of
+        // clock_done is called
+        const auto midi_clock_raii_shutdown =
+            make_midi_clock_raii_shutdown( midi_clock, clock_done );
         controller_ready.wait();
 
         WHEN( "clock is started" )
@@ -205,8 +218,93 @@ SCENARIO( "Asynchronous control of midi-clock", "[midi_clock]" )
                 }
             }
         }
+    }
+}
 
-        midi_clock.shut_down();
-        clock_done.wait();
+namespace
+{
+
+    struct timestamping_sender
+    {
+        timestamping_sender(
+            std::vector< std::chrono::time_point< std::chrono::high_resolution_clock > >&
+                time_points,
+            std::promise< void >& stop_received )
+            : time_points( time_points ), stop_received( stop_received )
+        {
+        }
+
+        void operator()( sequencer::midi::message_type message ) const
+        {
+            if ( message == sequencer::midi::message_type::realtime_clock )
+            {
+                time_points.push_back( std::chrono::high_resolution_clock::now() );
+            }
+            if ( message == sequencer::midi::message_type::realtime_stop )
+            {
+                stop_received.set_value();
+            }
+        }
+
+        std::vector< std::chrono::time_point< std::chrono::high_resolution_clock > >& time_points;
+        std::promise< void >& stop_received;
+    };
+
+    double estimate_tempo(
+        const std::vector< std::chrono::time_point< std::chrono::high_resolution_clock > >&
+            time_points,
+        int pulses_per_quarter_note )
+    {
+        const auto time_span = std::chrono::duration_cast< sequencer::chrono::minutes >(
+                                   time_points.back() - time_points.front() )
+                                   .count();
+        return ( time_points.size() - 1 ) / ( pulses_per_quarter_note * time_span );
+    }
+} // namespace
+
+SCENARIO( "detect tempo of clock signals", "[midi_clock]" )
+{
+    using namespace sequencer;
+
+    GIVEN( "A midi clock running in a separate thread with a sender that stores timestamps" )
+    {
+        auto controller_ready_promise = std::make_shared< std::promise< void > >();
+        const auto controller_ready = controller_ready_promise->get_future();
+
+        std::vector< std::chrono::time_point< std::chrono::high_resolution_clock > > time_points;
+        std::promise< void > stop_received_promise;
+        const auto sender = timestamping_sender{time_points, stop_received_promise};
+        const auto stop_received = stop_received_promise.get_future();
+
+        midi::clock< decltype( sender ) > midi_clock{sender};
+        const auto clock_done =
+            std::async( std::launch::async,
+                        [&midi_clock, controller_ready = std::move( controller_ready_promise )] {
+                            controller_ready->set_value();
+                            midi_clock.run();
+                        } );
+        // make sure that midi_clock.shut_down() is called before the blocking destructor of
+        // clock_done is called
+        const auto midi_clock_raii_shutdown =
+            make_midi_clock_raii_shutdown( midi_clock, clock_done );
+        controller_ready.wait();
+
+        WHEN( "clock is started" )
+        {
+            midi_clock.start();
+            WHEN( "clock is stopped after running for at least 1 second" )
+            {
+                std::this_thread::sleep_for( std::chrono::seconds{1} );
+                midi_clock.stop();
+                stop_received.wait();
+                THEN( "the estimated tempo from the timestamps yields 120 bpm" )
+                {
+                    REQUIRE( time_points.size() > 1 );
+                    const auto estimated_tempo =
+                        estimate_tempo( time_points, midi_clock.pulses_per_quarter_note() );
+                    REQUIRE( estimated_tempo == Approx{120.0}.epsilon( 1e-3 ) );
+                }
+            }
+        }
     }
 }

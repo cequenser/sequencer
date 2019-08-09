@@ -9,19 +9,19 @@
 SCENARIO( "Convert beat_duration to std::chrono::duration<>", "[beat_duration]" )
 {
     using namespace sequencer;
-    using namespace std::chrono_literals;
+    using namespace std::literals::chrono_literals;
 
     using Catch::Matchers::WithinULP;
     using sequencer::chrono::within_abs;
 
     GIVEN( "A beat_duration of 16 beats" )
     {
-        constexpr beat_duration sixteen_beats{16.0};
-        static_assert( sixteen_beats.beats() == 16.0 );
+        constexpr auto sixteen_beats = 16.0_beats;
+        static_assert( sixteen_beats.to_double() == 16.0 );
 
         WHEN( "the duration is calculated at 174 beats per minute" )
         {
-            constexpr auto duration = sixteen_beats.duration( 174.0_bpm );
+            constexpr auto duration = sixteen_beats / 174.0_bpm;
             using duration_type = decltype( duration );
 
             THEN( "the result is represented as double" )
@@ -29,15 +29,9 @@ SCENARIO( "Convert beat_duration to std::chrono::duration<>", "[beat_duration]" 
                 STATIC_REQUIRE( std::is_same_v< duration_type::rep, double > );
             }
 
-            THEN( "the result is represented in seconds" )
-            {
-                STATIC_REQUIRE(
-                    std::is_same_v< duration_type::period, std::chrono::seconds::period > );
-            }
-
             THEN( "the duration is 5.51724 seconds" )
             {
-                REQUIRE_THAT( duration, within_abs( 5.51724s, 0.00001s ) );
+                REQUIRE_THAT( chrono::seconds{duration}, within_abs( 5.51724s, 0.00001s ) );
             }
         }
 
@@ -79,12 +73,12 @@ SCENARIO( "Convert beat_duration to std::chrono::duration<>", "[beat_duration]" 
 
     GIVEN( "A beat_duration of 30 beats" )
     {
-        constexpr beat_duration thirty_beats{30.0};
-        static_assert( thirty_beats.beats() == 30.0 );
+        constexpr auto thirty_beats = 30.0_beats;
+        static_assert( thirty_beats.to_double() == 30.0 );
 
         WHEN( "the duration is calculated at 120 beats per minute" )
         {
-            constexpr auto duration = thirty_beats.duration( 120.0_bpm );
+            constexpr auto duration = thirty_beats / 120.0_bpm;
 
             THEN( "the duration is 15.0 seconds" )
             {
@@ -97,56 +91,57 @@ SCENARIO( "Convert beat_duration to std::chrono::duration<>", "[beat_duration]" 
 SCENARIO( "Convert std::chrono::duration<> to beat_duration", "[beat_duration]" )
 {
     using namespace sequencer;
+    using namespace std::literals::chrono_literals;
 
     using Catch::Matchers::WithinULP;
     using sequencer::chrono::within_abs;
 
     GIVEN( "a duration of 3 seconds" )
     {
-        const auto three_seconds = std::chrono::seconds( 3 );
+        constexpr auto three_seconds = 3s;
 
         WHEN( "the tempo is 120.0 BPM" )
         {
-            beat_duration duration{three_seconds, 120.0_bpm};
+            constexpr auto beats = three_seconds * 120.0_bpm;
 
             THEN( "the beat_duration is (2 beats per second * 3 seconds) = 6.0 beats" )
             {
-                REQUIRE( duration.beats() == 6.0 );
+                REQUIRE( beats == beat_duration{6.0} );
             }
         }
 
         WHEN( "the tempo is 174.0 BPM" )
         {
-            beat_duration duration{three_seconds, 174.0_bpm};
+            constexpr auto beats = three_seconds * 174.0_bpm;
 
             THEN( "the beat_duration is (2.9 beats per second * 3 seconds) = 8.7 beats" )
             {
-                REQUIRE( duration == beat_duration{8.7} );
+                REQUIRE( beats == beat_duration{8.7} );
             }
         }
     }
 
     GIVEN( "a duration of a quarter second" )
     {
-        const auto quarter_second = std::chrono::milliseconds( 250 );
+        constexpr auto quarter_second = 250ms;
 
         WHEN( "the tempo is 120.0 BPM" )
         {
-            beat_duration duration{quarter_second, 120.0_bpm};
+            constexpr auto beats = quarter_second * 120.0_bpm;
 
             THEN( "the beat_duration is (2 beats per second * 0.25 seconds) = 0.5 beats" )
             {
-                REQUIRE_THAT( duration.beats(), WithinULP( 0.5, 1 ) );
+                REQUIRE_THAT( beats.to_double(), WithinULP( 0.5, 1 ) );
             }
         }
 
         WHEN( "the tempo is 174.0 BPM" )
         {
-            beat_duration duration{quarter_second, 174.0_bpm};
+            constexpr auto beats = quarter_second * 174.0_bpm;
 
             THEN( "the beat_duration is (2.9 beats per second * 0.25 seconds) = 0.725 beats" )
             {
-                REQUIRE( duration == beat_duration{0.725} );
+                REQUIRE( beats == beat_duration{0.725} );
             }
         }
     }

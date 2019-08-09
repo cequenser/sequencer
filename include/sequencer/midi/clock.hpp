@@ -104,7 +104,7 @@ namespace sequencer::midi
 
         constexpr beat_duration now_as_beat_duration() const noexcept
         {
-            return beat_duration( sequencer_clock_.now() - sequencer_clock::time_point{}, tempo_ );
+            return ( sequencer_clock_.now() - sequencer_clock::time_point{} ) * tempo_;
         }
 
         void update_clock_base( beat_duration dt )

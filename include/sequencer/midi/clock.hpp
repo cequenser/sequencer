@@ -5,6 +5,7 @@
 #include <sequencer/chrono/sequencer_clock.hpp>
 #include <sequencer/midi/clock_base.hpp>
 
+#include <memory>
 #include <mutex>
 
 namespace sequencer::midi
@@ -34,6 +35,11 @@ namespace sequencer::midi
         {
         }
 
+        ~clock()
+        {
+            shut_down();
+        }
+
         void start() noexcept
         {
             std::lock_guard lock{clock_mutex_};
@@ -61,6 +67,11 @@ namespace sequencer::midi
             shut_down_ = true;
             clock_base_.stop();
             sequencer_clock_.stop();
+        }
+
+        constexpr int pulses_per_quarter_note() const noexcept
+        {
+            return clock_base_.pulses_per_quarter_note();
         }
 
         void run()
@@ -111,4 +122,57 @@ namespace sequencer::midi
         beat_tempo tempo_ = 120.0_bpm;
         bool shut_down_{false};
     };
+
+    template < class Sender >
+    class clock_controller
+    {
+    public:
+        clock_controller() = default;
+
+        explicit clock_controller( std::weak_ptr< clock< Sender > > weak_clock ) noexcept
+            : weak_clock_( weak_clock )
+        {
+        }
+
+        void start_clock() noexcept
+        {
+            if ( auto shared_clock = weak_clock_.lock() )
+            {
+                shared_clock->start();
+            }
+        }
+
+        void stop_clock() noexcept
+        {
+            if ( auto shared_clock = weak_clock_.lock() )
+            {
+                shared_clock->stop();
+            }
+        }
+
+        void reset_clock() noexcept
+        {
+            if ( auto shared_clock = weak_clock_.lock() )
+            {
+                shared_clock->reset();
+            }
+        }
+
+        void shut_down_clock() noexcept
+        {
+            if ( auto shared_clock = weak_clock_.lock() )
+            {
+                shared_clock->shut_down();
+            }
+        }
+
+    private:
+        std::weak_ptr< clock< Sender > > weak_clock_;
+    };
+
+    template < class Sender >
+    clock_controller< Sender > get_controller( std::shared_ptr< clock< Sender > > clock )
+    {
+        return clock_controller< Sender >( clock );
+    }
 } // namespace sequencer::midi

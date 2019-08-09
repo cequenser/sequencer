@@ -1,0 +1,204 @@
+{
+  "comments": [
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/318/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "3ef03348_d0139e0e",
+        "filename": "include/sequencer/beat_duration.hpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-09T15:35:22Z",
+      "side": 1,
+      "message": "jenkins/workspace/psv/clang-tidy/include/sequencer/beat_duration.hpp:70:30: note: in call to \u0027duration_cast(quarter_second)\u0027",
+      "revId": "e8b094e6a11521f732e248a8930c107ac98791b5",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/318/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "eaf65beb_453593a1",
+        "filename": "include/sequencer/beat_duration.hpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-09T15:35:22Z",
+      "side": 1,
+      "message": "jenkins/workspace/psv/clang-tidy/include/sequencer/beat_duration.hpp:70:30: note: in call to \u0027duration_cast(three_seconds)\u0027",
+      "revId": "e8b094e6a11521f732e248a8930c107ac98791b5",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/318/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "e492ae53_734a8ff6",
+        "filename": "tests/sequencer/beat_duration_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-09T15:35:22Z",
+      "side": 1,
+      "message": "jenkins/workspace/psv/clang-tidy/tests/sequencer/beat_duration_test.cpp:105:50: note: in call to \u0027operator*(three_seconds, {1.200000e+02})\u0027",
+      "revId": "e8b094e6a11521f732e248a8930c107ac98791b5",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/318/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "74a7bb58_56a2e69c",
+        "filename": "tests/sequencer/beat_duration_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-09T15:35:22Z",
+      "side": 1,
+      "message": "constexpr variable \u0027beats\u0027 must be initialized by a constant expression [clang-diagnostic-error]",
+      "revId": "e8b094e6a11521f732e248a8930c107ac98791b5",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/318/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "b8de0078_b51f918c",
+        "filename": "tests/sequencer/beat_duration_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-09T15:35:22Z",
+      "side": 1,
+      "message": "constexpr variable \u0027beats\u0027 must be initialized by a constant expression [clang-diagnostic-error]",
+      "revId": "e8b094e6a11521f732e248a8930c107ac98791b5",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/318/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "32211ce5_0e0b27b0",
+        "filename": "tests/sequencer/beat_duration_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-09T15:35:22Z",
+      "side": 1,
+      "message": "jenkins/workspace/psv/clang-tidy/tests/sequencer/beat_duration_test.cpp:115:50: note: in call to \u0027operator*(three_seconds, {1.740000e+02})\u0027",
+      "revId": "e8b094e6a11521f732e248a8930c107ac98791b5",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/318/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "a22b896d_3445855c",
+        "filename": "tests/sequencer/beat_duration_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-09T15:35:22Z",
+      "side": 1,
+      "message": "jenkins/workspace/psv/clang-tidy/tests/sequencer/beat_duration_test.cpp:130:51: note: in call to \u0027operator*(quarter_second, {1.200000e+02})\u0027",
+      "revId": "e8b094e6a11521f732e248a8930c107ac98791b5",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/318/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "fc0568e6_16e54d8e",
+        "filename": "tests/sequencer/beat_duration_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-09T15:35:22Z",
+      "side": 1,
+      "message": "constexpr variable \u0027beats\u0027 must be initialized by a constant expression [clang-diagnostic-error]",
+      "revId": "e8b094e6a11521f732e248a8930c107ac98791b5",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/318/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "2fbabf12_3ee9d76a",
+        "filename": "tests/sequencer/beat_duration_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-09T15:35:22Z",
+      "side": 1,
+      "message": "constexpr variable \u0027beats\u0027 must be initialized by a constant expression [clang-diagnostic-error]",
+      "revId": "e8b094e6a11521f732e248a8930c107ac98791b5",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/318/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "2ea5142b_fb398233",
+        "filename": "tests/sequencer/beat_duration_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-09T15:35:22Z",
+      "side": 1,
+      "message": "jenkins/workspace/psv/clang-tidy/tests/sequencer/beat_duration_test.cpp:140:51: note: in call to \u0027operator*(quarter_second, {1.740000e+02})\u0027",
+      "revId": "e8b094e6a11521f732e248a8930c107ac98791b5",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}

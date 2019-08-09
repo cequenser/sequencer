@@ -2,6 +2,7 @@
 
 #include <chrono>
 #include <cstdint>
+#include <mutex>
 #include <ratio>
 #include <stdexcept>
 
@@ -21,11 +22,13 @@ namespace sequencer::chrono
 
         time_point now() const noexcept
         {
+            std::lock_guard lock{mutex_};
             return now_;
         }
 
         void set( time_point new_time ) noexcept( !is_steady )
         {
+            std::lock_guard lock{mutex_};
             if constexpr ( is_steady )
             {
                 if ( new_time < now_ )
@@ -38,6 +41,7 @@ namespace sequencer::chrono
         }
 
     private:
+        mutable std::mutex mutex_;
         time_point now_ = time_point{duration{0}};
     };
 

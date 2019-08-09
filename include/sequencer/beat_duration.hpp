@@ -86,7 +86,7 @@ namespace sequencer
 
     inline std::ostream& operator<<( std::ostream& os, beat_duration beats )
     {
-        return os << "<" << beats.to_double() << " beats>";
+        return os << beats.to_double() << " beats";
     }
 
     constexpr beat_duration operator"" _beats( long double value ) noexcept

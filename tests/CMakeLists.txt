@@ -12,6 +12,7 @@ add_executable(tests
     sequencer/chrono/testing_clock.hpp
 )
 target_include_directories(tests PRIVATE
+  ${PROJECT_SOURCE_DIR}/tests
   ${PROJECT_SOURCE_DIR}/external/include
   ${PROJECT_SOURCE_DIR}/external/repo/install/rtmidi/include)
 target_link_libraries(tests PRIVATE Sequencer::Sequencer RtMidi::rtmidi)

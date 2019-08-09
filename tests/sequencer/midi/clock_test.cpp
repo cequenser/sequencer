@@ -307,5 +307,29 @@ SCENARIO( "detect tempo of clock signals", "[midi_clock]" )
                 }
             }
         }
+
+        WHEN( "the tempo is changed to 137 bpm" )
+        {
+            const auto new_tempo = 137.0_bpm;
+            midi_clock.set_tempo( new_tempo );
+            WHEN( "clock is started" )
+            {
+                midi_clock.start();
+                WHEN( "clock is stopped after running for at least 1 second" )
+                {
+                    std::this_thread::sleep_for( std::chrono::seconds{1} );
+                    midi_clock.stop();
+                    stop_received.wait();
+                    THEN( "the estimated tempo from the timestamps yields 137 bpm" )
+                    {
+                        REQUIRE( time_points.size() > 1 );
+                        const auto estimated_tempo =
+                            estimate_tempo( time_points, midi_clock.pulses_per_quarter_note() );
+                        REQUIRE( estimated_tempo ==
+                                 Approx{new_tempo.to_double()}.epsilon( 1e-3 ) );
+                    }
+                }
+            }
+        }
     }
 }

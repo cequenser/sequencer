@@ -1,0 +1,24 @@
+{
+  "comments": [
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/317/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "bc974995_58c8b9cc",
+        "filename": "include/sequencer/midi/clock.hpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-09T15:33:52Z",
+      "side": 1,
+      "message": "\u0027sequencer/beat_tempo.hpp\u0027 file not found [clang-diagnostic-error]",
+      "revId": "376c4aae523c33974aafe6a87b7ce02f497a8dcc",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}

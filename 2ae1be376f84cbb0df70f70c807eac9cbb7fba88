@@ -1,0 +1,24 @@
+{
+  "comments": [
+    {
+      "robotId": "clang-format",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-format/268/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "0c0ec628_10e1aa5e",
+        "filename": "tests/sequencer/midi/clock_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-09T17:45:39Z",
+      "side": 1,
+      "message": "REQUIRE( time_points.size() \u003e 1 );\n                         const auto estimated_tempo \u003d\n                             estimate_tempo( time_points, midi_clock.pulses_per_quarter_note() );\n-                        REQUIRE( estimated_tempo \u003d\u003d\n-                                 Approx{new_tempo.to_double()}.epsilon( 1e-3 ) );\n+                        REQUIRE( estimated_tempo \u003d\u003d Approx{new_tempo.to_double()}.epsilon( 1e-3 ) );\n                     }\n                 }\n             }",
+      "revId": "2ae1be376f84cbb0df70f70c807eac9cbb7fba88",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}

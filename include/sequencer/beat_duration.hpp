@@ -1,7 +1,7 @@
 #pragma once
 
 #include <sequencer/beat_tempo.hpp>
-#include <sequencer/float_type.hpp>
+#include <sequencer/fixed_point_type.hpp>
 
 #include <cassert>
 #include <chrono>
@@ -19,7 +19,7 @@ namespace sequencer
         static constexpr auto ticks_per_unit = 1024 * 1024 * 9;
 
         using rep = double;
-        using internal_rep = float_type< ticks_per_unit >;
+        using internal_rep = fixed_point_type< ticks_per_unit >;
         using seconds = std::chrono::duration< double, std::ratio< 1, 1 > >;
 
         constexpr explicit beat_duration( rep beats ) noexcept : duration_( beats )

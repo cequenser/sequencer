@@ -70,6 +70,10 @@ namespace sequencer::midi
 
         void set_tempo( beats_per_minute tempo ) noexcept
         {
+            std::lock_guard lock(clock_mutex_);
+            offset_ = now_as_beat_duration();
+            sequencer_clock_.reset();
+            sequencer_clock_.start();
             tempo_ = tempo;
         }
 
@@ -101,9 +105,9 @@ namespace sequencer::midi
             sequencer_clock_.stop();
         }
 
-        constexpr beat_duration now_as_beat_duration() const noexcept
+        beat_duration now_as_beat_duration() const noexcept
         {
-            return ( sequencer_clock_.now() - typename SequencerClock::time_point{} ) * tempo_;
+            return offset_ + ( sequencer_clock_.now() - typename SequencerClock::time_point{} ) * tempo_;
         }
 
         void update_clock_base( beat_duration dt )
@@ -117,7 +121,8 @@ namespace sequencer::midi
         clock_base clock_base_{beat_time_point{-clock_base{}.tick()}};
         Sender sender_;
         beat_duration max_duration_ = std::numeric_limits< beat_duration >::max();
-        std::atomic< beats_per_minute > tempo_{120.0_bpm};
+        beat_duration offset_ = 0.0_beats;
+        beats_per_minute tempo_{120.0_bpm};
         bool shut_down_{false};
     };
 } // namespace sequencer::midi

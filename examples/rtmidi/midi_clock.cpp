@@ -1,5 +1,7 @@
 #include "util.hpp"
 
+#include <sequencer/chrono/chrono_adapter.hpp>
+#include <sequencer/chrono/sequencer_clock.hpp>
 #include <sequencer/midi/clock.hpp>
 
 #include <RtMidi.h>
@@ -8,12 +10,13 @@
 #include <memory>
 #include <vector>
 
-template < class Sender >
-using midi_clock = sequencer::midi::clock< Sender >;
 using sequencer::midi::message_type;
 using sequencer::rtmidi::cout_callback;
 using sequencer::rtmidi::make_midi_port;
 using sequencer::rtmidi::wait_for_press_enter;
+
+using underlying_clock_type = sequencer::chrono::clock_object_adapter< std::chrono::steady_clock >;
+using sequencer_clock_type = sequencer::chrono::sequencer_clock< underlying_clock_type >;
 
 int main()
 {
@@ -30,7 +33,8 @@ int main()
         const std::vector< unsigned char > messages = {static_cast< unsigned char >( message )};
         midiout->sendMessage( &messages );
     };
-    midi_clock< decltype( sender ) > midi_clock{sender};
+    sequencer_clock_type sequencer_clock{underlying_clock_type{}};
+    auto midi_clock = sequencer::midi::clock{sequencer_clock, sender};
 
     std::promise< void > controller_ready_promise;
     const auto controller_ready = controller_ready_promise.get_future();

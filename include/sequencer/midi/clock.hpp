@@ -2,7 +2,6 @@
 
 #include <sequencer/beat_duration.hpp>
 #include <sequencer/beats_per_minute.hpp>
-#include <sequencer/chrono/sequencer_clock.hpp>
 #include <sequencer/midi/clock_base.hpp>
 
 #include <atomic>
@@ -10,28 +9,28 @@
 
 namespace sequencer::midi
 {
-    template < class Sender >
+    template < class SequencerClock, class Sender >
     class clock
     {
-        using underlying_clock = chrono::clock_object_adapter< std::chrono::steady_clock >;
-        using sequencer_clock = chrono::sequencer_clock< underlying_clock >;
-
     public:
-        clock( const Sender& sender, beat_duration max_duration )
-            : sender_( sender ), max_duration_( max_duration )
+        clock( SequencerClock& sequencer_clock, const Sender& sender, beat_duration max_duration )
+            : sequencer_clock_( sequencer_clock ), sender_( sender ), max_duration_( max_duration )
         {
         }
 
-        clock( Sender&& sender, beat_duration max_duration )
-            : sender_( std::move( sender ) ), max_duration_( max_duration )
+        clock( SequencerClock& sequencer_clock, Sender&& sender, beat_duration max_duration )
+            : sequencer_clock_( sequencer_clock ), sender_( std::move( sender ) ),
+              max_duration_( max_duration )
         {
         }
 
-        explicit clock( const Sender& sender ) : sender_( sender )
+        explicit clock( SequencerClock& sequencer_clock, const Sender& sender )
+            : sequencer_clock_( sequencer_clock ), sender_( sender )
         {
         }
 
-        explicit clock( Sender&& sender ) : sender_( std::move( sender ) )
+        explicit clock( SequencerClock& sequencer_clock, Sender&& sender )
+            : sequencer_clock_( sequencer_clock ), sender_( std::move( sender ) )
         {
         }
 
@@ -104,7 +103,7 @@ namespace sequencer::midi
 
         constexpr beat_duration now_as_beat_duration() const noexcept
         {
-            return ( sequencer_clock_.now() - sequencer_clock::time_point{} ) * tempo_;
+            return ( sequencer_clock_.now() - typename SequencerClock::time_point{} ) * tempo_;
         }
 
         void update_clock_base( beat_duration dt )
@@ -114,7 +113,7 @@ namespace sequencer::midi
         }
 
         std::mutex clock_mutex_;
-        sequencer_clock sequencer_clock_{underlying_clock{}};
+        SequencerClock& sequencer_clock_;
         clock_base clock_base_{beat_time_point{-clock_base{}.tick()}};
         Sender sender_;
         beat_duration max_duration_ = std::numeric_limits< beat_duration >::max();

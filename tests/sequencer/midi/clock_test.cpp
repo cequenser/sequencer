@@ -1,3 +1,5 @@
+#include <sequencer/chrono/chrono_adapter.hpp>
+#include <sequencer/chrono/sequencer_clock.hpp>
 #include <sequencer/midi/clock.hpp>
 #include <sequencer/midi/message_type.hpp>
 
@@ -14,13 +16,17 @@ SCENARIO( "A midi clock running for 1 beat", "[midi_clock]" )
 {
     using namespace sequencer;
 
+    using underlying_clock_type = chrono::clock_object_adapter< std::chrono::steady_clock >;
+    using sequencer_clock_type = chrono::sequencer_clock< underlying_clock_type >;
+
     GIVEN( "a midi clock that runs for 1 beat and a test sender" )
     {
         std::vector< midi::message_type > received_messages;
         const auto sender = [&received_messages]( midi::message_type message ) {
             received_messages.push_back( message );
         };
-        auto clock = midi::clock{sender, 1.0_beats};
+        sequencer_clock_type sequencer_clock{underlying_clock_type{}};
+        auto clock = midi::clock{sequencer_clock, sender, 1.0_beats};
 
         WHEN( "the clock is started" )
         {
@@ -106,6 +112,9 @@ SCENARIO( "Asynchronous control of midi-clock", "[midi_clock]" )
 {
     using namespace sequencer;
 
+    using underlying_clock_type = chrono::clock_object_adapter< std::chrono::steady_clock >;
+    using sequencer_clock_type = chrono::sequencer_clock< underlying_clock_type >;
+
     GIVEN( "A midi clock running in a separate thread" )
     {
         auto controller_ready_promise = std::make_shared< std::promise< void > >();
@@ -114,7 +123,8 @@ SCENARIO( "Asynchronous control of midi-clock", "[midi_clock]" )
         std::vector< midi::message_type > received_messages;
         const auto sender = message_counting_sender{received_messages};
 
-        midi::clock< decltype( sender ) > midi_clock{sender};
+        sequencer_clock_type sequencer_clock{underlying_clock_type{}};
+        auto midi_clock = midi::clock{sequencer_clock, sender};
         const auto clock_done =
             std::async( std::launch::async,
                         [&midi_clock, controller_ready = std::move( controller_ready_promise )] {
@@ -267,6 +277,9 @@ SCENARIO( "detect tempo of clock signals", "[midi_clock]" )
 {
     using namespace sequencer;
 
+    using underlying_clock_type = chrono::clock_object_adapter< std::chrono::steady_clock >;
+    using sequencer_clock_type = chrono::sequencer_clock< underlying_clock_type >;
+
     GIVEN( "A midi clock running in a separate thread with a sender that stores timestamps" )
     {
         auto controller_ready_promise = std::make_shared< std::promise< void > >();
@@ -277,7 +290,8 @@ SCENARIO( "detect tempo of clock signals", "[midi_clock]" )
         const auto sender = timestamping_sender{time_points, stop_received_promise};
         const auto stop_received = stop_received_promise.get_future();
 
-        midi::clock< decltype( sender ) > midi_clock{sender};
+        sequencer_clock_type sequencer_clock{underlying_clock_type{}};
+        auto midi_clock = midi::clock{sequencer_clock, sender};
         const auto clock_done =
             std::async( std::launch::async,
                         [&midi_clock, controller_ready = std::move( controller_ready_promise )] {

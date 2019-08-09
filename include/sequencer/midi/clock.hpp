@@ -1,7 +1,7 @@
 
 #pragma once
 #include <sequencer/beat_duration.hpp>
-#include <sequencer/beat_tempo.hpp>
+#include <sequencer/beats_per_minute.hpp>
 #include <sequencer/chrono/sequencer_clock.hpp>
 #include <sequencer/midi/clock_base.hpp>
 
@@ -69,7 +69,7 @@ namespace sequencer::midi
             return clock_base_.pulses_per_quarter_note();
         }
 
-        void set_tempo( beat_tempo tempo ) noexcept
+        void set_tempo( beats_per_minute tempo ) noexcept
         {
             tempo_ = tempo;
         }
@@ -119,7 +119,7 @@ namespace sequencer::midi
         clock_base clock_base_{beat_time_point{-clock_base{}.tick()}};
         Sender sender_;
         beat_duration max_duration_ = std::numeric_limits< beat_duration >::max();
-        std::atomic< beat_tempo > tempo_{120.0_bpm};
+        std::atomic< beats_per_minute > tempo_{120.0_bpm};
         bool shut_down_{false};
     };
 } // namespace sequencer::midi

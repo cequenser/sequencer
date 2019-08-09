@@ -325,8 +325,7 @@ SCENARIO( "detect tempo of clock signals", "[midi_clock]" )
                         REQUIRE( time_points.size() > 1 );
                         const auto estimated_tempo =
                             estimate_tempo( time_points, midi_clock.pulses_per_quarter_note() );
-                        REQUIRE( estimated_tempo ==
-                                 Approx{new_tempo.beats_per_minute()}.epsilon( 1e-3 ) );
+                        REQUIRE( estimated_tempo == Approx{new_tempo.to_double()}.epsilon( 1e-3 ) );
                     }
                 }
             }

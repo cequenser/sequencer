@@ -1,6 +1,6 @@
 #pragma once
 
-#include <sequencer/beat_tempo.hpp>
+#include <sequencer/beats_per_minute.hpp>
 #include <sequencer/chrono/units.hpp>
 #include <sequencer/fixed_point_type.hpp>
 
@@ -25,9 +25,9 @@ namespace sequencer
         }
 
         template < typename Duration >
-        constexpr explicit beat_duration( Duration duration, beat_tempo tempo ) noexcept
+        constexpr explicit beat_duration( Duration duration, beats_per_minute tempo ) noexcept
             : duration_( std::chrono::duration_cast< chrono::minutes >( duration ).count() *
-                         tempo.beats_per_minute() )
+                         tempo.to_double() )
         {
         }
 
@@ -36,9 +36,9 @@ namespace sequencer
             return duration_.to_double();
         }
 
-        constexpr chrono::seconds duration( beat_tempo tempo ) const noexcept
+        constexpr chrono::seconds duration( beats_per_minute tempo ) const noexcept
         {
-            return chrono::minutes{beats() / tempo.beats_per_minute()};
+            return chrono::minutes{beats() / tempo.to_double()};
         }
 
         constexpr bool operator==( beat_duration other ) const noexcept

@@ -2,8 +2,8 @@ add_library(sequencer
     Test.h
     Test.cpp
     beat_duration.hpp
-    beat_tempo.hpp
     beat_time_point.hpp
+    beats_per_minute.hpp
     fixed_point_type.hpp
     midi/clock.hpp
     midi/clock_base.hpp

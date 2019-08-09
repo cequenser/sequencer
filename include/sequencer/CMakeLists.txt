@@ -2,13 +2,14 @@ add_library(sequencer
     Test.h
     Test.cpp
     beat_duration.hpp
-    beat_tempo.hpp
     beat_time_point.hpp
+    beats_per_minute.hpp
     fixed_point_type.hpp
     midi/clock_base.hpp
     midi/message_type.hpp
     chrono/chrono_adapter.hpp
     chrono/sequencer_clock.hpp
+    chrono/units.hpp
 )
 target_compile_features(sequencer PUBLIC cxx_std_17)
 set_target_properties(sequencer PROPERTIES CXX_EXTENSIONS OFF)

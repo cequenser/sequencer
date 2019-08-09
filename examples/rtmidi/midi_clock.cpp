@@ -10,8 +10,10 @@
 #include <memory>
 #include <vector>
 
+using sequencer::beats_per_minute;
 using sequencer::midi::message_type;
 using sequencer::rtmidi::cout_callback;
+using sequencer::rtmidi::log_file_callback;
 using sequencer::rtmidi::make_midi_port;
 using sequencer::rtmidi::wait_for_press_enter;
 
@@ -51,13 +53,19 @@ int main()
         std::cout << "Failed to create MIDI in" << std::endl;
         return 1;
     }
-    midiin->setCallback( &cout_callback );
+    midiin->setCallback( &log_file_callback );
     // Don't ignore sysex, timing, or active sensing messages.
     midiin->ignoreTypes( false, false, false );
 
     midi_clock.start();
 
-    wait_for_press_enter( "Reading MIDI input ... press <Enter> to quit." );
+    auto bpm = 120.0;
+    while ( bpm > 0 )
+    {
+        std::cout << "Enter a tempo in bpm or -1 to quit." << std::endl;
+        std::cin >> bpm;
+        midi_clock.set_tempo( beats_per_minute{bpm} );
+    }
     midi_clock.shut_down();
 
     clock_done.wait();

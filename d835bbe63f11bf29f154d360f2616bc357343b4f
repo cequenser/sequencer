@@ -1,0 +1,24 @@
+{
+  "comments": [
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/348/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "b7b59ed1_c8a6c763",
+        "filename": "examples/rtmidi/midi_clock.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-10T11:58:09Z",
+      "side": 1,
+      "message": "invalid case style for variable \u0027nBytes\u0027 [readability-identifier-naming,-warnings-as-errors]",
+      "revId": "d835bbe63f11bf29f154d360f2616bc357343b4f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}

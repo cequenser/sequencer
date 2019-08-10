@@ -29,7 +29,7 @@ SCENARIO( "A midi clock running for 1 beat", "[midi_clock]" )
             received_messages.push_back( message );
         };
         sequencer_clock_type sequencer_clock{underlying_clock_type{}};
-        auto clock = midi::clock{sequencer_clock, sender, 1.0_beats};
+        auto clock = midi::clock{sequencer_clock, sender, 0.99_beats};
 
         WHEN( "the clock is started" )
         {
@@ -39,7 +39,7 @@ SCENARIO( "A midi clock running for 1 beat", "[midi_clock]" )
             THEN( "one start message, 24 clock messages and one stop message are sent" )
             {
 
-                CHECK( received_messages.size() >= 2u + 24u );
+                CHECK( received_messages.size() == 2u + 24u );
                 CHECK( received_messages.front() == midi::message_type::realtime_start );
                 for ( auto i = 1u; i + 1u < received_messages.size(); ++i )
                 {
@@ -120,25 +120,24 @@ SCENARIO( "Asynchronous control of midi-clock", "[midi_clock]" )
 
     GIVEN( "A midi clock running in a separate thread" )
     {
-        auto controller_ready_promise = std::make_shared< std::promise< void > >();
-        const auto controller_ready = controller_ready_promise->get_future();
+        auto thread_ready_promise = std::make_shared< std::promise< void > >();
+        const auto thread_ready = thread_ready_promise->get_future();
 
         std::vector< midi::message_type > received_messages;
         const auto sender = message_counting_sender{received_messages};
 
         sequencer_clock_type sequencer_clock{underlying_clock_type{}};
         auto midi_clock = midi::clock{sequencer_clock, sender};
-        const auto clock_done =
-            std::async( std::launch::async,
-                        [&midi_clock, controller_ready = std::move( controller_ready_promise )] {
-                            controller_ready->set_value();
-                            midi_clock.run();
-                        } );
+        const auto clock_done = std::async(
+            std::launch::async, [&midi_clock, thread_ready = std::move( thread_ready_promise )] {
+                thread_ready->set_value();
+                midi_clock.run();
+            } );
         // make sure that midi_clock.shut_down() is called before the blocking destructor of
         // clock_done is called
         const auto midi_clock_raii_shutdown =
             make_midi_clock_raii_shutdown( midi_clock, clock_done );
-        controller_ready.wait();
+        thread_ready.wait();
 
         WHEN( "clock is started" )
         {
@@ -284,8 +283,8 @@ SCENARIO( "detect tempo of clock signals", "[midi_clock]" )
 
     GIVEN( "A midi clock running in a separate thread with a sender that stores timestamps" )
     {
-        auto controller_ready_promise = std::make_shared< std::promise< void > >();
-        const auto controller_ready = controller_ready_promise->get_future();
+        auto thread_ready_promise = std::make_shared< std::promise< void > >();
+        const auto thread_ready = thread_ready_promise->get_future();
 
         std::vector< std::chrono::time_point< std::chrono::high_resolution_clock > > time_points;
         std::promise< void > stop_received_promise;
@@ -294,17 +293,16 @@ SCENARIO( "detect tempo of clock signals", "[midi_clock]" )
 
         sequencer_clock_type sequencer_clock{underlying_clock_type{}};
         auto midi_clock = midi::clock{sequencer_clock, sender};
-        const auto clock_done =
-            std::async( std::launch::async,
-                        [&midi_clock, controller_ready = std::move( controller_ready_promise )] {
-                            controller_ready->set_value();
-                            midi_clock.run();
-                        } );
+        const auto clock_done = std::async(
+            std::launch::async, [&midi_clock, thread_ready = std::move( thread_ready_promise )] {
+                thread_ready->set_value();
+                midi_clock.run();
+            } );
         // make sure that midi_clock.shut_down() is called before the blocking destructor of
         // clock_done is called
         const auto midi_clock_raii_shutdown =
             make_midi_clock_raii_shutdown( midi_clock, clock_done );
-        controller_ready.wait();
+        thread_ready.wait();
 
         WHEN( "clock is started" )
         {
@@ -388,115 +386,133 @@ SCENARIO( "Change tempo of running clock", "[midi_clock]" )
         underlying_clock_type testing_clock;
         sequencer_clock_type sequencer_clock{testing_clock};
 
-        GIVEN("a started midi clock")
+        GIVEN( "a started midi clock" )
         {
-            auto controller_ready_promise = std::make_shared< std::promise< void > >();
-            const auto controller_ready = controller_ready_promise->get_future();
+            auto thread_ready_promise = std::make_shared< std::promise< void > >();
+            const auto thread_ready = thread_ready_promise->get_future();
 
             auto sender = clock_counting_sender{};
             auto midi_clock = midi::clock{sequencer_clock, sender};
             const auto clock_done =
                 std::async( std::launch::async,
-                            [&midi_clock, controller_ready = std::move( controller_ready_promise )] {
-                                controller_ready->set_value();
+                            [&midi_clock, thread_ready = std::move( thread_ready_promise )] {
+                                thread_ready->set_value();
                                 midi_clock.run();
                             } );
             // make sure that midi_clock.shut_down() is called before the blocking destructor of
             // clock_done is called
             const auto midi_clock_raii_shutdown =
                 make_midi_clock_raii_shutdown( midi_clock, clock_done );
-            controller_ready.wait();
+            thread_ready.wait();
 
-            WHEN("the clock is started and the sequencer clock sends time point 0")
+            WHEN( "the clock is started and the sequencer clock sends time point 0" )
             {
                 midi_clock.start();
 
-                THEN("the clock sends 1 clock message")
+                THEN( "the clock sends 1 clock message" )
                 {
-                    std::unique_lock lock(sender.shared->message_mutex);
-                    sender.shared->message_received.wait(lock, [&sender]{ return sender.shared->clock_message_count == 1; });
-                    CHECK(sender.shared->clock_message_count == 1);
+                    std::unique_lock lock( sender.shared->message_mutex );
+                    sender.shared->message_received.wait(
+                        lock, [&sender] { return sender.shared->clock_message_count == 1; } );
+                    CHECK( sender.shared->clock_message_count == 1 );
                 }
 
-                WHEN( "the sequencer clock is increased 20 times by 10 ms")
+                WHEN( "the sequencer clock is increased 20 times by 10 ms" )
                 {
-                    THEN("the clock sends 10 clock messages")
+                    THEN( "the clock sends 10 clock messages" )
                     {
                         {
-                            std::unique_lock lock(sender.shared->message_mutex);
-                            sender.shared->message_received.wait(lock, [&sender]{ return sender.shared->clock_message_count == 1; });
+                            std::unique_lock lock( sender.shared->message_mutex );
+                            sender.shared->message_received.wait( lock, [&sender] {
+                                return sender.shared->clock_message_count == 1;
+                            } );
                         }
                         auto time = testing_clock.now();
-                        for(auto i=0; i<20; ++i)
+                        for ( auto i = 0; i < 20; ++i )
                         {
                             time += 10ms;
-                            testing_clock.set(time);
-                            std::unique_lock lock(sender.shared->message_mutex);
-                            sender.shared->message_received.wait(lock, [i,&sender]
-                            {
-                                return sender.shared->clock_message_count == 1+int((i+1)/2.083333);
-                            });
+                            testing_clock.set( time );
+                            std::unique_lock lock( sender.shared->message_mutex );
+                            sender.shared->message_received.wait( lock, [i, &sender] {
+                                return sender.shared->clock_message_count ==
+                                       1 + int( ( i + 1 ) / 2.083333 );
+                            } );
                         }
 
-                        REQUIRE(sender.shared->clock_message_count == 10);
+                        REQUIRE( sender.shared->clock_message_count == 10 );
 
-                        WHEN("the tempo is changed to 60 bpm")
+                        WHEN( "the tempo is changed to 60 bpm" )
                         {
-                            midi_clock.set_tempo(60.0_bpm);
+                            midi_clock.set_tempo( 60.0_bpm );
 
-                            REQUIRE(sender.shared->clock_message_count == 10);
+                            REQUIRE( sender.shared->clock_message_count == 10 );
                             const auto previously_sent_messages = 10;
 
-                            WHEN( "the sequencer clock is increased 20 times by 10 ms")
+                            WHEN( "the sequencer clock is increased 20 times by 10 ms" )
                             {
-                                THEN("the clock sends 5 more clock messages")
+                                THEN( "the clock sends 5 more clock messages" )
                                 {
                                     auto time = underlying_clock_type::time_point{200ms};
-                                    for(auto i=0; i<20; ++i)
+                                    for ( auto i = 0; i < 20; ++i )
                                     {
                                         time += 10ms;
-                                        testing_clock.set(time);
-                                        std::unique_lock lock(sender.shared->message_mutex);
-                                        // (i+1)*10ms + 2.5*10ms remaining from running clock at 120 bpm
-                                        const auto new_messages = ((i+1+2)*midi_clock.pulses_per_quarter_note() + midi_clock.pulses_per_quarter_note()/2)/100;
-                                        const auto expected_messages = previously_sent_messages + new_messages;
-                                        sender.shared->message_received.wait(lock, [&sender,expected_messages]
-                                        {
-                                            return sender.shared->clock_message_count == expected_messages;
-                                        });
+                                        testing_clock.set( time );
+                                        std::unique_lock lock( sender.shared->message_mutex );
+                                        // (i+1)*10ms + 2.5*10ms remaining from running clock at 120
+                                        // bpm
+                                        const auto new_messages =
+                                            ( ( i + 1 + 2 ) * midi_clock.pulses_per_quarter_note() +
+                                              midi_clock.pulses_per_quarter_note() / 2 ) /
+                                            100;
+                                        const auto expected_messages =
+                                            previously_sent_messages + new_messages;
+                                        sender.shared->message_received.wait(
+                                            lock, [&sender, expected_messages] {
+                                                return sender.shared->clock_message_count ==
+                                                       expected_messages;
+                                            } );
                                     }
 
-                                    REQUIRE(sender.shared->clock_message_count == 15);
+                                    REQUIRE( sender.shared->clock_message_count == 15 );
 
-                                    WHEN("the tempo is changed to 30 bpm")
+                                    WHEN( "the tempo is changed to 30 bpm" )
                                     {
-                                        midi_clock.set_tempo(30.0_bpm);
+                                        midi_clock.set_tempo( 30.0_bpm );
 
-                                        REQUIRE(sender.shared->clock_message_count == 15);
+                                        REQUIRE( sender.shared->clock_message_count == 15 );
                                         const auto previously_sent_messages = 15;
 
-                                        WHEN( "the sequencer clock is increased 20 times by 10 ms")
+                                        WHEN( "the sequencer clock is increased 20 times by 10 ms" )
                                         {
-                                            THEN("the clock sends 5 more clock messages")
+                                            THEN( "the clock sends 5 more clock messages" )
                                             {
-                                                auto time = underlying_clock_type::time_point{400ms};
-                                                for(auto i=0; i<20; ++i)
+                                                auto time =
+                                                    underlying_clock_type::time_point{400ms};
+                                                for ( auto i = 0; i < 20; ++i )
                                                 {
                                                     time += 10ms;
-                                                    testing_clock.set(time);
+                                                    testing_clock.set( time );
                                                     const auto now = sequencer_clock.now();
-                                                    using time_point = std::remove_const_t<decltype(now)>;
-                                                    std::unique_lock lock(sender.shared->message_mutex);
-                                                    const auto expected_messages = (i<4) ? previously_sent_messages :
-                                                                                           (i<13) ? (previously_sent_messages+1) :
-                                                                                                    (previously_sent_messages+2);
-                                                    sender.shared->message_received.wait(lock, [&sender,expected_messages]
-                                                    {
-                                                        return sender.shared->clock_message_count == expected_messages;
-                                                    });
+                                                    using time_point =
+                                                        std::remove_const_t< decltype( now ) >;
+                                                    std::unique_lock lock(
+                                                        sender.shared->message_mutex );
+                                                    const auto expected_messages =
+                                                        ( i < 4 )
+                                                            ? previously_sent_messages
+                                                            : ( i < 13 )
+                                                                  ? ( previously_sent_messages + 1 )
+                                                                  : ( previously_sent_messages +
+                                                                      2 );
+                                                    sender.shared->message_received.wait(
+                                                        lock, [&sender, expected_messages] {
+                                                            return sender.shared
+                                                                       ->clock_message_count ==
+                                                                   expected_messages;
+                                                        } );
                                                 }
 
-                                                REQUIRE(sender.shared->clock_message_count == 17);
+                                                REQUIRE( sender.shared->clock_message_count == 17 );
                                             }
                                         }
                                     }

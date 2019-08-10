@@ -4,6 +4,7 @@
 
 #include <catch2/catch.hpp>
 
+#include <sstream>
 #include <type_traits>
 
 SCENARIO( "Convert beat_duration to std::chrono::duration<>", "[beat_duration]" )
@@ -67,6 +68,17 @@ SCENARIO( "Convert beat_duration to std::chrono::duration<>", "[beat_duration]" 
             THEN( "thirteen beats is not smaller than thirteen beats" )
             {
                 STATIC_REQUIRE_FALSE( thirteen_beats < thirteen_beats );
+            }
+        }
+
+        WHEN( "written to stream" )
+        {
+            std::stringstream stream;
+            stream << sixteen_beats;
+
+            THEN( "writes '16 beats'" )
+            {
+                REQUIRE( stream.str() == "16 beats" );
             }
         }
     }

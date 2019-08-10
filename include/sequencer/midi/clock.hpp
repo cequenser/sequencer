@@ -12,13 +12,13 @@ namespace sequencer::midi
     class clock
     {
     public:
-        explicit clock( SequencerClock& sequencer_clock, const Sender& sender )
+        explicit clock( const SequencerClock& sequencer_clock, const Sender& sender )
             : sequencer_clock_( sequencer_clock ), sender_( sender )
         {
         }
 
-        explicit clock( SequencerClock& sequencer_clock, Sender&& sender )
-            : sequencer_clock_( sequencer_clock ), sender_( std::move( sender ) )
+        explicit clock( SequencerClock&& sequencer_clock, Sender&& sender )
+            : sequencer_clock_( std::move( sequencer_clock ) ), sender_( std::move( sender ) )
         {
         }
 
@@ -93,7 +93,7 @@ namespace sequencer::midi
         }
 
         std::mutex clock_mutex_;
-        SequencerClock& sequencer_clock_;
+        SequencerClock sequencer_clock_;
         clock_base clock_base_{beat_time_point{-clock_base{}.tick()}};
         Sender sender_;
         beat_duration offset_ = 0.0_beats;

@@ -20,6 +20,16 @@ using sequencer::rtmidi::wait_for_press_enter;
 using underlying_clock_type = sequencer::chrono::clock_object_adapter< std::chrono::steady_clock >;
 using sequencer_clock_type = sequencer::chrono::sequencer_clock< underlying_clock_type >;
 
+auto make_clock( const std::unique_ptr< RtMidiOut >& midiout )
+{
+    auto sender = [&midiout]( message_type message ) {
+        const std::vector< unsigned char > messages = {static_cast< unsigned char >( message )};
+        midiout->sendMessage( &messages );
+    };
+    sequencer_clock_type sequencer_clock{underlying_clock_type{}};
+    return sequencer::midi::clock{std::move( sequencer_clock ), std::move( sender )};
+}
+
 int main()
 {
     const auto midiout = make_midi_port< RtMidiOut >();
@@ -31,12 +41,7 @@ int main()
 
     wait_for_press_enter( "Connect MIDI signals then press <Enter> to continue." );
 
-    const auto sender = [&midiout]( message_type message ) {
-        const std::vector< unsigned char > messages = {static_cast< unsigned char >( message )};
-        midiout->sendMessage( &messages );
-    };
-    sequencer_clock_type sequencer_clock{underlying_clock_type{}};
-    auto midi_clock = sequencer::midi::clock{sequencer_clock, sender};
+    auto midi_clock = make_clock( midiout );
 
     std::promise< void > controller_ready_promise;
     const auto controller_ready = controller_ready_promise.get_future();

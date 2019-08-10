@@ -2,6 +2,7 @@
 
 #include <catch2/catch.hpp>
 
+#include <sstream>
 #include <type_traits>
 
 SCENARIO( "Test fixed_point_type<3>", "[fixed_point_type]" )
@@ -66,6 +67,17 @@ SCENARIO( "Test fixed_point_type<3>", "[fixed_point_type]" )
             THEN( "less-or-equal comparison returns false" )
             {
                 STATIC_REQUIRE_FALSE( thirty <= other );
+            }
+        }
+
+        WHEN( "written to stream" )
+        {
+            std::stringstream stream;
+            stream << thirty;
+
+            THEN( "writes '30'" )
+            {
+                REQUIRE( stream.str() == "30" );
             }
         }
     }

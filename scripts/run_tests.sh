@@ -4,11 +4,14 @@ COMPILER=$1
 GCOV=$2
 
 cd /home/shared
+
+scripts/ci/install_dependencies_linux.sh ${COMPILER}
+
 mkdir -p build
 cd build
 rm -rf *
 
-cmake .. -DBuildTests=ON -DCMAKE_CXX_COMPILER=${COMPILER}
+cmake .. -DBuildTests=ON -DBuildExamples=ON -DCMAKE_CXX_COMPILER=${COMPILER}
 if [ -n "${GCOV}" ]; then
     cmake . -DCoverage=ON
 fi

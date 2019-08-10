@@ -13,7 +13,6 @@
 using sequencer::beats_per_minute;
 using sequencer::midi::message_type;
 using sequencer::rtmidi::cout_callback;
-using sequencer::rtmidi::log_file_callback;
 using sequencer::rtmidi::make_midi_port;
 using sequencer::rtmidi::wait_for_press_enter;
 
@@ -28,6 +27,18 @@ auto make_clock( const std::unique_ptr< RtMidiOut >& midiout )
     };
     sequencer_clock_type sequencer_clock{underlying_clock_type{}};
     return sequencer::midi::clock{std::move( sequencer_clock ), std::move( sender )};
+}
+
+void log_file_callback( double time_delta, std::vector< unsigned char >* message,
+                        void* /*userData*/ )
+{
+    static std::ofstream log_file( "midi_messages.log" );
+    const auto nBytes = message->size();
+    for ( decltype( message->size() ) i = 0; i < nBytes; ++i )
+        log_file << "Byte " << i << " = " << std::hex << static_cast< int >( message->at( i ) )
+                 << ", ";
+    if ( nBytes > 0 )
+        log_file << "expired since last message = " << time_delta << "s" << std::endl;
 }
 
 int main()

@@ -6,6 +6,7 @@ add_executable(tests
     sequencer/fixed_point_type_test.cpp
     sequencer/midi/clock_test.cpp
     sequencer/midi/clock_base_test.cpp
+    sequencer/midi/message_type_test.cpp
     sequencer/chrono/chrono_matchers.hpp
     sequencer/chrono/sequencer_clock_test.cpp
     sequencer/chrono/testing_clock_test.cpp

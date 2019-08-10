@@ -28,7 +28,7 @@ SCENARIO( "A midi clock running for 1 beat", "[midi_clock]" )
             received_messages.push_back( message );
         };
         sequencer_clock_type sequencer_clock{underlying_clock_type{}};
-        auto clock = midi::clock{sequencer_clock, sender, 1.0_beats};
+        auto clock = midi::clock{sequencer_clock, sender, 0.99_beats};
 
         WHEN( "the clock is started" )
         {
@@ -38,7 +38,7 @@ SCENARIO( "A midi clock running for 1 beat", "[midi_clock]" )
             THEN( "one start message, 24 clock messages and one stop message are sent" )
             {
 
-                CHECK( received_messages.size() >= 2u + 24u );
+                CHECK( received_messages.size() == 2u + 24u );
                 CHECK( received_messages.front() == midi::message_type::realtime_start );
                 for ( auto i = 1u; i + 1u < received_messages.size(); ++i )
                 {
@@ -119,25 +119,24 @@ SCENARIO( "Asynchronous control of midi-clock", "[midi_clock]" )
 
     GIVEN( "A midi clock running in a separate thread" )
     {
-        auto controller_ready_promise = std::make_shared< std::promise< void > >();
-        const auto controller_ready = controller_ready_promise->get_future();
+        auto thread_ready_promise = std::make_shared< std::promise< void > >();
+        const auto thread_ready = thread_ready_promise->get_future();
 
         std::vector< midi::message_type > received_messages;
         const auto sender = message_counting_sender{received_messages};
 
         sequencer_clock_type sequencer_clock{underlying_clock_type{}};
         auto midi_clock = midi::clock{sequencer_clock, sender};
-        const auto clock_done =
-            std::async( std::launch::async,
-                        [&midi_clock, controller_ready = std::move( controller_ready_promise )] {
-                            controller_ready->set_value();
-                            midi_clock.run();
-                        } );
+        const auto clock_done = std::async(
+            std::launch::async, [&midi_clock, thread_ready = std::move( thread_ready_promise )] {
+                thread_ready->set_value();
+                midi_clock.run();
+            } );
         // make sure that midi_clock.shut_down() is called before the blocking destructor of
         // clock_done is called
         const auto midi_clock_raii_shutdown =
             make_midi_clock_raii_shutdown( midi_clock, clock_done );
-        controller_ready.wait();
+        thread_ready.wait();
 
         WHEN( "clock is started" )
         {
@@ -283,8 +282,8 @@ SCENARIO( "detect tempo of clock signals", "[midi_clock]" )
 
     GIVEN( "A midi clock running in a separate thread with a sender that stores timestamps" )
     {
-        auto controller_ready_promise = std::make_shared< std::promise< void > >();
-        const auto controller_ready = controller_ready_promise->get_future();
+        auto thread_ready_promise = std::make_shared< std::promise< void > >();
+        const auto thread_ready = thread_ready_promise->get_future();
 
         std::vector< std::chrono::time_point< std::chrono::high_resolution_clock > > time_points;
         std::promise< void > stop_received_promise;
@@ -293,17 +292,16 @@ SCENARIO( "detect tempo of clock signals", "[midi_clock]" )
 
         sequencer_clock_type sequencer_clock{underlying_clock_type{}};
         auto midi_clock = midi::clock{sequencer_clock, sender};
-        const auto clock_done =
-            std::async( std::launch::async,
-                        [&midi_clock, controller_ready = std::move( controller_ready_promise )] {
-                            controller_ready->set_value();
-                            midi_clock.run();
-                        } );
+        const auto clock_done = std::async(
+            std::launch::async, [&midi_clock, thread_ready = std::move( thread_ready_promise )] {
+                thread_ready->set_value();
+                midi_clock.run();
+            } );
         // make sure that midi_clock.shut_down() is called before the blocking destructor of
         // clock_done is called
         const auto midi_clock_raii_shutdown =
             make_midi_clock_raii_shutdown( midi_clock, clock_done );
-        controller_ready.wait();
+        thread_ready.wait();
 
         WHEN( "clock is started" )
         {
@@ -389,22 +387,22 @@ SCENARIO( "Change tempo of running clock", "[midi_clock]" )
 
         GIVEN( "a started midi clock" )
         {
-            auto controller_ready_promise = std::make_shared< std::promise< void > >();
-            const auto controller_ready = controller_ready_promise->get_future();
+            auto thread_ready_promise = std::make_shared< std::promise< void > >();
+            const auto thread_ready = thread_ready_promise->get_future();
 
             auto sender = clock_counting_sender{};
             auto midi_clock = midi::clock{sequencer_clock, sender};
-            const auto clock_done = std::async(
-                std::launch::async,
-                [&midi_clock, controller_ready = std::move( controller_ready_promise )] {
-                    controller_ready->set_value();
-                    midi_clock.run();
-                } );
+            const auto clock_done =
+                std::async( std::launch::async,
+                            [&midi_clock, thread_ready = std::move( thread_ready_promise )] {
+                                thread_ready->set_value();
+                                midi_clock.run();
+                            } );
             // make sure that midi_clock.shut_down() is called before the blocking destructor of
             // clock_done is called
             const auto midi_clock_raii_shutdown =
                 make_midi_clock_raii_shutdown( midi_clock, clock_done );
-            controller_ready.wait();
+            thread_ready.wait();
 
             WHEN( "the clock is started and the sequencer clock sends time point 0" )
             {

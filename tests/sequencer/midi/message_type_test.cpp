@@ -2,6 +2,8 @@
 
 #include <catch2/catch.hpp>
 
+#include <sstream>
+
 SCENARIO( "message types to string", "[message_type]" )
 {
     using namespace sequencer;
@@ -14,6 +16,13 @@ SCENARIO( "message types to string", "[message_type]" )
         {
             REQUIRE( to_string( message ) == "clock" );
         }
+
+        THEN( "stream operator writes 'clock'" )
+        {
+            std::stringstream stream;
+            stream << message;
+            REQUIRE( stream.str() == "clock" );
+        }
     }
 
     GIVEN( "message_type::realtime_start" )
@@ -23,6 +32,13 @@ SCENARIO( "message types to string", "[message_type]" )
         THEN( "to_string returns 'start'" )
         {
             REQUIRE( to_string( message ) == "start" );
+        }
+
+        THEN( "stream operator writes 'start'" )
+        {
+            std::stringstream stream;
+            stream << message;
+            REQUIRE( stream.str() == "start" );
         }
     }
 
@@ -34,6 +50,13 @@ SCENARIO( "message types to string", "[message_type]" )
         {
             REQUIRE( to_string( message ) == "stop" );
         }
+
+        THEN( "stream operator writes 'stop'" )
+        {
+            std::stringstream stream;
+            stream << message;
+            REQUIRE( stream.str() == "stop" );
+        }
     }
 
     GIVEN( "message_type::realtime_continue" )
@@ -44,6 +67,13 @@ SCENARIO( "message types to string", "[message_type]" )
         {
             REQUIRE( to_string( message ) == "continue" );
         }
+
+        THEN( "stream operator writes 'continue'" )
+        {
+            std::stringstream stream;
+            stream << message;
+            REQUIRE( stream.str() == "continue" );
+        }
     }
 
     GIVEN( "message_type::invalid" )
@@ -53,6 +83,13 @@ SCENARIO( "message types to string", "[message_type]" )
         THEN( "to_string returns 'invalid'" )
         {
             REQUIRE( to_string( message ) == "invalid" );
+        }
+
+        THEN( "stream operator writes 'invalid'" )
+        {
+            std::stringstream stream;
+            stream << message;
+            REQUIRE( stream.str() == "invalid" );
         }
     }
 }

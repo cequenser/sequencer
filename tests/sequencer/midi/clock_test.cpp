@@ -14,44 +14,18 @@
 #include <mutex>
 #include <vector>
 
-SCENARIO( "A midi clock running for 1 beat", "[midi_clock]" )
-{
-    using namespace sequencer;
-
-    using underlying_clock_type = chrono::clock_object_adapter< std::chrono::steady_clock >;
-    using sequencer_clock_type = chrono::sequencer_clock< underlying_clock_type >;
-
-    GIVEN( "a midi clock that runs for 1 beat and a test sender" )
-    {
-        std::vector< midi::message_type > received_messages;
-        const auto sender = [&received_messages]( midi::message_type message ) {
-            received_messages.push_back( message );
-        };
-        sequencer_clock_type sequencer_clock{underlying_clock_type{}};
-        auto clock = midi::clock{sequencer_clock, sender, 0.99_beats};
-
-        WHEN( "the clock is started" )
-        {
-            clock.start();
-            clock.run();
-
-            THEN( "one start message, 24 clock messages and one stop message are sent" )
-            {
-
-                CHECK( received_messages.size() == 2u + 24u );
-                CHECK( received_messages.front() == midi::message_type::realtime_start );
-                for ( auto i = 1u; i + 1u < received_messages.size(); ++i )
-                {
-                    CHECK( received_messages[ i ] == midi::message_type::realtime_clock );
-                }
-                CHECK( received_messages.back() == midi::message_type::realtime_stop );
-            }
-        }
-    }
-}
-
 namespace
 {
+    template < class Clock, class Dummy >
+    auto make_midi_clock_raii_shutdown( Clock& clock, Dummy& dummy )
+    {
+        const auto shut_down_clock_impl = [&clock]( const std::future< void >* ) {
+            clock.shut_down();
+        };
+        return std::unique_ptr< Dummy, decltype( shut_down_clock_impl ) >( &dummy,
+                                                                           shut_down_clock_impl );
+    }
+
     struct message_counting_sender
     {
         message_counting_sender( std::vector< sequencer::midi::message_type >& received_messages )
@@ -83,6 +57,13 @@ namespace
                 lock.unlock();
                 shared->message_received.notify_one();
             }
+            if ( message == sequencer::midi::message_type::realtime_clock )
+            {
+                std::unique_lock lock( shared->message_mutex );
+                ++shared->clock_message_count;
+                lock.unlock();
+                shared->message_received.notify_one();
+            }
         }
 
         std::vector< sequencer::midi::message_type >& received_messages;
@@ -94,21 +75,90 @@ namespace
             int start_message_count{0};
             int continue_message_count{0};
             int stop_message_count{0};
+            int clock_message_count{0};
         };
 
         std::shared_ptr< shared_data > shared = std::make_shared< shared_data >();
     };
-
-    template < class Clock, class Dummy >
-    auto make_midi_clock_raii_shutdown( Clock& clock, Dummy& dummy )
-    {
-        const auto shut_down_clock_impl = [&clock]( const std::future< void >* ) {
-            clock.shut_down();
-        };
-        return std::unique_ptr< Dummy, decltype( shut_down_clock_impl ) >( &dummy,
-                                                                           shut_down_clock_impl );
-    }
 } // namespace
+
+SCENARIO( "A midi clock running for 1 beat", "[midi_clock]" )
+{
+    using namespace sequencer;
+    using namespace std::literals::chrono_literals;
+
+    using underlying_clock_type = chrono::steady_testing_clock<>;
+    using sequencer_clock_type = chrono::sequencer_clock< const underlying_clock_type& >;
+
+    GIVEN( "a midi clock that runs for 1 beat and a test sender" )
+    {
+        auto thread_ready_promise = std::make_shared< std::promise< void > >();
+        const auto thread_ready = thread_ready_promise->get_future();
+        auto stop_message_received_promise = std::promise< void >();
+        const auto stop_message_received = stop_message_received_promise.get_future();
+        auto start_message_received_promise = std::promise< void >();
+        const auto start_message_received = start_message_received_promise.get_future();
+
+        std::vector< midi::message_type > received_messages;
+        const auto sender = message_counting_sender{received_messages};
+
+        underlying_clock_type testing_clock;
+        sequencer_clock_type sequencer_clock{testing_clock};
+
+        auto midi_clock = midi::clock{sequencer_clock, sender};
+        const auto clock_done = std::async(
+            std::launch::async, [&midi_clock, thread_ready = std::move( thread_ready_promise )] {
+                thread_ready->set_value();
+                midi_clock.run();
+            } );
+        // make sure that midi_clock.shut_down() is called before the blocking destructor of
+        // clock_done is called
+        const auto midi_clock_raii_shutdown =
+            make_midi_clock_raii_shutdown( midi_clock, clock_done );
+        thread_ready.wait();
+
+        WHEN( "the clock is started and runs for 490ms = 0.98 beats @ 120 bpm" )
+        {
+            midi_clock.start();
+            {
+                std::unique_lock lock( sender.shared->message_mutex );
+                sender.shared->message_received.wait(
+                    lock, [&sender] { return sender.shared->start_message_count == 1; } );
+            }
+
+            auto time = testing_clock.now();
+            for ( auto i = 0u; i < 49; ++i )
+            {
+                time += 10ms;
+                testing_clock.set( time );
+            }
+            {
+                std::unique_lock lock( sender.shared->message_mutex );
+                sender.shared->message_received.wait(
+                    lock, [&sender] { return sender.shared->clock_message_count == 24; } );
+            }
+
+            midi_clock.stop();
+            {
+                std::unique_lock lock( sender.shared->message_mutex );
+                sender.shared->message_received.wait(
+                    lock, [&sender] { return sender.shared->stop_message_count == 1; } );
+            }
+
+            THEN( "one start message, 24 clock messages and one stop message are sent" )
+            {
+
+                CHECK( received_messages.size() == 2u + 24u );
+                CHECK( received_messages.front() == midi::message_type::realtime_start );
+                for ( auto i = 1u; i + 1u < received_messages.size(); ++i )
+                {
+                    CHECK( received_messages[ i ] == midi::message_type::realtime_clock );
+                }
+                CHECK( received_messages.back() == midi::message_type::realtime_stop );
+            }
+        }
+    }
+}
 
 SCENARIO( "Asynchronous control of midi-clock", "[midi_clock]" )
 {
@@ -346,32 +396,6 @@ SCENARIO( "detect tempo of clock signals", "[midi_clock]" )
     }
 }
 
-namespace
-{
-    struct clock_counting_sender
-    {
-        void operator()( sequencer::midi::message_type message ) const
-        {
-            if ( message == sequencer::midi::message_type::realtime_clock )
-            {
-                auto lock = std::unique_lock{shared->message_mutex};
-                ++shared->clock_message_count;
-                lock.unlock();
-                shared->message_received.notify_one();
-            }
-        }
-
-        struct shared_data
-        {
-            std::mutex message_mutex;
-            std::condition_variable message_received;
-            int clock_message_count{0};
-        };
-
-        std::shared_ptr< shared_data > shared = std::make_shared< shared_data >();
-    };
-} // namespace
-
 SCENARIO( "Change tempo of running clock", "[midi_clock]" )
 {
     using namespace sequencer;
@@ -390,7 +414,8 @@ SCENARIO( "Change tempo of running clock", "[midi_clock]" )
             auto thread_ready_promise = std::make_shared< std::promise< void > >();
             const auto thread_ready = thread_ready_promise->get_future();
 
-            auto sender = clock_counting_sender{};
+            std::vector< midi::message_type > received_messages;
+            auto sender = message_counting_sender{received_messages};
             auto midi_clock = midi::clock{sequencer_clock, sender};
             const auto clock_done =
                 std::async( std::launch::async,

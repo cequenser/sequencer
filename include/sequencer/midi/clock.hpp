@@ -4,7 +4,6 @@
 #include <sequencer/beats_per_minute.hpp>
 #include <sequencer/midi/clock_base.hpp>
 
-#include <atomic>
 #include <mutex>
 
 namespace sequencer::midi
@@ -13,17 +12,6 @@ namespace sequencer::midi
     class clock
     {
     public:
-        clock( SequencerClock& sequencer_clock, const Sender& sender, beat_duration max_duration )
-            : sequencer_clock_( sequencer_clock ), sender_( sender ), max_duration_( max_duration )
-        {
-        }
-
-        clock( SequencerClock& sequencer_clock, Sender&& sender, beat_duration max_duration )
-            : sequencer_clock_( sequencer_clock ), sender_( std::move( sender ) ),
-              max_duration_( max_duration )
-        {
-        }
-
         explicit clock( SequencerClock& sequencer_clock, const Sender& sender )
             : sequencer_clock_( sequencer_clock ), sender_( sender )
         {
@@ -83,13 +71,7 @@ namespace sequencer::midi
             while ( true )
             {
                 std::lock_guard lock{clock_mutex_};
-                const auto dt = now_as_beat_duration();
-                if ( max_duration_ < dt )
-                {
-                    unlocked_shut_down();
-                }
-                update_clock_base( dt );
-
+                update_clock_base( now_as_beat_duration() );
                 if ( shut_down_ )
                 {
                     return;
@@ -98,13 +80,6 @@ namespace sequencer::midi
         }
 
     private:
-        void unlocked_shut_down() noexcept
-        {
-            shut_down_ = true;
-            clock_base_.stop();
-            sequencer_clock_.stop();
-        }
-
         beat_duration now_as_beat_duration() const noexcept
         {
             return offset_ +
@@ -121,7 +96,6 @@ namespace sequencer::midi
         SequencerClock& sequencer_clock_;
         clock_base clock_base_{beat_time_point{-clock_base{}.tick()}};
         Sender sender_;
-        beat_duration max_duration_ = std::numeric_limits< beat_duration >::max();
         beat_duration offset_ = 0.0_beats;
         beats_per_minute tempo_{120.0_bpm};
         bool shut_down_{false};

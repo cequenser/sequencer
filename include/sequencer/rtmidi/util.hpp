@@ -10,7 +10,7 @@
 #include <fstream>
 #include <ios>
 #include <iostream>
-#include <memory>
+#include <optional>
 #include <vector>
 
 namespace sequencer::rtmidi
@@ -27,17 +27,17 @@ namespace sequencer::rtmidi
     }
 
     template < class RtMidi >
-    std::unique_ptr< RtMidi > make_midi_port( int port_number = 0 )
+    std::optional< RtMidi > make_midi_port( int port_number = 0 )
     {
-        auto rtmidi = std::make_unique< RtMidi >();
-        if ( rtmidi->getPortCount() < port_number + 1 )
+        auto rtmidi = RtMidi();
+        if ( rtmidi.getPortCount() < port_number + 1 )
         {
             std::cout << "Requested port: " << port_number
-                      << ". Available number of ports: " << rtmidi->getPortCount() << std::endl;
-            return nullptr;
+                      << ". Available number of ports: " << rtmidi.getPortCount() << std::endl;
+            return {};
         }
-        std::cout << "Opening port " << rtmidi->getPortName( port_number ) << std::endl;
-        rtmidi->openPort( 0 );
+        std::cout << "Opening port " << rtmidi.getPortName( port_number ) << std::endl;
+        rtmidi.openPort( 0 );
         return rtmidi;
     }
 
@@ -81,14 +81,14 @@ namespace sequencer::rtmidi
         RtMidiOut& rtmidiout_;
     };
 
-    inline auto make_clock( const std::unique_ptr< RtMidiOut >& midiout )
+    inline auto make_clock( RtMidiOut& midiout )
     {
         using underlying_clock_type =
             sequencer::chrono::clock_object_adapter< std::chrono::steady_clock >;
         using sequencer_clock_type = sequencer::chrono::sequencer_clock< underlying_clock_type >;
 
         sequencer_clock_type sequencer_clock{underlying_clock_type{}};
-        auto sender = realtime_message_sender{*midiout};
+        auto sender = realtime_message_sender{midiout};
         return sequencer::midi::clock{std::move( sequencer_clock ), std::move( sender )};
     }
 

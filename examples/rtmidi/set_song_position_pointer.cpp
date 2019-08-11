@@ -5,7 +5,6 @@
 #include <algorithm>
 #include <chrono>
 #include <future>
-#include <memory>
 #include <thread>
 #include <vector>
 
@@ -38,7 +37,7 @@ int main()
         } );
     receiver_is_ready.wait();
 
-    const auto midiout = make_midi_port< RtMidiOut >();
+    auto midiout = make_midi_port< RtMidiOut >();
     if ( !midiout )
     {
         return 1;

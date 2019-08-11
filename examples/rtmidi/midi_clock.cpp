@@ -7,7 +7,6 @@
 #include <chrono>
 #include <fstream>
 #include <future>
-#include <memory>
 #include <vector>
 
 using sequencer::beats_per_minute;
@@ -32,7 +31,7 @@ void log_file_callback( double time_delta, std::vector< unsigned char >* message
 
 int main()
 {
-    const auto midiout = make_midi_port< RtMidiOut >();
+    auto midiout = make_midi_port< RtMidiOut >();
     if ( !midiout )
     {
         std::cout << "Failed to create MIDI out" << std::endl;
@@ -51,7 +50,7 @@ int main()
 
     wait_for_press_enter( "Connect MIDI signals then press <Enter> to continue." );
 
-    auto midi_clock = make_clock( midiout );
+    auto midi_clock = make_clock( *midiout );
     const auto clock_done = start_clock_in_thread( midi_clock );
 
     midi_clock.start();

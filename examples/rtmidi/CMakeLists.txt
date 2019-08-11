@@ -6,5 +6,6 @@ function(add_example name)
       ${PROJECT_SOURCE_DIR}/external/repo/install/rtmidi/include)
 endfunction()
 
-add_example(send_midi_message)
 add_example(midi_clock)
+add_example(send_midi_message)
+add_example(set_song_position_pointer)

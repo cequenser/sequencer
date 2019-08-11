@@ -50,6 +50,16 @@ int main()
         return 1;
     }
 
+    auto midiin = make_midi_port< RtMidiIn >();
+    if ( !midiin )
+    {
+        std::cout << "Failed to create MIDI in" << std::endl;
+        return 1;
+    }
+    midiin->setCallback( &log_file_callback );
+    // Don't ignore sysex, timing, or active sensing messages.
+    midiin->ignoreTypes( false, false, false );
+
     wait_for_press_enter( "Connect MIDI signals then press <Enter> to continue." );
 
     auto midi_clock = make_clock( midiout );
@@ -60,18 +70,11 @@ int main()
         std::async( std::launch::async, [&midi_clock, &controller_ready_promise] {
             controller_ready_promise.set_value();
             midi_clock.run();
+            // wait a bit to make sure that the last messages where sent
+            // TODO solve without sleep if possible
+            std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
         } );
     controller_ready.wait();
-
-    auto midiin = make_midi_port< RtMidiIn >();
-    if ( !midiin )
-    {
-        std::cout << "Failed to create MIDI in" << std::endl;
-        return 1;
-    }
-    midiin->setCallback( &log_file_callback );
-    // Don't ignore sysex, timing, or active sensing messages.
-    midiin->ignoreTypes( false, false, false );
 
     midi_clock.start();
 
@@ -83,7 +86,6 @@ int main()
         midi_clock.set_tempo( beats_per_minute{bpm} );
     }
     midi_clock.shut_down();
-
     clock_done.wait();
 
     return 0;

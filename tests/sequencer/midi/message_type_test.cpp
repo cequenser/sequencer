@@ -2,9 +2,9 @@
 
 #include <catch2/catch.hpp>
 
+#include <iostream>
 #include <sstream>
-
-SCENARIO( "message types to string", "[message_type]" )
+SCENARIO( "real time messages to string", "[message_type]" )
 {
     using namespace sequencer;
 
@@ -90,6 +90,165 @@ SCENARIO( "message types to string", "[message_type]" )
             std::stringstream stream;
             stream << message;
             REQUIRE( stream.str() == "invalid" );
+        }
+    }
+}
+
+SCENARIO( "uint16_to_two_bytes", "[message_type]" )
+{
+    using namespace sequencer::midi::system::common;
+
+    GIVEN( "a value of 64" )
+    {
+        constexpr auto value = std::uint16_t{64};
+
+        WHEN( "converted to two bytes" )
+        {
+            constexpr auto two_bytes = uint16_to_two_bytes( value );
+
+            THEN( "first byte is 0x40" )
+            {
+                STATIC_REQUIRE( two_bytes.first == std::byte{0x40} );
+            }
+
+            THEN( "second byte is 0x00" )
+            {
+                STATIC_REQUIRE( two_bytes.second == std::byte{0x00} );
+            }
+        }
+    }
+
+    GIVEN( "a value of 200" )
+    {
+        constexpr auto value = std::uint16_t{200};
+
+        WHEN( "converted to two bytes" )
+        {
+            constexpr auto two_bytes = uint16_to_two_bytes( value );
+
+            THEN( "first byte is 0x48" )
+            {
+                STATIC_REQUIRE( two_bytes.first == std::byte{0x48} );
+            }
+
+            THEN( "second byte is 0x01" )
+            {
+                STATIC_REQUIRE( two_bytes.second == std::byte{0x01} );
+            }
+        }
+    }
+}
+
+SCENARIO( "two_bytes_to_uint16", "[message_type]" )
+{
+    using namespace sequencer::midi::system::common;
+
+    GIVEN( "two bytes with values 0x40 and 0x00" )
+    {
+        constexpr auto two_bytes = std::make_pair( std::byte{0x40}, std::byte{0x00} );
+
+        WHEN( "converted to std::uint16_t" )
+        {
+            constexpr auto value = two_bytes_to_uint16( two_bytes );
+
+            THEN( "value is 64" )
+            {
+                STATIC_REQUIRE( value == 64 );
+            }
+        }
+    }
+
+    GIVEN( "two bytes with values 0x48 and 0x01" )
+    {
+        constexpr auto two_bytes = std::make_pair( std::byte{0x48}, std::byte{0x01} );
+
+        WHEN( "converted to std::uint16_t" )
+        {
+            constexpr auto value = two_bytes_to_uint16( two_bytes );
+
+            THEN( "value is 200" )
+            {
+                STATIC_REQUIRE( value == 200 );
+            }
+        }
+    }
+}
+
+SCENARIO( "system common messages to string", "[message_type]" )
+{
+    using namespace sequencer;
+
+    GIVEN( "song pointer position message with value 3" )
+    {
+        const auto message = midi::system::common::song_position_pointer( 3 );
+
+        THEN( "message contains 3 bytes" )
+        {
+            REQUIRE( message.size() == 3 );
+        }
+
+        THEN( "first byte is 0xF2" )
+        {
+            REQUIRE( message[ 0 ] == std::byte{0xF2} );
+        }
+
+        THEN( "second byte is 0x03" )
+        {
+            REQUIRE( message[ 1 ] == std::byte{0x03} );
+        }
+
+        THEN( "third byte is 0x00" )
+        {
+            REQUIRE( message[ 2 ] == std::byte{0x00} );
+        }
+
+        THEN( "to_string returns 'spp@3'" )
+        {
+            REQUIRE( to_string( message ) == "spp@3" );
+        }
+
+        THEN( "stream operator writes 'spp@3'" )
+        {
+            std::stringstream stream;
+            stream << message;
+            REQUIRE( stream.str() == "spp@3" );
+        }
+    }
+
+    GIVEN( "song pointer position message with value 200" )
+    {
+        const auto message = midi::system::common::song_position_pointer( 200 );
+
+        THEN( "message contains 3 bytes" )
+        {
+            REQUIRE( message.size() == 3 );
+        }
+
+        THEN( "first byte is 0xF2" )
+        {
+            REQUIRE( message[ 0 ] == std::byte{0xF2} );
+        }
+
+        THEN( "second byte is 0x48" )
+        {
+            REQUIRE( message[ 1 ] == std::byte{0x48} );
+        }
+
+        THEN( "third byte is 0x01" )
+        {
+            REQUIRE( message[ 2 ] == std::byte{0x01} );
+        }
+
+        THEN( "to_string returns 'spp@200'" )
+        {
+            REQUIRE( to_string( message ) == "spp@200" );
+        }
+
+        THEN( "stream operator writes 'spp@200'" )
+        {
+            std::stringstream stream;
+            stream << message;
+            REQUIRE( stream.str() == "spp@200" );
         }
     }
 }

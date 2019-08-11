@@ -174,7 +174,105 @@ SCENARIO( "two_bytes_to_uint16", "[message_type]" )
     }
 }
 
-SCENARIO( "system common messages to string", "[message_type]" )
+SCENARIO( "system::common::message_type to string conversion", "[message_type]" )
+{
+    using namespace sequencer;
+
+    GIVEN( "song pointer position message with value 3" )
+    {
+        const auto message = midi::system::common::song_position_pointer( 3 );
+
+        THEN( "to_string returns 'spp@3'" )
+        {
+            REQUIRE( to_string( message ) == "spp@3" );
+        }
+    }
+
+    GIVEN( "song pointer position message with value 200" )
+    {
+        const auto message = midi::system::common::song_position_pointer( 200 );
+
+        THEN( "to_string returns 'spp@200'" )
+        {
+            REQUIRE( to_string( message ) == "spp@200" );
+        }
+    }
+
+    GIVEN( "empty message" )
+    {
+        const auto message = midi::system::common::message_type{{}};
+
+        THEN( "to_string returns 'invalid'" )
+        {
+            REQUIRE( to_string( message ) == "invalid" );
+        }
+    }
+
+    GIVEN( "invalid message" )
+    {
+        const auto message = midi::system::common::message_type{{std::byte{0x00}}};
+
+        THEN( "to_string returns 'invalid'" )
+        {
+            REQUIRE( to_string( message ) == "invalid" );
+        }
+    }
+}
+
+SCENARIO( "system::common::message_type streaming", "[message_type]" )
+{
+    using namespace sequencer;
+
+    GIVEN( "song pointer position message with value 3" )
+    {
+        const auto message = midi::system::common::song_position_pointer( 3 );
+
+        THEN( "stream operator writes 'spp@3'" )
+        {
+            std::stringstream stream;
+            stream << message;
+            REQUIRE( stream.str() == "spp@3" );
+        }
+    }
+
+    GIVEN( "song pointer position message with value 200" )
+    {
+        const auto message = midi::system::common::song_position_pointer( 200 );
+
+        THEN( "stream operator writes 'spp@200'" )
+        {
+            std::stringstream stream;
+            stream << message;
+            REQUIRE( stream.str() == "spp@200" );
+        }
+    }
+
+    GIVEN( "empty message" )
+    {
+        const auto message = midi::system::common::message_type{{}};
+
+        THEN( "stream operator writes 'invalid'" )
+        {
+            std::stringstream stream;
+            stream << message;
+            REQUIRE( stream.str() == "invalid" );
+        }
+    }
+
+    GIVEN( "invalid message" )
+    {
+        const auto message = midi::system::common::message_type{{std::byte{0x00}}};
+
+        THEN( "to_string returns 'invalid'" )
+        {
+            std::stringstream stream;
+            stream << message;
+            REQUIRE( stream.str() == "invalid" );
+        }
+    }
+}
+
+SCENARIO( "song position messages", "[message_type]" )
 {
     using namespace sequencer;
 
@@ -201,18 +299,6 @@ SCENARIO( "system common messages to string", "[message_type]" )
         {
             REQUIRE( message[ 2 ] == std::byte{0x00} );
         }
-
-        THEN( "to_string returns 'spp@3'" )
-        {
-            REQUIRE( to_string( message ) == "spp@3" );
-        }
-
-        THEN( "stream operator writes 'spp@3'" )
-        {
-            std::stringstream stream;
-            stream << message;
-            REQUIRE( stream.str() == "spp@3" );
-        }
     }
 
     GIVEN( "song pointer position message with value 200" )
@@ -237,18 +323,6 @@ SCENARIO( "system common messages to string", "[message_type]" )
         THEN( "third byte is 0x01" )
         {
             REQUIRE( message[ 2 ] == std::byte{0x01} );
-        }
-
-        THEN( "to_string returns 'spp@200'" )
-        {
-            REQUIRE( to_string( message ) == "spp@200" );
-        }
-
-        THEN( "stream operator writes 'spp@200'" )
-        {
-            std::stringstream stream;
-            stream << message;
-            REQUIRE( stream.str() == "spp@200" );
         }
     }
 }

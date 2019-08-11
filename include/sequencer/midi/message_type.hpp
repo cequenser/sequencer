@@ -60,6 +60,11 @@ namespace sequencer::midi
             {
             }
 
+            bool empty() const noexcept
+            {
+                return message_.empty();
+            }
+
             const std::byte& front() const
             {
                 return message_.front();
@@ -131,6 +136,11 @@ namespace sequencer::midi
 
         inline std::string to_string( const message_type& message )
         {
+            if ( message.empty() )
+            {
+                return invalid_string;
+            }
+
             switch ( static_cast< unsigned char >( message.front() ) )
             {
             // song position pointer

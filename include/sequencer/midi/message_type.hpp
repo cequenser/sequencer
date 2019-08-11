@@ -95,6 +95,12 @@ namespace sequencer::midi
                 return message_;
             }
 
+            const unsigned char* data() const
+            {
+                return static_cast< const unsigned char* >(
+                    static_cast< const void* >( message_.data() ) );
+            }
+
         private:
             std::vector< std::byte > message_;
         };
@@ -125,10 +131,10 @@ namespace sequencer::midi
 
         inline std::string to_string( const message_type& message )
         {
-            switch ( message.front() )
+            switch ( static_cast< unsigned char >( message.front() ) )
             {
             // song position pointer
-            case std::byte{0xF2}:
+            case 0xF2:
                 assert( message.size() == 3 );
                 return std::string( "spp@" ).append(
                     std::to_string( two_bytes_to_uint16( {message[ 1 ], message[ 2 ]} ) ) );

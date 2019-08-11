@@ -1,6 +1,5 @@
-#include "util.hpp"
-
 #include <sequencer/midi/message_type.hpp>
+#include <sequencer/rtmidi/util.hpp>
 
 #include <RtMidi.h>
 #include <algorithm>
@@ -46,12 +45,7 @@ int main()
     }
 
     const auto sender = [&midiout]( sequencer::midi::system::common::message_type msg ) {
-        using std::begin;
-        using std::end;
-        std::vector< unsigned char > message;
-        transform( begin( msg ), end( msg ), back_inserter( message ),
-                   []( std::byte b ) { return static_cast< unsigned char >( b ); } );
-        midiout->sendMessage( &message );
+        midiout->sendMessage( msg.data(), msg.size() );
     };
 
     while ( true )

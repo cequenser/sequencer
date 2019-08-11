@@ -11,6 +11,7 @@ add_library(sequencer
     chrono/chrono_adapter.hpp
     chrono/sequencer_clock.hpp
     chrono/units.hpp
+    rtmidi/util.hpp
 )
 target_compile_features(sequencer PUBLIC cxx_std_17)
 set_target_properties(sequencer PROPERTIES CXX_EXTENSIONS OFF)

@@ -24,10 +24,10 @@ namespace sequencer::rtmidi
     }
 
     template < class RtMidi >
-    std::optional< RtMidi > make_midi_port( int port_number = 0 )
+    std::optional< RtMidi > make_midi_port( unsigned port_number = 0 )
     {
         auto rtmidi = RtMidi();
-        if ( rtmidi.getPortCount() < port_number + 1 )
+        if ( rtmidi.getPortCount() < port_number + 1u )
         {
             std::cout << "Requested port: " << port_number
                       << ". Available number of ports: " << rtmidi.getPortCount() << std::endl;

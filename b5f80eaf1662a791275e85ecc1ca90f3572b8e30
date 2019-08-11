@@ -1,0 +1,24 @@
+{
+  "comments": [
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/371/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "695a25fd_803b6663",
+        "filename": "examples/rtmidi/midi_clock.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-11T20:51:07Z",
+      "side": 1,
+      "message": "implicit instantiation of undefined template \u0027std::basic_ofstream\u003cchar, std::char_traits\u003cchar\u003e \u003e\u0027 [clang-diagnostic-error]",
+      "revId": "b5f80eaf1662a791275e85ecc1ca90f3572b8e30",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}

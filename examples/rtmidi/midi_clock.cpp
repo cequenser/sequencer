@@ -1,33 +1,22 @@
-#include "util.hpp"
-
 #include <sequencer/chrono/chrono_adapter.hpp>
 #include <sequencer/chrono/sequencer_clock.hpp>
 #include <sequencer/midi/clock.hpp>
+#include <sequencer/rtmidi/util.hpp>
 
 #include <RtMidi.h>
 #include <chrono>
+#include <fstream>
 #include <future>
 #include <memory>
 #include <vector>
 
 using sequencer::beats_per_minute;
 using sequencer::midi::message_type;
+using sequencer::midi::start_clock_in_thread;
 using sequencer::rtmidi::cout_callback;
+using sequencer::rtmidi::make_clock;
 using sequencer::rtmidi::make_midi_port;
 using sequencer::rtmidi::wait_for_press_enter;
-
-using underlying_clock_type = sequencer::chrono::clock_object_adapter< std::chrono::steady_clock >;
-using sequencer_clock_type = sequencer::chrono::sequencer_clock< underlying_clock_type >;
-
-auto make_clock( const std::unique_ptr< RtMidiOut >& midiout )
-{
-    auto sender = [&midiout]( message_type message ) {
-        const std::vector< unsigned char > messages = {static_cast< unsigned char >( message )};
-        midiout->sendMessage( &messages );
-    };
-    sequencer_clock_type sequencer_clock{underlying_clock_type{}};
-    return sequencer::midi::clock{std::move( sequencer_clock ), std::move( sender )};
-}
 
 void log_file_callback( double time_delta, std::vector< unsigned char >* message,
                         void* /*userData*/ )
@@ -63,18 +52,7 @@ int main()
     wait_for_press_enter( "Connect MIDI signals then press <Enter> to continue." );
 
     auto midi_clock = make_clock( midiout );
-
-    std::promise< void > controller_ready_promise;
-    const auto controller_ready = controller_ready_promise.get_future();
-    const auto clock_done =
-        std::async( std::launch::async, [&midi_clock, &controller_ready_promise] {
-            controller_ready_promise.set_value();
-            midi_clock.run();
-            // wait a bit to make sure that the last messages where sent
-            // TODO solve without sleep if possible
-            std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
-        } );
-    controller_ready.wait();
+    const auto clock_done = start_clock_in_thread( midi_clock );
 
     midi_clock.start();
 

@@ -20,15 +20,16 @@ namespace sequencer::rtmidi
     }
 
     template < class RtMidi >
-    std::unique_ptr< RtMidi > make_midi_port()
+    std::unique_ptr< RtMidi > make_midi_port( int port_number = 0 )
     {
         auto rtmidi = std::make_unique< RtMidi >();
-        if ( rtmidi->getPortCount() == 0 )
+        if ( rtmidi->getPortCount() < port_number + 1 )
         {
-            std::cout << "No ports available!\n";
+            std::cout << "Requested port: " << port_number
+                      << ". Available number of ports: " << rtmidi->getPortCount() << std::endl;
             return nullptr;
         }
-        std::cout << "Opening port " << rtmidi->getPortName( 0 ) << std::endl;
+        std::cout << "Opening port " << rtmidi->getPortName( port_number ) << std::endl;
         rtmidi->openPort( 0 );
         return rtmidi;
     }

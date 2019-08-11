@@ -46,26 +46,57 @@ namespace sequencer::midi
 
     namespace system::common
     {
-        struct message_type
+        class message_type
         {
+        public:
             using size_type = std::vector< std::byte >::size_type;
+
+            explicit message_type( const std::vector< std::byte >& message ) : message_( message )
+            {
+            }
+
+            explicit message_type( std::vector< std::byte >&& message )
+                : message_( std::move( message ) )
+            {
+            }
+
+            const std::byte& front() const
+            {
+                return message_[ 0 ];
+            }
 
             auto size() const noexcept
             {
-                return message.size();
+                return message_.size();
             }
 
             std::byte& operator[]( size_type i )
             {
-                return message[ i ];
+                return message_[ i ];
             }
 
             const std::byte& operator[]( size_type i ) const
             {
-                return message[ i ];
+                return message_[ i ];
             }
 
-            std::vector< std::byte > message;
+            auto begin() const
+            {
+                return message_.begin();
+            }
+
+            auto end() const
+            {
+                return message_.end();
+            }
+
+            const std::vector< std::byte >& message() const noexcept
+            {
+                return message_;
+            }
+
+        private:
+            std::vector< std::byte > message_;
         };
 
         inline std::pair< std::byte, std::byte > uint16_to_two_byte_hex( std::uint16_t value )
@@ -100,13 +131,13 @@ namespace sequencer::midi
 
         inline std::string to_string( const message_type& msg )
         {
-            switch ( msg.message.front() )
+            switch ( static_cast< unsigned char >( msg.front() ) )
             {
             // song position pointer
-            case std::byte{0xF2}:
-                assert( msg.message.size() == 3 );
-                return std::string( "spp@" ).append( std::to_string(
-                    two_byte_hex_to_uint16( {msg.message[ 1 ], msg.message[ 2 ]} ) ) );
+            case 0xF2:
+                assert( msg.size() == 3 );
+                return std::string( "spp@" ).append(
+                    std::to_string( two_byte_hex_to_uint16( {msg[ 1 ], msg[ 2 ]} ) ) );
             default:
                 return invalid_string;
             }

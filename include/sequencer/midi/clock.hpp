@@ -4,7 +4,9 @@
 #include <sequencer/beats_per_minute.hpp>
 #include <sequencer/midi/clock_base.hpp>
 
+#include <future>
 #include <mutex>
+#include <thread>
 
 namespace sequencer::midi
 {
@@ -100,4 +102,20 @@ namespace sequencer::midi
         beats_per_minute tempo_{120.0_bpm};
         bool shut_down_{false};
     };
+
+    template < class MidiClock >
+    auto start_clock_in_thread( MidiClock& midi_clock )
+    {
+        std::promise< void > controller_ready_promise;
+        const auto controller_ready = controller_ready_promise.get_future();
+        auto clock_done = std::async( std::launch::async, [&midi_clock, &controller_ready_promise] {
+            controller_ready_promise.set_value();
+            midi_clock.run();
+            // wait a bit to make sure that the last messages where sent
+            // TODO solve without sleep if possible
+            std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) );
+        } );
+        controller_ready.wait();
+        return clock_done;
+    }
 } // namespace sequencer::midi

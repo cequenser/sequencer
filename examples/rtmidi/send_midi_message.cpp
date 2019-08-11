@@ -1,6 +1,5 @@
-#include "util.hpp"
-
 #include <sequencer/midi/message_type.hpp>
+#include <sequencer/rtmidi/util.hpp>
 
 #include <RtMidi.h>
 #include <chrono>

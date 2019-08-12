@@ -30,7 +30,7 @@ namespace sequencer::midi::channel::mode
         return make_message( status_byte( channel ), std::byte{0x79} );
     }
 
-    inline message_type local_control( std::uint8_t channel, bool on = true )
+    inline message_type local_control( std::uint8_t channel, bool on )
     {
         assert( channel < 16 );
         const auto data_byte = on ? std::byte{0x7F} : std::byte{0x00};

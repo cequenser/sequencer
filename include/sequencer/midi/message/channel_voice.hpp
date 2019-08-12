@@ -7,11 +7,6 @@
 
 namespace sequencer::midi::channel::voice
 {
-    constexpr std::byte status_byte_for( std::byte status_byte, std::uint8_t channel )
-    {
-        return status_byte | std::byte{channel};
-    }
-
     inline message_type note_on( std::uint8_t channel, std::uint8_t note, std::uint8_t velocity )
     {
         assert( channel < 16 );

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <sequencer/midi/message/invalid_string.hpp>
+#include <sequencer/midi/message/util.hpp>
 
 #include <cstdint>
 #include <ostream>

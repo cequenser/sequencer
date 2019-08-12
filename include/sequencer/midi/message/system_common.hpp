@@ -1,7 +1,7 @@
 #pragma once
 
-#include <sequencer/midi/message/invalid_string.hpp>
 #include <sequencer/midi/message/message_type.hpp>
+#include <sequencer/midi/message/util.hpp>
 
 #include <cstddef>
 #include <cstdint>

@@ -29,6 +29,6 @@ namespace sequencer::midi::system::common
     inline message_type song_position_pointer( std::uint16_t position_in_16th_notes )
     {
         const auto hex_value = uint16_to_two_bytes( position_in_16th_notes );
-        return message_type{{std::byte{0xF2}, hex_value.first, hex_value.second}};
+        return make_message( std::byte{0xF2}, hex_value.first, hex_value.second );
     }
 } // namespace sequencer::midi::system::common

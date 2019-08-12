@@ -72,4 +72,10 @@ namespace sequencer::midi
     private:
         std::vector< std::byte > message_;
     };
+
+    template < class... Args >
+    message_type make_message( Args&&... args )
+    {
+        return message_type{{std::forward< Args >( args )...}};
+    }
 } // namespace sequencer::midi

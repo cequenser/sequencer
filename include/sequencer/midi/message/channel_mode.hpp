@@ -10,7 +10,7 @@ namespace sequencer::midi::channel::mode
     inline message_type make_message( std::byte status, std::byte control_function,
                                       std::byte data = std::byte{0x00} )
     {
-        return message_type{{status, control_function, data}};
+        return sequencer::midi::make_message( status, control_function, data );
     }
 
     constexpr std::byte status_byte( std::uint8_t channel )

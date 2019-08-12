@@ -13,8 +13,8 @@ namespace sequencer::midi::channel::voice
         assert( note < 128 );
         assert( velocity < 128 );
 
-        return message_type{
-            {status_byte_for( std::byte{0x90}, channel ), std::byte{note}, std::byte{velocity}}};
+        return make_message( status_byte_for( std::byte{0x90}, channel ), std::byte{note},
+                             std::byte{velocity} );
     }
 
     inline message_type note_off( std::uint8_t channel, std::uint8_t note, std::uint8_t velocity )
@@ -23,7 +23,7 @@ namespace sequencer::midi::channel::voice
         assert( note < 128 );
         assert( velocity < 128 );
 
-        return message_type{
-            {status_byte_for( std::byte{0x80}, channel ), std::byte{note}, std::byte{velocity}}};
+        return make_message( status_byte_for( std::byte{0x80}, channel ), std::byte{note},
+                             std::byte{velocity} );
     }
 } // namespace sequencer::midi::channel::voice

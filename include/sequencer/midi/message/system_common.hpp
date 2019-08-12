@@ -6,7 +6,7 @@
 #include <cstddef>
 #include <cstdint>
 
-namespace sequencer::midi::message::system::common
+namespace sequencer::midi::system::common
 {
     constexpr std::pair< std::byte, std::byte > uint16_to_two_bytes( std::uint16_t value )
     {
@@ -31,4 +31,4 @@ namespace sequencer::midi::message::system::common
         const auto hex_value = uint16_to_two_bytes( position_in_16th_notes );
         return message_type{{std::byte{0xF2}, hex_value.first, hex_value.second}};
     }
-} // namespace sequencer::midi::message::system::common
+} // namespace sequencer::midi::system::common

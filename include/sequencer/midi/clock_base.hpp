@@ -23,16 +23,18 @@ namespace sequencer::midi
         template < typename Sender >
         void update( beat_time_point t, Sender sender )
         {
+            using real_time::message_type;
+
             if ( !running_ && started_ )
             {
-                sender( continue_ ? midi::message::real_time::message_type::realtime_continue
-                                  : midi::message::real_time::message_type::realtime_start );
+                sender( continue_ ? message_type::realtime_continue
+                                  : message_type::realtime_start );
                 running_ = true;
                 continue_ = true;
             }
             else if ( running_ && !started_ )
             {
-                sender( midi::message::real_time::message_type::realtime_stop );
+                sender( message_type::realtime_stop );
                 running_ = false;
             }
 
@@ -42,7 +44,7 @@ namespace sequencer::midi
                 while ( last_update_ + dt <= t )
                 {
                     last_update_ += dt;
-                    sender( midi::message::real_time::message_type::realtime_clock );
+                    sender( message_type::realtime_clock );
                 }
             }
         }

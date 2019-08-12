@@ -54,7 +54,7 @@ int main()
         {
             break;
         }
-        sender( sequencer::midi::message::system::common::song_position_pointer(
+        sender( sequencer::midi::system::common::song_position_pointer(
             static_cast< std::uint16_t >( song_position ) ) );
     }
 

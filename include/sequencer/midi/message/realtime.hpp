@@ -6,7 +6,7 @@
 #include <ostream>
 #include <string_view>
 
-namespace sequencer::midi::message::real_time
+namespace sequencer::midi::real_time
 {
     enum class message_type : std::uint8_t
     {
@@ -39,4 +39,4 @@ namespace sequencer::midi::message::real_time
         stream << to_string( type );
         return stream;
     }
-} // namespace sequencer::midi::message::real_time
+} // namespace sequencer::midi::real_time

@@ -2,8 +2,8 @@
 
 #include <catch2/catch.hpp>
 
-using sequencer::midi::message::channel::voice::note_off;
-using sequencer::midi::message::channel::voice::note_on;
+using sequencer::midi::channel::voice::note_off;
+using sequencer::midi::channel::voice::note_on;
 
 SCENARIO( "channel voice messages", "[channel_voice_message]" )
 {

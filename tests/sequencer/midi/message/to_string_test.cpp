@@ -4,10 +4,10 @@
 
 #include <sstream>
 
-using sequencer::midi::message::message_type;
-using sequencer::midi::message::channel::voice::note_off;
-using sequencer::midi::message::channel::voice::note_on;
-using sequencer::midi::message::system::common::song_position_pointer;
+using sequencer::midi::message_type;
+using sequencer::midi::channel::voice::note_off;
+using sequencer::midi::channel::voice::note_on;
+using sequencer::midi::system::common::song_position_pointer;
 
 SCENARIO( "midi message to string", "[to_string]" )
 {
@@ -65,7 +65,7 @@ SCENARIO( "midi message to string", "[to_string]" )
 
         THEN( "to_string returns 'invalid'" )
         {
-            REQUIRE( to_string( message ) == sequencer::midi::message::invalid_string );
+            REQUIRE( to_string( message ) == sequencer::midi::invalid_string );
         }
     }
 
@@ -75,7 +75,7 @@ SCENARIO( "midi message to string", "[to_string]" )
 
         THEN( "to_string returns 'invalid'" )
         {
-            REQUIRE( to_string( message ) == sequencer::midi::message::invalid_string );
+            REQUIRE( to_string( message ) == sequencer::midi::invalid_string );
         }
     }
 }
@@ -146,7 +146,7 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
         {
             std::stringstream stream;
             stream << message;
-            REQUIRE( stream.str() == sequencer::midi::message::invalid_string );
+            REQUIRE( stream.str() == sequencer::midi::invalid_string );
         }
     }
 
@@ -158,7 +158,7 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
         {
             std::stringstream stream;
             stream << message;
-            REQUIRE( stream.str() == sequencer::midi::message::invalid_string );
+            REQUIRE( stream.str() == sequencer::midi::invalid_string );
         }
     }
 }

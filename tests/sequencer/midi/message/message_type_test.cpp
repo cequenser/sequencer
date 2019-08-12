@@ -4,7 +4,7 @@
 
 SCENARIO( "message_type", "[message_type]" )
 {
-    using sequencer::midi::message::message_type;
+    using sequencer::midi::message_type;
 
     GIVEN( "an empty midi message" )
     {

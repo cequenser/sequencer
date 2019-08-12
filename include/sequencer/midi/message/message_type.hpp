@@ -5,7 +5,7 @@
 #include <cstddef>
 #include <vector>
 
-namespace sequencer::midi::message
+namespace sequencer::midi
 {
     class message_type
     {
@@ -72,4 +72,4 @@ namespace sequencer::midi::message
     private:
         std::vector< std::byte > message_;
     };
-} // namespace sequencer::midi::message
+} // namespace sequencer::midi

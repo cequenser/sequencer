@@ -5,7 +5,7 @@
 #include <cassert>
 #include <cstdint>
 
-namespace sequencer::midi::message::channel::voice
+namespace sequencer::midi::channel::voice
 {
     constexpr std::byte status_byte_for( std::byte status_byte, std::uint8_t channel )
     {
@@ -31,4 +31,4 @@ namespace sequencer::midi::message::channel::voice
         return message_type{
             {status_byte_for( std::byte{0x80}, channel ), std::byte{note}, std::byte{velocity}}};
     }
-} // namespace sequencer::midi::message::channel::voice
+} // namespace sequencer::midi::channel::voice

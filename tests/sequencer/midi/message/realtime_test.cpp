@@ -4,9 +4,11 @@
 
 #include <sstream>
 
+using sequencer::midi::real_time::message_type;
+
 SCENARIO( "realtime message to string conversion", "[realtime_message]" )
 {
-    using namespace sequencer::midi::message::real_time;
+    using namespace sequencer::midi::real_time;
 
     GIVEN( "realtime clock message" )
     {
@@ -54,14 +56,14 @@ SCENARIO( "realtime message to string conversion", "[realtime_message]" )
 
         THEN( "to_string returns 'invalid'" )
         {
-            REQUIRE( to_string( message ) == sequencer::midi::message::invalid_string );
+            REQUIRE( to_string( message ) == sequencer::midi::invalid_string );
         }
     }
 }
 
 SCENARIO( "realtime message streaming", "[realtime_message]" )
 {
-    using namespace sequencer::midi::message::real_time;
+    using namespace sequencer::midi::real_time;
 
     GIVEN( "message_type::realtime_clock" )
     {
@@ -119,14 +121,14 @@ SCENARIO( "realtime message streaming", "[realtime_message]" )
         {
             std::stringstream stream;
             stream << message;
-            REQUIRE( stream.str() == sequencer::midi::message::invalid_string );
+            REQUIRE( stream.str() == sequencer::midi::invalid_string );
         }
     }
 }
 
 SCENARIO( "realtime messages", "[realtime_message]" )
 {
-    using namespace sequencer::midi::message::real_time;
+    using namespace sequencer::midi::real_time;
 
     GIVEN( "realtime clock message" )
     {

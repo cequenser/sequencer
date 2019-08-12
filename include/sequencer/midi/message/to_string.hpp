@@ -8,7 +8,7 @@
 #include <ostream>
 #include <string>
 
-namespace sequencer::midi::message
+namespace sequencer::midi
 {
     inline std::string to_string( const message_type& message )
     {
@@ -63,4 +63,4 @@ namespace sequencer::midi::message
         stream << to_string( msg );
         return stream;
     }
-} // namespace sequencer::midi::message
+} // namespace sequencer::midi

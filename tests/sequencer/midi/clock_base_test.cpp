@@ -2,7 +2,7 @@
 
 #include <catch2/catch.hpp>
 
-using sequencer::midi::message::real_time::message_type;
+using sequencer::midi::real_time::message_type;
 
 SCENARIO( "start and stop messages", "[midi_clock_base]" )
 {

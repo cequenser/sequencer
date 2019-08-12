@@ -2,11 +2,11 @@
 
 #include <catch2/catch.hpp>
 
-using sequencer::midi::message::message_type;
+using sequencer::midi::message_type;
 
 SCENARIO( "uint16_to_two_bytes", "[system_common_message]" )
 {
-    using namespace sequencer::midi::message::system::common;
+    using namespace sequencer::midi::system::common;
 
     GIVEN( "a value of 64" )
     {
@@ -51,7 +51,7 @@ SCENARIO( "uint16_to_two_bytes", "[system_common_message]" )
 
 SCENARIO( "two_bytes_to_uint16", "[system_common_message]" )
 {
-    using namespace sequencer::midi::message::system::common;
+    using namespace sequencer::midi::system::common;
 
     GIVEN( "two bytes with values 0x40 and 0x00" )
     {
@@ -86,7 +86,7 @@ SCENARIO( "two_bytes_to_uint16", "[system_common_message]" )
 
 SCENARIO( "song position messages", "[system_common_message]" )
 {
-    using namespace sequencer::midi::message::system::common;
+    using namespace sequencer::midi::system::common;
 
     GIVEN( "song pointer position message with value 3" )
     {

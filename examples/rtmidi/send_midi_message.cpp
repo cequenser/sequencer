@@ -47,7 +47,7 @@ int main()
         midiout->sendMessage( &messages );
     };
 
-    using sequencer::midi::message::real_time::message_type;
+    using sequencer::midi::real_time::message_type;
     sender( message_type::realtime_clock );
     sender( message_type::realtime_continue );
     sender( message_type::realtime_start );

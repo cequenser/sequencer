@@ -8,6 +8,7 @@ using sequencer::midi::message_type;
 using sequencer::midi::channel::mode::all_notes_off;
 using sequencer::midi::channel::mode::all_sounds_off;
 using sequencer::midi::channel::mode::omni_mode_off;
+using sequencer::midi::channel::mode::omni_mode_on;
 using sequencer::midi::channel::mode::reset_all_controllers;
 using sequencer::midi::channel::voice::note_off;
 using sequencer::midi::channel::voice::note_on;
@@ -105,6 +106,17 @@ SCENARIO( "midi message to string", "[to_string]" )
         THEN( "to_string returns 'omni_mode_off:1'" )
         {
             REQUIRE( to_string( message ) == "omni_mode_off:1" );
+        }
+    }
+
+    GIVEN( "an omni mode on message for channel 1" )
+    {
+        const auto channel = 1;
+        const auto message = omni_mode_on( channel );
+
+        THEN( "to_string returns 'omni_mode_on:1'" )
+        {
+            REQUIRE( to_string( message ) == "omni_mode_on:1" );
         }
     }
 
@@ -238,6 +250,19 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
             std::stringstream stream;
             stream << message;
             REQUIRE( stream.str() == "omni_mode_off:1" );
+        }
+    }
+
+    GIVEN( "an omni mode on message for channel 1" )
+    {
+        const auto channel = 1;
+        const auto message = omni_mode_on( channel );
+
+        THEN( "stream operator writes 'omni_mode_on:1'" )
+        {
+            std::stringstream stream;
+            stream << message;
+            REQUIRE( stream.str() == "omni_mode_on:1" );
         }
     }
 

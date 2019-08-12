@@ -63,6 +63,10 @@ namespace sequencer::midi
             case 0x7C:
                 return std::string( "omni_mode_off:" )
                     .append( to_string( get_channel( status_byte ) ) );
+            // omni mode off
+            case 0x7D:
+                return std::string( "omni_mode_on:" )
+                    .append( to_string( get_channel( status_byte ) ) );
             default:
                 return invalid_string;
             }

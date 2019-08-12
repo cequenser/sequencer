@@ -65,6 +65,9 @@ namespace sequencer::midi
             // sostenuto on/off
             case 0x42:
                 return on_off_message( "sostenuto", status_byte, message[ 2 ] );
+            // soft pedal on/off
+            case 0x43:
+                return on_off_message( "soft_pedal", status_byte, message[ 2 ] );
             // all sounds off
             case 0x78:
                 return std::string( "all_sounds_off:" )

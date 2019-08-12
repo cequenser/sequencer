@@ -19,19 +19,21 @@ namespace sequencer::midi::control_change
 
     inline message_type damper_pedal( std::uint8_t channel, bool on )
     {
-        const auto data_byte = on_off_byte( on );
-        return make_message( status_byte( channel ), std::byte{0x40}, data_byte );
+        return make_message( status_byte( channel ), std::byte{0x40}, on_off_byte( on ) );
     }
 
     inline message_type portamento( std::uint8_t channel, bool on )
     {
-        const auto data_byte = on_off_byte( on );
-        return make_message( status_byte( channel ), std::byte{0x41}, data_byte );
+        return make_message( status_byte( channel ), std::byte{0x41}, on_off_byte( on ) );
     }
 
     inline message_type sostenuto( std::uint8_t channel, bool on )
     {
-        const auto data_byte = on_off_byte( on );
-        return make_message( status_byte( channel ), std::byte{0x42}, data_byte );
+        return make_message( status_byte( channel ), std::byte{0x42}, on_off_byte( on ) );
+    }
+
+    inline message_type soft_pedal( std::uint8_t channel, bool on )
+    {
+        return make_message( status_byte( channel ), std::byte{0x43}, on_off_byte( on ) );
     }
 } // namespace sequencer::midi::control_change

@@ -16,6 +16,7 @@ using sequencer::midi::channel::voice::note_off;
 using sequencer::midi::channel::voice::note_on;
 using sequencer::midi::control_change::damper_pedal;
 using sequencer::midi::control_change::portamento;
+using sequencer::midi::control_change::soft_pedal;
 using sequencer::midi::control_change::sostenuto;
 using sequencer::midi::system::common::song_position_pointer;
 
@@ -230,6 +231,30 @@ SCENARIO( "midi message to string", "[to_string]" )
         THEN( "to_string returns 'sostenuto_off:1'" )
         {
             REQUIRE( to_string( message ) == "sostenuto_off:1" );
+        }
+    }
+
+    GIVEN( "a soft pedal on message for channel 1" )
+    {
+        const auto channel = 1;
+        const auto on = true;
+        const auto message = soft_pedal( channel, on );
+
+        THEN( "to_string returns 'soft_pedal_on:1'" )
+        {
+            REQUIRE( to_string( message ) == "soft_pedal_on:1" );
+        }
+    }
+
+    GIVEN( "a soft pedal off message for channel 1" )
+    {
+        const auto channel = 1;
+        const auto on = false;
+        const auto message = soft_pedal( channel, on );
+
+        THEN( "to_string returns 'soft_pedal_off:1'" )
+        {
+            REQUIRE( to_string( message ) == "soft_pedal_off:1" );
         }
     }
 
@@ -455,7 +480,7 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
         const auto on = true;
         const auto message = portamento( channel, on );
 
-        THEN( "to_string returns 'portamento_on:1'" )
+        THEN( "stream operator writes 'portamento_on:1'" )
         {
             std::stringstream stream;
             stream << message;
@@ -469,7 +494,7 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
         const auto on = false;
         const auto message = portamento( channel, on );
 
-        THEN( "to_string returns 'portamento_off:1'" )
+        THEN( "stream operator writes 'portamento_off:1'" )
         {
             std::stringstream stream;
             stream << message;
@@ -483,7 +508,7 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
         const auto on = true;
         const auto message = sostenuto( channel, on );
 
-        THEN( "to_string returns 'sostenuto_on:1'" )
+        THEN( "stream operator writes 'sostenuto_on:1'" )
         {
             std::stringstream stream;
             stream << message;
@@ -497,11 +522,39 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
         const auto on = false;
         const auto message = sostenuto( channel, on );
 
-        THEN( "to_string returns 'sostenuto_off:1'" )
+        THEN( "stream operator writes 'sostenuto_off:1'" )
         {
             std::stringstream stream;
             stream << message;
             REQUIRE( stream.str() == "sostenuto_off:1" );
+        }
+    }
+
+    GIVEN( "a soft pedal on message for channel 1" )
+    {
+        const auto channel = 1;
+        const auto on = true;
+        const auto message = soft_pedal( channel, on );
+
+        THEN( "stream operator writes 'soft_pedal_on:1'" )
+        {
+            std::stringstream stream;
+            stream << message;
+            REQUIRE( stream.str() == "soft_pedal_on:1" );
+        }
+    }
+
+    GIVEN( "a soft pedal off message for channel 1" )
+    {
+        const auto channel = 1;
+        const auto on = false;
+        const auto message = soft_pedal( channel, on );
+
+        THEN( "stream operator writes 'soft_pedal_off:1'" )
+        {
+            std::stringstream stream;
+            stream << message;
+            REQUIRE( stream.str() == "soft_pedal_off:1" );
         }
     }
 

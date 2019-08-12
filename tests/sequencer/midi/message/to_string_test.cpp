@@ -5,6 +5,7 @@
 #include <sstream>
 
 using sequencer::midi::message_type;
+using sequencer::midi::channel::mode::all_notes_off;
 using sequencer::midi::channel::mode::all_sounds_off;
 using sequencer::midi::channel::mode::reset_all_controllers;
 using sequencer::midi::channel::voice::note_off;
@@ -81,6 +82,17 @@ SCENARIO( "midi message to string", "[to_string]" )
         THEN( "stream operator writes 'reset_all_controllers:1'" )
         {
             REQUIRE( to_string( message ) == "reset_all_controllers:1" );
+        }
+    }
+
+    GIVEN( "an all notes off message for channel 1" )
+    {
+        const auto channel = 1;
+        const auto message = all_notes_off( channel );
+
+        THEN( "stream operator writes 'all_notes_off:1'" )
+        {
+            REQUIRE( to_string( message ) == "all_notes_off:1" );
         }
     }
 
@@ -188,6 +200,19 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
             std::stringstream stream;
             stream << message;
             REQUIRE( stream.str() == "reset_all_controllers:1" );
+        }
+    }
+
+    GIVEN( "an all notes off message for channel 1" )
+    {
+        const auto channel = 1;
+        const auto message = all_notes_off( channel );
+
+        THEN( "stream operator writes 'all_notes_off:1'" )
+        {
+            std::stringstream stream;
+            stream << message;
+            REQUIRE( stream.str() == "all_notes_off:1" );
         }
     }
 

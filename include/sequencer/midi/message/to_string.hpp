@@ -55,6 +55,10 @@ namespace sequencer::midi
             case 0x79:
                 return std::string( "reset_all_controllers:" )
                     .append( to_string( get_channel( status_byte ) ) );
+            // all notes off
+            case 0x7B:
+                return std::string( "all_notes_off:" )
+                    .append( to_string( get_channel( status_byte ) ) );
             default:
                 return invalid_string;
             }

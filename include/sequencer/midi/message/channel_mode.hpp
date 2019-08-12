@@ -25,4 +25,10 @@ namespace sequencer::midi::channel::mode
         return make_message( status_byte_for( std::byte{0xB0}, channel ), std::byte{0x79} );
     }
 
+    inline message_type all_notes_off( std::uint8_t channel )
+    {
+        assert( channel < 16 );
+        return make_message( status_byte_for( std::byte{0xB0}, channel ), std::byte{0x7B} );
+    }
+
 } // namespace sequencer::midi::channel::mode

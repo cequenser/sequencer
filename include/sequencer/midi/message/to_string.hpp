@@ -17,7 +17,8 @@ namespace sequencer::midi
         return status_byte & 0x0F;
     }
 
-    inline std::string on_off_message( std::string name, unsigned char status_byte, std::byte data )
+    inline std::string on_off_message_to_string( std::string name, unsigned char status_byte,
+                                                 std::byte data )
     {
         using std::to_string;
         return name.append( "_" )
@@ -58,19 +59,19 @@ namespace sequencer::midi
             {
             // damper pedal on/off
             case 0x40:
-                return on_off_message( "damper_pedal", status_byte, message[ 2 ] );
+                return on_off_message_to_string( "damper_pedal", status_byte, message[ 2 ] );
             // portamento on/off
             case 0x41:
-                return on_off_message( "portamento", status_byte, message[ 2 ] );
+                return on_off_message_to_string( "portamento", status_byte, message[ 2 ] );
             // sostenuto on/off
             case 0x42:
-                return on_off_message( "sostenuto", status_byte, message[ 2 ] );
+                return on_off_message_to_string( "sostenuto", status_byte, message[ 2 ] );
             // soft pedal on/off
             case 0x43:
-                return on_off_message( "soft_pedal", status_byte, message[ 2 ] );
+                return on_off_message_to_string( "soft_pedal", status_byte, message[ 2 ] );
             // hold 2 on/off
             case 0x45:
-                return on_off_message( "hold_2", status_byte, message[ 2 ] );
+                return on_off_message_to_string( "hold_2", status_byte, message[ 2 ] );
             // all sounds off
             case 0x78:
                 return std::string( "all_sounds_off:" )
@@ -81,7 +82,7 @@ namespace sequencer::midi
                     .append( to_string( get_channel( status_byte ) ) );
             // local control on/off
             case 0x7A:
-                return on_off_message( "local_control", status_byte, message[ 2 ] );
+                return on_off_message_to_string( "local_control", status_byte, message[ 2 ] );
             // all notes off
             case 0x7B:
                 return std::string( "all_notes_off:" )

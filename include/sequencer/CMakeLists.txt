@@ -8,12 +8,13 @@ add_library(sequencer
     midi/clock.hpp
     midi/clock_base.hpp
     midi/percussion_key.hpp
+    midi/message/channel_mode.hpp
     midi/message/channel_voice.hpp
-    midi/message/invalid_string.hpp
     midi/message/message_type.hpp
     midi/message/realtime.hpp
     midi/message/system_common.hpp
     midi/message/to_string.hpp
+    midi/message/util.hpp
     chrono/chrono_adapter.hpp
     chrono/sequencer_clock.hpp
     chrono/units.hpp

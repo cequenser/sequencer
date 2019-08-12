@@ -5,6 +5,7 @@
 #include <sstream>
 
 using sequencer::midi::message_type;
+using sequencer::midi::channel::mode::all_sounds_off;
 using sequencer::midi::channel::voice::note_off;
 using sequencer::midi::channel::voice::note_on;
 using sequencer::midi::system::common::song_position_pointer;
@@ -16,9 +17,9 @@ SCENARIO( "midi message to string", "[to_string]" )
     {
         const auto message = song_position_pointer( 3 );
 
-        THEN( "to_string returns 'spp@3'" )
+        THEN( "to_string returns 'spp:3'" )
         {
-            REQUIRE( to_string( message ) == "spp@3" );
+            REQUIRE( to_string( message ) == "spp:3" );
         }
     }
 
@@ -26,9 +27,9 @@ SCENARIO( "midi message to string", "[to_string]" )
     {
         const auto message = song_position_pointer( 200 );
 
-        THEN( "to_string returns 'spp@200'" )
+        THEN( "to_string returns 'spp:200'" )
         {
-            REQUIRE( to_string( message ) == "spp@200" );
+            REQUIRE( to_string( message ) == "spp:200" );
         }
     }
 
@@ -59,6 +60,19 @@ SCENARIO( "midi message to string", "[to_string]" )
         }
     }
 
+    // channel::mode
+    GIVEN( "an all sound off message for channel 1" )
+    {
+        const auto channel = 1;
+        const auto message = all_sounds_off( channel );
+
+        THEN( "stream operator writes 'all_sounds_off:1'" )
+        {
+            REQUIRE( to_string( message ) == "all_sounds_off:1" );
+        }
+    }
+
+    // default
     GIVEN( "empty message" )
     {
         const auto message = message_type{{}};
@@ -87,11 +101,11 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
     {
         const auto message = song_position_pointer( 3 );
 
-        THEN( "stream operator writes 'spp@3'" )
+        THEN( "stream operator writes 'spp:3'" )
         {
             std::stringstream stream;
             stream << message;
-            REQUIRE( stream.str() == "spp@3" );
+            REQUIRE( stream.str() == "spp:3" );
         }
     }
 
@@ -99,11 +113,11 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
     {
         const auto message = song_position_pointer( 200 );
 
-        THEN( "stream operator writes 'spp@200'" )
+        THEN( "stream operator writes 'spp:200'" )
         {
             std::stringstream stream;
             stream << message;
-            REQUIRE( stream.str() == "spp@200" );
+            REQUIRE( stream.str() == "spp:200" );
         }
     }
 
@@ -138,6 +152,21 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
         }
     }
 
+    // channel::mode
+    GIVEN( "an all sound off message for channel 1" )
+    {
+        const auto channel = 1;
+        const auto message = all_sounds_off( channel );
+
+        THEN( "stream operator writes 'all_sounds_off:1'" )
+        {
+            std::stringstream stream;
+            stream << message;
+            REQUIRE( stream.str() == "all_sounds_off:1" );
+        }
+    }
+
+    // default
     GIVEN( "empty message" )
     {
         const auto message = message_type{{}};

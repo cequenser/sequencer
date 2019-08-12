@@ -15,6 +15,7 @@ using sequencer::midi::channel::mode::reset_all_controllers;
 using sequencer::midi::channel::voice::note_off;
 using sequencer::midi::channel::voice::note_on;
 using sequencer::midi::control_change::damper_pedal;
+using sequencer::midi::control_change::portamento;
 using sequencer::midi::system::common::song_position_pointer;
 
 SCENARIO( "midi message to string", "[to_string]" )
@@ -180,6 +181,30 @@ SCENARIO( "midi message to string", "[to_string]" )
         THEN( "to_string returns 'damper_pedal_off:1'" )
         {
             REQUIRE( to_string( message ) == "damper_pedal_off:1" );
+        }
+    }
+
+    GIVEN( "a portamento on message for channel 1" )
+    {
+        const auto channel = 1;
+        const auto on = true;
+        const auto message = portamento( channel, on );
+
+        THEN( "to_string returns 'portamento_on:1'" )
+        {
+            REQUIRE( to_string( message ) == "portamento_on:1" );
+        }
+    }
+
+    GIVEN( "a portamento off message for channel 1" )
+    {
+        const auto channel = 1;
+        const auto on = false;
+        const auto message = portamento( channel, on );
+
+        THEN( "to_string returns 'portamento_off:1'" )
+        {
+            REQUIRE( to_string( message ) == "portamento_off:1" );
         }
     }
 
@@ -396,6 +421,34 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
             std::stringstream stream;
             stream << message;
             REQUIRE( stream.str() == "damper_pedal_off:1" );
+        }
+    }
+
+    GIVEN( "a portamento on message for channel 1" )
+    {
+        const auto channel = 1;
+        const auto on = true;
+        const auto message = portamento( channel, on );
+
+        THEN( "to_string returns 'portamento_on:1'" )
+        {
+            std::stringstream stream;
+            stream << message;
+            REQUIRE( stream.str() == "portamento_on:1" );
+        }
+    }
+
+    GIVEN( "a portamento off message for channel 1" )
+    {
+        const auto channel = 1;
+        const auto on = false;
+        const auto message = portamento( channel, on );
+
+        THEN( "to_string returns 'portamento_off:1'" )
+        {
+            std::stringstream stream;
+            stream << message;
+            REQUIRE( stream.str() == "portamento_off:1" );
         }
     }
 

@@ -17,4 +17,10 @@ namespace sequencer::midi::control_change
         const auto data_byte = on ? std::byte{0x7F} : std::byte{0x00};
         return make_message( status_byte( channel ), std::byte{0x40}, data_byte );
     }
+
+    inline message_type portamento( std::uint8_t channel, bool on )
+    {
+        const auto data_byte = on ? std::byte{0x7F} : std::byte{0x00};
+        return make_message( status_byte( channel ), std::byte{0x41}, data_byte );
+    }
 } // namespace sequencer::midi::control_change

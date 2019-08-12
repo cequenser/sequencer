@@ -17,6 +17,14 @@ namespace sequencer::midi
         return status_byte & 0x0F;
     }
 
+    inline std::string on_off_message( std::string name, unsigned char status_byte, std::byte data )
+    {
+        using std::to_string;
+        return name.append( "_" )
+            .append( ( static_cast< std::uint8_t >( data ) < 64u ) ? "off:" : "on:" )
+            .append( to_string( get_channel( status_byte ) ) );
+    }
+
     inline std::string to_string( const message_type& message )
     {
         if ( message.empty() )
@@ -50,10 +58,10 @@ namespace sequencer::midi
             {
             // damper pedal on/off
             case 0x40:
-                return std::string( "damper_pedal_" )
-                    .append( ( static_cast< std::uint8_t >( message[ 2 ] ) < 64u ) ? "off:"
-                                                                                   : "on:" )
-                    .append( to_string( get_channel( status_byte ) ) );
+                return on_off_message( "damper_pedal", status_byte, message[ 2 ] );
+            // portamento on/off
+            case 0x41:
+                return on_off_message( "portamento", status_byte, message[ 2 ] );
             // all sounds off
             case 0x78:
                 return std::string( "all_sounds_off:" )
@@ -64,9 +72,7 @@ namespace sequencer::midi
                     .append( to_string( get_channel( status_byte ) ) );
             // local control on/off
             case 0x7A:
-                return std::string( "local_control_" )
-                    .append( ( message[ 2 ] == std::byte{0x00} ) ? "off:" : "on:" )
-                    .append( to_string( get_channel( status_byte ) ) );
+                return on_off_message( "local_control", status_byte, message[ 2 ] );
             // all notes off
             case 0x7B:
                 return std::string( "all_notes_off:" )

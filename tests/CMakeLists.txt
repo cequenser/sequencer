@@ -8,6 +8,7 @@ add_executable(tests
     sequencer/midi/clock_base_test.cpp
     sequencer/midi/message/channel_mode_test.cpp
     sequencer/midi/message/channel_voice_test.cpp
+    sequencer/midi/message/control_change_test.cpp
     sequencer/midi/message/message_type_test.cpp
     sequencer/midi/message/realtime_test.cpp
     sequencer/midi/message/system_common_test.cpp

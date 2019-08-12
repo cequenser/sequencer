@@ -1,5 +1,6 @@
 #pragma once
 
+#include <sequencer/midi/message/control_change.hpp>
 #include <sequencer/midi/message/message_type.hpp>
 #include <sequencer/midi/message/util.hpp>
 
@@ -7,15 +8,12 @@
 
 namespace sequencer::midi::channel::mode
 {
+    using control_change::status_byte;
+
     inline message_type make_message( std::byte status, std::byte control_function,
                                       std::byte data = std::byte{0x00} )
     {
         return sequencer::midi::make_message( status, control_function, data );
-    }
-
-    constexpr std::byte status_byte( std::uint8_t channel )
-    {
-        return status_byte_for( std::byte{0xB0}, channel );
     }
 
     inline message_type all_sounds_off( std::uint8_t channel )

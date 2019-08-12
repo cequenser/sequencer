@@ -14,6 +14,7 @@ using sequencer::midi::channel::mode::poly_mode_on;
 using sequencer::midi::channel::mode::reset_all_controllers;
 using sequencer::midi::channel::voice::note_off;
 using sequencer::midi::channel::voice::note_on;
+using sequencer::midi::control_change::damper_pedal;
 using sequencer::midi::system::common::song_position_pointer;
 
 SCENARIO( "midi message to string", "[to_string]" )
@@ -154,6 +155,31 @@ SCENARIO( "midi message to string", "[to_string]" )
         THEN( "to_string returns 'poly_mode_on:1'" )
         {
             REQUIRE( to_string( message ) == "poly_mode_on:1" );
+        }
+    }
+
+    // control change
+    GIVEN( "a damper pedal on message for channel 1" )
+    {
+        const auto channel = 1;
+        const auto on = true;
+        const auto message = damper_pedal( channel, on );
+
+        THEN( "to_string returns 'damper_pedal_on:1'" )
+        {
+            REQUIRE( to_string( message ) == "damper_pedal_on:1" );
+        }
+    }
+
+    GIVEN( "a damper pedal off message for channel 1" )
+    {
+        const auto channel = 1;
+        const auto on = false;
+        const auto message = damper_pedal( channel, on );
+
+        THEN( "to_string returns 'damper_pedal_off:1'" )
+        {
+            REQUIRE( to_string( message ) == "damper_pedal_off:1" );
         }
     }
 
@@ -341,6 +367,35 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
             std::stringstream stream;
             stream << message;
             REQUIRE( stream.str() == "poly_mode_on:1" );
+        }
+    }
+
+    // control change
+    GIVEN( "a damper pedal on message for channel 1" )
+    {
+        const auto channel = 1;
+        const auto on = true;
+        const auto message = damper_pedal( channel, on );
+
+        THEN( "stream operator writes 'damper_pedal_on:1'" )
+        {
+            std::stringstream stream;
+            stream << message;
+            REQUIRE( stream.str() == "damper_pedal_on:1" );
+        }
+    }
+
+    GIVEN( "a damper pedal off message for channel 1" )
+    {
+        const auto channel = 1;
+        const auto on = false;
+        const auto message = damper_pedal( channel, on );
+
+        THEN( "stream operator writes 'damper_pedal_off:1'" )
+        {
+            std::stringstream stream;
+            stream << message;
+            REQUIRE( stream.str() == "damper_pedal_off:1" );
         }
     }
 

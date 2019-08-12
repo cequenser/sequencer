@@ -8,6 +8,7 @@ add_library(sequencer
     midi/clock.hpp
     midi/clock_base.hpp
     midi/percussion_key.hpp
+    midi/message/channel_voice.hpp
     midi/message/invalid_string.hpp
     midi/message/message_type.hpp
     midi/message/realtime.hpp

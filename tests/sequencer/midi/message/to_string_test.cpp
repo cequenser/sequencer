@@ -6,6 +6,7 @@
 
 using sequencer::midi::message_type;
 using sequencer::midi::channel::mode::all_sounds_off;
+using sequencer::midi::channel::mode::reset_all_controllers;
 using sequencer::midi::channel::voice::note_off;
 using sequencer::midi::channel::voice::note_on;
 using sequencer::midi::system::common::song_position_pointer;
@@ -69,6 +70,17 @@ SCENARIO( "midi message to string", "[to_string]" )
         THEN( "stream operator writes 'all_sounds_off:1'" )
         {
             REQUIRE( to_string( message ) == "all_sounds_off:1" );
+        }
+    }
+
+    GIVEN( "a reset all controllers message for channel 1" )
+    {
+        const auto channel = 1;
+        const auto message = reset_all_controllers( channel );
+
+        THEN( "stream operator writes 'reset_all_controllers:1'" )
+        {
+            REQUIRE( to_string( message ) == "reset_all_controllers:1" );
         }
     }
 
@@ -163,6 +175,19 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
             std::stringstream stream;
             stream << message;
             REQUIRE( stream.str() == "all_sounds_off:1" );
+        }
+    }
+
+    GIVEN( "a reset all controllers message for channel 1" )
+    {
+        const auto channel = 1;
+        const auto message = reset_all_controllers( channel );
+
+        THEN( "stream operator writes 'reset_all_controllers:1'" )
+        {
+            std::stringstream stream;
+            stream << message;
+            REQUIRE( stream.str() == "reset_all_controllers:1" );
         }
     }
 

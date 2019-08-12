@@ -51,6 +51,10 @@ namespace sequencer::midi
             case 0x78:
                 return std::string( "all_sounds_off:" )
                     .append( to_string( get_channel( status_byte ) ) );
+            // reset all controllers
+            case 0x79:
+                return std::string( "reset_all_controllers:" )
+                    .append( to_string( get_channel( status_byte ) ) );
             default:
                 return invalid_string;
             }

@@ -13,33 +13,38 @@ namespace sequencer::midi::channel::mode
         return message_type{{status, control_function, data}};
     }
 
+    constexpr std::byte status_byte( std::uint8_t channel )
+    {
+        return status_byte_for( std::byte{0xB0}, channel );
+    }
+
     inline message_type all_sounds_off( std::uint8_t channel )
     {
         assert( channel < 16 );
-        return make_message( status_byte_for( std::byte{0xB0}, channel ), std::byte{0x78} );
+        return make_message( status_byte( channel ), std::byte{0x78} );
     }
 
     inline message_type reset_all_controllers( std::uint8_t channel )
     {
         assert( channel < 16 );
-        return make_message( status_byte_for( std::byte{0xB0}, channel ), std::byte{0x79} );
+        return make_message( status_byte( channel ), std::byte{0x79} );
     }
 
     inline message_type all_notes_off( std::uint8_t channel )
     {
         assert( channel < 16 );
-        return make_message( status_byte_for( std::byte{0xB0}, channel ), std::byte{0x7B} );
+        return make_message( status_byte( channel ), std::byte{0x7B} );
     }
 
     inline message_type omni_mode_off( std::uint8_t channel )
     {
         assert( channel < 16 );
-        return make_message( status_byte_for( std::byte{0xB0}, channel ), std::byte{0x7C} );
+        return make_message( status_byte( channel ), std::byte{0x7C} );
     }
 
     inline message_type omni_mode_on( std::uint8_t channel )
     {
         assert( channel < 16 );
-        return make_message( status_byte_for( std::byte{0xB0}, channel ), std::byte{0x7D} );
+        return make_message( status_byte( channel ), std::byte{0x7D} );
     }
 } // namespace sequencer::midi::channel::mode

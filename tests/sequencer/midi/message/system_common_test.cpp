@@ -4,6 +4,8 @@
 
 #include <sstream>
 
+using sequencer::midi::message::message_type;
+
 SCENARIO( "uint16_to_two_bytes", "[system_common_message]" )
 {
     using namespace sequencer::midi::message::system::common;

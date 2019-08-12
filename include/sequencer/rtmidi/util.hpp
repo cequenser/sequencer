@@ -71,7 +71,7 @@ namespace sequencer::rtmidi
         {
         }
 
-        void operator()( const midi::message::system::common::message_type& msg )
+        void operator()( const midi::message::message_type& msg )
         {
             rtmidiout_.sendMessage( msg.data(), msg.size() );
         }

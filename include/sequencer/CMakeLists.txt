@@ -9,6 +9,7 @@ add_library(sequencer
     midi/clock_base.hpp
     midi/percussion_key.hpp
     midi/message/invalid_string.hpp
+    midi/message/message_type.hpp
     midi/message/realtime.hpp
     midi/message/system_common.hpp
     chrono/chrono_adapter.hpp

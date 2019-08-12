@@ -3,7 +3,7 @@
 #include <cstddef>
 #include <cstdint>
 
-namespace sequencer::midi::message
+namespace sequencer::midi
 {
     static constexpr auto invalid_string = "invalid";
 
@@ -11,4 +11,4 @@ namespace sequencer::midi::message
     {
         return status_byte | std::byte{channel};
     }
-} // namespace sequencer::midi::message
+} // namespace sequencer::midi

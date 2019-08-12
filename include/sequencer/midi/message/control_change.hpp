@@ -36,4 +36,9 @@ namespace sequencer::midi::control_change
     {
         return make_message( status_byte( channel ), std::byte{0x43}, on_off_byte( on ) );
     }
+
+    inline message_type hold_2( std::uint8_t channel, bool on )
+    {
+        return make_message( status_byte( channel ), std::byte{0x45}, on_off_byte( on ) );
+    }
 } // namespace sequencer::midi::control_change

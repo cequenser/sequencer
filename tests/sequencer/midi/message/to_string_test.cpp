@@ -15,6 +15,7 @@ using sequencer::midi::channel::mode::reset_all_controllers;
 using sequencer::midi::channel::voice::note_off;
 using sequencer::midi::channel::voice::note_on;
 using sequencer::midi::control_change::damper_pedal;
+using sequencer::midi::control_change::hold_2;
 using sequencer::midi::control_change::portamento;
 using sequencer::midi::control_change::soft_pedal;
 using sequencer::midi::control_change::sostenuto;
@@ -255,6 +256,30 @@ SCENARIO( "midi message to string", "[to_string]" )
         THEN( "to_string returns 'soft_pedal_off:1'" )
         {
             REQUIRE( to_string( message ) == "soft_pedal_off:1" );
+        }
+    }
+
+    GIVEN( "a hold 2 on message for channel 1" )
+    {
+        const auto channel = 1;
+        const auto on = true;
+        const auto message = hold_2( channel, on );
+
+        THEN( "to_string returns 'hold_2_on:1'" )
+        {
+            REQUIRE( to_string( message ) == "hold_2_on:1" );
+        }
+    }
+
+    GIVEN( "a hold 2 off message for channel 1" )
+    {
+        const auto channel = 1;
+        const auto on = false;
+        const auto message = hold_2( channel, on );
+
+        THEN( "to_string returns 'hold_2_off:1'" )
+        {
+            REQUIRE( to_string( message ) == "hold_2_off:1" );
         }
     }
 
@@ -555,6 +580,34 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
             std::stringstream stream;
             stream << message;
             REQUIRE( stream.str() == "soft_pedal_off:1" );
+        }
+    }
+
+    GIVEN( "a hold 2 on message for channel 1" )
+    {
+        const auto channel = 1;
+        const auto on = true;
+        const auto message = hold_2( channel, on );
+
+        THEN( "stream operator writes 'hold_2_on:1'" )
+        {
+            std::stringstream stream;
+            stream << message;
+            REQUIRE( stream.str() == "hold_2_on:1" );
+        }
+    }
+
+    GIVEN( "a hold 2 off message for channel 1" )
+    {
+        const auto channel = 1;
+        const auto on = false;
+        const auto message = hold_2( channel, on );
+
+        THEN( "stream operator writes 'hold_2_off:1'" )
+        {
+            std::stringstream stream;
+            stream << message;
+            REQUIRE( stream.str() == "hold_2_off:1" );
         }
     }
 

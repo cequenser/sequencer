@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/385/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "94f72534_4ebc1cbc",
+        "filename": "include/sequencer/midi/message/message_type.hpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-12T15:51:34Z",
+      "side": 1,
+      "message": "jenkins/workspace/psv/clang-tidy/include/sequencer/midi/message/message_type.hpp:26:14: note: method \u0027message_type\u0027::empty() defined here",
+      "revId": "04f91b8f0361a6466c6aaa7c227bd408f0550cdb",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/385/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "a4e75bb0_a5d4e12f",
+        "filename": "tests/sequencer/midi/message/message_type_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-12T15:51:34Z",
+      "side": 1,
+      "message": "the \u0027empty\u0027 method should be used to check for emptiness instead of \u0027size\u0027 [readability-container-size-empty,-warnings-as-errors]",
+      "revId": "04f91b8f0361a6466c6aaa7c227bd408f0550cdb",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}

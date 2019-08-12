@@ -2,6 +2,7 @@
 
 #include <sequencer/midi/message/channel_mode.hpp>
 #include <sequencer/midi/message/channel_voice.hpp>
+#include <sequencer/midi/message/control_change.hpp>
 #include <sequencer/midi/message/message_type.hpp>
 #include <sequencer/midi/message/system_common.hpp>
 
@@ -47,6 +48,12 @@ namespace sequencer::midi
             const auto control_byte = static_cast< unsigned char >( message[ 1 ] );
             switch ( control_byte )
             {
+            // damper pedal on/off
+            case 0x40:
+                return std::string( "damper_pedal_" )
+                    .append( ( static_cast< std::uint8_t >( message[ 2 ] ) < 64u ) ? "off:"
+                                                                                   : "on:" )
+                    .append( to_string( get_channel( status_byte ) ) );
             // all sounds off
             case 0x78:
                 return std::string( "all_sounds_off:" )

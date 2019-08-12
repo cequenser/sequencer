@@ -3,9 +3,9 @@
 #include <sequencer/rtmidi/util.hpp>
 
 #include <QObject>
+#include <QString>
 #include <RtMidi.h>
 #include <future>
-#include <optional>
 
 namespace qml
 {
@@ -27,9 +27,13 @@ namespace qml
 
         Q_INVOKABLE void set_song_position_pointer( int song_position_in_16th_notes );
 
+        Q_INVOKABLE QString available_ports();
+
+        Q_INVOKABLE bool open_port( unsigned id );
+
     private:
-        std::optional< RtMidiOut > midiout_;
-        decltype( sequencer::rtmidi::make_clock( *midiout_ ) ) clock_;
+        RtMidiOut midiout_;
+        decltype( sequencer::rtmidi::make_clock( midiout_ ) ) clock_;
         std::future< void > clock_done_;
     };
 } // namespace qml

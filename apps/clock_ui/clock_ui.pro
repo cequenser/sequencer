@@ -23,3 +23,5 @@ include(deployment.pri)
 
 HEADERS += \
     backend.hpp
+
+DISTFILES +=

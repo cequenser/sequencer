@@ -55,6 +55,11 @@ namespace sequencer::midi
             case 0x79:
                 return std::string( "reset_all_controllers:" )
                     .append( to_string( get_channel( status_byte ) ) );
+            // local control on/off
+            case 0x7A:
+                return std::string( "local_control_" )
+                    .append( ( message[ 2 ] == std::byte{0x00} ) ? "off:" : "on:" )
+                    .append( to_string( get_channel( status_byte ) ) );
             // all notes off
             case 0x7B:
                 return std::string( "all_notes_off:" )
@@ -63,9 +68,13 @@ namespace sequencer::midi
             case 0x7C:
                 return std::string( "omni_mode_off:" )
                     .append( to_string( get_channel( status_byte ) ) );
-            // omni mode off
+            // omni mode on
             case 0x7D:
                 return std::string( "omni_mode_on:" )
+                    .append( to_string( get_channel( status_byte ) ) );
+            // poly mode on
+            case 0x7F:
+                return std::string( "poly_mode_on:" )
                     .append( to_string( get_channel( status_byte ) ) );
             default:
                 return invalid_string;

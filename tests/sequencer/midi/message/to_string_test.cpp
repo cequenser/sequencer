@@ -7,8 +7,10 @@
 using sequencer::midi::message_type;
 using sequencer::midi::channel::mode::all_notes_off;
 using sequencer::midi::channel::mode::all_sounds_off;
+using sequencer::midi::channel::mode::local_control;
 using sequencer::midi::channel::mode::omni_mode_off;
 using sequencer::midi::channel::mode::omni_mode_on;
+using sequencer::midi::channel::mode::poly_mode_on;
 using sequencer::midi::channel::mode::reset_all_controllers;
 using sequencer::midi::channel::voice::note_off;
 using sequencer::midi::channel::voice::note_on;
@@ -87,6 +89,30 @@ SCENARIO( "midi message to string", "[to_string]" )
         }
     }
 
+    GIVEN( "a local control on message for channel 1" )
+    {
+        const auto channel = 1;
+        const auto on = true;
+        const auto message = local_control( channel, on );
+
+        THEN( "to_string returns 'local_control_on:1'" )
+        {
+            REQUIRE( to_string( message ) == "local_control_on:1" );
+        }
+    }
+
+    GIVEN( "a local control off message for channel 1" )
+    {
+        const auto channel = 1;
+        const auto on = false;
+        const auto message = local_control( channel, on );
+
+        THEN( "to_string returns 'local_control_off:1'" )
+        {
+            REQUIRE( to_string( message ) == "local_control_off:1" );
+        }
+    }
+
     GIVEN( "an all notes off message for channel 1" )
     {
         const auto channel = 1;
@@ -117,6 +143,17 @@ SCENARIO( "midi message to string", "[to_string]" )
         THEN( "to_string returns 'omni_mode_on:1'" )
         {
             REQUIRE( to_string( message ) == "omni_mode_on:1" );
+        }
+    }
+
+    GIVEN( "a poly mode on message for channel 1" )
+    {
+        const auto channel = 1;
+        const auto message = poly_mode_on( channel );
+
+        THEN( "to_string returns 'poly_mode_on:1'" )
+        {
+            REQUIRE( to_string( message ) == "poly_mode_on:1" );
         }
     }
 
@@ -227,6 +264,34 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
         }
     }
 
+    GIVEN( "a local control on message for channel 1" )
+    {
+        const auto channel = 1;
+        const auto on = true;
+        const auto message = local_control( channel, on );
+
+        THEN( "stream operator writes 'local_control_on:1'" )
+        {
+            std::stringstream stream;
+            stream << message;
+            REQUIRE( stream.str() == "local_control_on:1" );
+        }
+    }
+
+    GIVEN( "a local control off message for channel 1" )
+    {
+        const auto channel = 1;
+        const auto on = false;
+        const auto message = local_control( channel, on );
+
+        THEN( "stream operator writes 'local_control_off:1'" )
+        {
+            std::stringstream stream;
+            stream << message;
+            REQUIRE( stream.str() == "local_control_off:1" );
+        }
+    }
+
     GIVEN( "an all notes off message for channel 1" )
     {
         const auto channel = 1;
@@ -263,6 +328,19 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
             std::stringstream stream;
             stream << message;
             REQUIRE( stream.str() == "omni_mode_on:1" );
+        }
+    }
+
+    GIVEN( "a poly mode on message for channel 1" )
+    {
+        const auto channel = 1;
+        const auto message = poly_mode_on( channel );
+
+        THEN( "stream operator writes 'poly_mode_on:1'" )
+        {
+            std::stringstream stream;
+            stream << message;
+            REQUIRE( stream.str() == "poly_mode_on:1" );
         }
     }
 

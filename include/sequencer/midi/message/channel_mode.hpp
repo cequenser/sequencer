@@ -30,6 +30,13 @@ namespace sequencer::midi::channel::mode
         return make_message( status_byte( channel ), std::byte{0x79} );
     }
 
+    inline message_type local_control( std::uint8_t channel, bool on = true )
+    {
+        assert( channel < 16 );
+        const auto data_byte = on ? std::byte{0x7F} : std::byte{0x00};
+        return make_message( status_byte( channel ), std::byte{0x7A}, data_byte );
+    }
+
     inline message_type all_notes_off( std::uint8_t channel )
     {
         assert( channel < 16 );
@@ -46,5 +53,11 @@ namespace sequencer::midi::channel::mode
     {
         assert( channel < 16 );
         return make_message( status_byte( channel ), std::byte{0x7D} );
+    }
+
+    inline message_type poly_mode_on( std::uint8_t channel )
+    {
+        assert( channel < 16 );
+        return make_message( status_byte( channel ), std::byte{0x7F} );
     }
 } // namespace sequencer::midi::channel::mode

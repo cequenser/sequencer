@@ -31,4 +31,10 @@ namespace sequencer::midi::channel::mode
         return make_message( status_byte_for( std::byte{0xB0}, channel ), std::byte{0x7B} );
     }
 
+    inline message_type omni_mode_off( std::uint8_t channel )
+    {
+        assert( channel < 16 );
+        return make_message( status_byte_for( std::byte{0xB0}, channel ), std::byte{0x7C} );
+    }
+
 } // namespace sequencer::midi::channel::mode

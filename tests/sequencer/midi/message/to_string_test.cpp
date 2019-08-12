@@ -7,6 +7,7 @@
 using sequencer::midi::message_type;
 using sequencer::midi::channel::mode::all_notes_off;
 using sequencer::midi::channel::mode::all_sounds_off;
+using sequencer::midi::channel::mode::omni_mode_off;
 using sequencer::midi::channel::mode::reset_all_controllers;
 using sequencer::midi::channel::voice::note_off;
 using sequencer::midi::channel::voice::note_on;
@@ -43,7 +44,7 @@ SCENARIO( "midi message to string", "[to_string]" )
         const auto velocity = 73;
         const auto message = note_on( channel, note, velocity );
 
-        THEN( "to_string writes 'note_on:1:40:73'" )
+        THEN( "to_string returns 'note_on:1:40:73'" )
         {
             REQUIRE( to_string( message ) == "note_on:1:40:73" );
         }
@@ -56,7 +57,7 @@ SCENARIO( "midi message to string", "[to_string]" )
         const auto velocity = 73;
         const auto message = note_off( channel, note, velocity );
 
-        THEN( "to_string writes 'note_off:1:40:73'" )
+        THEN( "to_string returns 'note_off:1:40:73'" )
         {
             REQUIRE( to_string( message ) == "note_off:1:40:73" );
         }
@@ -68,7 +69,7 @@ SCENARIO( "midi message to string", "[to_string]" )
         const auto channel = 1;
         const auto message = all_sounds_off( channel );
 
-        THEN( "stream operator writes 'all_sounds_off:1'" )
+        THEN( "to_string returns 'all_sounds_off:1'" )
         {
             REQUIRE( to_string( message ) == "all_sounds_off:1" );
         }
@@ -79,7 +80,7 @@ SCENARIO( "midi message to string", "[to_string]" )
         const auto channel = 1;
         const auto message = reset_all_controllers( channel );
 
-        THEN( "stream operator writes 'reset_all_controllers:1'" )
+        THEN( "to_string returns 'reset_all_controllers:1'" )
         {
             REQUIRE( to_string( message ) == "reset_all_controllers:1" );
         }
@@ -90,9 +91,20 @@ SCENARIO( "midi message to string", "[to_string]" )
         const auto channel = 1;
         const auto message = all_notes_off( channel );
 
-        THEN( "stream operator writes 'all_notes_off:1'" )
+        THEN( "to_string returns 'all_notes_off:1'" )
         {
             REQUIRE( to_string( message ) == "all_notes_off:1" );
+        }
+    }
+
+    GIVEN( "an omni mode off message for channel 1" )
+    {
+        const auto channel = 1;
+        const auto message = omni_mode_off( channel );
+
+        THEN( "to_string returns 'omni_mode_off:1'" )
+        {
+            REQUIRE( to_string( message ) == "omni_mode_off:1" );
         }
     }
 
@@ -213,6 +225,19 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
             std::stringstream stream;
             stream << message;
             REQUIRE( stream.str() == "all_notes_off:1" );
+        }
+    }
+
+    GIVEN( "an omni mode off message for channel 1" )
+    {
+        const auto channel = 1;
+        const auto message = omni_mode_off( channel );
+
+        THEN( "stream operator writes 'omni_mode_off:1'" )
+        {
+            std::stringstream stream;
+            stream << message;
+            REQUIRE( stream.str() == "omni_mode_off:1" );
         }
     }
 

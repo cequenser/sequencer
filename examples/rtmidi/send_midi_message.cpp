@@ -1,4 +1,4 @@
-#include <sequencer/midi/message_type.hpp>
+#include <sequencer/midi/message/realtime.hpp>
 #include <sequencer/rtmidi/util.hpp>
 
 #include <RtMidi.h>
@@ -42,15 +42,16 @@ int main()
         return 1;
     }
 
-    const auto sender = [&midiout]( sequencer::midi::message_type message ) {
+    const auto sender = [&midiout]( auto message ) {
         const std::vector< unsigned char > messages = {static_cast< unsigned char >( message )};
         midiout->sendMessage( &messages );
     };
 
-    sender( sequencer::midi::message_type::realtime_clock );
-    sender( sequencer::midi::message_type::realtime_continue );
-    sender( sequencer::midi::message_type::realtime_start );
-    sender( sequencer::midi::message_type::realtime_stop );
+    using sequencer::midi::message::real_time::message_type;
+    sender( message_type::realtime_clock );
+    sender( message_type::realtime_continue );
+    sender( message_type::realtime_start );
+    sender( message_type::realtime_stop );
 
     std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
     sender_is_done.set_value();

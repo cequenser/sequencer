@@ -2,7 +2,7 @@
 #include <sequencer/chrono/sequencer_clock.hpp>
 #include <sequencer/chrono/testing_clock.hpp>
 #include <sequencer/midi/clock.hpp>
-#include <sequencer/midi/message_type.hpp>
+#include <sequencer/midi/message/realtime.hpp>
 
 #include <catch2/catch.hpp>
 
@@ -13,6 +13,8 @@
 #include <memory>
 #include <mutex>
 #include <vector>
+
+using sequencer::midi::message::real_time::message_type;
 
 namespace
 {
@@ -28,36 +30,36 @@ namespace
 
     struct message_counting_sender
     {
-        message_counting_sender( std::vector< sequencer::midi::message_type >& received_messages )
+        message_counting_sender( std::vector< message_type >& received_messages )
             : received_messages( received_messages )
         {
         }
 
-        void operator()( sequencer::midi::message_type message ) const
+        void operator()( message_type message ) const
         {
             received_messages.push_back( message );
-            if ( message == sequencer::midi::message_type::realtime_start )
+            if ( message == message_type::realtime_start )
             {
                 std::unique_lock lock( shared->message_mutex );
                 ++shared->start_message_count;
                 lock.unlock();
                 shared->message_received.notify_one();
             }
-            if ( message == sequencer::midi::message_type::realtime_continue )
+            if ( message == message_type::realtime_continue )
             {
                 std::unique_lock lock( shared->message_mutex );
                 ++shared->continue_message_count;
                 lock.unlock();
                 shared->message_received.notify_one();
             }
-            if ( message == sequencer::midi::message_type::realtime_stop )
+            if ( message == message_type::realtime_stop )
             {
                 std::unique_lock lock( shared->message_mutex );
                 ++shared->stop_message_count;
                 lock.unlock();
                 shared->message_received.notify_one();
             }
-            if ( message == sequencer::midi::message_type::realtime_clock )
+            if ( message == message_type::realtime_clock )
             {
                 std::unique_lock lock( shared->message_mutex );
                 ++shared->clock_message_count;
@@ -66,7 +68,7 @@ namespace
             }
         }
 
-        std::vector< sequencer::midi::message_type >& received_messages;
+        std::vector< message_type >& received_messages;
 
         struct shared_data
         {
@@ -99,7 +101,7 @@ SCENARIO( "A midi clock running for 1 beat", "[midi_clock]" )
         auto start_message_received_promise = std::promise< void >();
         const auto start_message_received = start_message_received_promise.get_future();
 
-        std::vector< midi::message_type > received_messages;
+        std::vector< message_type > received_messages;
         const auto sender = message_counting_sender{received_messages};
 
         underlying_clock_type testing_clock;
@@ -149,12 +151,12 @@ SCENARIO( "A midi clock running for 1 beat", "[midi_clock]" )
             {
 
                 CHECK( received_messages.size() == 2u + 24u );
-                CHECK( received_messages.front() == midi::message_type::realtime_start );
+                CHECK( received_messages.front() == message_type::realtime_start );
                 for ( auto i = 1u; i + 1u < received_messages.size(); ++i )
                 {
-                    CHECK( received_messages[ i ] == midi::message_type::realtime_clock );
+                    CHECK( received_messages[ i ] == message_type::realtime_clock );
                 }
-                CHECK( received_messages.back() == midi::message_type::realtime_stop );
+                CHECK( received_messages.back() == message_type::realtime_stop );
             }
         }
     }
@@ -172,7 +174,7 @@ SCENARIO( "Asynchronous control of midi-clock", "[midi_clock]" )
         auto thread_ready_promise = std::make_shared< std::promise< void > >();
         const auto thread_ready = thread_ready_promise->get_future();
 
-        std::vector< midi::message_type > received_messages;
+        std::vector< message_type > received_messages;
         const auto sender = message_counting_sender{received_messages};
 
         sequencer_clock_type sequencer_clock{underlying_clock_type{}};
@@ -209,8 +211,8 @@ SCENARIO( "Asynchronous control of midi-clock", "[midi_clock]" )
                 THEN( "start and stop messages are sent" )
                 {
                     CHECK( received_messages.size() >= 2 );
-                    CHECK( received_messages.front() == midi::message_type::realtime_start );
-                    CHECK( received_messages.back() == midi::message_type::realtime_stop );
+                    CHECK( received_messages.front() == message_type::realtime_start );
+                    CHECK( received_messages.back() == message_type::realtime_stop );
 
                     received_messages.clear();
 
@@ -238,9 +240,8 @@ SCENARIO( "Asynchronous control of midi-clock", "[midi_clock]" )
                             {
                                 CHECK( received_messages.size() >= 2 );
                                 CHECK( received_messages.front() ==
-                                       midi::message_type::realtime_continue );
-                                CHECK( received_messages.back() ==
-                                       midi::message_type::realtime_stop );
+                                       message_type::realtime_continue );
+                                CHECK( received_messages.back() == message_type::realtime_stop );
                             }
                         }
                     }
@@ -269,10 +270,8 @@ SCENARIO( "Asynchronous control of midi-clock", "[midi_clock]" )
                             THEN( "start and stop messages are sent" )
                             {
                                 CHECK( received_messages.size() >= 2 );
-                                CHECK( received_messages.front() ==
-                                       midi::message_type::realtime_start );
-                                CHECK( received_messages.back() ==
-                                       midi::message_type::realtime_stop );
+                                CHECK( received_messages.front() == message_type::realtime_start );
+                                CHECK( received_messages.back() == message_type::realtime_stop );
                             }
                         }
                     }
@@ -294,13 +293,13 @@ namespace
         {
         }
 
-        void operator()( sequencer::midi::message_type message ) const
+        void operator()( message_type message ) const
         {
-            if ( message == sequencer::midi::message_type::realtime_clock )
+            if ( message == message_type::realtime_clock )
             {
                 time_points.push_back( std::chrono::high_resolution_clock::now() );
             }
-            if ( message == sequencer::midi::message_type::realtime_stop )
+            if ( message == message_type::realtime_stop )
             {
                 stop_received.set_value();
             }
@@ -414,7 +413,7 @@ SCENARIO( "Change tempo of running clock", "[midi_clock]" )
             auto thread_ready_promise = std::make_shared< std::promise< void > >();
             const auto thread_ready = thread_ready_promise->get_future();
 
-            std::vector< midi::message_type > received_messages;
+            std::vector< message_type > received_messages;
             auto sender = message_counting_sender{received_messages};
             auto midi_clock = midi::clock{sequencer_clock, sender};
             const auto clock_done =

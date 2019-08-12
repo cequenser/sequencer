@@ -1,4 +1,4 @@
-#include <sequencer/midi/message_type.hpp>
+#include <sequencer/midi/message/system_common.hpp>
 #include <sequencer/rtmidi/util.hpp>
 
 #include <RtMidi.h>
@@ -43,9 +43,7 @@ int main()
         return 1;
     }
 
-    const auto sender = [&midiout]( sequencer::midi::system::common::message_type msg ) {
-        midiout->sendMessage( msg.data(), msg.size() );
-    };
+    const auto sender = [&midiout]( auto msg ) { midiout->sendMessage( msg.data(), msg.size() ); };
 
     while ( true )
     {
@@ -56,7 +54,7 @@ int main()
         {
             break;
         }
-        sender( sequencer::midi::system::common::song_position_pointer(
+        sender( sequencer::midi::message::system::common::song_position_pointer(
             static_cast< std::uint16_t >( song_position ) ) );
     }
 

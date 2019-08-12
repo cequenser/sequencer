@@ -3,6 +3,8 @@
 #include <sequencer/chrono/chrono_adapter.hpp>
 #include <sequencer/chrono/sequencer_clock.hpp>
 #include <sequencer/midi/clock.hpp>
+#include <sequencer/midi/message/realtime.hpp>
+#include <sequencer/midi/message/system_common.hpp>
 
 #include <RtMidi.h>
 #include <ios>
@@ -52,7 +54,7 @@ namespace sequencer::rtmidi
         {
         }
 
-        void operator()( midi::message_type message )
+        void operator()( midi::message::real_time::message_type message )
         {
             const std::vector< unsigned char > messages = {static_cast< unsigned char >( message )};
             rtmidiout_.sendMessage( &messages );
@@ -69,7 +71,7 @@ namespace sequencer::rtmidi
         {
         }
 
-        void operator()( const midi::system::common::message_type& msg )
+        void operator()( const midi::message::system::common::message_type& msg )
         {
             rtmidiout_.sendMessage( msg.data(), msg.size() );
         }

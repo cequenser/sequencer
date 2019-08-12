@@ -2,6 +2,8 @@
 
 #include <catch2/catch.hpp>
 
+using sequencer::midi::message::real_time::message_type;
+
 SCENARIO( "start and stop messages", "[midi_clock_base]" )
 {
     using namespace sequencer;
@@ -14,7 +16,7 @@ SCENARIO( "start and stop messages", "[midi_clock_base]" )
         {
             THEN( "nothing happens when update is called" )
             {
-                clock.update( beat_time_point( 1.0_beats ), []( midi::message_type ) { throw 1; } );
+                clock.update( beat_time_point( 1.0_beats ), []( auto ) { throw 1; } );
             }
             THEN( "is_started returns false" )
             {
@@ -27,8 +29,7 @@ SCENARIO( "start and stop messages", "[midi_clock_base]" )
 
                 THEN( "nothing happens when update is called" )
                 {
-                    clock.update( beat_time_point( 1.0_beats ),
-                                  []( midi::message_type ) { throw 1; } );
+                    clock.update( beat_time_point( 1.0_beats ), []( auto ) { throw 1; } );
                 }
             }
             THEN( "is_started still returns false after reset" )
@@ -38,8 +39,7 @@ SCENARIO( "start and stop messages", "[midi_clock_base]" )
 
                 THEN( "nothing happens when update is called" )
                 {
-                    clock.update( beat_time_point( 1.0_beats ),
-                                  []( midi::message_type ) { throw 1; } );
+                    clock.update( beat_time_point( 1.0_beats ), []( auto ) { throw 1; } );
                 }
             }
         }
@@ -49,15 +49,14 @@ SCENARIO( "start and stop messages", "[midi_clock_base]" )
             clock.start();
             THEN( "a start message is sent when update is called" )
             {
-                midi::message_type message = midi::message_type::invalid;
+                auto message = message_type::invalid;
                 clock.update( beat_time_point( 0.0_beats ),
-                              [& msg = message]( midi::message_type message ) { msg = message; } );
-                REQUIRE( message == midi::message_type::realtime_start );
+                              [& msg = message]( auto message ) { msg = message; } );
+                REQUIRE( message == message_type::realtime_start );
 
                 THEN( "nothing happens when update is called again" )
                 {
-                    clock.update( beat_time_point( 0.0_beats ),
-                                  []( midi::message_type ) { throw 1; } );
+                    clock.update( beat_time_point( 0.0_beats ), []( auto ) { throw 1; } );
                 }
 
                 THEN( "is_started returns false after stop" )
@@ -67,18 +66,16 @@ SCENARIO( "start and stop messages", "[midi_clock_base]" )
 
                     THEN( "a stop message is sent when update is called again" )
                     {
-                        midi::message_type received = midi::message_type::invalid;
-                        clock.update( beat_time_point( 1.0_beats ),
-                                      [&received]( midi::message_type message ) {
-                                          REQUIRE( received == midi::message_type::invalid );
-                                          received = message;
-                                      } );
-                        REQUIRE( received == midi::message_type::realtime_stop );
+                        auto received = message_type::invalid;
+                        clock.update( beat_time_point( 1.0_beats ), [&received]( auto message ) {
+                            REQUIRE( received == message_type::invalid );
+                            received = message;
+                        } );
+                        REQUIRE( received == message_type::realtime_stop );
 
                         THEN( "nothing happens when update is called again" )
                         {
-                            clock.update( beat_time_point( 1.0_beats ),
-                                          []( midi::message_type ) { throw 1; } );
+                            clock.update( beat_time_point( 1.0_beats ), []( auto ) { throw 1; } );
                         }
                     }
                 }
@@ -88,18 +85,16 @@ SCENARIO( "start and stop messages", "[midi_clock_base]" )
                     clock.reset();
                     REQUIRE_FALSE( clock.is_started() );
 
-                    midi::message_type received = midi::message_type::invalid;
-                    clock.update( beat_time_point( 1.0_beats ),
-                                  [&received]( midi::message_type message ) {
-                                      REQUIRE( received == midi::message_type::invalid );
-                                      received = message;
-                                  } );
-                    REQUIRE( received == midi::message_type::realtime_stop );
+                    auto received = message_type::invalid;
+                    clock.update( beat_time_point( 1.0_beats ), [&received]( auto message ) {
+                        REQUIRE( received == message_type::invalid );
+                        received = message;
+                    } );
+                    REQUIRE( received == message_type::realtime_stop );
 
                     THEN( "nothing happens when update is called again" )
                     {
-                        clock.update( beat_time_point( 1.0_beats ),
-                                      []( midi::message_type ) { throw 1; } );
+                        clock.update( beat_time_point( 1.0_beats ), []( auto ) { throw 1; } );
                     }
                 }
             }
@@ -121,13 +116,12 @@ SCENARIO( "start and stop messages", "[midi_clock_base]" )
             THEN( "the clock sends 5 x 24 pulses" )
             {
                 int pulse_count = 0;
-                clock.update( beat_time_point( 1.0_beats ),
-                              [&pulse_count]( midi::message_type message ) {
-                                  if ( message == midi::message_type::realtime_clock )
-                                  {
-                                      pulse_count++;
-                                  }
-                              } );
+                clock.update( beat_time_point( 1.0_beats ), [&pulse_count]( auto message ) {
+                    if ( message == message_type::realtime_clock )
+                    {
+                        pulse_count++;
+                    }
+                } );
                 REQUIRE( pulse_count == 5 * clock.pulses_per_quarter_note() );
 
                 WHEN( "update is called at 1.0 beat after reset" )
@@ -137,13 +131,12 @@ SCENARIO( "start and stop messages", "[midi_clock_base]" )
                     THEN( "the clock sends 5 x 24 pulses again" )
                     {
                         int pulse_count = 0;
-                        clock.update( beat_time_point( 1.0_beats ),
-                                      [&pulse_count]( midi::message_type message ) {
-                                          if ( message == midi::message_type::realtime_clock )
-                                          {
-                                              pulse_count++;
-                                          }
-                                      } );
+                        clock.update( beat_time_point( 1.0_beats ), [&pulse_count]( auto message ) {
+                            if ( message == message_type::realtime_clock )
+                            {
+                                pulse_count++;
+                            }
+                        } );
                         REQUIRE( pulse_count == 5 * clock.pulses_per_quarter_note() );
                     }
                 }
@@ -160,41 +153,39 @@ SCENARIO( "continue", "[midi_clock_base]" )
     {
         midi::clock_base clock;
         clock.start();
-        clock.update( beat_time_point( 0.0_beats ), []( midi::message_type ) {} );
+        clock.update( beat_time_point( 0.0_beats ), []( auto ) {} );
 
         WHEN( "the clock is stopped" )
         {
             clock.stop();
-            clock.update( beat_time_point( 0.0_beats ), []( midi::message_type ) {} );
+            clock.update( beat_time_point( 0.0_beats ), []( auto ) {} );
 
             THEN( "starting the clock again sends a continue message" )
             {
                 clock.start();
-                midi::message_type received = midi::message_type::invalid;
-                clock.update( beat_time_point( 0.0_beats ),
-                              [&received]( midi::message_type message ) {
-                                  REQUIRE( received == midi::message_type::invalid );
-                                  received = message;
-                              } );
-                REQUIRE( received == midi::message_type::realtime_continue );
+                auto received = message_type::invalid;
+                clock.update( beat_time_point( 0.0_beats ), [&received]( auto message ) {
+                    REQUIRE( received == message_type::invalid );
+                    received = message;
+                } );
+                REQUIRE( received == message_type::realtime_continue );
             }
         }
 
         WHEN( "the clock is reset" )
         {
             clock.reset();
-            clock.update( beat_time_point( 0.0_beats ), []( midi::message_type ) {} );
+            clock.update( beat_time_point( 0.0_beats ), []( auto ) {} );
 
             THEN( "starting the clock again sends a start message" )
             {
                 clock.start();
-                midi::message_type received = midi::message_type::invalid;
-                clock.update( beat_time_point( 0.0_beats ),
-                              [&received]( midi::message_type message ) {
-                                  REQUIRE( received == midi::message_type::invalid );
-                                  received = message;
-                              } );
-                REQUIRE( received == midi::message_type::realtime_start );
+                auto received = message_type::invalid;
+                clock.update( beat_time_point( 0.0_beats ), [&received]( auto message ) {
+                    REQUIRE( received == message_type::invalid );
+                    received = message;
+                } );
+                REQUIRE( received == message_type::realtime_start );
             }
         }
     }
@@ -213,26 +204,24 @@ SCENARIO( "pulses", "[midi_clock_base]" )
             THEN( "the clock sends 24 pulses" )
             {
                 int pulse_count = 0;
-                clock.update( beat_time_point( 1.0_beats ),
-                              [&pulse_count]( midi::message_type message ) {
-                                  if ( message == midi::message_type::realtime_clock )
-                                  {
-                                      pulse_count++;
-                                  }
-                              } );
+                clock.update( beat_time_point( 1.0_beats ), [&pulse_count]( auto message ) {
+                    if ( message == message_type::realtime_clock )
+                    {
+                        pulse_count++;
+                    }
+                } );
                 REQUIRE( pulse_count == 24 );
                 WHEN( "update is called again with duration of 1 beat" )
                 {
                     THEN( "no pulses are send" )
                     {
                         pulse_count = 0;
-                        clock.update( beat_time_point( 1.0_beats ),
-                                      [&pulse_count]( midi::message_type message ) {
-                                          if ( message == midi::message_type::realtime_clock )
-                                          {
-                                              pulse_count++;
-                                          }
-                                      } );
+                        clock.update( beat_time_point( 1.0_beats ), [&pulse_count]( auto message ) {
+                            if ( message == message_type::realtime_clock )
+                            {
+                                pulse_count++;
+                            }
+                        } );
                         REQUIRE( pulse_count == 0 );
                     }
                 }
@@ -244,13 +233,12 @@ SCENARIO( "pulses", "[midi_clock_base]" )
                     THEN( "24 pulses are send" )
                     {
                         pulse_count = 0;
-                        clock.update( beat_time_point( 1.0_beats ),
-                                      [&pulse_count]( midi::message_type message ) {
-                                          if ( message == midi::message_type::realtime_clock )
-                                          {
-                                              pulse_count++;
-                                          }
-                                      } );
+                        clock.update( beat_time_point( 1.0_beats ), [&pulse_count]( auto message ) {
+                            if ( message == message_type::realtime_clock )
+                            {
+                                pulse_count++;
+                            }
+                        } );
                         REQUIRE( pulse_count == 24 );
                     }
                 }
@@ -267,13 +255,12 @@ SCENARIO( "pulses", "[midi_clock_base]" )
             THEN( "the clock sends 36 pulses" )
             {
                 int pulse_count = 0;
-                clock.update( beat_time_point( 1.0_beats ),
-                              [&pulse_count]( midi::message_type message ) {
-                                  if ( message == midi::message_type::realtime_clock )
-                                  {
-                                      pulse_count++;
-                                  }
-                              } );
+                clock.update( beat_time_point( 1.0_beats ), [&pulse_count]( auto message ) {
+                    if ( message == message_type::realtime_clock )
+                    {
+                        pulse_count++;
+                    }
+                } );
                 REQUIRE( pulse_count == clock.pulses_per_quarter_note() );
             }
         }

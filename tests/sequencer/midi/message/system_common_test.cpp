@@ -1,102 +1,12 @@
-#include <sequencer/midi/message_type.hpp>
+#include <sequencer/midi/message/system_common.hpp>
 
 #include <catch2/catch.hpp>
 
 #include <sstream>
 
-SCENARIO( "real time messages to string", "[message_type]" )
+SCENARIO( "uint16_to_two_bytes", "[system_common_message]" )
 {
-    using namespace sequencer;
-
-    GIVEN( "message_type::realtime_clock" )
-    {
-        const auto message = midi::message_type::realtime_clock;
-
-        THEN( "to_string returns 'clock'" )
-        {
-            REQUIRE( to_string( message ) == "clock" );
-        }
-
-        THEN( "stream operator writes 'clock'" )
-        {
-            std::stringstream stream;
-            stream << message;
-            REQUIRE( stream.str() == "clock" );
-        }
-    }
-
-    GIVEN( "message_type::realtime_start" )
-    {
-        const auto message = midi::message_type::realtime_start;
-
-        THEN( "to_string returns 'start'" )
-        {
-            REQUIRE( to_string( message ) == "start" );
-        }
-
-        THEN( "stream operator writes 'start'" )
-        {
-            std::stringstream stream;
-            stream << message;
-            REQUIRE( stream.str() == "start" );
-        }
-    }
-
-    GIVEN( "message_type::realtime_stop" )
-    {
-        const auto message = midi::message_type::realtime_stop;
-
-        THEN( "to_string returns 'stop'" )
-        {
-            REQUIRE( to_string( message ) == "stop" );
-        }
-
-        THEN( "stream operator writes 'stop'" )
-        {
-            std::stringstream stream;
-            stream << message;
-            REQUIRE( stream.str() == "stop" );
-        }
-    }
-
-    GIVEN( "message_type::realtime_continue" )
-    {
-        const auto message = midi::message_type::realtime_continue;
-
-        THEN( "to_string returns 'continue'" )
-        {
-            REQUIRE( to_string( message ) == "continue" );
-        }
-
-        THEN( "stream operator writes 'continue'" )
-        {
-            std::stringstream stream;
-            stream << message;
-            REQUIRE( stream.str() == "continue" );
-        }
-    }
-
-    GIVEN( "message_type::invalid" )
-    {
-        const auto message = midi::message_type::invalid;
-
-        THEN( "to_string returns 'invalid'" )
-        {
-            REQUIRE( to_string( message ) == "invalid" );
-        }
-
-        THEN( "stream operator writes 'invalid'" )
-        {
-            std::stringstream stream;
-            stream << message;
-            REQUIRE( stream.str() == "invalid" );
-        }
-    }
-}
-
-SCENARIO( "uint16_to_two_bytes", "[message_type]" )
-{
-    using namespace sequencer::midi::system::common;
+    using namespace sequencer::midi::message::system::common;
 
     GIVEN( "a value of 64" )
     {
@@ -139,9 +49,9 @@ SCENARIO( "uint16_to_two_bytes", "[message_type]" )
     }
 }
 
-SCENARIO( "two_bytes_to_uint16", "[message_type]" )
+SCENARIO( "two_bytes_to_uint16", "[system_common_message]" )
 {
-    using namespace sequencer::midi::system::common;
+    using namespace sequencer::midi::message::system::common;
 
     GIVEN( "two bytes with values 0x40 and 0x00" )
     {
@@ -174,13 +84,13 @@ SCENARIO( "two_bytes_to_uint16", "[message_type]" )
     }
 }
 
-SCENARIO( "system::common::message_type to string conversion", "[message_type]" )
+SCENARIO( "message to string conversion", "[system_common_message]" )
 {
-    using namespace sequencer;
+    using namespace sequencer::midi::message::system::common;
 
     GIVEN( "song pointer position message with value 3" )
     {
-        const auto message = midi::system::common::song_position_pointer( 3 );
+        const auto message = song_position_pointer( 3 );
 
         THEN( "to_string returns 'spp@3'" )
         {
@@ -190,7 +100,7 @@ SCENARIO( "system::common::message_type to string conversion", "[message_type]" 
 
     GIVEN( "song pointer position message with value 200" )
     {
-        const auto message = midi::system::common::song_position_pointer( 200 );
+        const auto message = song_position_pointer( 200 );
 
         THEN( "to_string returns 'spp@200'" )
         {
@@ -200,32 +110,32 @@ SCENARIO( "system::common::message_type to string conversion", "[message_type]" 
 
     GIVEN( "empty message" )
     {
-        const auto message = midi::system::common::message_type{{}};
+        const auto message = message_type{{}};
 
         THEN( "to_string returns 'invalid'" )
         {
-            REQUIRE( to_string( message ) == "invalid" );
+            REQUIRE( to_string( message ) == sequencer::midi::message::invalid_string );
         }
     }
 
     GIVEN( "invalid message" )
     {
-        const auto message = midi::system::common::message_type{{std::byte{0x00}}};
+        const auto message = message_type{{std::byte{0x00}}};
 
         THEN( "to_string returns 'invalid'" )
         {
-            REQUIRE( to_string( message ) == "invalid" );
+            REQUIRE( to_string( message ) == sequencer::midi::message::invalid_string );
         }
     }
 }
 
-SCENARIO( "system::common::message_type streaming", "[message_type]" )
+SCENARIO( "system common message streaming", "[system_common_message]" )
 {
-    using namespace sequencer;
+    using namespace sequencer::midi::message::system::common;
 
     GIVEN( "song pointer position message with value 3" )
     {
-        const auto message = midi::system::common::song_position_pointer( 3 );
+        const auto message = song_position_pointer( 3 );
 
         THEN( "stream operator writes 'spp@3'" )
         {
@@ -237,7 +147,7 @@ SCENARIO( "system::common::message_type streaming", "[message_type]" )
 
     GIVEN( "song pointer position message with value 200" )
     {
-        const auto message = midi::system::common::song_position_pointer( 200 );
+        const auto message = song_position_pointer( 200 );
 
         THEN( "stream operator writes 'spp@200'" )
         {
@@ -249,36 +159,36 @@ SCENARIO( "system::common::message_type streaming", "[message_type]" )
 
     GIVEN( "empty message" )
     {
-        const auto message = midi::system::common::message_type{{}};
+        const auto message = message_type{{}};
 
         THEN( "stream operator writes 'invalid'" )
         {
             std::stringstream stream;
             stream << message;
-            REQUIRE( stream.str() == "invalid" );
+            REQUIRE( stream.str() == sequencer::midi::message::invalid_string );
         }
     }
 
     GIVEN( "invalid message" )
     {
-        const auto message = midi::system::common::message_type{{std::byte{0x00}}};
+        const auto message = message_type{{std::byte{0x00}}};
 
         THEN( "to_string returns 'invalid'" )
         {
             std::stringstream stream;
             stream << message;
-            REQUIRE( stream.str() == "invalid" );
+            REQUIRE( stream.str() == sequencer::midi::message::invalid_string );
         }
     }
 }
 
-SCENARIO( "song position messages", "[message_type]" )
+SCENARIO( "song position messages", "[system_common_message]" )
 {
-    using namespace sequencer;
+    using namespace sequencer::midi::message::system::common;
 
     GIVEN( "song pointer position message with value 3" )
     {
-        const auto message = midi::system::common::song_position_pointer( 3 );
+        const auto message = song_position_pointer( 3 );
 
         THEN( "message contains 3 bytes" )
         {
@@ -303,7 +213,7 @@ SCENARIO( "song position messages", "[message_type]" )
 
     GIVEN( "song pointer position message with value 200" )
     {
-        const auto message = midi::system::common::song_position_pointer( 200 );
+        const auto message = song_position_pointer( 200 );
 
         THEN( "message contains 3 bytes" )
         {

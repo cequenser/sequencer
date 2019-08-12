@@ -1,7 +1,7 @@
 #pragma once
 
 #include <sequencer/beat_time_point.hpp>
-#include <sequencer/midi/message_type.hpp>
+#include <sequencer/midi/message/realtime.hpp>
 
 namespace sequencer::midi
 {
@@ -25,14 +25,14 @@ namespace sequencer::midi
         {
             if ( !running_ && started_ )
             {
-                sender( continue_ ? midi::message_type::realtime_continue
-                                  : midi::message_type::realtime_start );
+                sender( continue_ ? midi::message::real_time::message_type::realtime_continue
+                                  : midi::message::real_time::message_type::realtime_start );
                 running_ = true;
                 continue_ = true;
             }
             else if ( running_ && !started_ )
             {
-                sender( midi::message_type::realtime_stop );
+                sender( midi::message::real_time::message_type::realtime_stop );
                 running_ = false;
             }
 
@@ -42,7 +42,7 @@ namespace sequencer::midi
                 while ( last_update_ + dt <= t )
                 {
                     last_update_ += dt;
-                    sender( midi::message_type::realtime_clock );
+                    sender( midi::message::real_time::message_type::realtime_clock );
                 }
             }
         }

@@ -10,8 +10,8 @@
 #include <vector>
 
 using sequencer::beats_per_minute;
-using sequencer::midi::message_type;
 using sequencer::midi::start_clock_in_thread;
+using sequencer::midi::message::real_time::message_type;
 using sequencer::rtmidi::cout_callback;
 using sequencer::rtmidi::make_clock;
 using sequencer::rtmidi::make_midi_port;

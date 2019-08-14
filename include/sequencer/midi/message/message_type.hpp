@@ -33,7 +33,7 @@ namespace sequencer::midi
             return message_.front();
         }
 
-        auto size() const noexcept
+        size_type size() const noexcept
         {
             return message_.size();
         }
@@ -67,6 +67,24 @@ namespace sequencer::midi
         {
             return static_cast< const unsigned char* >(
                 static_cast< const void* >( message_.data() ) );
+        }
+
+        bool operator==( const message_type& other ) const noexcept
+        {
+            if ( size() != other.size() )
+            {
+                return false;
+            }
+
+            for ( auto i = 0u; i < size(); ++i )
+            {
+                if ( ( *this )[ i ] != other[ i ] )
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
     private:

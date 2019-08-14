@@ -108,6 +108,8 @@ SCENARIO( "A midi clock running for 1 beat", "[midi_clock]" )
         sequencer_clock_type sequencer_clock{testing_clock};
 
         auto midi_clock = midi::clock{sequencer_clock, sender};
+        CHECK_FALSE( midi_clock.is_running() );
+
         const auto clock_done = std::async(
             std::launch::async, [&midi_clock, thread_ready = std::move( thread_ready_promise )] {
                 thread_ready->set_value();
@@ -122,6 +124,7 @@ SCENARIO( "A midi clock running for 1 beat", "[midi_clock]" )
         WHEN( "the clock is started and runs for 490ms = 0.98 beats @ 120 bpm" )
         {
             midi_clock.start();
+            CHECK( midi_clock.is_running() );
             {
                 std::unique_lock lock( sender.shared->message_mutex );
                 sender.shared->message_received.wait(

@@ -31,6 +31,12 @@ namespace qml
 
         Q_INVOKABLE bool open_port( unsigned id );
 
+        Q_INVOKABLE void start_sequencer();
+
+        Q_INVOKABLE void stop_sequencer();
+
+        Q_INVOKABLE void set_step( int i );
+
     private:
         RtMidiOut midiout_;
         decltype( sequencer::rtmidi::make_clock( midiout_ ) ) clock_;

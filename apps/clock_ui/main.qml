@@ -5,8 +5,8 @@ import Sequencer 1.0
 
 ApplicationWindow {
     visible: true
-    width: 480
-    height: 220
+    width: 900
+    height: 260
     title: qsTr("MIDI Clock")
 
     Backend
@@ -145,6 +145,138 @@ ApplicationWindow {
                 id: status_label
                 color: "black"
                 text: qsTr("")
+            }
+        }
+
+        RowLayout {
+            id: sequencer_layout
+
+            CheckBox {
+                id: step_0
+
+                onClicked: {
+                    backend.set_step(0, checked);
+                }
+            }
+
+            CheckBox {
+                id: step_1
+
+                onClicked: {
+                    backend.set_step(1, checked);
+                }
+            }
+
+            CheckBox {
+                id: step_2
+
+                onClicked: {
+                    backend.set_step(2, checked);
+                }
+            }
+
+            CheckBox {
+                id: step_3
+
+                onClicked: {
+                    backend.set_step(3, checked);
+                }
+            }
+
+            CheckBox {
+                id: step_4
+
+                onClicked: {
+                    backend.set_step(4, checked);
+                }
+            }
+
+            CheckBox {
+                id: step_5
+
+                onClicked: {
+                    backend.set_step(5, checked);
+                }
+            }
+
+            CheckBox {
+                id: step_6
+
+                onClicked: {
+                    backend.set_step(6, checked);
+                }
+            }
+
+            CheckBox {
+                id: step_7
+
+                onClicked: {
+                    backend.set_step(7, checked);
+                }
+            }
+
+            CheckBox {
+                id: step_8
+
+                onClicked: {
+                    backend.set_step(8, checked);
+                }
+            }
+
+            CheckBox {
+                id: step_9
+
+                onClicked: {
+                    backend.set_step(9, checked);
+                }
+            }
+
+            CheckBox {
+                id: step_10
+
+                onClicked: {
+                    backend.set_step(10, checked);
+                }
+            }
+
+            CheckBox {
+                id: step_11
+
+                onClicked: {
+                    backend.set_step(11, checked);
+                }
+            }
+
+            CheckBox {
+                id: step_12
+
+                onClicked: {
+                    backend.set_step(12, checked);
+                }
+            }
+
+            CheckBox {
+                id: step_13
+
+                onClicked: {
+                    backend.set_step(13, checked);
+                }
+            }
+
+            CheckBox {
+                id: step_14
+
+                onClicked: {
+                    backend.set_step(14, checked);
+                }
+            }
+
+            CheckBox {
+                id: step_15
+
+                onClicked: {
+                    backend.set_step(15, checked);
+                }
             }
         }
     }

@@ -25,6 +25,8 @@ using sequencer::midi::channel::voice::note_on;
 using underlying_clock_type = sequencer::chrono::steady_testing_clock<>;
 using sequencer_clock_type = sequencer::chrono::sequencer_clock< const underlying_clock_type& >;
 
+const auto velocity = 32;
+
 SCENARIO( "step_sequencer_base plays 4 beats", "[step_sequencer]" )
 {
     using namespace sequencer;
@@ -79,7 +81,7 @@ SCENARIO( "step_sequencer_base plays 4 beats", "[step_sequencer]" )
             THEN( "one note on message is send" )
             {
                 REQUIRE( received_messages.size() == 1 );
-                CHECK( received_messages.front() == note_on( 0, note_1, 0 ) );
+                CHECK( received_messages.front() == note_on( 0, note_1, velocity ) );
             }
         }
 
@@ -104,7 +106,7 @@ SCENARIO( "step_sequencer_base plays 4 beats", "[step_sequencer]" )
             THEN( "one note on message is send" )
             {
                 REQUIRE( received_messages.size() == 1 );
-                CHECK( received_messages.front() == note_on( 0, note_1, 0 ) );
+                CHECK( received_messages.front() == note_on( 0, note_1, velocity ) );
             }
             WHEN( "sequencer receives stop message one clock message" )
             {
@@ -114,7 +116,7 @@ SCENARIO( "step_sequencer_base plays 4 beats", "[step_sequencer]" )
                 THEN( "one note on and all notes off message are send" )
                 {
                     REQUIRE( received_messages.size() == 2 );
-                    CHECK( received_messages[ 0 ] == note_on( 0, note_1, 0 ) );
+                    CHECK( received_messages[ 0 ] == note_on( 0, note_1, velocity ) );
                     CHECK( received_messages[ 1 ] == all_notes_off( 0 ) );
                 }
 
@@ -129,7 +131,7 @@ SCENARIO( "step_sequencer_base plays 4 beats", "[step_sequencer]" )
                     THEN( "one note off message is send" )
                     {
                         REQUIRE( received_messages.size() == 3 );
-                        CHECK( received_messages[ 2 ] == note_on( 0, note_2, 0 ) );
+                        CHECK( received_messages[ 2 ] == note_on( 0, note_2, velocity ) );
                     }
                 }
 
@@ -144,15 +146,15 @@ SCENARIO( "step_sequencer_base plays 4 beats", "[step_sequencer]" )
                     THEN( "one note on message is send" )
                     {
                         REQUIRE( received_messages.size() == 5 );
-                        CHECK( received_messages[ 2 ] == note_on( 0, note_1, 0 ) );
+                        CHECK( received_messages[ 2 ] == note_on( 0, note_1, velocity ) );
 
                         THEN( "one note off message is send" )
                         {
-                            CHECK( received_messages[ 3 ] == note_off( 0, note_1, 0 ) );
+                            CHECK( received_messages[ 3 ] == note_off( 0, note_1, velocity ) );
 
                             THEN( "one note on message is send" )
                             {
-                                CHECK( received_messages[ 4 ] == note_on( 0, note_2, 0 ) );
+                                CHECK( received_messages[ 4 ] == note_on( 0, note_2, velocity ) );
                             }
                         }
                     }
@@ -171,15 +173,15 @@ SCENARIO( "step_sequencer_base plays 4 beats", "[step_sequencer]" )
             THEN( "one note on message is send" )
             {
                 REQUIRE( received_messages.size() == 3 );
-                CHECK( received_messages[ 0 ] == note_on( 0, note_1, 0 ) );
+                CHECK( received_messages[ 0 ] == note_on( 0, note_1, velocity ) );
 
                 THEN( "one note off message is send" )
                 {
-                    CHECK( received_messages[ 1 ] == note_off( 0, note_1, 0 ) );
+                    CHECK( received_messages[ 1 ] == note_off( 0, note_1, velocity ) );
 
                     THEN( "one note on message is send" )
                     {
-                        CHECK( received_messages[ 2 ] == note_on( 0, note_2, 0 ) );
+                        CHECK( received_messages[ 2 ] == note_on( 0, note_2, velocity ) );
                     }
                 }
             }
@@ -196,15 +198,15 @@ SCENARIO( "step_sequencer_base plays 4 beats", "[step_sequencer]" )
             THEN( "one note on message is send" )
             {
                 REQUIRE( received_messages.size() == 3 );
-                CHECK( received_messages[ 0 ] == note_on( 0, note_1, 0 ) );
+                CHECK( received_messages[ 0 ] == note_on( 0, note_1, velocity ) );
 
                 THEN( "one note off message is send" )
                 {
-                    CHECK( received_messages[ 1 ] == note_off( 0, note_1, 0 ) );
+                    CHECK( received_messages[ 1 ] == note_off( 0, note_1, velocity ) );
 
                     THEN( "one note on message is send" )
                     {
-                        CHECK( received_messages[ 2 ] == note_on( 0, note_2, 0 ) );
+                        CHECK( received_messages[ 2 ] == note_on( 0, note_2, velocity ) );
                     }
                 }
             }
@@ -353,7 +355,7 @@ SCENARIO( "step_sequencer_base that is triggered by a midi clock plays 4 beats",
             THEN( "one note on message is send" )
             {
                 REQUIRE( received_messages.size() == 1 );
-                CHECK( received_messages.front() == note_on( 0, note_1, 0 ) );
+                CHECK( received_messages.front() == note_on( 0, note_1, velocity ) );
             }
         }
 
@@ -365,15 +367,15 @@ SCENARIO( "step_sequencer_base that is triggered by a midi clock plays 4 beats",
             THEN( "one note on message is send" )
             {
                 REQUIRE( received_messages.size() == 3 );
-                CHECK( received_messages[ 0 ] == note_on( 0, note_1, 0 ) );
+                CHECK( received_messages[ 0 ] == note_on( 0, note_1, velocity ) );
 
                 THEN( "one note off message is send" )
                 {
-                    CHECK( received_messages[ 1 ] == note_off( 0, note_1, 0 ) );
+                    CHECK( received_messages[ 1 ] == note_off( 0, note_1, velocity ) );
 
                     THEN( "one note on message is send" )
                     {
-                        CHECK( received_messages[ 2 ] == note_on( 0, note_2, 0 ) );
+                        CHECK( received_messages[ 2 ] == note_on( 0, note_2, velocity ) );
                     }
                 }
             }
@@ -387,7 +389,7 @@ SCENARIO( "step_sequencer_base that is triggered by a midi clock plays 4 beats",
             THEN( "one note on message is send" )
             {
                 REQUIRE( received_messages.size() == 1 );
-                CHECK( received_messages.front() == note_on( 0, note_1, 0 ) );
+                CHECK( received_messages.front() == note_on( 0, note_1, velocity ) );
             }
 
             WHEN( "midi clock is stopped" )
@@ -410,7 +412,7 @@ SCENARIO( "step_sequencer_base that is triggered by a midi clock plays 4 beats",
                     THEN( "one note on message is send" )
                     {
                         REQUIRE( received_messages.size() == 3 );
-                        CHECK( received_messages[ 2 ] == note_on( 0, note_2, 0 ) );
+                        CHECK( received_messages[ 2 ] == note_on( 0, note_2, velocity ) );
                     }
                 }
 
@@ -425,15 +427,15 @@ SCENARIO( "step_sequencer_base that is triggered by a midi clock plays 4 beats",
                     THEN( "one note on message is send" )
                     {
                         REQUIRE( received_messages.size() == 5 );
-                        CHECK( received_messages[ 2 ] == note_on( 0, note_1, 0 ) );
+                        CHECK( received_messages[ 2 ] == note_on( 0, note_1, velocity ) );
 
                         THEN( "one note off message is send" )
                         {
-                            CHECK( received_messages[ 3 ] == note_off( 0, note_1, 0 ) );
+                            CHECK( received_messages[ 3 ] == note_off( 0, note_1, velocity ) );
 
                             THEN( "one note on message is send" )
                             {
-                                CHECK( received_messages[ 4 ] == note_on( 0, note_2, 0 ) );
+                                CHECK( received_messages[ 4 ] == note_on( 0, note_2, velocity ) );
                             }
                         }
                     }

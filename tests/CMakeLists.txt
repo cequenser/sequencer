@@ -6,6 +6,7 @@ add_executable(tests
     sequencer/fixed_point_type_test.cpp
     sequencer/midi/clock_test.cpp
     sequencer/midi/clock_base_test.cpp
+    sequencer/midi/track_test.cpp
     sequencer/midi/message/channel_mode_test.cpp
     sequencer/midi/message/channel_voice_test.cpp
     sequencer/midi/message/control_change_test.cpp

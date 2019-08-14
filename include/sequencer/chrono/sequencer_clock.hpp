@@ -28,7 +28,7 @@ namespace sequencer::chrono
         {
         }
 
-        bool is_running() noexcept
+        bool is_running() const noexcept
         {
             return is_running_;
         }

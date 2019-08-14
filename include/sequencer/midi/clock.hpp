@@ -67,6 +67,11 @@ namespace sequencer::midi
             tempo_ = tempo;
         }
 
+        bool is_running() const noexcept
+        {
+            return sequencer_clock_.is_running();
+        }
+
         void run()
         {
             update_clock_base( 0.0_beats );

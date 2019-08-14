@@ -147,5 +147,158 @@ ApplicationWindow {
                 text: qsTr("")
             }
         }
+
+        RowLayout {
+            id: sequencer_button_layout
+            Button {
+                id: sequencer_play_button
+                text: qsTr("Play")
+
+                onClicked: {
+                    backend.start_sequencer()
+                }
+            }
+
+            Button {
+                id: sequencer_stop_button
+                text: qsTr("Stop")
+
+                onClicked: {
+                    backend.stop_sequencer()
+                }
+            }
+        }
+
+        RowLayout {
+            id: sequencer_layout
+
+            CheckBox {
+                id: step_0
+
+                onClicked: {
+                    backend.set_step(0);
+                }
+            }
+
+            CheckBox {
+                id: step_1
+
+                onClicked: {
+                    backend.set_step(1);
+                }
+            }
+
+            CheckBox {
+                id: step_2
+
+                onClicked: {
+                    backend.set_step(2);
+                }
+            }
+
+            CheckBox {
+                id: step_3
+
+                onClicked: {
+                    backend.set_step(3);
+                }
+            }
+
+            CheckBox {
+                id: step_4
+
+                onClicked: {
+                    backend.set_step(4);
+                }
+            }
+
+            CheckBox {
+                id: step_5
+
+                onClicked: {
+                    backend.set_step(5);
+                }
+            }
+
+            CheckBox {
+                id: step_6
+
+                onClicked: {
+                    backend.set_step(6);
+                }
+            }
+
+            CheckBox {
+                id: step_7
+
+                onClicked: {
+                    backend.set_step(7);
+                }
+            }
+
+            CheckBox {
+                id: step_8
+
+                onClicked: {
+                    backend.set_step(8);
+                }
+            }
+
+            CheckBox {
+                id: step_9
+
+                onClicked: {
+                    backend.set_step(9);
+                }
+            }
+
+            CheckBox {
+                id: step_10
+
+                onClicked: {
+                    backend.set_step(10);
+                }
+            }
+
+            CheckBox {
+                id: step_11
+
+                onClicked: {
+                    backend.set_step(11);
+                }
+            }
+
+            CheckBox {
+                id: step_12
+
+                onClicked: {
+                    backend.set_step(12);
+                }
+            }
+
+            CheckBox {
+                id: step_13
+
+                onClicked: {
+                    backend.set_step(13);
+                }
+            }
+
+            CheckBox {
+                id: step_14
+
+                onClicked: {
+                    backend.set_step(14);
+                }
+            }
+
+            CheckBox {
+                id: step_15
+
+                onClicked: {
+                    backend.set_step(15);
+                }
+            }
+        }
     }
 }

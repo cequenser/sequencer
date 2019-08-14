@@ -74,4 +74,15 @@ namespace qml
         return midiout_.isPortOpen();
     }
 
+    void backend::start_sequencer()
+    {
+    }
+
+    void backend::stop_sequencer()
+    {
+    }
+
+    void backend::set_step( int i )
+    {
+    }
 } // namespace qml

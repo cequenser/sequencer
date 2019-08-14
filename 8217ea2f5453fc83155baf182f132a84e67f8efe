@@ -1,0 +1,24 @@
+{
+  "comments": [
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/410/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "92daf577_d37efa9c",
+        "filename": "include/sequencer/midi/message/message_type.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-14T19:03:20Z",
+      "side": 1,
+      "message": "loop variable has narrower type \u0027unsigned int\u0027 than iteration\u0027s upper bound \u0027sequencer::midi::message_type::size_type\u0027 (aka \u0027unsigned long\u0027) [bugprone-too-small-loop-variable,-warnings-as-errors]",
+      "revId": "8217ea2f5453fc83155baf182f132a84e67f8efe",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}

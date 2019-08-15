@@ -56,7 +56,7 @@ namespace sequencer::rtmidi
         {
         }
 
-        void operator()( midi::realtime::message_type message )
+        void operator()( midi::realtime::message_type message ) const
         {
             const std::vector< unsigned char > messages = {static_cast< unsigned char >( message )};
             rtmidiout_.sendMessage( &messages );
@@ -74,7 +74,7 @@ namespace sequencer::rtmidi
         }
 
         template < class Message >
-        void operator()( const Message& msg )
+        void operator()( const Message& msg ) const
         {
             rtmidiout_.sendMessage(
                 static_cast< const unsigned char* >( static_cast< const void* >( msg.data() ) ),
@@ -96,18 +96,18 @@ namespace sequencer::rtmidi
         return sequencer::midi::clock{std::move( sequencer_clock ), std::move( sender )};
     }
 
-    template < class Sender >
-    inline auto make_clock( RtMidiOut& midiout, Sender other_sender )
+    template < class StepSequencer >
+    inline auto make_clock( RtMidiOut& midiout, StepSequencer& step_sequencer )
     {
         using underlying_clock_type =
             sequencer::chrono::clock_object_adapter< std::chrono::steady_clock >;
         using sequencer_clock_type = sequencer::chrono::sequencer_clock< underlying_clock_type >;
 
         sequencer_clock_type sequencer_clock{underlying_clock_type{}};
-        auto sender = [&other_sender, &midiout]( midi::realtime::message_type message ) {
+        auto sender = [&step_sequencer, &midiout]( midi::realtime::message_type message ) {
             const std::vector< unsigned char > messages = {static_cast< unsigned char >( message )};
             midiout.sendMessage( &messages );
-            other_sender( message );
+            step_sequencer.update( message );
         };
         return sequencer::midi::clock{std::move( sequencer_clock ), std::move( sender )};
     }

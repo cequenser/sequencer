@@ -24,7 +24,7 @@ namespace sequencer::midi
 
         ~step_sequencer()
         {
-            sender_( message_type{channel::mode::all_notes_off( channel_ )} );
+            sender_( make_message( channel::mode::all_notes_off( channel_ ) ) );
         }
 
         void update( realtime::message_type message )
@@ -69,7 +69,7 @@ namespace sequencer::midi
             }
             if ( message == realtime::message_type::realtime_stop )
             {
-                sender_( message_type{channel::mode::all_notes_off( channel_ )} );
+                sender_( make_message( channel::mode::all_notes_off( channel_ ) ) );
                 started_ = false;
                 last_note_ = Track::no_note;
                 return true;
@@ -92,10 +92,10 @@ namespace sequencer::midi
                 {
                     if ( last_note_ != Track::no_note )
                     {
-                        sender_( message_type{
-                            channel::voice::note_off( channel_, last_note_, velocity_ )} );
+                        sender_( make_message(
+                            channel::voice::note_off( channel_, last_note_, velocity_ ) ) );
                     }
-                    sender_( message_type{channel::voice::note_on( channel_, note, velocity_ )} );
+                    sender_( make_message( channel::voice::note_on( channel_, note, velocity_ ) ) );
                     last_note_ = note;
                 }
             }

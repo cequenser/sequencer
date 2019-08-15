@@ -1,5 +1,7 @@
 #include "backend.hpp"
 
+#include <sequencer/midi/percussion_key.hpp>
+
 #include <cassert>
 #include <cstdint>
 #include <iostream>
@@ -7,7 +9,9 @@
 namespace qml
 {
     backend::backend()
-        : midiout_{RtMidiOut()}, clock_{sequencer::rtmidi::make_clock( midiout_ )},
+        : midiout_{RtMidiOut()}, step_sequencer_{track{},
+                                                 sequencer::rtmidi::message_sender{midiout_}},
+          clock_{sequencer::rtmidi::make_clock( midiout_, step_sequencer_ )},
           clock_done_{start_clock_in_thread( clock_ )}
     {
     }
@@ -74,15 +78,10 @@ namespace qml
         return midiout_.isPortOpen();
     }
 
-    void backend::start_sequencer()
+    void backend::set_step( int i, bool checked )
     {
-    }
-
-    void backend::stop_sequencer()
-    {
-    }
-
-    void backend::set_step( int i )
-    {
+        step_sequencer_.track()[ track::size_type( i ) ] =
+            checked ? static_cast< std::uint8_t >( sequencer::midi::percussion_key::BassDrum_1 )
+                    : std::uint8_t{0};
     }
 } // namespace qml

@@ -444,3 +444,51 @@ SCENARIO( "step_sequencer_base that is triggered by a midi clock plays 4 beats",
         }
     }
 }
+
+SCENARIO( "step_sequencer_base sends notes to correct channels", "[step_sequencer]" )
+{
+    using namespace sequencer;
+
+    GIVEN( "a step sequencer with an empty track" )
+    {
+        std::vector< midi::message_type > received_messages;
+        const auto midi_sender = [&received_messages]( midi::message_type message ) {
+            received_messages.push_back( message );
+        };
+
+        constexpr auto steps = 16u;
+        auto midi_track = track< steps >{};
+        const auto note_1 = 0;
+        midi_track[ 0 ] = note_1;
+        auto sequencer = step_sequencer{midi_track, midi_sender};
+
+        WHEN( "sequencer receives start message and 1 clock message" )
+        {
+            sequencer.update( midi::realtime::message_type::realtime_start );
+            sequencer.update( midi::realtime::message_type::realtime_clock );
+
+            THEN( "one note on message is send for channel 0" )
+            {
+                REQUIRE( received_messages.size() == 1 );
+                CHECK( received_messages.front() == note_on( 0, note_1, velocity ) );
+            }
+        }
+
+        WHEN( "channel is set to 1" )
+        {
+            const auto new_channel = 1;
+            sequencer.set_channel( new_channel );
+            WHEN( "sequencer receives start message and 1 clock message" )
+            {
+                sequencer.update( midi::realtime::message_type::realtime_start );
+                sequencer.update( midi::realtime::message_type::realtime_clock );
+
+                THEN( "one note on message is send for channel 1" )
+                {
+                    REQUIRE( received_messages.size() == 1 );
+                    CHECK( received_messages.front() == note_on( new_channel, note_1, velocity ) );
+                }
+            }
+        }
+    }
+}

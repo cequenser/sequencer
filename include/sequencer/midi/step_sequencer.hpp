@@ -4,6 +4,7 @@
 #include <sequencer/midi/message/channel_voice.hpp>
 #include <sequencer/midi/message/realtime.hpp>
 
+#include <cassert>
 #include <cstdint>
 #include <type_traits>
 
@@ -43,6 +44,12 @@ namespace sequencer::midi
         const Track& track() const noexcept
         {
             return track_;
+        }
+
+        void set_channel( std::uint8_t channel ) noexcept
+        {
+            assert( channel < 16 );
+            channel_ = channel;
         }
 
     private:

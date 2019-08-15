@@ -92,16 +92,16 @@ namespace sequencer::rtmidi
         return sequencer::midi::clock{std::move( sequencer_clock ), std::move( sender )};
     }
 
-    template < class StepSequencer >
-    inline auto make_clock( RtMidiOut& midiout, StepSequencer& step_sequencer )
+    template < class Sender >
+    inline auto make_clock( RtMidiOut& midiout, Sender other_sender )
     {
         using underlying_clock_type =
             sequencer::chrono::clock_object_adapter< std::chrono::steady_clock >;
         using sequencer_clock_type = sequencer::chrono::sequencer_clock< underlying_clock_type >;
 
         sequencer_clock_type sequencer_clock{underlying_clock_type{}};
-        auto sender = [&step_sequencer, &midiout]( midi::realtime::message_type message ) {
-            step_sequencer.update( message );
+        auto sender = [&other_sender, &midiout]( midi::realtime::message_type message ) {
+            other_sender( message );
             const std::vector< unsigned char > messages = {static_cast< unsigned char >( message )};
             midiout.sendMessage( &messages );
         };

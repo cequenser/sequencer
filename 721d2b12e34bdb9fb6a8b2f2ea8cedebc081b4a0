@@ -1,0 +1,24 @@
+{
+  "comments": [
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/451/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "48267004_554bda27",
+        "filename": "include/sequencer/rtmidi/util.hpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-15T19:34:22Z",
+      "side": 1,
+      "message": "do not use reinterpret_cast [cppcoreguidelines-pro-type-reinterpret-cast,-warnings-as-errors]",
+      "revId": "721d2b12e34bdb9fb6a8b2f2ea8cedebc081b4a0",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}

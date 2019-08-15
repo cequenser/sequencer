@@ -29,12 +29,6 @@ namespace sequencer::midi
         {
         }
 
-        template < std::size_t n >
-        explicit message_type( const std::array< std::byte, n >& message )
-            : message_type( std::make_from_tuple< message_type >( message ) )
-        {
-        }
-
         explicit message_type( std::vector< std::byte >&& message )
             : message_( std::move( message ) )
         {
@@ -108,9 +102,9 @@ namespace sequencer::midi
         container message_;
     };
 
-    template < class... Args >
-    message_type make_message( Args&&... args )
+    template < std::size_t n >
+    message_type make_message( const std::array< std::byte, n >& message )
     {
-        return message_type{{std::forward< Args >( args )...}};
+        return std::make_from_tuple< message_type >( message );
     }
 } // namespace sequencer::midi

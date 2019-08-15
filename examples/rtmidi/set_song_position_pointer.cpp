@@ -43,7 +43,11 @@ int main()
         return 1;
     }
 
-    const auto sender = [&midiout]( auto msg ) { midiout->sendMessage( msg.data(), msg.size() ); };
+    const auto sender = [&midiout]( auto msg ) {
+        midiout->sendMessage(
+            static_cast< const unsigned char* >( static_cast< const void* >( msg.data() ) ),
+            msg.size() );
+    };
 
     while ( true )
     {

@@ -1,8 +1,8 @@
 #pragma once
 
-#include <sequencer/midi/message/message_type.hpp>
 #include <sequencer/midi/message/util.hpp>
 
+#include <array>
 #include <cstddef>
 #include <cstdint>
 
@@ -23,9 +23,10 @@ namespace sequencer::midi::system::common
                static_cast< std::uint8_t >( two_bytes.first );
     }
 
-    inline message_type song_position_pointer( std::uint16_t position_in_16th_notes )
+    constexpr std::array< std::byte, 3 >
+    song_position_pointer( std::uint16_t position_in_16th_notes ) noexcept
     {
         const auto hex_value = uint16_to_two_bytes( position_in_16th_notes );
-        return make_message( std::byte{0xF2}, hex_value.first, hex_value.second );
+        return {std::byte{0xF2}, hex_value.first, hex_value.second};
     }
 } // namespace sequencer::midi::system::common

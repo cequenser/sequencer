@@ -2,8 +2,6 @@
 
 #include <catch2/catch.hpp>
 
-using sequencer::midi::message_type;
-
 SCENARIO( "uint16_to_two_bytes", "[system_common_message]" )
 {
     using namespace sequencer::midi::system::common;

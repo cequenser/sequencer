@@ -16,6 +16,7 @@
 #include <mutex>
 #include <vector>
 
+using sequencer::midi::make_message;
 using sequencer::midi::step_sequencer;
 using sequencer::midi::track;
 using sequencer::midi::channel::mode::all_notes_off;
@@ -29,14 +30,12 @@ namespace
 {
     auto note_on( std::uint8_t channel, std::uint8_t note )
     {
-        return sequencer::midi::message_type{
-            sequencer::midi::channel::voice::note_on( channel, note, velocity )};
+        return make_message( sequencer::midi::channel::voice::note_on( channel, note, velocity ) );
     }
 
     auto note_off( std::uint8_t channel, std::uint8_t note )
     {
-        return sequencer::midi::message_type{
-            sequencer::midi::channel::voice::note_off( channel, note, velocity )};
+        return make_message( sequencer::midi::channel::voice::note_off( channel, note, velocity ) );
     }
 } // namespace
 
@@ -130,7 +129,7 @@ SCENARIO( "step_sequencer_base plays 4 beats", "[step_sequencer]" )
                 {
                     REQUIRE( received_messages.size() == 2 );
                     CHECK( received_messages[ 0 ] == note_on( 0, note_1 ) );
-                    CHECK( received_messages[ 1 ] == midi::message_type{all_notes_off( 0 )} );
+                    CHECK( received_messages[ 1 ] == make_message( all_notes_off( 0 ) ) );
                 }
 
                 WHEN( "sequencer receives continue message and 25 clock messages" )
@@ -413,7 +412,7 @@ SCENARIO( "step_sequencer_base that is triggered by a midi clock plays 4 beats",
                 THEN( "all notes off message is send" )
                 {
                     REQUIRE( received_messages.size() == 2 );
-                    CHECK( received_messages[ 1 ] == midi::message_type{all_notes_off( 0 )} );
+                    CHECK( received_messages[ 1 ] == make_message( all_notes_off( 0 ) ) );
                 }
 
                 WHEN( "midi clock is started again and testing clock runs for 500 ms" )

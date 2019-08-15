@@ -4,10 +4,10 @@
 
 #include <array>
 #include <cstddef>
+#include <iostream>
 #include <tuple>
 #include <type_traits>
 #include <vector>
-
 namespace sequencer::midi
 {
     class message_type
@@ -91,11 +91,28 @@ namespace sequencer::midi
             {
                 if ( ( *this )[ i ] != other[ i ] )
                 {
+                    std::cout << "unequal: " << int( ( *this )[ i ] ) << " vs. "
+                              << int( other[ i ] ) << std::endl;
                     return false;
                 }
             }
 
             return true;
+        }
+
+        template < class Iterator >
+        message_type& append( Iterator begin, Iterator end )
+        {
+            message_.insert( message_.end(), begin, end );
+            return *this;
+        }
+
+        template < class Container >
+        message_type& append( const Container& container )
+        {
+            using std::begin;
+            using std::end;
+            return append( begin( container ), end( container ) );
         }
 
     private:

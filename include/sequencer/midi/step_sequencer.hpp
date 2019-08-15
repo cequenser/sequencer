@@ -24,7 +24,7 @@ namespace sequencer::midi
 
         ~step_sequencer()
         {
-            sender_( make_message( channel::mode::all_notes_off( channel_ ) ) );
+            sender_( make_message( channel::mode::all_notes_off( track_.channel() ) ) );
         }
 
         void update( realtime::message_type message )
@@ -47,12 +47,6 @@ namespace sequencer::midi
             return track_;
         }
 
-        void set_channel( std::uint8_t channel ) noexcept
-        {
-            assert( channel < 16 );
-            channel_ = channel;
-        }
-
     private:
         bool process_control_message( realtime::message_type message )
         {
@@ -69,9 +63,9 @@ namespace sequencer::midi
             }
             if ( message == realtime::message_type::realtime_stop )
             {
-                sender_( make_message( channel::mode::all_notes_off( channel_ ) ) );
+                sender_( make_message( channel::mode::all_notes_off( track_.channel() ) ) );
                 started_ = false;
-                last_note_ = Track::no_note;
+                track_.clear_last_note();
                 return true;
             }
 
@@ -87,20 +81,13 @@ namespace sequencer::midi
             if ( midi_beat_counter_ % midi_clock_messages_per_step == 0 )
             {
                 const auto step = midi_beat_counter_ / midi_clock_messages_per_step;
-                const auto note = track_[ step ].load();
-                if ( note != Track::no_note )
+                const auto messages = track_.get_messages( step );
+                if ( !messages.empty() )
                 {
-                    if ( last_note_ != Track::no_note )
-                    {
-                        sender_( make_message(
-                            channel::voice::note_off( channel_, last_note_, velocity_ ) ) );
-                    }
-                    sender_( make_message( channel::voice::note_on( channel_, note, velocity_ ) ) );
-                    last_note_ = note;
+                    sender_( messages );
                 }
             }
-            midi_beat_counter_ += 1;
-            if ( midi_beat_counter_ == track_.steps() * midi_clock_messages_per_step )
+            if ( ++midi_beat_counter_ == track_.steps() * midi_clock_messages_per_step )
             {
                 midi_beat_counter_ = 0;
             }
@@ -109,8 +96,6 @@ namespace sequencer::midi
         Track track_;
         Sender sender_;
         unsigned midi_beat_counter_ = 0;
-        int last_note_ = Track::no_note;
-        std::uint8_t channel_ = 0;
         std::uint8_t velocity_ = 32;
         bool started_ = false;
     };

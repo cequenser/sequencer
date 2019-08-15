@@ -75,7 +75,7 @@ SCENARIO( "midi message to string", "[to_string]" )
     GIVEN( "an all sound off message for channel 1" )
     {
         const auto channel = 1;
-        const auto message = all_sounds_off( channel );
+        const auto message = message_type{all_sounds_off( channel )};
 
         THEN( "to_string returns 'all_sounds_off:1'" )
         {
@@ -86,7 +86,7 @@ SCENARIO( "midi message to string", "[to_string]" )
     GIVEN( "a reset all controllers message for channel 1" )
     {
         const auto channel = 1;
-        const auto message = reset_all_controllers( channel );
+        const auto message = message_type{reset_all_controllers( channel )};
 
         THEN( "to_string returns 'reset_all_controllers:1'" )
         {
@@ -98,7 +98,7 @@ SCENARIO( "midi message to string", "[to_string]" )
     {
         const auto channel = 1;
         const auto on = true;
-        const auto message = local_control( channel, on );
+        const auto message = message_type{local_control( channel, on )};
 
         THEN( "to_string returns 'local_control_on:1'" )
         {
@@ -110,7 +110,7 @@ SCENARIO( "midi message to string", "[to_string]" )
     {
         const auto channel = 1;
         const auto on = false;
-        const auto message = local_control( channel, on );
+        const auto message = message_type{local_control( channel, on )};
 
         THEN( "to_string returns 'local_control_off:1'" )
         {
@@ -121,7 +121,7 @@ SCENARIO( "midi message to string", "[to_string]" )
     GIVEN( "an all notes off message for channel 1" )
     {
         const auto channel = 1;
-        const auto message = all_notes_off( channel );
+        const auto message = message_type{all_notes_off( channel )};
 
         THEN( "to_string returns 'all_notes_off:1'" )
         {
@@ -132,7 +132,7 @@ SCENARIO( "midi message to string", "[to_string]" )
     GIVEN( "an omni mode off message for channel 1" )
     {
         const auto channel = 1;
-        const auto message = omni_mode_off( channel );
+        const auto message = message_type{omni_mode_off( channel )};
 
         THEN( "to_string returns 'omni_mode_off:1'" )
         {
@@ -143,7 +143,7 @@ SCENARIO( "midi message to string", "[to_string]" )
     GIVEN( "an omni mode on message for channel 1" )
     {
         const auto channel = 1;
-        const auto message = omni_mode_on( channel );
+        const auto message = message_type{omni_mode_on( channel )};
 
         THEN( "to_string returns 'omni_mode_on:1'" )
         {
@@ -154,7 +154,7 @@ SCENARIO( "midi message to string", "[to_string]" )
     GIVEN( "a poly mode on message for channel 1" )
     {
         const auto channel = 1;
-        const auto message = poly_mode_on( channel );
+        const auto message = message_type{poly_mode_on( channel )};
 
         THEN( "to_string returns 'poly_mode_on:1'" )
         {
@@ -367,7 +367,7 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
     GIVEN( "an all sound off message for channel 1" )
     {
         const auto channel = 1;
-        const auto message = all_sounds_off( channel );
+        const auto message = message_type{all_sounds_off( channel )};
 
         THEN( "stream operator writes 'all_sounds_off:1'" )
         {
@@ -380,7 +380,7 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
     GIVEN( "a reset all controllers message for channel 1" )
     {
         const auto channel = 1;
-        const auto message = reset_all_controllers( channel );
+        const auto message = message_type{reset_all_controllers( channel )};
 
         THEN( "stream operator writes 'reset_all_controllers:1'" )
         {
@@ -394,7 +394,7 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
     {
         const auto channel = 1;
         const auto on = true;
-        const auto message = local_control( channel, on );
+        const auto message = message_type{local_control( channel, on )};
 
         THEN( "stream operator writes 'local_control_on:1'" )
         {
@@ -408,7 +408,7 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
     {
         const auto channel = 1;
         const auto on = false;
-        const auto message = local_control( channel, on );
+        const auto message = message_type{local_control( channel, on )};
 
         THEN( "stream operator writes 'local_control_off:1'" )
         {
@@ -421,7 +421,7 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
     GIVEN( "an all notes off message for channel 1" )
     {
         const auto channel = 1;
-        const auto message = all_notes_off( channel );
+        const auto message = message_type{all_notes_off( channel )};
 
         THEN( "stream operator writes 'all_notes_off:1'" )
         {
@@ -434,7 +434,7 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
     GIVEN( "an omni mode off message for channel 1" )
     {
         const auto channel = 1;
-        const auto message = omni_mode_off( channel );
+        const auto message = message_type{omni_mode_off( channel )};
 
         THEN( "stream operator writes 'omni_mode_off:1'" )
         {
@@ -447,7 +447,7 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
     GIVEN( "an omni mode on message for channel 1" )
     {
         const auto channel = 1;
-        const auto message = omni_mode_on( channel );
+        const auto message = message_type{omni_mode_on( channel )};
 
         THEN( "stream operator writes 'omni_mode_on:1'" )
         {
@@ -460,7 +460,7 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
     GIVEN( "a poly mode on message for channel 1" )
     {
         const auto channel = 1;
-        const auto message = poly_mode_on( channel );
+        const auto message = message_type{poly_mode_on( channel )};
 
         THEN( "stream operator writes 'poly_mode_on:1'" )
         {

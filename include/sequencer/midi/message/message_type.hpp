@@ -4,6 +4,8 @@
 
 #include <array>
 #include <cstddef>
+#include <tuple>
+#include <type_traits>
 #include <vector>
 
 namespace sequencer::midi
@@ -11,7 +13,8 @@ namespace sequencer::midi
     class message_type
     {
     public:
-        using size_type = std::vector< std::byte >::size_type;
+        using container = std::vector< std::byte >;
+        using size_type = container::size_type;
 
         message_type() = default;
 
@@ -19,9 +22,16 @@ namespace sequencer::midi
         {
         }
 
+        template <
+            class... Args,
+            std::enable_if_t< !std::is_constructible_v< message_type, Args... > >* = nullptr >
+        explicit message_type( Args&&... args ) : message_{{std::forward< Args >( args )...}}
+        {
+        }
+
         template < std::size_t n >
         explicit message_type( const std::array< std::byte, n >& message )
-            : message_( std::begin( message ), std::end( message ) )
+            : message_type( std::make_from_tuple< message_type >( message ) )
         {
         }
 
@@ -65,7 +75,7 @@ namespace sequencer::midi
             return message_.end();
         }
 
-        const std::vector< std::byte >& message() const noexcept
+        const container& message() const noexcept
         {
             return message_;
         }
@@ -95,7 +105,7 @@ namespace sequencer::midi
         }
 
     private:
-        std::vector< std::byte > message_;
+        container message_;
     };
 
     template < class... Args >

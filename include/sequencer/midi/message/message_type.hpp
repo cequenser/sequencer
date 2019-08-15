@@ -98,6 +98,21 @@ namespace sequencer::midi
             return true;
         }
 
+        template < class Iterator >
+        message_type& append( Iterator begin, Iterator end )
+        {
+            message_.insert( message_.end(), begin, end );
+            return *this;
+        }
+
+        template < class Container >
+        message_type& append( const Container& container )
+        {
+            using std::begin;
+            using std::end;
+            return append( begin( container ), end( container ) );
+        }
+
     private:
         container message_;
     };

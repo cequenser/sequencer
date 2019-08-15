@@ -1,0 +1,24 @@
+{
+  "comments": [
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/418/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "d4179869_a4518b58",
+        "filename": "tests/sequencer/midi/step_sequencer_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-15T10:56:56Z",
+      "side": 1,
+      "message": "invalid case style for class \u0027ClockMessageCount\u0027 [readability-identifier-naming,-warnings-as-errors]",
+      "revId": "bbd59b00e20e7f33b3c628290a46d20a56db2cf3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}

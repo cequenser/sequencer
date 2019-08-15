@@ -37,7 +37,7 @@ SCENARIO( "step_sequencer_base plays 4 beats", "[step_sequencer]" )
         };
 
         constexpr auto steps = 4u;
-        const auto midi_track = track< steps >{};
+        auto midi_track = track< steps >{};
         auto sequencer = step_sequencer{midi_track, midi_sender};
 
         WHEN( "sequencer receives start message and 96 clock messages (i.e. 4 beats @ 24 pulses "
@@ -266,7 +266,7 @@ SCENARIO( "step_sequencer_base that is triggered by a midi clock plays 4 beats",
         };
 
         constexpr auto steps = 4u;
-        const auto midi_track = track< steps >{};
+        auto midi_track = track< steps >{};
         auto sequencer = step_sequencer{midi_track, midi_sender};
         underlying_clock_type testing_clock;
         sequencer_clock_type sequencer_clock{testing_clock};

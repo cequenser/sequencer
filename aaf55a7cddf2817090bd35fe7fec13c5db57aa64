@@ -1,0 +1,24 @@
+{
+  "comments": [
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/448/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "539fb521_78d2e863",
+        "filename": "examples/rtmidi/set_song_position_pointer.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-15T19:22:15Z",
+      "side": 1,
+      "message": "do not use reinterpret_cast [cppcoreguidelines-pro-type-reinterpret-cast,-warnings-as-errors]",
+      "revId": "aaf55a7cddf2817090bd35fe7fec13c5db57aa64",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}

@@ -91,6 +91,10 @@ namespace sequencer::midi
                 }
             }
             midi_beat_counter_ += 1;
+            if ( midi_beat_counter_ == track_.steps() * midi_clock_messages_per_step )
+            {
+                midi_beat_counter_ = 0;
+            }
         }
 
         Track track_;

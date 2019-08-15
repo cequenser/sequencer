@@ -11,7 +11,8 @@ namespace qml
     backend::backend()
         : midiout_{RtMidiOut()}, step_sequencer_{track{},
                                                  sequencer::rtmidi::message_sender{midiout_}},
-          clock_{sequencer::rtmidi::make_clock( midiout_, step_sequencer_ )},
+          clock_{sequencer::rtmidi::make_clock(
+              midiout_, [this]( auto message ) { step_sequencer_.update( message ); } )},
           clock_done_{start_clock_in_thread( clock_ )}
     {
     }

@@ -92,9 +92,10 @@ namespace sequencer::midi
                 {
                     if ( last_note_ != Track::no_note )
                     {
-                        sender_( channel::voice::note_off( channel_, last_note_, velocity_ ) );
+                        sender_( message_type{
+                            channel::voice::note_off( channel_, last_note_, velocity_ )} );
                     }
-                    sender_( channel::voice::note_on( channel_, note, velocity_ ) );
+                    sender_( message_type{channel::voice::note_on( channel_, note, velocity_ )} );
                     last_note_ = note;
                 }
             }

@@ -50,7 +50,7 @@ SCENARIO( "midi message to string", "[to_string]" )
         const auto channel = 1;
         const auto note = 40;
         const auto velocity = 73;
-        const auto message = note_on( channel, note, velocity );
+        const auto message = message_type{note_on( channel, note, velocity )};
 
         THEN( "to_string returns 'note_on:1:40:73'" )
         {
@@ -63,7 +63,7 @@ SCENARIO( "midi message to string", "[to_string]" )
         const auto channel = 1;
         const auto note = 40;
         const auto velocity = 73;
-        const auto message = note_off( channel, note, velocity );
+        const auto message = message_type{note_off( channel, note, velocity )};
 
         THEN( "to_string returns 'note_off:1:40:73'" )
         {
@@ -338,7 +338,7 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
         const auto channel = 1;
         const auto note = 40;
         const auto velocity = 73;
-        const auto message = note_on( channel, note, velocity );
+        const auto message = message_type{note_on( channel, note, velocity )};
 
         THEN( "stream operator writes 'note_on:1:40:73'" )
         {
@@ -353,7 +353,7 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
         const auto channel = 1;
         const auto note = 40;
         const auto velocity = 73;
-        const auto message = note_off( channel, note, velocity );
+        const auto message = message_type{note_off( channel, note, velocity )};
 
         THEN( "stream operator writes 'note_off:1:40:73'" )
         {

@@ -73,9 +73,11 @@ namespace sequencer::rtmidi
         {
         }
 
-        void operator()( const midi::message_type& msg )
+        template < class Message >
+        void operator()( const Message& msg )
         {
-            rtmidiout_.sendMessage( msg.data(), msg.size() );
+            rtmidiout_.sendMessage( reinterpret_cast< const unsigned char* >( msg.data() ),
+                                    msg.size() );
         }
 
     private:

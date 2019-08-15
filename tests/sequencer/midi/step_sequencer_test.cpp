@@ -6,6 +6,7 @@
 #include <sequencer/midi/message/message_type.hpp>
 #include <sequencer/midi/step_sequencer.hpp>
 #include <sequencer/midi/track.hpp>
+#include <sequencer/midi/util.hpp>
 
 #include <catch2/catch.hpp>
 
@@ -17,6 +18,7 @@
 #include <vector>
 
 using sequencer::midi::make_message;
+using sequencer::midi::make_midi_clock_raii_shutdown;
 using sequencer::midi::step_sequencer;
 using sequencer::midi::track;
 using sequencer::midi::channel::mode::all_notes_off;
@@ -228,16 +230,6 @@ SCENARIO( "step_sequencer_base plays 4 beats", "[step_sequencer]" )
 
 namespace
 {
-    template < class Clock, class Dummy >
-    auto make_midi_clock_raii_shutdown( Clock& clock, Dummy& dummy )
-    {
-        const auto shut_down_clock_impl = [&clock]( const std::future< void >* ) {
-            clock.shut_down();
-        };
-        return std::unique_ptr< Dummy, decltype( shut_down_clock_impl ) >( &dummy,
-                                                                           shut_down_clock_impl );
-    }
-
     struct clock_message_count_t
     {
         explicit clock_message_count_t( int count ) noexcept : count( count )

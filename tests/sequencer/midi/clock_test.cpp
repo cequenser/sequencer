@@ -3,6 +3,7 @@
 #include <sequencer/chrono/testing_clock.hpp>
 #include <sequencer/midi/clock.hpp>
 #include <sequencer/midi/message/realtime.hpp>
+#include <sequencer/midi/util.hpp>
 
 #include <catch2/catch.hpp>
 
@@ -14,20 +15,11 @@
 #include <mutex>
 #include <vector>
 
+using sequencer::midi::make_midi_clock_raii_shutdown;
 using sequencer::midi::realtime::message_type;
 
 namespace
 {
-    template < class Clock, class Dummy >
-    auto make_midi_clock_raii_shutdown( Clock& clock, Dummy& dummy )
-    {
-        const auto shut_down_clock_impl = [&clock]( const std::future< void >* ) {
-            clock.shut_down();
-        };
-        return std::unique_ptr< Dummy, decltype( shut_down_clock_impl ) >( &dummy,
-                                                                           shut_down_clock_impl );
-    }
-
     struct message_counting_sender
     {
         message_counting_sender( std::vector< message_type >& received_messages )

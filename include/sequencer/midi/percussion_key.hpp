@@ -1,8 +1,10 @@
 #pragma once
 
+#include <cstdint>
+
 namespace sequencer::midi
 {
-    enum class percussion_key
+    enum class percussion_key : std::uint8_t
     {
         // clang-format off
         AcousticBassDrum    = 35,

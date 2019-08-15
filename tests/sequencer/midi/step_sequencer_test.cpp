@@ -117,7 +117,7 @@ SCENARIO( "step_sequencer_base plays 4 beats", "[step_sequencer]" )
                 {
                     REQUIRE( received_messages.size() == 2 );
                     CHECK( received_messages[ 0 ] == note_on( 0, note_1, velocity ) );
-                    CHECK( received_messages[ 1 ] == all_notes_off( 0 ) );
+                    CHECK( received_messages[ 1 ] == midi::message_type{all_notes_off( 0 )} );
                 }
 
                 WHEN( "sequencer receives continue message and 25 clock messages" )
@@ -400,7 +400,7 @@ SCENARIO( "step_sequencer_base that is triggered by a midi clock plays 4 beats",
                 THEN( "all notes off message is send" )
                 {
                     REQUIRE( received_messages.size() == 2 );
-                    CHECK( received_messages[ 1 ] == all_notes_off( 0 ) );
+                    CHECK( received_messages[ 1 ] == midi::message_type{all_notes_off( 0 )} );
                 }
 
                 WHEN( "midi clock is started again and testing clock runs for 500 ms" )

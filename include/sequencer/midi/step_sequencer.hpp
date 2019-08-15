@@ -2,6 +2,7 @@
 
 #include <sequencer/midi/message/channel_mode.hpp>
 #include <sequencer/midi/message/channel_voice.hpp>
+#include <sequencer/midi/message/message_type.hpp>
 #include <sequencer/midi/message/realtime.hpp>
 
 #include <cassert>
@@ -23,7 +24,7 @@ namespace sequencer::midi
 
         ~step_sequencer()
         {
-            sender_( channel::mode::all_notes_off( channel_ ) );
+            sender_( message_type{channel::mode::all_notes_off( channel_ )} );
         }
 
         void update( realtime::message_type message )
@@ -68,7 +69,7 @@ namespace sequencer::midi
             }
             if ( message == realtime::message_type::realtime_stop )
             {
-                sender_( channel::mode::all_notes_off( channel_ ) );
+                sender_( message_type{channel::mode::all_notes_off( channel_ )} );
                 started_ = false;
                 last_note_ = Track::no_note;
                 return true;

@@ -2,6 +2,7 @@
 
 #include <sequencer/midi/message/util.hpp>
 
+#include <array>
 #include <cstddef>
 #include <vector>
 
@@ -15,6 +16,12 @@ namespace sequencer::midi
         message_type() = default;
 
         explicit message_type( const std::vector< std::byte >& message ) : message_( message )
+        {
+        }
+
+        template < std::size_t n >
+        explicit message_type( const std::array< std::byte, n >& message )
+            : message_( std::begin( message ), std::end( message ) )
         {
         }
 

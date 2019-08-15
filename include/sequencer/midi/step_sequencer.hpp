@@ -13,10 +13,10 @@ namespace sequencer::midi
     class step_sequencer
     {
     public:
-        constexpr step_sequencer( const Track& track, const Sender& sender ) noexcept(
-            std::is_nothrow_copy_constructible_v< Track >&&
+        constexpr step_sequencer( Track&& track, const Sender& sender ) noexcept(
+            std::is_nothrow_move_constructible_v< Track >&&
                 std::is_nothrow_copy_constructible_v< Sender > )
-            : track_( track ), sender_( sender )
+            : track_( std::move( track ) ), sender_( sender )
         {
         }
 
@@ -79,7 +79,7 @@ namespace sequencer::midi
             if ( midi_beat_counter_ % midi_clock_messages_per_step == 0 )
             {
                 const auto step = midi_beat_counter_ / midi_clock_messages_per_step;
-                const auto note = track_[ step ];
+                const auto note = track_[ step ].load();
                 if ( note != Track::no_note )
                 {
                     if ( last_note_ != Track::no_note )

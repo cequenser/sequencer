@@ -37,8 +37,8 @@ SCENARIO( "step_sequencer_base plays 4 beats", "[step_sequencer]" )
         };
 
         constexpr auto steps = 4u;
-        const auto midi_track = track< steps >{};
-        auto sequencer = step_sequencer{midi_track, midi_sender};
+        auto midi_track = track< steps >{};
+        auto sequencer = step_sequencer{std::move( midi_track ), midi_sender};
 
         WHEN( "sequencer receives start message and 96 clock messages (i.e. 4 beats @ 24 pulses "
               "per beat)" )
@@ -69,7 +69,7 @@ SCENARIO( "step_sequencer_base plays 4 beats", "[step_sequencer]" )
         const auto note_2 = 42;
         midi_track[ 0 ] = note_1;
         midi_track[ 4 ] = note_2;
-        auto sequencer = step_sequencer{midi_track, midi_sender};
+        auto sequencer = step_sequencer{std::move( midi_track ), midi_sender};
 
         WHEN( "sequencer receives start message and one clock message" )
         {
@@ -266,8 +266,8 @@ SCENARIO( "step_sequencer_base that is triggered by a midi clock plays 4 beats",
         };
 
         constexpr auto steps = 4u;
-        const auto midi_track = track< steps >{};
-        auto sequencer = step_sequencer{midi_track, midi_sender};
+        auto midi_track = track< steps >{};
+        auto sequencer = step_sequencer{std::move( midi_track ), midi_sender};
         underlying_clock_type testing_clock;
         sequencer_clock_type sequencer_clock{testing_clock};
 
@@ -319,7 +319,7 @@ SCENARIO( "step_sequencer_base that is triggered by a midi clock plays 4 beats",
         const auto note_2 = 42;
         midi_track[ 0 ] = note_1;
         midi_track[ 4 ] = note_2;
-        auto sequencer = step_sequencer{midi_track, midi_sender};
+        auto sequencer = step_sequencer{std::move( midi_track ), midi_sender};
         underlying_clock_type testing_clock;
         sequencer_clock_type sequencer_clock{testing_clock};
 

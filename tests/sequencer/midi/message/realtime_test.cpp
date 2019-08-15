@@ -4,11 +4,11 @@
 
 #include <sstream>
 
-using sequencer::midi::real_time::message_type;
+using sequencer::midi::realtime::message_type;
 
 SCENARIO( "realtime message to string conversion", "[realtime_message]" )
 {
-    using namespace sequencer::midi::real_time;
+    using namespace sequencer::midi::realtime;
 
     GIVEN( "realtime clock message" )
     {
@@ -63,7 +63,7 @@ SCENARIO( "realtime message to string conversion", "[realtime_message]" )
 
 SCENARIO( "realtime message streaming", "[realtime_message]" )
 {
-    using namespace sequencer::midi::real_time;
+    using namespace sequencer::midi::realtime;
 
     GIVEN( "message_type::realtime_clock" )
     {
@@ -128,7 +128,7 @@ SCENARIO( "realtime message streaming", "[realtime_message]" )
 
 SCENARIO( "realtime messages", "[realtime_message]" )
 {
-    using namespace sequencer::midi::real_time;
+    using namespace sequencer::midi::realtime;
 
     GIVEN( "realtime clock message" )
     {

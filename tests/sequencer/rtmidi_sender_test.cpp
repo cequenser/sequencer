@@ -1,18 +1,18 @@
-#include <sequencer/midi_clock.hpp>
+#include <sequencer/midi/message/realtime.hpp>
 
 #include <catch2/catch.hpp>
 
 #include <cstddef>
 
-SCENARIO( "midi_real_time_message", "[midi_real_time_message]" )
+SCENARIO( "midi_realtime_message", "[midi_realtime_message]" )
 {
-    using namespace sequencer;
+    using namespace sequencer::midi::realtime;
 
-    GIVEN( "real time message types" )
+    GIVEN( "realtime message types" )
     {
-        const auto messages = std::vector< midi::message_type >{
-            midi::message_type::realtime_start, midi::message_type::realtime_continue,
-            midi::message_type::realtime_stop, midi::message_type::realtime_clock};
+        const auto messages = std::vector< message_type >{
+            message_type::realtime_start, message_type::realtime_continue,
+            message_type::realtime_stop, message_type::realtime_clock};
 
         THEN( "are converted to midi byte messages" )
         {

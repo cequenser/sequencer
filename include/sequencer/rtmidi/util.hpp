@@ -54,7 +54,7 @@ namespace sequencer::rtmidi
         {
         }
 
-        void operator()( midi::real_time::message_type message )
+        void operator()( midi::realtime::message_type message )
         {
             const std::vector< unsigned char > messages = {static_cast< unsigned char >( message )};
             rtmidiout_.sendMessage( &messages );

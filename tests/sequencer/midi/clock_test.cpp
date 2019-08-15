@@ -14,7 +14,7 @@
 #include <mutex>
 #include <vector>
 
-using sequencer::midi::real_time::message_type;
+using sequencer::midi::realtime::message_type;
 
 namespace
 {

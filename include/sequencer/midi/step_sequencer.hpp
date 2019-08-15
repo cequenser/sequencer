@@ -25,7 +25,7 @@ namespace sequencer::midi
             sender_( channel::mode::all_notes_off( channel_ ) );
         }
 
-        void update( real_time::message_type message )
+        void update( realtime::message_type message )
         {
             if ( process_control_message( message ) || !started_ )
             {
@@ -46,20 +46,20 @@ namespace sequencer::midi
         }
 
     private:
-        bool process_control_message( real_time::message_type message )
+        bool process_control_message( realtime::message_type message )
         {
-            if ( message == real_time::message_type::realtime_start )
+            if ( message == realtime::message_type::realtime_start )
             {
                 started_ = true;
                 midi_beat_counter_ = 0;
                 return true;
             }
-            if ( message == real_time::message_type::realtime_continue )
+            if ( message == realtime::message_type::realtime_continue )
             {
                 started_ = true;
                 return true;
             }
-            if ( message == real_time::message_type::realtime_stop )
+            if ( message == realtime::message_type::realtime_stop )
             {
                 sender_( channel::mode::all_notes_off( channel_ ) );
                 started_ = false;

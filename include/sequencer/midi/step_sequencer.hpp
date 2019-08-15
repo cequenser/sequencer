@@ -10,17 +10,17 @@
 namespace sequencer::midi
 {
     template < class Track, class Sender >
-    class step_sequencer_base
+    class step_sequencer
     {
     public:
-        constexpr step_sequencer_base( const Track& track, const Sender& sender ) noexcept(
+        constexpr step_sequencer( const Track& track, const Sender& sender ) noexcept(
             std::is_nothrow_copy_constructible_v< Track >&&
                 std::is_nothrow_copy_constructible_v< Sender > )
             : track_( track ), sender_( sender )
         {
         }
 
-        ~step_sequencer_base()
+        ~step_sequencer()
         {
             sender_( channel::mode::all_notes_off( channel_ ) );
         }

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <sequencer/midi/step_sequencer.hpp>
+#include <sequencer/midi/track.hpp>
 #include <sequencer/rtmidi/util.hpp>
 
 #include <QObject>
@@ -12,6 +14,9 @@ namespace qml
     class backend : public QObject
     {
         Q_OBJECT
+
+        using track = sequencer::midi::track< 16 >;
+
     public:
         backend();
 
@@ -31,15 +36,12 @@ namespace qml
 
         Q_INVOKABLE bool open_port( unsigned id );
 
-        Q_INVOKABLE void start_sequencer();
-
-        Q_INVOKABLE void stop_sequencer();
-
-        Q_INVOKABLE void set_step( int i );
+        Q_INVOKABLE void set_step( int i, bool checked );
 
     private:
         RtMidiOut midiout_;
-        decltype( sequencer::rtmidi::make_clock( midiout_ ) ) clock_;
+        sequencer::midi::step_sequencer< track, sequencer::rtmidi::message_sender > step_sequencer_;
+        decltype( sequencer::rtmidi::make_clock( midiout_, step_sequencer_ ) ) clock_;
         std::future< void > clock_done_;
     };
 } // namespace qml

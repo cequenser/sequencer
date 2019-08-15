@@ -84,9 +84,9 @@ namespace sequencer::midi
                 {
                     if ( last_note_ != Track::no_note )
                     {
-                        sender_( channel::voice::note_off( channel_, last_note_, 0 ) );
+                        sender_( channel::voice::note_off( channel_, last_note_, velocity_ ) );
                     }
-                    sender_( channel::voice::note_on( channel_, note, 0 ) );
+                    sender_( channel::voice::note_on( channel_, note, velocity_ ) );
                     last_note_ = note;
                 }
             }
@@ -102,6 +102,7 @@ namespace sequencer::midi
         unsigned midi_beat_counter_ = 0;
         int last_note_ = Track::no_note;
         std::uint8_t channel_ = 0;
+        std::uint8_t velocity_ = 32;
         bool started_ = false;
     };
 } // namespace sequencer::midi

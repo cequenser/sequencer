@@ -3,13 +3,14 @@
 #include <sequencer/chrono/chrono_adapter.hpp>
 #include <sequencer/chrono/sequencer_clock.hpp>
 #include <sequencer/midi/clock.hpp>
+#include <sequencer/midi/message/channel_voice.hpp>
 #include <sequencer/midi/message/realtime.hpp>
 #include <sequencer/midi/message/system_common.hpp>
 
 #include <RtMidi.h>
 #include <ios>
 #include <iostream>
-#include <optional>
+#include <memory>
 #include <vector>
 
 namespace sequencer::rtmidi
@@ -26,17 +27,17 @@ namespace sequencer::rtmidi
     }
 
     template < class RtMidi >
-    std::optional< RtMidi > make_midi_port( unsigned port_number = 0 )
+    std::unique_ptr< RtMidi > make_midi_port( unsigned port_number = 0 )
     {
-        auto rtmidi = RtMidi();
-        if ( rtmidi.getPortCount() < port_number + 1u )
+        auto rtmidi = std::make_unique< RtMidi >();
+        if ( rtmidi->getPortCount() < port_number + 1u )
         {
             std::cout << "Requested port: " << port_number
-                      << ". Available number of ports: " << rtmidi.getPortCount() << std::endl;
+                      << ". Available number of ports: " << rtmidi->getPortCount() << std::endl;
             return {};
         }
-        std::cout << "Opening port " << rtmidi.getPortName( port_number ) << std::endl;
-        rtmidi.openPort( 0 );
+        std::cout << "Opening port " << rtmidi->getPortName( port_number ) << std::endl;
+        rtmidi->openPort( port_number );
         return rtmidi;
     }
 
@@ -88,6 +89,22 @@ namespace sequencer::rtmidi
 
         sequencer_clock_type sequencer_clock{underlying_clock_type{}};
         auto sender = realtime_message_sender{midiout};
+        return sequencer::midi::clock{std::move( sequencer_clock ), std::move( sender )};
+    }
+
+    template < class StepSequencer >
+    inline auto make_clock( RtMidiOut& midiout, StepSequencer& step_sequencer )
+    {
+        using underlying_clock_type =
+            sequencer::chrono::clock_object_adapter< std::chrono::steady_clock >;
+        using sequencer_clock_type = sequencer::chrono::sequencer_clock< underlying_clock_type >;
+
+        sequencer_clock_type sequencer_clock{underlying_clock_type{}};
+        auto sender = [&step_sequencer, &midiout]( midi::realtime::message_type message ) {
+            step_sequencer.update( message );
+            const std::vector< unsigned char > messages = {static_cast< unsigned char >( message )};
+            midiout.sendMessage( &messages );
+        };
         return sequencer::midi::clock{std::move( sequencer_clock ), std::move( sender )};
     }
 

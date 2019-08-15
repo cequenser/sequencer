@@ -4,6 +4,7 @@
 
 #include <sstream>
 
+using sequencer::midi::make_message;
 using sequencer::midi::message_type;
 using sequencer::midi::channel::mode::all_notes_off;
 using sequencer::midi::channel::mode::all_sounds_off;
@@ -26,7 +27,7 @@ SCENARIO( "midi message to string", "[to_string]" )
     // system::common
     GIVEN( "song pointer position message with value 3" )
     {
-        const auto message = song_position_pointer( 3 );
+        const auto message = make_message( song_position_pointer( 3 ) );
 
         THEN( "to_string returns 'spp:3'" )
         {
@@ -36,7 +37,7 @@ SCENARIO( "midi message to string", "[to_string]" )
 
     GIVEN( "song pointer position message with value 200" )
     {
-        const auto message = song_position_pointer( 200 );
+        const auto message = make_message( song_position_pointer( 200 ) );
 
         THEN( "to_string returns 'spp:200'" )
         {
@@ -50,7 +51,7 @@ SCENARIO( "midi message to string", "[to_string]" )
         const auto channel = 1;
         const auto note = 40;
         const auto velocity = 73;
-        const auto message = message_type{note_on( channel, note, velocity )};
+        const auto message = make_message( note_on( channel, note, velocity ) );
 
         THEN( "to_string returns 'note_on:1:40:73'" )
         {
@@ -63,7 +64,7 @@ SCENARIO( "midi message to string", "[to_string]" )
         const auto channel = 1;
         const auto note = 40;
         const auto velocity = 73;
-        const auto message = message_type{note_off( channel, note, velocity )};
+        const auto message = make_message( note_off( channel, note, velocity ) );
 
         THEN( "to_string returns 'note_off:1:40:73'" )
         {
@@ -75,7 +76,7 @@ SCENARIO( "midi message to string", "[to_string]" )
     GIVEN( "an all sound off message for channel 1" )
     {
         const auto channel = 1;
-        const auto message = message_type{all_sounds_off( channel )};
+        const auto message = make_message( all_sounds_off( channel ) );
 
         THEN( "to_string returns 'all_sounds_off:1'" )
         {
@@ -86,7 +87,7 @@ SCENARIO( "midi message to string", "[to_string]" )
     GIVEN( "a reset all controllers message for channel 1" )
     {
         const auto channel = 1;
-        const auto message = message_type{reset_all_controllers( channel )};
+        const auto message = make_message( reset_all_controllers( channel ) );
 
         THEN( "to_string returns 'reset_all_controllers:1'" )
         {
@@ -98,7 +99,7 @@ SCENARIO( "midi message to string", "[to_string]" )
     {
         const auto channel = 1;
         const auto on = true;
-        const auto message = message_type{local_control( channel, on )};
+        const auto message = make_message( local_control( channel, on ) );
 
         THEN( "to_string returns 'local_control_on:1'" )
         {
@@ -110,7 +111,7 @@ SCENARIO( "midi message to string", "[to_string]" )
     {
         const auto channel = 1;
         const auto on = false;
-        const auto message = message_type{local_control( channel, on )};
+        const auto message = make_message( local_control( channel, on ) );
 
         THEN( "to_string returns 'local_control_off:1'" )
         {
@@ -121,7 +122,7 @@ SCENARIO( "midi message to string", "[to_string]" )
     GIVEN( "an all notes off message for channel 1" )
     {
         const auto channel = 1;
-        const auto message = message_type{all_notes_off( channel )};
+        const auto message = make_message( all_notes_off( channel ) );
 
         THEN( "to_string returns 'all_notes_off:1'" )
         {
@@ -132,7 +133,7 @@ SCENARIO( "midi message to string", "[to_string]" )
     GIVEN( "an omni mode off message for channel 1" )
     {
         const auto channel = 1;
-        const auto message = message_type{omni_mode_off( channel )};
+        const auto message = make_message( omni_mode_off( channel ) );
 
         THEN( "to_string returns 'omni_mode_off:1'" )
         {
@@ -143,7 +144,7 @@ SCENARIO( "midi message to string", "[to_string]" )
     GIVEN( "an omni mode on message for channel 1" )
     {
         const auto channel = 1;
-        const auto message = message_type{omni_mode_on( channel )};
+        const auto message = make_message( omni_mode_on( channel ) );
 
         THEN( "to_string returns 'omni_mode_on:1'" )
         {
@@ -154,7 +155,7 @@ SCENARIO( "midi message to string", "[to_string]" )
     GIVEN( "a poly mode on message for channel 1" )
     {
         const auto channel = 1;
-        const auto message = message_type{poly_mode_on( channel )};
+        const auto message = make_message( poly_mode_on( channel ) );
 
         THEN( "to_string returns 'poly_mode_on:1'" )
         {
@@ -167,7 +168,7 @@ SCENARIO( "midi message to string", "[to_string]" )
     {
         const auto channel = 1;
         const auto on = true;
-        const auto message = damper_pedal( channel, on );
+        const auto message = make_message( damper_pedal( channel, on ) );
 
         THEN( "to_string returns 'damper_pedal_on:1'" )
         {
@@ -179,7 +180,7 @@ SCENARIO( "midi message to string", "[to_string]" )
     {
         const auto channel = 1;
         const auto on = false;
-        const auto message = damper_pedal( channel, on );
+        const auto message = make_message( damper_pedal( channel, on ) );
 
         THEN( "to_string returns 'damper_pedal_off:1'" )
         {
@@ -191,7 +192,7 @@ SCENARIO( "midi message to string", "[to_string]" )
     {
         const auto channel = 1;
         const auto on = true;
-        const auto message = portamento( channel, on );
+        const auto message = make_message( portamento( channel, on ) );
 
         THEN( "to_string returns 'portamento_on:1'" )
         {
@@ -203,7 +204,7 @@ SCENARIO( "midi message to string", "[to_string]" )
     {
         const auto channel = 1;
         const auto on = false;
-        const auto message = portamento( channel, on );
+        const auto message = make_message( portamento( channel, on ) );
 
         THEN( "to_string returns 'portamento_off:1'" )
         {
@@ -215,7 +216,7 @@ SCENARIO( "midi message to string", "[to_string]" )
     {
         const auto channel = 1;
         const auto on = true;
-        const auto message = sostenuto( channel, on );
+        const auto message = make_message( sostenuto( channel, on ) );
 
         THEN( "to_string returns 'sostenuto_on:1'" )
         {
@@ -227,7 +228,7 @@ SCENARIO( "midi message to string", "[to_string]" )
     {
         const auto channel = 1;
         const auto on = false;
-        const auto message = sostenuto( channel, on );
+        const auto message = make_message( sostenuto( channel, on ) );
 
         THEN( "to_string returns 'sostenuto_off:1'" )
         {
@@ -239,7 +240,7 @@ SCENARIO( "midi message to string", "[to_string]" )
     {
         const auto channel = 1;
         const auto on = true;
-        const auto message = soft_pedal( channel, on );
+        const auto message = make_message( soft_pedal( channel, on ) );
 
         THEN( "to_string returns 'soft_pedal_on:1'" )
         {
@@ -251,7 +252,7 @@ SCENARIO( "midi message to string", "[to_string]" )
     {
         const auto channel = 1;
         const auto on = false;
-        const auto message = soft_pedal( channel, on );
+        const auto message = make_message( soft_pedal( channel, on ) );
 
         THEN( "to_string returns 'soft_pedal_off:1'" )
         {
@@ -263,7 +264,7 @@ SCENARIO( "midi message to string", "[to_string]" )
     {
         const auto channel = 1;
         const auto on = true;
-        const auto message = hold_2( channel, on );
+        const auto message = make_message( hold_2( channel, on ) );
 
         THEN( "to_string returns 'hold_2_on:1'" )
         {
@@ -275,7 +276,7 @@ SCENARIO( "midi message to string", "[to_string]" )
     {
         const auto channel = 1;
         const auto on = false;
-        const auto message = hold_2( channel, on );
+        const auto message = make_message( hold_2( channel, on ) );
 
         THEN( "to_string returns 'hold_2_off:1'" )
         {
@@ -286,7 +287,7 @@ SCENARIO( "midi message to string", "[to_string]" )
     // default
     GIVEN( "empty message" )
     {
-        const auto message = message_type{{}};
+        const auto message = message_type{};
 
         THEN( "to_string returns 'invalid'" )
         {
@@ -310,7 +311,7 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
     // system::common
     GIVEN( "song pointer position message with value 3" )
     {
-        const auto message = song_position_pointer( 3 );
+        const auto message = make_message( song_position_pointer( 3 ) );
 
         THEN( "stream operator writes 'spp:3'" )
         {
@@ -322,7 +323,7 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
 
     GIVEN( "song pointer position message with value 200" )
     {
-        const auto message = song_position_pointer( 200 );
+        const auto message = make_message( song_position_pointer( 200 ) );
 
         THEN( "stream operator writes 'spp:200'" )
         {
@@ -338,7 +339,7 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
         const auto channel = 1;
         const auto note = 40;
         const auto velocity = 73;
-        const auto message = message_type{note_on( channel, note, velocity )};
+        const auto message = make_message( note_on( channel, note, velocity ) );
 
         THEN( "stream operator writes 'note_on:1:40:73'" )
         {
@@ -353,7 +354,7 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
         const auto channel = 1;
         const auto note = 40;
         const auto velocity = 73;
-        const auto message = message_type{note_off( channel, note, velocity )};
+        const auto message = make_message( note_off( channel, note, velocity ) );
 
         THEN( "stream operator writes 'note_off:1:40:73'" )
         {
@@ -367,7 +368,7 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
     GIVEN( "an all sound off message for channel 1" )
     {
         const auto channel = 1;
-        const auto message = message_type{all_sounds_off( channel )};
+        const auto message = make_message( all_sounds_off( channel ) );
 
         THEN( "stream operator writes 'all_sounds_off:1'" )
         {
@@ -380,7 +381,7 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
     GIVEN( "a reset all controllers message for channel 1" )
     {
         const auto channel = 1;
-        const auto message = message_type{reset_all_controllers( channel )};
+        const auto message = make_message( reset_all_controllers( channel ) );
 
         THEN( "stream operator writes 'reset_all_controllers:1'" )
         {
@@ -394,7 +395,7 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
     {
         const auto channel = 1;
         const auto on = true;
-        const auto message = message_type{local_control( channel, on )};
+        const auto message = make_message( local_control( channel, on ) );
 
         THEN( "stream operator writes 'local_control_on:1'" )
         {
@@ -408,7 +409,7 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
     {
         const auto channel = 1;
         const auto on = false;
-        const auto message = message_type{local_control( channel, on )};
+        const auto message = make_message( local_control( channel, on ) );
 
         THEN( "stream operator writes 'local_control_off:1'" )
         {
@@ -421,7 +422,7 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
     GIVEN( "an all notes off message for channel 1" )
     {
         const auto channel = 1;
-        const auto message = message_type{all_notes_off( channel )};
+        const auto message = make_message( all_notes_off( channel ) );
 
         THEN( "stream operator writes 'all_notes_off:1'" )
         {
@@ -434,7 +435,7 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
     GIVEN( "an omni mode off message for channel 1" )
     {
         const auto channel = 1;
-        const auto message = message_type{omni_mode_off( channel )};
+        const auto message = make_message( omni_mode_off( channel ) );
 
         THEN( "stream operator writes 'omni_mode_off:1'" )
         {
@@ -447,7 +448,7 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
     GIVEN( "an omni mode on message for channel 1" )
     {
         const auto channel = 1;
-        const auto message = message_type{omni_mode_on( channel )};
+        const auto message = make_message( omni_mode_on( channel ) );
 
         THEN( "stream operator writes 'omni_mode_on:1'" )
         {
@@ -460,7 +461,7 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
     GIVEN( "a poly mode on message for channel 1" )
     {
         const auto channel = 1;
-        const auto message = message_type{poly_mode_on( channel )};
+        const auto message = make_message( poly_mode_on( channel ) );
 
         THEN( "stream operator writes 'poly_mode_on:1'" )
         {
@@ -475,7 +476,7 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
     {
         const auto channel = 1;
         const auto on = true;
-        const auto message = damper_pedal( channel, on );
+        const auto message = make_message( damper_pedal( channel, on ) );
 
         THEN( "stream operator writes 'damper_pedal_on:1'" )
         {
@@ -489,7 +490,7 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
     {
         const auto channel = 1;
         const auto on = false;
-        const auto message = damper_pedal( channel, on );
+        const auto message = make_message( damper_pedal( channel, on ) );
 
         THEN( "stream operator writes 'damper_pedal_off:1'" )
         {
@@ -503,7 +504,7 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
     {
         const auto channel = 1;
         const auto on = true;
-        const auto message = portamento( channel, on );
+        const auto message = make_message( portamento( channel, on ) );
 
         THEN( "stream operator writes 'portamento_on:1'" )
         {
@@ -517,7 +518,7 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
     {
         const auto channel = 1;
         const auto on = false;
-        const auto message = portamento( channel, on );
+        const auto message = make_message( portamento( channel, on ) );
 
         THEN( "stream operator writes 'portamento_off:1'" )
         {
@@ -531,7 +532,7 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
     {
         const auto channel = 1;
         const auto on = true;
-        const auto message = sostenuto( channel, on );
+        const auto message = make_message( sostenuto( channel, on ) );
 
         THEN( "stream operator writes 'sostenuto_on:1'" )
         {
@@ -545,7 +546,7 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
     {
         const auto channel = 1;
         const auto on = false;
-        const auto message = sostenuto( channel, on );
+        const auto message = make_message( sostenuto( channel, on ) );
 
         THEN( "stream operator writes 'sostenuto_off:1'" )
         {
@@ -559,7 +560,7 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
     {
         const auto channel = 1;
         const auto on = true;
-        const auto message = soft_pedal( channel, on );
+        const auto message = make_message( soft_pedal( channel, on ) );
 
         THEN( "stream operator writes 'soft_pedal_on:1'" )
         {
@@ -573,7 +574,7 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
     {
         const auto channel = 1;
         const auto on = false;
-        const auto message = soft_pedal( channel, on );
+        const auto message = make_message( soft_pedal( channel, on ) );
 
         THEN( "stream operator writes 'soft_pedal_off:1'" )
         {
@@ -587,7 +588,7 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
     {
         const auto channel = 1;
         const auto on = true;
-        const auto message = hold_2( channel, on );
+        const auto message = make_message( hold_2( channel, on ) );
 
         THEN( "stream operator writes 'hold_2_on:1'" )
         {
@@ -601,7 +602,7 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
     {
         const auto channel = 1;
         const auto on = false;
-        const auto message = hold_2( channel, on );
+        const auto message = make_message( hold_2( channel, on ) );
 
         THEN( "stream operator writes 'hold_2_off:1'" )
         {

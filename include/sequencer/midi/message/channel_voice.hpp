@@ -10,7 +10,7 @@
 namespace sequencer::midi::channel::voice
 {
     constexpr std::array< std::byte, 3 > note_on( std::uint8_t channel, std::uint8_t note,
-                                                  std::uint8_t velocity )
+                                                  std::uint8_t velocity ) noexcept
     {
         assert( channel < 16 );
         assert( note < 128 );
@@ -20,7 +20,7 @@ namespace sequencer::midi::channel::voice
     }
 
     constexpr std::array< std::byte, 3 > note_off( std::uint8_t channel, std::uint8_t note,
-                                                   std::uint8_t velocity )
+                                                   std::uint8_t velocity ) noexcept
     {
         assert( channel < 16 );
         assert( note < 128 );

@@ -123,7 +123,7 @@ SCENARIO( "step_sequencer_base plays 4 beats", "[step_sequencer]" )
                 REQUIRE( received_messages.size() == 1 );
                 CHECK( received_messages.front() == note_on( 0, note_1 ) );
             }
-            WHEN( "sequencer receives stop message one clock message" )
+            AND_WHEN( "sequencer receives stop message one clock message" )
             {
                 sequencer.update( midi::realtime::message_type::realtime_stop );
                 sequencer.update( midi::realtime::message_type::realtime_clock );
@@ -136,7 +136,7 @@ SCENARIO( "step_sequencer_base plays 4 beats", "[step_sequencer]" )
                     CHECK( received_messages[ 2 ] == make_message( all_notes_off( 1 ) ) );
                 }
 
-                WHEN( "sequencer receives continue message and 25 clock messages" )
+                AND_WHEN( "sequencer receives continue message and 25 clock messages" )
                 {
                     sequencer.update( midi::realtime::message_type::realtime_continue );
                     for ( auto i = 0u; i < 25; ++i )
@@ -151,7 +151,7 @@ SCENARIO( "step_sequencer_base plays 4 beats", "[step_sequencer]" )
                     }
                 }
 
-                WHEN( "sequencer receives start message and 25 clock messages" )
+                AND_WHEN( "sequencer receives start message and 25 clock messages" )
                 {
                     sequencer.update( midi::realtime::message_type::realtime_start );
                     for ( auto i = 0u; i < 25; ++i )
@@ -164,7 +164,7 @@ SCENARIO( "step_sequencer_base plays 4 beats", "[step_sequencer]" )
                         REQUIRE( received_messages.size() == 5 );
                         CHECK( received_messages[ 3 ] == note_on( 0, note_1 ) );
 
-                        THEN( "one note off and one note on message are send" )
+                        AND_THEN( "one note off and one note on message are send" )
                         {
                             CHECK( received_messages[ 4 ] == note_on( 1, note_2 ) );
                         }
@@ -186,7 +186,7 @@ SCENARIO( "step_sequencer_base plays 4 beats", "[step_sequencer]" )
                 REQUIRE( received_messages.size() == 2 );
                 CHECK( received_messages[ 0 ] == note_on( 0, note_1 ) );
 
-                THEN( "one note off and one note on message are send" )
+                AND_THEN( "one note off and one note on message are send" )
                 {
                     CHECK( received_messages[ 1 ] == note_on( 1, note_2 ) );
                 }
@@ -206,7 +206,7 @@ SCENARIO( "step_sequencer_base plays 4 beats", "[step_sequencer]" )
                 REQUIRE( received_messages.size() == 2 );
                 CHECK( received_messages[ 0 ] == note_on( 0, note_1 ) );
 
-                THEN( "one note off message is send" )
+                AND_THEN( "one note off message is send" )
                 {
                     CHECK( received_messages[ 1 ] == note_on( 1, note_2 ) );
                 }
@@ -360,11 +360,11 @@ SCENARIO( "step_sequencer_base, that is triggered by a midi clock, plays 4 beats
                 REQUIRE( received_messages.size() == 3 );
                 CHECK( received_messages[ 0 ] == note_on( 0, note_1 ) );
 
-                THEN( "one note off message is send" )
+                AND_THEN( "one note off message is send" )
                 {
                     CHECK( received_messages[ 1 ] == note_off( 0, note_1 ) );
 
-                    THEN( "one note on message is send" )
+                    AND_THEN( "one note on message is send" )
                     {
                         CHECK( received_messages[ 2 ] == note_on( 0, note_2 ) );
                     }
@@ -394,7 +394,7 @@ SCENARIO( "step_sequencer_base, that is triggered by a midi clock, plays 4 beats
                     CHECK( received_messages[ 1 ] == make_message( all_notes_off( 0 ) ) );
                 }
 
-                WHEN( "midi clock is started again and testing clock runs for 500 ms" )
+                AND_WHEN( "midi clock is started again and testing clock runs for 500 ms" )
                 {
                     midi_clock.start();
                     testing_clock.set( testing_clock.now() + 500ms );
@@ -407,7 +407,7 @@ SCENARIO( "step_sequencer_base, that is triggered by a midi clock, plays 4 beats
                     }
                 }
 
-                WHEN(
+                AND_WHEN(
                     "midi clock is reset and then started again and testing clock runs for 500 ms" )
                 {
                     midi_clock.reset();
@@ -422,11 +422,11 @@ SCENARIO( "step_sequencer_base, that is triggered by a midi clock, plays 4 beats
                         REQUIRE( received_messages.size() == 5 );
                         CHECK( received_messages[ 2 ] == note_on( 0, note_1 ) );
 
-                        THEN( "one note off message is send" )
+                        AND_THEN( "one note off message is send" )
                         {
                             CHECK( received_messages[ 3 ] == note_off( 0, note_1 ) );
 
-                            THEN( "one note on message is send" )
+                            AND_THEN( "one note on message is send" )
                             {
                                 CHECK( received_messages[ 4 ] == note_on( 0, note_2 ) );
                             }
@@ -471,7 +471,7 @@ SCENARIO( "step_sequencer_base sends notes to correct channels", "[step_sequence
         {
             const auto new_channel = 1;
             sequencer.track().track( 0 ).set_channel( new_channel );
-            WHEN( "sequencer receives start message and 1 clock message" )
+            AND_WHEN( "sequencer receives start message and 1 clock message" )
             {
                 sequencer.update( midi::realtime::message_type::realtime_start );
                 sequencer.update( midi::realtime::message_type::realtime_clock );

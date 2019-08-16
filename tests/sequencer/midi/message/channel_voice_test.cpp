@@ -5,6 +5,7 @@
 SCENARIO( "channel voice messages", "[channel_voice_message]" )
 {
     using namespace sequencer::midi::channel::voice;
+
     GIVEN( "a note on message for channel 1 with value 40 and velocity 73" )
     {
         const auto channel = 1;
@@ -119,29 +120,68 @@ SCENARIO( "channel voice messages", "[channel_voice_message]" )
         }
     }
 
-    GIVEN( "pitch bend change message with value 3" )
+    GIVEN( "a control change message for channel 15 and controller 47 with value 42" )
     {
         const auto channel = 15;
-        const auto message = pitch_bend_change( channel, 3 );
+        const auto controller = 47;
+        const auto value = 42;
+        const auto message = control_change( channel, controller, value );
 
-        THEN( "message contains 3 bytes" )
+        THEN( "the first byte is 0xBF" )
         {
-            REQUIRE( message.size() == 3 );
+            CHECK( message[ 0 ] == std::byte{0xBF} );
         }
 
-        THEN( "first byte is 0xEF" )
+        THEN( "the second byte is 0x2F" )
         {
-            REQUIRE( message[ 0 ] == std::byte{0xEF} );
+            CHECK( message[ 1 ] == std::byte{0x2F} );
         }
 
-        THEN( "second byte is 0x03" )
+        THEN( "the third byte is 0x2A" )
         {
-            REQUIRE( message[ 1 ] == std::byte{0x03} );
+            CHECK( message[ 2 ] == std::byte{0x2A} );
+        }
+    }
+
+    GIVEN( "program change message with value 73" )
+    {
+        const auto channel = 15;
+        const auto message = program_change( channel, 73 );
+
+        THEN( "message contains 2 bytes" )
+        {
+            REQUIRE( message.size() == 2 );
         }
 
-        THEN( "third byte is 0x00" )
+        THEN( "first byte is 0xCF" )
         {
-            REQUIRE( message[ 2 ] == std::byte{0x00} );
+            REQUIRE( message[ 0 ] == std::byte{0xCF} );
+        }
+
+        THEN( "second byte is 0x49" )
+        {
+            REQUIRE( message[ 1 ] == std::byte{0x49} );
+        }
+    }
+
+    GIVEN( "channel pressure message with value 73" )
+    {
+        const auto channel = 15;
+        const auto message = channel_pressure( channel, 73 );
+
+        THEN( "message contains 2 bytes" )
+        {
+            REQUIRE( message.size() == 2 );
+        }
+
+        THEN( "first byte is 0xDF" )
+        {
+            REQUIRE( message[ 0 ] == std::byte{0xDF} );
+        }
+
+        THEN( "second byte is 0x49" )
+        {
+            REQUIRE( message[ 1 ] == std::byte{0x49} );
         }
     }
 

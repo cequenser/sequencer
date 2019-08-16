@@ -40,6 +40,35 @@ namespace sequencer::midi::channel::voice
         return {status_byte_for( std::byte{0xA0}, channel ), std::byte{key}, std::byte{pressure}};
     }
 
+    constexpr std::array< std::byte, 3 >
+    control_change( std::uint8_t channel, std::uint8_t controller, std::uint8_t value ) noexcept
+    {
+        assert( channel < 16 );
+        assert( controller < 120 );
+        assert( value < 128 );
+
+        return {status_byte_for( std::byte{0xB0}, channel ), std::byte{controller},
+                std::byte{value}};
+    }
+
+    constexpr std::array< std::byte, 2 > program_change( std::uint8_t channel,
+                                                         std::uint8_t program ) noexcept
+    {
+        assert( channel < 16 );
+        assert( program < 128 );
+
+        return {status_byte_for( std::byte{0xC0}, channel ), std::byte{program}};
+    }
+
+    constexpr std::array< std::byte, 2 > channel_pressure( std::uint8_t channel,
+                                                           std::uint8_t pressure ) noexcept
+    {
+        assert( channel < 16 );
+        assert( pressure < 128 );
+
+        return {status_byte_for( std::byte{0xD0}, channel ), std::byte{pressure}};
+    }
+
     constexpr std::array< std::byte, 3 > pitch_bend_change( std::uint8_t channel,
                                                             std::uint16_t value ) noexcept
     {

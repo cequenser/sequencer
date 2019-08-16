@@ -350,9 +350,9 @@ SCENARIO( "step_sequencer_base, that is triggered by a midi clock, plays 4 beats
             }
         }
 
-        WHEN( "testing clock runs for 500 ms" )
+        WHEN( "testing clock runs for 501 ms" )
         {
-            testing_clock.set( testing_clock.now() + 500ms );
+            testing_clock.set( testing_clock.now() + 501ms );
             clock_message_count.wait_for_count( 26 );
 
             THEN( "one note on message is send" )
@@ -394,10 +394,10 @@ SCENARIO( "step_sequencer_base, that is triggered by a midi clock, plays 4 beats
                     CHECK( received_messages[ 1 ] == make_message( all_notes_off( 0 ) ) );
                 }
 
-                AND_WHEN( "midi clock is started again and testing clock runs for 500 ms" )
+                AND_WHEN( "midi clock is started again and testing clock runs for 499 ms" )
                 {
                     midi_clock.start();
-                    testing_clock.set( testing_clock.now() + 500ms );
+                    testing_clock.set( testing_clock.now() + 499ms );
                     clock_message_count.wait_for_count( 51 );
 
                     THEN( "one note on message is send" )
@@ -408,13 +408,13 @@ SCENARIO( "step_sequencer_base, that is triggered by a midi clock, plays 4 beats
                 }
 
                 AND_WHEN(
-                    "midi clock is reset and then started again and testing clock runs for 500 ms" )
+                    "midi clock is reset and then started again and testing clock runs for 501 ms" )
                 {
                     midi_clock.reset();
                     midi_clock.start();
                     testing_clock.set( testing_clock.now() + 10ms );
                     clock_message_count.wait_for_count( 28 );
-                    testing_clock.set( testing_clock.now() + 490ms );
+                    testing_clock.set( testing_clock.now() + 491ms );
                     clock_message_count.wait_for_count( 51 );
 
                     THEN( "one note on message is send" )

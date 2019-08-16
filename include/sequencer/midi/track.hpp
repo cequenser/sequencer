@@ -107,27 +107,25 @@ namespace sequencer::midi
             return channel_;
         }
 
-        midi::message_type get_messages( unsigned step ) const
+        template < class Sender >
+        void send_messages( unsigned step, const Sender& sender ) const
         {
             const auto note = track_[ step ].load();
-            midi::message_type message;
             if ( note != no_note )
             {
                 if ( last_note_ != no_note )
                 {
-                    const auto bytes = channel::voice::note_off( channel(), last_note_, velocity_ );
-                    message.append( bytes );
+                    sender( channel::voice::note_off( channel(), last_note_, velocity_ ) );
                 }
-                const auto bytes = channel::voice::note_on( channel(), note, velocity_ );
-                message.append( bytes );
+                sender( channel::voice::note_on( channel(), note, velocity_ ) );
                 last_note_ = note;
             }
-            return message;
         }
 
-        midi::message_type get_all_notes_off_message() const
+        template < class Sender >
+        void send_all_notes_off_message( const Sender& sender ) const
         {
-            return make_message( channel::mode::all_notes_off( channel() ) );
+            sender( channel::mode::all_notes_off( channel() ) );
         }
 
         void clear_last_note() noexcept
@@ -180,27 +178,21 @@ namespace sequencer::midi
                 []( track_for_step_sequencer< number_of_steps >& track ) { track.clear(); } );
         }
 
-        midi::message_type get_messages( unsigned step ) const
+        template < class Sender >
+        void send_messages( unsigned step, const Sender& sender ) const
         {
-            midi::message_type message;
             for_each_track(
-                [&message, step]( const track_for_step_sequencer< number_of_steps >& track ) {
-                    const auto new_messages = track.get_messages( step );
-                    if ( !new_messages.empty() )
-                    {
-                        message.append( new_messages );
-                    }
+                [&sender, step]( const track_for_step_sequencer< number_of_steps >& track ) {
+                    track.send_messages( step, sender );
                 } );
-            return message;
         }
 
-        midi::message_type get_all_notes_off_message() const
+        template < class Sender >
+        void send_all_notes_off_message( const Sender& sender ) const
         {
-            midi::message_type message;
-            for_each_track( [&message]( const track_for_step_sequencer< number_of_steps >& track ) {
-                message.append( track.get_all_notes_off_message() );
+            for_each_track( [&sender]( const track_for_step_sequencer< number_of_steps >& track ) {
+                track.send_all_notes_off_message( sender );
             } );
-            return message;
         }
 
         void clear_last_note() noexcept

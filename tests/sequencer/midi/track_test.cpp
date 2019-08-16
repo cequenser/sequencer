@@ -3,6 +3,7 @@
 #include <catch2/catch.hpp>
 
 using sequencer::midi::make_message;
+using sequencer::midi::message_type;
 using sequencer::midi::track;
 using sequencer::midi::track_for_step_sequencer;
 using sequencer::midi::tracks_for_step_sequencer;
@@ -99,14 +100,25 @@ SCENARIO( "track_for_step_sequencer", "[track]" )
                 CHECK( track[ 2 ] == first_note );
             }
 
-            THEN( "get_messages(1) returns empty message" )
+            THEN( "send_messages(1, sender) returns empty message" )
             {
-                CHECK( track.get_messages( 1 ).empty() );
+                message_type received_message;
+                const auto sender = [&received_message]( const auto& msg ) {
+                    received_message = make_message( msg );
+                };
+                track.send_messages( 1, sender );
+                CHECK( received_message.empty() );
             }
 
-            THEN( "get_messages(2) returns note on message" )
+            THEN( "send_messages(2, sender) returns note on message" )
             {
-                CHECK( track.get_messages( 2 ) ==
+                std::vector< message_type > received_messages;
+                const auto sender = [&received_messages]( const auto& msg ) {
+                    received_messages.push_back( make_message( msg ) );
+                };
+                track.send_messages( 2, sender );
+
+                CHECK( received_messages.front() ==
                        make_message( note_on( track.channel(), first_note, 32 ) ) );
 
                 WHEN( "the 5th step is set to note 2" )
@@ -114,12 +126,14 @@ SCENARIO( "track_for_step_sequencer", "[track]" )
                     const auto second_note = 2;
                     track[ 4 ] = second_note;
 
-                    THEN( "get_messages(4( returns note off and note on message" )
+                    THEN( "send_messages(4,sender) returns note off and note on message" )
                     {
-                        CHECK( track.get_messages( 4 ) ==
-                               make_message( note_off( track.channel(), first_note, 32 ) )
-                                   .append( make_message(
-                                       note_on( track.channel(), second_note, 32 ) ) ) );
+                        track.send_messages( 4, sender );
+                        REQUIRE( received_messages.size() == 3 );
+                        CHECK( received_messages[ 1 ] ==
+                               make_message( note_off( track.channel(), first_note, 32 ) ) );
+                        CHECK( received_messages[ 2 ] ==
+                               make_message( note_on( track.channel(), second_note, 32 ) ) );
                     }
                 }
 
@@ -132,9 +146,11 @@ SCENARIO( "track_for_step_sequencer", "[track]" )
                         const auto second_note = 2;
                         track[ 4 ] = second_note;
 
-                        THEN( "get_messages(4( returns note on message" )
+                        THEN( "send_messages(4,sender) returns note on message" )
                         {
-                            CHECK( track.get_messages( 4 ) ==
+                            track.send_messages( 4, sender );
+                            REQUIRE( received_messages.size() == 2 );
+                            CHECK( received_messages[ 1 ] ==
                                    make_message( note_on( track.channel(), second_note, 32 ) ) );
                         }
                     }
@@ -145,7 +161,7 @@ SCENARIO( "track_for_step_sequencer", "[track]" )
             {
                 track.clear();
 
-                THEN( "the rd step equals no note" )
+                THEN( "the 3rd step equals no note" )
                 {
                     CHECK( track[ 2 ] == track_t::no_note );
                 }
@@ -154,11 +170,15 @@ SCENARIO( "track_for_step_sequencer", "[track]" )
 
         WHEN( "get_all_notes_off_message is called" )
         {
-            const auto message = track.get_all_notes_off_message();
+            message_type received_message;
+            const auto sender = [&received_message]( const auto& msg ) {
+                received_message = make_message( msg );
+            };
+            track.send_all_notes_off_message( sender );
 
             THEN( "returns all notes off message for its channel" )
             {
-                CHECK( message == make_message( all_notes_off( track.channel() ) ) );
+                CHECK( received_message == make_message( all_notes_off( track.channel() ) ) );
             }
         }
 
@@ -173,11 +193,15 @@ SCENARIO( "track_for_step_sequencer", "[track]" )
 
             WHEN( "get_all_notes_off_message is called" )
             {
-                const auto message = track.get_all_notes_off_message();
+                message_type received_message;
+                const auto sender = [&received_message]( const auto& msg ) {
+                    received_message = make_message( msg );
+                };
+                track.send_all_notes_off_message( sender );
 
                 THEN( "returns all notes off message for its channel" )
                 {
-                    CHECK( message == make_message( all_notes_off( track.channel() ) ) );
+                    CHECK( received_message == make_message( all_notes_off( track.channel() ) ) );
                 }
             }
         }
@@ -210,14 +234,25 @@ SCENARIO( "tracks_for_step_sequencer", "[track]" )
                 CHECK( tracks.track( 0 )[ 2 ] == first_note );
             }
 
-            THEN( "get_messages(1) returns empty message" )
+            THEN( "send_messages(1, sender) returns empty message" )
             {
-                CHECK( tracks.get_messages( 1 ).empty() );
+                message_type received_message;
+                const auto sender = [&received_message]( const auto& msg ) {
+                    received_message = make_message( msg );
+                };
+                tracks.send_messages( 1, sender );
+                CHECK( received_message.empty() );
             }
 
-            THEN( "get_messages(2) returns note on message" )
+            THEN( "send_messages(2, sender) returns note on message" )
             {
-                CHECK( tracks.get_messages( 2 ) ==
+                std::vector< message_type > received_messages;
+                const auto sender = [&received_messages]( const auto& msg ) {
+                    received_messages.push_back( make_message( msg ) );
+                };
+                tracks.send_messages( 2, sender );
+
+                CHECK( received_messages.front() ==
                        make_message( note_on( tracks.track( 0 ).channel(), first_note, 32 ) ) );
 
                 WHEN( "in the first track the 5th step is set to note 2" )
@@ -225,13 +260,16 @@ SCENARIO( "tracks_for_step_sequencer", "[track]" )
                     const auto second_note = 2;
                     tracks.track( 0 )[ 4 ] = second_note;
 
-                    THEN( "get_messages(4( returns note off and note on message" )
+                    THEN( "send_messages(4, sender) returns note off and note on message" )
                     {
-                        CHECK(
-                            tracks.get_messages( 4 ) ==
-                            make_message( note_off( tracks.track( 0 ).channel(), first_note, 32 ) )
-                                .append( make_message(
-                                    note_on( tracks.track( 0 ).channel(), second_note, 32 ) ) ) );
+                        tracks.send_messages( 4, sender );
+                        REQUIRE( received_messages.size() == 3 );
+                        CHECK( received_messages[ 1 ] ==
+                               make_message(
+                                   note_off( tracks.track( 0 ).channel(), first_note, 32 ) ) );
+                        CHECK( received_messages[ 2 ] ==
+                               make_message(
+                                   note_on( tracks.track( 0 ).channel(), second_note, 32 ) ) );
                     }
                 }
 
@@ -240,9 +278,11 @@ SCENARIO( "tracks_for_step_sequencer", "[track]" )
                     const auto second_note = 2;
                     tracks.track( 1 )[ 4 ] = second_note;
 
-                    THEN( "get_messages(4( returns note off and note on message" )
+                    THEN( "send_messages(4,sender) returns note off and note on message" )
                     {
-                        CHECK( tracks.get_messages( 4 ) ==
+                        tracks.send_messages( 4, sender );
+                        REQUIRE( received_messages.size() == 2 );
+                        CHECK( received_messages[ 1 ] ==
                                make_message(
                                    note_on( tracks.track( 1 ).channel(), second_note, 32 ) ) );
                     }
@@ -259,7 +299,9 @@ SCENARIO( "tracks_for_step_sequencer", "[track]" )
 
                         THEN( "get_messages(4( returns note on message" )
                         {
-                            CHECK( tracks.get_messages( 4 ) ==
+                            tracks.send_messages( 4, sender );
+                            REQUIRE( received_messages.size() == 2 );
+                            CHECK( received_messages[ 1 ] ==
                                    make_message(
                                        note_on( tracks.track( 0 ).channel(), second_note, 32 ) ) );
                         }
@@ -271,7 +313,7 @@ SCENARIO( "tracks_for_step_sequencer", "[track]" )
             {
                 tracks.clear();
 
-                THEN( "the rd step equals no note" )
+                THEN( "the 3rd step equals no note" )
                 {
                     CHECK( tracks.track( 0 )[ 2 ] == track_t::no_note );
                 }
@@ -280,16 +322,23 @@ SCENARIO( "tracks_for_step_sequencer", "[track]" )
 
         WHEN( "get_all_notes_off_message is called" )
         {
-            const auto message = tracks.get_all_notes_off_message();
+            std::vector< message_type > received_messages;
+            const auto sender = [&received_messages]( const auto& msg ) {
+                received_messages.push_back( make_message( msg ) );
+            };
+            tracks.send_all_notes_off_message( sender );
 
-            THEN( "returns all notes off messages with corresponding channels" )
+            THEN( "returns all notes off message for its channel" )
             {
-                CHECK( message == make_message( all_notes_off( tracks.track( 0 ).channel() ) )
-                                      .append( all_notes_off( tracks.track( 1 ).channel() ) ) );
+                REQUIRE( received_messages.size() == 2 );
+                CHECK( received_messages[ 0 ] ==
+                       make_message( all_notes_off( tracks.track( 0 ).channel() ) ) );
+                CHECK( received_messages[ 1 ] ==
+                       make_message( all_notes_off( tracks.track( 1 ).channel() ) ) );
             }
         }
 
-        WHEN( "channel is channed to 1" )
+        WHEN( "channel is set to 2" )
         {
             tracks.track( 1 ).set_channel( 2 );
 
@@ -300,12 +349,19 @@ SCENARIO( "tracks_for_step_sequencer", "[track]" )
 
             WHEN( "get_all_notes_off_message is called" )
             {
-                const auto message = tracks.get_all_notes_off_message();
+                std::vector< message_type > received_messages;
+                const auto sender = [&received_messages]( const auto& msg ) {
+                    received_messages.push_back( make_message( msg ) );
+                };
+                tracks.send_all_notes_off_message( sender );
 
                 THEN( "returns all notes off messages with corresponding channels" )
                 {
-                    CHECK( message == make_message( all_notes_off( tracks.track( 2 ).channel() ) )
-                                          .append( all_notes_off( tracks.track( 1 ).channel() ) ) );
+                    REQUIRE( received_messages.size() == 2 );
+                    CHECK( received_messages[ 0 ] ==
+                           make_message( all_notes_off( tracks.track( 0 ).channel() ) ) );
+                    CHECK( received_messages[ 1 ] ==
+                           make_message( all_notes_off( tracks.track( 1 ).channel() ) ) );
                 }
             }
         }

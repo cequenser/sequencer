@@ -22,7 +22,7 @@ namespace sequencer::midi
 
         ~step_sequencer()
         {
-            sender_( track_.get_all_notes_off_message() );
+            track_.send_all_notes_off_message( sender_ );
         }
 
         void update( realtime::message_type message )
@@ -61,8 +61,8 @@ namespace sequencer::midi
             }
             if ( message == realtime::message_type::realtime_stop )
             {
-                sender_( track_.get_all_notes_off_message() );
                 started_ = false;
+                track_.send_all_notes_off_message( sender_ );
                 track_.clear_last_note();
                 return true;
             }
@@ -79,11 +79,7 @@ namespace sequencer::midi
             if ( midi_beat_counter_ % midi_clock_messages_per_step == 0 )
             {
                 const auto step = midi_beat_counter_ / midi_clock_messages_per_step;
-                const auto messages = track_.get_messages( step );
-                if ( !messages.empty() )
-                {
-                    sender_( messages );
-                }
+                track_.send_messages( step, sender_ );
             }
             if ( ++midi_beat_counter_ == track_.steps() * midi_clock_messages_per_step )
             {

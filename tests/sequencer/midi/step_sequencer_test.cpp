@@ -48,8 +48,8 @@ SCENARIO( "step_sequencer_base plays 4 beats", "[step_sequencer]" )
     GIVEN( "a step sequencer with an empty track" )
     {
         std::vector< midi::message_type > received_messages;
-        const auto midi_sender = [&received_messages]( midi::message_type message ) {
-            received_messages.push_back( message );
+        const auto midi_sender = [&received_messages]( const auto& message ) {
+            received_messages.push_back( make_message( message ) );
         };
 
         constexpr auto steps = 4u;
@@ -76,8 +76,8 @@ SCENARIO( "step_sequencer_base plays 4 beats", "[step_sequencer]" )
            "second quarter" )
     {
         std::vector< midi::message_type > received_messages;
-        const auto midi_sender = [&received_messages]( midi::message_type message ) {
-            received_messages.push_back( message );
+        const auto midi_sender = [&received_messages]( const auto& message ) {
+            received_messages.push_back( make_message( message ) );
         };
 
         constexpr auto steps = 16u;
@@ -128,13 +128,12 @@ SCENARIO( "step_sequencer_base plays 4 beats", "[step_sequencer]" )
                 sequencer.update( midi::realtime::message_type::realtime_stop );
                 sequencer.update( midi::realtime::message_type::realtime_clock );
 
-                THEN( "one note on and all notes off message are send" )
+                THEN( "one note on and two all notes off messages are send" )
                 {
-                    REQUIRE( received_messages.size() == 2 );
+                    REQUIRE( received_messages.size() == 3 );
                     CHECK( received_messages[ 0 ] == note_on( 0, note_1 ) );
-                    CHECK( received_messages[ 1 ] ==
-                           make_message( all_notes_off( 0 ) )
-                               .append( make_message( all_notes_off( 1 ) ) ) );
+                    CHECK( received_messages[ 1 ] == make_message( all_notes_off( 0 ) ) );
+                    CHECK( received_messages[ 2 ] == make_message( all_notes_off( 1 ) ) );
                 }
 
                 WHEN( "sequencer receives continue message and 25 clock messages" )
@@ -147,8 +146,8 @@ SCENARIO( "step_sequencer_base plays 4 beats", "[step_sequencer]" )
 
                     THEN( "one note off message is send" )
                     {
-                        REQUIRE( received_messages.size() == 3 );
-                        CHECK( received_messages[ 2 ] == note_on( 1, note_2 ) );
+                        REQUIRE( received_messages.size() == 4 );
+                        CHECK( received_messages[ 3 ] == note_on( 1, note_2 ) );
                     }
                 }
 
@@ -162,12 +161,12 @@ SCENARIO( "step_sequencer_base plays 4 beats", "[step_sequencer]" )
 
                     THEN( "one note on message is send" )
                     {
-                        REQUIRE( received_messages.size() == 4 );
-                        CHECK( received_messages[ 2 ] == note_on( 0, note_1 ) );
+                        REQUIRE( received_messages.size() == 5 );
+                        CHECK( received_messages[ 3 ] == note_on( 0, note_1 ) );
 
                         THEN( "one note off and one note on message are send" )
                         {
-                            CHECK( received_messages[ 3 ] == note_on( 1, note_2 ) );
+                            CHECK( received_messages[ 4 ] == note_on( 1, note_2 ) );
                         }
                     }
                 }
@@ -255,8 +254,8 @@ SCENARIO( "step_sequencer_base, that is triggered by a midi clock, plays 4 beats
     GIVEN( "a step sequencer with an empty track" )
     {
         std::vector< midi::message_type > received_messages;
-        const auto midi_sender = [&received_messages]( midi::message_type message ) {
-            received_messages.push_back( message );
+        const auto midi_sender = [&received_messages]( const auto& message ) {
+            received_messages.push_back( make_message( message ) );
         };
 
         constexpr auto steps = 4u;
@@ -303,8 +302,8 @@ SCENARIO( "step_sequencer_base, that is triggered by a midi clock, plays 4 beats
     GIVEN( "a step sequencer a track with notes on first two quarters" )
     {
         std::vector< midi::message_type > received_messages;
-        const auto midi_sender = [&received_messages]( midi::message_type message ) {
-            received_messages.push_back( message );
+        const auto midi_sender = [&received_messages]( const auto& message ) {
+            received_messages.push_back( make_message( message ) );
         };
 
         constexpr auto steps = 16u;
@@ -358,13 +357,17 @@ SCENARIO( "step_sequencer_base, that is triggered by a midi clock, plays 4 beats
 
             THEN( "one note on message is send" )
             {
-                REQUIRE( received_messages.size() == 2 );
+                REQUIRE( received_messages.size() == 3 );
                 CHECK( received_messages[ 0 ] == note_on( 0, note_1 ) );
 
-                THEN( "one note off and one note on message are send" )
+                THEN( "one note off message is send" )
                 {
-                    CHECK( received_messages[ 1 ] ==
-                           note_off( 0, note_1 ).append( note_on( 0, note_2 ) ) );
+                    CHECK( received_messages[ 1 ] == note_off( 0, note_1 ) );
+
+                    THEN( "one note on message is send" )
+                    {
+                        CHECK( received_messages[ 2 ] == note_on( 0, note_2 ) );
+                    }
                 }
             }
         }
@@ -416,13 +419,17 @@ SCENARIO( "step_sequencer_base, that is triggered by a midi clock, plays 4 beats
 
                     THEN( "one note on message is send" )
                     {
-                        REQUIRE( received_messages.size() == 4 );
+                        REQUIRE( received_messages.size() == 5 );
                         CHECK( received_messages[ 2 ] == note_on( 0, note_1 ) );
 
                         THEN( "one note off message is send" )
                         {
-                            CHECK( received_messages[ 3 ] ==
-                                   note_off( 0, note_1 ).append( note_on( 0, note_2 ) ) );
+                            CHECK( received_messages[ 3 ] == note_off( 0, note_1 ) );
+
+                            THEN( "one note on message is send" )
+                            {
+                                CHECK( received_messages[ 4 ] == note_on( 0, note_2 ) );
+                            }
                         }
                     }
                 }
@@ -438,8 +445,8 @@ SCENARIO( "step_sequencer_base sends notes to correct channels", "[step_sequence
     GIVEN( "a step sequencer with one track and note on first beat" )
     {
         std::vector< midi::message_type > received_messages;
-        const auto midi_sender = [&received_messages]( midi::message_type message ) {
-            received_messages.push_back( message );
+        const auto midi_sender = [&received_messages]( const auto& message ) {
+            received_messages.push_back( make_message( message ) );
         };
 
         constexpr auto steps = 16u;

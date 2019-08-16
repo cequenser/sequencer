@@ -58,7 +58,7 @@ namespace qml
     private:
         RtMidiOut midiout_;
         sequencer::midi::step_sequencer< track, sequencer::rtmidi::message_sender > step_sequencer_;
-        decltype( sequencer::rtmidi::make_clock( midiout_, step_sequencer_ ) ) clock_;
+        decltype( sequencer::rtmidi::make_clock() ) clock_;
         std::future< void > clock_done_;
         std::uint8_t current_track_{0};
         std::array< int, number_of_tracks > track_notes_;

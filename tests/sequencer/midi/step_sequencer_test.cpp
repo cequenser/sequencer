@@ -270,14 +270,15 @@ SCENARIO( "step_sequencer_base, that is triggered by a midi clock, plays 4 beats
             sequencer.update( message );
             ++clock_message_count;
         };
-        auto midi_clock = midi::clock{sequencer_clock, clock_sender};
+        auto midi_clock = midi::clock{sequencer_clock};
 
         auto thread_ready_promise = std::make_shared< std::promise< void > >();
         const auto thread_ready = thread_ready_promise->get_future();
-        const auto clock_done = std::async(
-            std::launch::async, [&midi_clock, thread_ready = std::move( thread_ready_promise )] {
+        const auto clock_done =
+            std::async( std::launch::async, [&clock_sender, &midi_clock,
+                                             thread_ready = std::move( thread_ready_promise )] {
                 thread_ready->set_value();
-                midi_clock.run();
+                midi_clock.run( clock_sender );
             } );
         // make sure that midi_clock.shut_down() is called before the blocking destructor of
         // clock_done is called
@@ -322,14 +323,15 @@ SCENARIO( "step_sequencer_base, that is triggered by a midi clock, plays 4 beats
             sequencer.update( message );
             ++clock_message_count;
         };
-        auto midi_clock = midi::clock{sequencer_clock, clock_sender};
+        auto midi_clock = midi::clock{sequencer_clock};
 
         auto thread_ready_promise = std::make_shared< std::promise< void > >();
         const auto thread_ready = thread_ready_promise->get_future();
-        const auto clock_done = std::async(
-            std::launch::async, [&midi_clock, thread_ready = std::move( thread_ready_promise )] {
+        const auto clock_done =
+            std::async( std::launch::async, [&clock_sender, &midi_clock,
+                                             thread_ready = std::move( thread_ready_promise )] {
                 thread_ready->set_value();
-                midi_clock.run();
+                midi_clock.run( clock_sender );
             } );
         // make sure that midi_clock.shut_down() is called before the blocking destructor of
         // clock_done is called

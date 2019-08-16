@@ -15,6 +15,7 @@ using sequencer::midi::realtime::message_type;
 using sequencer::rtmidi::cout_callback;
 using sequencer::rtmidi::make_clock;
 using sequencer::rtmidi::make_midi_port;
+using sequencer::rtmidi::realtime_message_sender;
 using sequencer::rtmidi::wait_for_press_enter;
 
 void log_file_callback( double time_delta, std::vector< unsigned char >* message,
@@ -50,8 +51,8 @@ int main()
 
     wait_for_press_enter( "Connect MIDI signals then press <Enter> to continue." );
 
-    auto midi_clock = make_clock( *midiout );
-    const auto clock_done = start_clock_in_thread( midi_clock );
+    auto midi_clock = make_clock();
+    const auto clock_done = start_clock_in_thread( midi_clock, realtime_message_sender{*midiout} );
 
     midi_clock.start();
 

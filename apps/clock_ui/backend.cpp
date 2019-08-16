@@ -11,10 +11,11 @@ namespace qml
     backend::backend()
         : midiout_{RtMidiOut()}, step_sequencer_{track{},
                                                  sequencer::rtmidi::message_sender{midiout_}},
-          clock_{sequencer::rtmidi::make_clock(
-              midiout_, [this]( auto message ) { step_sequencer_.update( message ); } )},
+          clock_{sequencer::rtmidi::make_clock( midiout_, step_sequencer_ )},
           clock_done_{start_clock_in_thread( clock_ )}
     {
+        step_sequencer_.update( sequencer::midi::realtime::message_type::realtime_start );
+        step_sequencer_.update( sequencer::midi::realtime::message_type::realtime_clock );
     }
 
     backend::~backend()
@@ -81,8 +82,20 @@ namespace qml
 
     void backend::set_step( int i, bool checked )
     {
-        step_sequencer_.track()[ track::size_type( i ) ] =
+        const auto new_note =
             checked ? static_cast< int >( sequencer::midi::percussion_key::BassDrum_1 )
                     : track::no_note;
+        step_sequencer_.track().track( current_track_ )[ track::size_type( i ) ] = new_note;
+    }
+
+    bool backend::is_step_set( int i ) const
+    {
+        return step_sequencer_.track().track( current_track_ )[ i ] != track::no_note;
+    }
+
+    void backend::set_current_track( int i )
+    {
+        assert( i < number_of_tracks );
+        current_track_ = std::uint8_t( i );
     }
 } // namespace qml

@@ -6,7 +6,7 @@ import Sequencer 1.0
 ApplicationWindow {
     visible: true
     width: 900
-    height: 260
+    height: 300
     title: qsTr("MIDI Clock")
 
     Backend
@@ -145,6 +145,38 @@ ApplicationWindow {
                 id: status_label
                 color: "black"
                 text: qsTr("")
+            }
+        }
+
+        RowLayout {
+            id: sequencer_parameter_layout
+
+            SpinBox {
+                id: sequencer_track_spinbox
+                from: 0
+                to: 7
+                value: 0
+
+                onValueChanged: {
+                    backend.set_current_track(value);
+
+                    step_0.checked = backend.is_step_set(0)
+                    step_1.checked = backend.is_step_set(1)
+                    step_2.checked = backend.is_step_set(2)
+                    step_3.checked = backend.is_step_set(3)
+                    step_4.checked = backend.is_step_set(4)
+                    step_5.checked = backend.is_step_set(5)
+                    step_6.checked = backend.is_step_set(6)
+                    step_7.checked = backend.is_step_set(7)
+                    step_8.checked = backend.is_step_set(8)
+                    step_9.checked = backend.is_step_set(9)
+                    step_10.checked = backend.is_step_set(10)
+                    step_11.checked = backend.is_step_set(11)
+                    step_12.checked = backend.is_step_set(12)
+                    step_13.checked = backend.is_step_set(13)
+                    step_14.checked = backend.is_step_set(14)
+                    step_15.checked = backend.is_step_set(15)
+                }
             }
         }
 

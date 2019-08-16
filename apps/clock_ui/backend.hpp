@@ -15,7 +15,10 @@ namespace qml
     {
         Q_OBJECT
 
-        using track = sequencer::midi::track< 16 >;
+        static constexpr auto number_of_steps = 16;
+        static constexpr auto number_of_tracks = 8;
+        using track =
+            sequencer::midi::tracks_for_step_sequencer< number_of_steps, number_of_tracks >;
 
     public:
         backend();
@@ -38,10 +41,15 @@ namespace qml
 
         Q_INVOKABLE void set_step( int i, bool checked );
 
+        Q_INVOKABLE bool is_step_set( int i ) const;
+
+        Q_INVOKABLE void set_current_track( int i );
+
     private:
         RtMidiOut midiout_;
         sequencer::midi::step_sequencer< track, sequencer::rtmidi::message_sender > step_sequencer_;
         decltype( sequencer::rtmidi::make_clock( midiout_, step_sequencer_ ) ) clock_;
         std::future< void > clock_done_;
+        std::uint8_t current_track_{0};
     };
 } // namespace qml

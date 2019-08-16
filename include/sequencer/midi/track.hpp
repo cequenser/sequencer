@@ -133,12 +133,12 @@ namespace sequencer::midi
             return number_of_steps;
         }
 
-        track_t< number_of_steps >& track( size_type i ) noexcept
+        track_t< number_of_steps >& operator[]( size_type i ) noexcept
         {
             return tracks_[ i ];
         }
 
-        const track_t< number_of_steps >& track( size_type i ) const noexcept
+        const track_t< number_of_steps >& operator[]( size_type i ) const noexcept
         {
             return tracks_[ i ];
         }

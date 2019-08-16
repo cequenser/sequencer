@@ -13,14 +13,12 @@ using sequencer::midi::percussion_key;
 namespace qml
 {
     backend::backend()
-        : midiout_{RtMidiOut()}, step_sequencer_{track{},
-                                                 sequencer::rtmidi::message_sender{midiout_}},
-          clock_{sequencer::rtmidi::make_clock()},
+        : midiout_{RtMidiOut()}, step_sequencer_{tracks_}, clock_{sequencer::rtmidi::make_clock()},
           clock_done_{start_clock_in_thread( clock_, [this]( auto message ) {
               midiout_.sendMessage(
                   static_cast< const unsigned char* >( static_cast< const void* >( &message ) ),
                   1 );
-              step_sequencer_.update( message );
+              step_sequencer_.update( message, sequencer::rtmidi::message_sender{midiout_} );
           } )}
     {
         track_notes_.fill( note_t( min_note() ) );
@@ -28,6 +26,7 @@ namespace qml
 
     backend::~backend()
     {
+        tracks_.send_all_notes_off_message( sequencer::rtmidi::message_sender{midiout_} );
         clock_.shut_down();
     }
 
@@ -88,21 +87,21 @@ namespace qml
         return midiout_.isPortOpen();
     }
 
-    void backend::set_step( int i, bool checked )
+    void backend::set_step( int step, bool checked )
     {
         const auto new_note = checked ? track_notes_[ current_track_ ] : no_note();
-        step_sequencer_.tracks().track( current_track_ )[ track::size_type( i ) ] = new_note;
+        tracks_[ current_track_ ][ tracks_t::size_type( step ) ] = new_note;
     }
 
-    bool backend::is_step_set( int i ) const
+    bool backend::is_step_set( int step ) const
     {
-        return step_sequencer_.tracks().track( current_track_ )[ i ] != no_note();
+        return tracks_[ current_track_ ][ step ] != no_note();
     }
 
-    void backend::set_current_track( int i )
+    void backend::set_current_track( int track )
     {
-        assert( i < number_of_tracks );
-        current_track_ = std::uint8_t( i );
+        assert( track < number_of_tracks );
+        current_track_ = std::uint8_t( track );
     }
 
     int backend::min_note() const

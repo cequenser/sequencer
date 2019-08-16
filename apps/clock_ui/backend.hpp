@@ -17,7 +17,7 @@ namespace qml
 
         static constexpr auto number_of_steps = 16;
         static constexpr auto number_of_tracks = 8;
-        using track = sequencer::midi::tracks_t< number_of_steps, number_of_tracks >;
+        using tracks_t = sequencer::midi::tracks_t< number_of_steps, number_of_tracks >;
 
     public:
         backend();
@@ -38,11 +38,11 @@ namespace qml
 
         Q_INVOKABLE bool open_port( unsigned id );
 
-        Q_INVOKABLE void set_step( int i, bool checked );
+        Q_INVOKABLE void set_step( int step, bool checked );
 
-        Q_INVOKABLE bool is_step_set( int i ) const;
+        Q_INVOKABLE bool is_step_set( int step ) const;
 
-        Q_INVOKABLE void set_current_track( int i );
+        Q_INVOKABLE void set_current_track( int track );
 
         Q_INVOKABLE int min_note() const;
 
@@ -56,7 +56,8 @@ namespace qml
 
     private:
         RtMidiOut midiout_;
-        sequencer::midi::step_sequencer< track, sequencer::rtmidi::message_sender > step_sequencer_;
+        tracks_t tracks_{};
+        sequencer::midi::step_sequencer< tracks_t > step_sequencer_;
         decltype( sequencer::rtmidi::make_clock() ) clock_;
         std::future< void > clock_done_;
         std::uint8_t current_track_{0};

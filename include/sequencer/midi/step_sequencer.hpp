@@ -9,44 +9,28 @@
 
 namespace sequencer::midi
 {
-    template < class Tracks, class Sender >
+    template < class Tracks >
     class step_sequencer
     {
     public:
-        constexpr step_sequencer( const Tracks& tracks, const Sender& sender ) noexcept(
-            std::is_nothrow_copy_constructible_v< Tracks >&&
-                std::is_nothrow_copy_constructible_v< Sender > )
-            : track_( tracks ), sender_( sender )
+        constexpr step_sequencer( const Tracks& tracks ) noexcept : track_( tracks )
         {
         }
 
-        ~step_sequencer()
+        template < class Sender >
+        void update( realtime::message_type message, const Sender& sender )
         {
-            track_.send_all_notes_off_message( sender_ );
-        }
-
-        void update( realtime::message_type message )
-        {
-            if ( process_control_message( message ) || !started_ )
+            if ( process_control_message( message, sender ) || !started_ )
             {
                 return;
             }
 
-            process_clock_message();
-        }
-
-        Tracks& tracks() noexcept
-        {
-            return track_;
-        }
-
-        const Tracks& tracks() const noexcept
-        {
-            return track_;
+            process_clock_message( sender );
         }
 
     private:
-        bool process_control_message( realtime::message_type message )
+        template < class Sender >
+        bool process_control_message( realtime::message_type message, const Sender& sender )
         {
             if ( message == realtime::message_type::realtime_start )
             {
@@ -62,14 +46,15 @@ namespace sequencer::midi
             if ( message == realtime::message_type::realtime_stop )
             {
                 started_ = false;
-                track_.send_all_notes_off_message( sender_ );
+                track_.send_all_notes_off_message( sender );
                 return true;
             }
 
             return false;
         }
 
-        void process_clock_message()
+        template < class Sender >
+        void process_clock_message( const Sender& sender )
         {
             constexpr auto midi_clock_messages_per_beat = 24u;
             const auto steps_per_beat = track_.steps() / 4u;
@@ -78,7 +63,7 @@ namespace sequencer::midi
             if ( midi_beat_counter_ % midi_clock_messages_per_step == 0 )
             {
                 const auto step = midi_beat_counter_ / midi_clock_messages_per_step;
-                track_.send_messages( step, sender_ );
+                track_.send_messages( step, sender );
             }
             if ( ++midi_beat_counter_ == track_.steps() * midi_clock_messages_per_step )
             {
@@ -86,8 +71,7 @@ namespace sequencer::midi
             }
         }
 
-        Tracks track_;
-        Sender sender_;
+        const Tracks& track_;
         unsigned midi_beat_counter_ = 0;
         bool started_ = false;
     };

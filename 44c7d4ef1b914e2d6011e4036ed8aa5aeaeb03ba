@@ -1,0 +1,184 @@
+{
+  "comments": [
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/473/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "3b76aba9_d9ec6402",
+        "filename": "include/sequencer/midi/track.hpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-16T17:40:34Z",
+      "side": 1,
+      "message": "name defined in alias declaration must be an identifier [clang-diagnostic-error]",
+      "revId": "44c7d4ef1b914e2d6011e4036ed8aa5aeaeb03ba",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/473/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "5ba81dda_c1d6a97b",
+        "filename": "include/sequencer/midi/track.hpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-16T17:40:34Z",
+      "side": 1,
+      "message": "jenkins/workspace/psv/clang-tidy/include/sequencer/midi/track.hpp:30:20: note: \u0027size_type\u0027 declared here",
+      "revId": "44c7d4ef1b914e2d6011e4036ed8aa5aeaeb03ba",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/473/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "6789abea_91afe76f",
+        "filename": "include/sequencer/midi/track.hpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-16T17:40:34Z",
+      "side": 1,
+      "message": "no type named \u0027size_type\u0027 in namespace \u0027std\u0027; did you mean simply \u0027size_type\u0027? [clang-diagnostic-error]",
+      "revId": "44c7d4ef1b914e2d6011e4036ed8aa5aeaeb03ba",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/473/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "332cb54a_f5e6c32d",
+        "filename": "include/sequencer/midi/track.hpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-16T17:40:34Z",
+      "side": 1,
+      "message": "no type named \u0027size_type\u0027 in namespace \u0027std\u0027; did you mean simply \u0027size_type\u0027? [clang-diagnostic-error]",
+      "revId": "44c7d4ef1b914e2d6011e4036ed8aa5aeaeb03ba",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/473/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "17f7a091_728d74a9",
+        "filename": "include/sequencer/midi/track.hpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-16T17:40:34Z",
+      "side": 1,
+      "message": "jenkins/workspace/psv/clang-tidy/include/sequencer/midi/track.hpp:121:20: note: \u0027size_type\u0027 declared here",
+      "revId": "44c7d4ef1b914e2d6011e4036ed8aa5aeaeb03ba",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/473/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "22cd724c_a463ad87",
+        "filename": "include/sequencer/midi/track.hpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-16T17:40:34Z",
+      "side": 1,
+      "message": "name defined in alias declaration must be an identifier [clang-diagnostic-error]",
+      "revId": "44c7d4ef1b914e2d6011e4036ed8aa5aeaeb03ba",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/473/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "a13e5da3_910bfa24",
+        "filename": "include/sequencer/midi/track.hpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-16T17:40:34Z",
+      "side": 1,
+      "message": "no type named \u0027size_type\u0027 in namespace \u0027std\u0027; did you mean simply \u0027size_type\u0027? [clang-diagnostic-error]",
+      "revId": "44c7d4ef1b914e2d6011e4036ed8aa5aeaeb03ba",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/473/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "beb0fe19_3a68e298",
+        "filename": "include/sequencer/midi/track.hpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-16T17:40:34Z",
+      "side": 1,
+      "message": "no type named \u0027size_type\u0027 in namespace \u0027std\u0027; did you mean simply \u0027size_type\u0027? [clang-diagnostic-error]",
+      "revId": "44c7d4ef1b914e2d6011e4036ed8aa5aeaeb03ba",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/473/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "14d96543_fb298e3d",
+        "filename": "tests/sequencer/midi/step_sequencer_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 461,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-16T17:40:34Z",
+      "side": 1,
+      "message": "no member named \u0027track\u0027 in \u0027sequencer::midi::tracks_for_step_sequencer\u003c16, 2\u003e\u0027 [clang-diagnostic-error]",
+      "revId": "44c7d4ef1b914e2d6011e4036ed8aa5aeaeb03ba",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}

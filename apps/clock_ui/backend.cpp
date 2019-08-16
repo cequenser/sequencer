@@ -88,12 +88,12 @@ namespace qml
     {
         const auto new_note =
             checked ? static_cast< int >( track_notes_[ current_track_ ] ) : track::no_note;
-        step_sequencer_.track().track( current_track_ )[ track::size_type( i ) ] = new_note;
+        step_sequencer_.tracks().track( current_track_ )[ track::size_type( i ) ] = new_note;
     }
 
     bool backend::is_step_set( int i ) const
     {
-        return step_sequencer_.track().track( current_track_ )[ i ] != track::no_note;
+        return step_sequencer_.tracks().track( current_track_ )[ i ] != track::no_note;
     }
 
     void backend::set_current_track( int i )

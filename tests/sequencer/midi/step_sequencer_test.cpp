@@ -472,7 +472,7 @@ SCENARIO( "step_sequencer_base sends notes to correct channels", "[step_sequence
         WHEN( "channel is set to 1" )
         {
             const auto new_channel = 1;
-            sequencer.track().track( 0 ).set_channel( new_channel );
+            sequencer.tracks().track( 0 ).set_channel( new_channel );
             AND_WHEN( "sequencer receives start message and 1 clock message" )
             {
                 sequencer.update( midi::realtime::message_type::realtime_start );

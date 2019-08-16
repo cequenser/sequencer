@@ -9,14 +9,14 @@
 
 namespace sequencer::midi
 {
-    template < class Track, class Sender >
+    template < class Tracks, class Sender >
     class step_sequencer
     {
     public:
-        constexpr step_sequencer( const Track& track, const Sender& sender ) noexcept(
-            std::is_nothrow_copy_constructible_v< Track >&&
+        constexpr step_sequencer( const Tracks& tracks, const Sender& sender ) noexcept(
+            std::is_nothrow_copy_constructible_v< Tracks >&&
                 std::is_nothrow_copy_constructible_v< Sender > )
-            : track_( track ), sender_( sender )
+            : track_( tracks ), sender_( sender )
         {
         }
 
@@ -35,12 +35,12 @@ namespace sequencer::midi
             process_clock_message();
         }
 
-        Track& track() noexcept
+        Tracks& tracks() noexcept
         {
             return track_;
         }
 
-        const Track& track() const noexcept
+        const Tracks& tracks() const noexcept
         {
             return track_;
         }
@@ -87,7 +87,7 @@ namespace sequencer::midi
             }
         }
 
-        Track track_;
+        Tracks track_;
         Sender sender_;
         unsigned midi_beat_counter_ = 0;
         bool started_ = false;

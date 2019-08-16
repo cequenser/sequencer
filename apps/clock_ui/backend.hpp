@@ -17,8 +17,7 @@ namespace qml
 
         static constexpr auto number_of_steps = 16;
         static constexpr auto number_of_tracks = 8;
-        using track =
-            sequencer::midi::tracks_for_step_sequencer< number_of_steps, number_of_tracks >;
+        using track = sequencer::midi::tracks_t< number_of_steps, number_of_tracks >;
 
     public:
         backend();
@@ -61,6 +60,6 @@ namespace qml
         decltype( sequencer::rtmidi::make_clock() ) clock_;
         std::future< void > clock_done_;
         std::uint8_t current_track_{0};
-        std::array< int, number_of_tracks > track_notes_;
+        std::array< sequencer::midi::note_t, number_of_tracks > track_notes_;
     };
 } // namespace qml

@@ -3,6 +3,7 @@
 #include <sequencer/midi/message/channel_mode.hpp>
 #include <sequencer/midi/message/channel_voice.hpp>
 #include <sequencer/midi/message/message_type.hpp>
+#include <sequencer/midi/note.hpp>
 
 #include <array>
 #include <atomic>
@@ -10,90 +11,65 @@
 
 namespace sequencer::midi
 {
-    template < unsigned number_of_steps >
-    class track
+    template < std::size_t number_of_steps >
+    using track_base_t = std::array< std::atomic< note_t >, number_of_steps >;
+
+    template < std::size_t number_of_steps >
+    void copy_track( const track_base_t< number_of_steps >& from,
+                     track_base_t< number_of_steps >& to )
     {
-        using container = std::array< std::atomic_int, number_of_steps >;
+        for ( auto step = std::size_t{0}; step < number_of_steps; ++step )
+        {
+            to[ step ] = from[ step ].load();
+        }
+    }
 
+    template < std::size_t number_of_steps >
+    struct track_t
+    {
     public:
-        using size_type = typename container::size_type;
-        static constexpr int no_note = -1;
+        using size_type = typename track_base_t< number_of_steps >::size_type;
 
-        track() noexcept
+        constexpr track_t() noexcept = default;
+
+        track_t( const track_t& other ) noexcept
+            : channel_( other.channel_ ), velocity_( other.velocity_ )
         {
-            clear();
+            copy_track( other.track_, track_ );
         }
 
-        track( const track& other ) noexcept
+        track_t& operator=( const track_t& other ) noexcept
         {
-            for ( auto i = size_type{0}; i < steps(); ++i )
+            if ( this != &other )
             {
-                steps_[ i ] = other.steps_[ i ].load();
+                copy_track( other.track_, track_ );
+                channel_ = other.channel_;
+                velocity_ = other.velocity_;
             }
-        }
-
-        track& operator=( const track& other ) noexcept
-        {
-            if ( this == &other )
-            {
-                return *this;
-            }
-            ( *this ) = track{other};
             return *this;
         }
 
-        constexpr unsigned steps() const noexcept
+        constexpr std::size_t steps() const noexcept
         {
             return number_of_steps;
         }
 
-        std::atomic_int& operator[]( size_type i ) noexcept
+        std::atomic< note_t >& operator[]( size_type i ) noexcept
         {
-            return steps_[ i ];
+            return track_[ i ];
         }
 
-        const std::atomic_int& operator[]( size_type i ) const noexcept
+        const std::atomic< note_t >& operator[]( size_type i ) const noexcept
         {
-            return steps_[ i ];
+            return track_[ i ];
         }
 
         void clear() noexcept
         {
-            for ( auto& step : steps_ )
+            for ( auto& note : track_ )
             {
-                step = no_note;
+                note = note_t::no_note;
             }
-        }
-
-    private:
-        container steps_{};
-    };
-
-    template < unsigned number_of_steps >
-    struct track_for_step_sequencer
-    {
-    public:
-        using size_type = typename track< number_of_steps >::size_type;
-        static constexpr auto no_note = track< number_of_steps >::no_note;
-
-        constexpr unsigned steps() const noexcept
-        {
-            return number_of_steps;
-        }
-
-        std::atomic_int& operator[]( size_type i ) noexcept
-        {
-            return track_[ i ];
-        }
-
-        const std::atomic_int& operator[]( size_type i ) const noexcept
-        {
-            return track_[ i ];
-        }
-
-        void clear() noexcept
-        {
-            track_.clear();
         }
 
         constexpr void set_channel( std::uint8_t channel ) noexcept
@@ -108,16 +84,17 @@ namespace sequencer::midi
         }
 
         template < class Sender >
-        void send_messages( unsigned step, const Sender& sender ) const
+        void send_messages( std::size_t step, const Sender& sender ) const
         {
             const auto note = track_[ step ].load();
-            if ( note != no_note )
+            if ( note != note_t::no_note )
             {
-                if ( last_note_ != no_note )
+                if ( last_note_ != note_t::no_note )
                 {
-                    sender( channel::voice::note_off( channel(), last_note_, velocity_ ) );
+                    sender( channel::voice::note_off( channel(), to_uint8_t( last_note_ ),
+                                                      velocity_ ) );
                 }
-                sender( channel::voice::note_on( channel(), note, velocity_ ) );
+                sender( channel::voice::note_on( channel(), to_uint8_t( note ), velocity_ ) );
                 last_note_ = note;
             }
         }
@@ -126,67 +103,63 @@ namespace sequencer::midi
         void send_all_notes_off_message( const Sender& sender ) const
         {
             sender( channel::mode::all_notes_off( channel() ) );
-            last_note_ = no_note;
+            last_note_ = note_t::no_note;
         }
 
     private:
-        track< number_of_steps > track_{};
-        mutable int last_note_ = no_note;
+        track_base_t< number_of_steps > track_{};
+        mutable note_t last_note_ = note_t::no_note;
         std::uint8_t channel_{0};
         std::uint8_t velocity_{32};
     };
 
-    template < unsigned number_of_steps, unsigned number_of_tracks >
-    struct tracks_for_step_sequencer
+    template < std::size_t number_of_steps, std::size_t number_of_tracks >
+    struct tracks_t
     {
     public:
-        using container =
-            std::array< track_for_step_sequencer< number_of_steps >, number_of_tracks >;
+        using container = std::array< track_t< number_of_steps >, number_of_tracks >;
         using size_type = typename container::size_type;
-        static constexpr auto no_note = track_for_step_sequencer< number_of_steps >::no_note;
 
-        tracks_for_step_sequencer() noexcept
+        tracks_t() noexcept
         {
             std::uint8_t channel = 0;
-            for_each_track( [&channel]( track_for_step_sequencer< number_of_steps >& track ) {
+            for_each_track( [&channel]( track_t< number_of_steps >& track ) {
                 track.set_channel( channel++ );
             } );
         }
 
-        constexpr unsigned steps() const noexcept
+        constexpr std::size_t steps() const noexcept
         {
             return number_of_steps;
         }
 
-        track_for_step_sequencer< number_of_steps >& track( size_type i ) noexcept
+        track_t< number_of_steps >& track( size_type i ) noexcept
         {
             return tracks_[ i ];
         }
 
-        const track_for_step_sequencer< number_of_steps >& track( size_type i ) const noexcept
+        const track_t< number_of_steps >& track( size_type i ) const noexcept
         {
             return tracks_[ i ];
         }
 
         void clear() noexcept
         {
-            for_each_track(
-                []( track_for_step_sequencer< number_of_steps >& track ) { track.clear(); } );
+            for_each_track( []( track_t< number_of_steps >& track ) { track.clear(); } );
         }
 
         template < class Sender >
-        void send_messages( unsigned step, const Sender& sender ) const
+        void send_messages( std::size_t step, const Sender& sender ) const
         {
-            for_each_track(
-                [&sender, step]( const track_for_step_sequencer< number_of_steps >& track ) {
-                    track.send_messages( step, sender );
-                } );
+            for_each_track( [&sender, step]( const track_t< number_of_steps >& track ) {
+                track.send_messages( step, sender );
+            } );
         }
 
         template < class Sender >
         void send_all_notes_off_message( const Sender& sender ) const
         {
-            for_each_track( [&sender]( const track_for_step_sequencer< number_of_steps >& track ) {
+            for_each_track( [&sender]( const track_t< number_of_steps >& track ) {
                 track.send_all_notes_off_message( sender );
             } );
         }

@@ -20,7 +20,10 @@ using sequencer::midi::control_change::hold_2;
 using sequencer::midi::control_change::portamento;
 using sequencer::midi::control_change::soft_pedal;
 using sequencer::midi::control_change::sostenuto;
+using sequencer::midi::system::common::end_system_exclusive;
 using sequencer::midi::system::common::song_position_pointer;
+using sequencer::midi::system::common::song_select;
+using sequencer::midi::system::common::tune_request;
 
 SCENARIO( "midi message to string", "[to_string]" )
 {
@@ -42,6 +45,36 @@ SCENARIO( "midi message to string", "[to_string]" )
         THEN( "to_string returns 'spp:200'" )
         {
             REQUIRE( to_string( message ) == "spp:200" );
+        }
+    }
+
+    GIVEN( "song select message with value 42" )
+    {
+        const auto message = make_message( song_select( 42 ) );
+
+        THEN( "to_string returns 'song_select:42'" )
+        {
+            REQUIRE( to_string( message ) == "song_select:42" );
+        }
+    }
+
+    GIVEN( "tune request message" )
+    {
+        const auto message = make_message( tune_request() );
+
+        THEN( "to_string returns 'tune_request'" )
+        {
+            REQUIRE( to_string( message ) == "tune_request" );
+        }
+    }
+
+    GIVEN( "end system exclusive message" )
+    {
+        const auto message = make_message( end_system_exclusive() );
+
+        THEN( "to_string returns 'end_sysex'" )
+        {
+            REQUIRE( to_string( message ) == "end_sysex" );
         }
     }
 
@@ -330,6 +363,41 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
             std::stringstream stream;
             stream << message;
             REQUIRE( stream.str() == "spp:200" );
+        }
+    }
+    GIVEN( "song select message with value 42" )
+    {
+        const auto message = make_message( song_select( 42 ) );
+
+        THEN( "stream operator writes 'song_select:42'" )
+        {
+            std::stringstream stream;
+            stream << message;
+            REQUIRE( stream.str() == "song_select:42" );
+        }
+    }
+
+    GIVEN( "tune request message" )
+    {
+        const auto message = make_message( tune_request() );
+
+        THEN( "stream operator writes 'tune_request'" )
+        {
+            std::stringstream stream;
+            stream << message;
+            REQUIRE( stream.str() == "tune_request" );
+        }
+    }
+
+    GIVEN( "end system exclusive message" )
+    {
+        const auto message = make_message( end_system_exclusive() );
+
+        THEN( "stream operator writes 'end_sysex'" )
+        {
+            std::stringstream stream;
+            stream << message;
+            REQUIRE( stream.str() == "end_sysex" );
         }
     }
 

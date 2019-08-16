@@ -44,6 +44,11 @@ namespace sequencer::midi
             return message_.front();
         }
 
+        const std::byte& back() const
+        {
+            return message_.back();
+        }
+
         size_type size() const noexcept
         {
             return message_.size();

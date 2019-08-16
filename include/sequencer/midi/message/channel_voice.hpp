@@ -28,4 +28,25 @@ namespace sequencer::midi::channel::voice
 
         return {status_byte_for( std::byte{0x80}, channel ), std::byte{note}, std::byte{velocity}};
     }
+
+    constexpr std::array< std::byte, 3 > polymorphic_key_pressure( std::uint8_t channel,
+                                                                   std::uint8_t key,
+                                                                   std::uint8_t pressure ) noexcept
+    {
+        assert( channel < 16 );
+        assert( key < 128 );
+        assert( pressure < 128 );
+
+        return {status_byte_for( std::byte{0xA0}, channel ), std::byte{key}, std::byte{pressure}};
+    }
+
+    constexpr std::array< std::byte, 3 > pitch_bend_change( std::uint8_t channel,
+                                                            std::uint16_t value ) noexcept
+    {
+        assert( channel < 16 );
+        assert( value < 16384 );
+
+        const auto hex_value = uint16_to_two_bytes( value );
+        return {status_byte_for( std::byte{0xE0}, channel ), hex_value.first, hex_value.second};
+    }
 } // namespace sequencer::midi::channel::voice

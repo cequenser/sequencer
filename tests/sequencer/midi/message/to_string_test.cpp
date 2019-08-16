@@ -3,30 +3,18 @@
 #include <catch2/catch.hpp>
 
 #include <sstream>
+#include <stddef.h>
 
 using sequencer::midi::make_message;
 using sequencer::midi::message_type;
-using sequencer::midi::channel::mode::all_notes_off;
-using sequencer::midi::channel::mode::all_sounds_off;
-using sequencer::midi::channel::mode::local_control;
-using sequencer::midi::channel::mode::omni_mode_off;
-using sequencer::midi::channel::mode::omni_mode_on;
-using sequencer::midi::channel::mode::poly_mode_on;
-using sequencer::midi::channel::mode::reset_all_controllers;
-using sequencer::midi::channel::voice::note_off;
-using sequencer::midi::channel::voice::note_on;
-using sequencer::midi::control_change::damper_pedal;
-using sequencer::midi::control_change::hold_2;
-using sequencer::midi::control_change::portamento;
-using sequencer::midi::control_change::soft_pedal;
-using sequencer::midi::control_change::sostenuto;
-using sequencer::midi::system::common::end_system_exclusive;
-using sequencer::midi::system::common::song_position_pointer;
-using sequencer::midi::system::common::song_select;
-using sequencer::midi::system::common::tune_request;
 
 SCENARIO( "midi message to string", "[to_string]" )
 {
+    using namespace sequencer::midi::channel::mode;
+    using namespace sequencer::midi::channel::voice;
+    using namespace sequencer::midi::control_change;
+    using namespace sequencer::midi::system::common;
+
     // system::common
     GIVEN( "song pointer position message with value 3" )
     {
@@ -102,6 +90,28 @@ SCENARIO( "midi message to string", "[to_string]" )
         THEN( "to_string returns 'note_off:1:40:73'" )
         {
             REQUIRE( to_string( message ) == "note_off:1:40:73" );
+        }
+    }
+
+    GIVEN( "pitch bend change message with value 3" )
+    {
+        const auto channel = 1;
+        const auto message = make_message( pitch_bend_change( channel, 3 ) );
+
+        THEN( "stream operator writes 'pitch_bend_change:1:3'" )
+        {
+            REQUIRE( to_string( message ) == "pitch_bend_change:1:3" );
+        }
+    }
+
+    GIVEN( "pitch bend change message with value 200" )
+    {
+        const auto channel = 0;
+        const auto message = make_message( pitch_bend_change( channel, 200 ) );
+
+        THEN( "stream operator writes 'pitch_bend_change:0:200'" )
+        {
+            REQUIRE( to_string( message ) == "pitch_bend_change:0:200" );
         }
     }
 
@@ -341,6 +351,11 @@ SCENARIO( "midi message to string", "[to_string]" )
 
 SCENARIO( "midi message streaming", "[midi_message_stream]" )
 {
+    using namespace sequencer::midi::channel::mode;
+    using namespace sequencer::midi::channel::voice;
+    using namespace sequencer::midi::control_change;
+    using namespace sequencer::midi::system::common;
+
     // system::common
     GIVEN( "song pointer position message with value 3" )
     {
@@ -365,6 +380,7 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
             REQUIRE( stream.str() == "spp:200" );
         }
     }
+
     GIVEN( "song select message with value 42" )
     {
         const auto message = make_message( song_select( 42 ) );
@@ -429,6 +445,32 @@ SCENARIO( "midi message streaming", "[midi_message_stream]" )
             std::stringstream stream;
             stream << message;
             REQUIRE( stream.str() == "note_off:1:40:73" );
+        }
+    }
+
+    GIVEN( "pitch bend change message with value 3" )
+    {
+        const auto channel = 1;
+        const auto message = make_message( pitch_bend_change( channel, 3 ) );
+
+        THEN( "stream operator writes 'pitch_bend_change:1:3'" )
+        {
+            std::stringstream stream;
+            stream << message;
+            REQUIRE( stream.str() == "pitch_bend_change:1:3" );
+        }
+    }
+
+    GIVEN( "pitch bend change message with value 200" )
+    {
+        const auto channel = 0;
+        const auto message = make_message( pitch_bend_change( 0, 200 ) );
+
+        THEN( "stream operator writes 'pitch_bend_change.0:200'" )
+        {
+            std::stringstream stream;
+            stream << message;
+            REQUIRE( stream.str() == "pitch_bend_change:0:200" );
         }
     }
 

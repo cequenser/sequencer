@@ -4,7 +4,7 @@
 
 SCENARIO( "uint16_to_two_bytes", "[system_common_message]" )
 {
-    using namespace sequencer::midi::system::common;
+    using namespace sequencer::midi;
 
     GIVEN( "a value of 64" )
     {
@@ -49,7 +49,7 @@ SCENARIO( "uint16_to_two_bytes", "[system_common_message]" )
 
 SCENARIO( "two_bytes_to_uint16", "[system_common_message]" )
 {
-    using namespace sequencer::midi::system::common;
+    using namespace sequencer::midi;
 
     GIVEN( "two bytes with values 0x40 and 0x00" )
     {

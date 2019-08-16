@@ -42,8 +42,8 @@ namespace sequencer::midi
             // song position pointer
             case 0xF2:
                 assert( message.size() == 3 );
-                return std::string( "spp:" ).append( std::to_string(
-                    system::common::two_bytes_to_uint16( {message[ 1 ], message[ 2 ]} ) ) );
+                return std::string( "spp:" ).append(
+                    std::to_string( two_bytes_to_uint16( {message[ 1 ], message[ 2 ]} ) ) );
             // song select
             case 0xF3:
                 assert( message.size() == 2 );
@@ -139,6 +139,14 @@ namespace sequencer::midi
             str += to_string( static_cast< std::uint8_t >( message[ 2 ] ) );
             return str;
         }
+        // pitch bend change
+        case 0xE:
+            assert( message.size() == 3 );
+            return std::string( "pitch_bend_change:" )
+                .append( to_string( get_channel( status_byte ) ) )
+                .append( ":" )
+                .append( std::to_string( two_bytes_to_uint16( {message[ 1 ], message[ 2 ]} ) ) );
+
         default:
             return invalid_string;
         }

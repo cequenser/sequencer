@@ -7,6 +7,7 @@ add_library(sequencer
     fixed_point_type.hpp
     midi/clock.hpp
     midi/clock_base.hpp
+    midi/note.hpp
     midi/percussion_key.hpp
     midi/step_sequencer.hpp
     midi/track.hpp

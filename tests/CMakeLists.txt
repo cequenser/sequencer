@@ -14,7 +14,6 @@ add_executable(tests
     sequencer/midi/message/control_change_test.cpp
     sequencer/midi/message/realtime_test.cpp
     sequencer/midi/message/system_common_test.cpp
-    sequencer/midi/message/to_string_test.cpp
     sequencer/chrono/chrono_matchers.hpp
     sequencer/chrono/sequencer_clock_test.cpp
     sequencer/chrono/testing_clock_test.cpp

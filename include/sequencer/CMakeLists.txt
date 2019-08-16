@@ -16,7 +16,6 @@ add_library(sequencer
     midi/message/control_change.hpp
     midi/message/realtime.hpp
     midi/message/system_common.hpp
-    midi/message/to_string.hpp
     midi/message/util.hpp
     chrono/chrono_adapter.hpp
     chrono/sequencer_clock.hpp

@@ -14,8 +14,7 @@ namespace qml
           clock_{sequencer::rtmidi::make_clock( midiout_, step_sequencer_ )},
           clock_done_{start_clock_in_thread( clock_ )}
     {
-        step_sequencer_.update( sequencer::midi::realtime::message_type::realtime_start );
-        step_sequencer_.update( sequencer::midi::realtime::message_type::realtime_clock );
+        track_notes_.fill( min_note() );
     }
 
     backend::~backend()
@@ -83,8 +82,7 @@ namespace qml
     void backend::set_step( int i, bool checked )
     {
         const auto new_note =
-            checked ? static_cast< int >( sequencer::midi::percussion_key::BassDrum_1 )
-                    : track::no_note;
+            checked ? static_cast< int >( track_notes_[ current_track_ ] ) : track::no_note;
         step_sequencer_.track().track( current_track_ )[ track::size_type( i ) ] = new_note;
     }
 
@@ -97,5 +95,50 @@ namespace qml
     {
         assert( i < number_of_tracks );
         current_track_ = std::uint8_t( i );
+    }
+
+    int backend::min_note() const
+    {
+        return static_cast< std::uint8_t >( sequencer::midi::percussion_key::AcousticBassDrum );
+    }
+
+    int backend::max_note() const
+    {
+        return static_cast< std::uint8_t >( sequencer::midi::percussion_key::OpenTriangle );
+    }
+
+    QString backend::note_to_string( int note ) const
+    {
+        assert( note >= min_note() );
+        assert( note <= max_note() );
+        return QString(
+            to_string( static_cast< sequencer::midi::percussion_key >( std::uint8_t( note ) ) )
+                .data() );
+    }
+
+    QString backend::notes_to_string() const
+    {
+        QString str;
+        for ( auto note = min_note(); note <= max_note(); ++note )
+        {
+            str.append( note_to_string( note ) );
+            if ( note != max_note() )
+            {
+                str.append( ";" );
+            }
+        }
+        return str;
+    }
+
+    void backend::set_note_of_current_track( int note )
+    {
+        track_notes_[ current_track_ ] = min_note() + note;
+        for ( auto step = 0; step < number_of_steps; ++step )
+        {
+            if ( is_step_set( step ) )
+            {
+                set_step( step, true );
+            }
+        }
     }
 } // namespace qml

@@ -178,6 +178,15 @@ ApplicationWindow {
                     step_15.checked = backend.is_step_set(15)
                 }
             }
+
+            ComboBox {
+                width: 250
+                model: backend.notes_to_string().split(";")
+
+                onCurrentIndexChanged: {
+                    backend.set_note_of_current_track(currentIndex);
+                }
+            }
         }
 
         RowLayout {

@@ -45,11 +45,22 @@ namespace qml
 
         Q_INVOKABLE void set_current_track( int i );
 
+        Q_INVOKABLE int min_note() const;
+
+        Q_INVOKABLE int max_note() const;
+
+        Q_INVOKABLE QString note_to_string( int note ) const;
+
+        Q_INVOKABLE QString notes_to_string() const;
+
+        Q_INVOKABLE void set_note_of_current_track( int note );
+
     private:
         RtMidiOut midiout_;
         sequencer::midi::step_sequencer< track, sequencer::rtmidi::message_sender > step_sequencer_;
         decltype( sequencer::rtmidi::make_clock( midiout_, step_sequencer_ ) ) clock_;
         std::future< void > clock_done_;
         std::uint8_t current_track_{0};
+        std::array< int, number_of_tracks > track_notes_;
     };
 } // namespace qml

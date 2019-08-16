@@ -3,10 +3,11 @@
 #include <sequencer/midi/message/channel_mode.hpp>
 #include <sequencer/midi/message/channel_voice.hpp>
 #include <sequencer/midi/message/control_change.hpp>
-#include <sequencer/midi/message/message_type.hpp>
 #include <sequencer/midi/message/system_common.hpp>
 
+#include <array>
 #include <cassert>
+#include <cstddef>
 #include <ostream>
 #include <string>
 
@@ -26,7 +27,8 @@ namespace sequencer::midi
             .append( to_string( get_channel( status_byte ) ) );
     }
 
-    inline std::string to_string( const message_type& message )
+    template < std::size_t size >
+    std::string to_string( const std::array< std::byte, size >& message )
     {
         if ( message.empty() )
         {
@@ -152,7 +154,8 @@ namespace sequencer::midi
         }
     }
 
-    inline std::ostream& operator<<( std::ostream& stream, const message_type& msg )
+    template < std::size_t size >
+    std::ostream& operator<<( std::ostream& stream, const std::array< std::byte, size >& msg )
     {
         stream << to_string( msg );
         return stream;

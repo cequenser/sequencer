@@ -14,7 +14,6 @@ add_library(sequencer
     midi/message/channel_mode.hpp
     midi/message/channel_voice.hpp
     midi/message/control_change.hpp
-    midi/message/message_type.hpp
     midi/message/realtime.hpp
     midi/message/system_common.hpp
     midi/message/to_string.hpp

@@ -1,6 +1,5 @@
 #pragma once
 
-#include <sequencer/midi/message/message_type.hpp>
 #include <sequencer/midi/message/realtime.hpp>
 
 #include <cassert>

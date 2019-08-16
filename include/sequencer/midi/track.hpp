@@ -2,7 +2,6 @@
 
 #include <sequencer/midi/message/channel_mode.hpp>
 #include <sequencer/midi/message/channel_voice.hpp>
-#include <sequencer/midi/message/message_type.hpp>
 #include <sequencer/midi/note.hpp>
 
 #include <array>

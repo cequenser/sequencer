@@ -3,7 +3,6 @@
 #include <sequencer/midi/clock.hpp>
 #include <sequencer/midi/message/channel_mode.hpp>
 #include <sequencer/midi/message/channel_voice.hpp>
-#include <sequencer/midi/message/message_type.hpp>
 #include <sequencer/midi/note.hpp>
 #include <sequencer/midi/step_sequencer.hpp>
 #include <sequencer/midi/track.hpp>
@@ -18,7 +17,6 @@
 #include <mutex>
 #include <vector>
 
-using sequencer::midi::make_message;
 using sequencer::midi::make_midi_clock_raii_shutdown;
 using sequencer::midi::note_t;
 using sequencer::midi::step_sequencer;
@@ -34,14 +32,12 @@ namespace
 {
     auto note_on( std::uint8_t channel, note_t note )
     {
-        return make_message(
-            sequencer::midi::channel::voice::note_on( channel, to_uint8_t( note ), velocity ) );
+        return sequencer::midi::channel::voice::note_on( channel, to_uint8_t( note ), velocity );
     }
 
     auto note_off( std::uint8_t channel, note_t note )
     {
-        return make_message(
-            sequencer::midi::channel::voice::note_off( channel, to_uint8_t( note ), velocity ) );
+        return sequencer::midi::channel::voice::note_off( channel, to_uint8_t( note ), velocity );
     }
 } // namespace
 
@@ -51,9 +47,9 @@ SCENARIO( "step_sequencer_base plays 4 beats", "[step_sequencer]" )
 
     GIVEN( "a step sequencer with an empty track" )
     {
-        std::vector< midi::message_type > received_messages;
+        std::vector< std::array< std::byte, 3 > > received_messages;
         const auto midi_sender = [&received_messages]( const auto& message ) {
-            received_messages.push_back( make_message( message ) );
+            received_messages.push_back( message );
         };
 
         constexpr auto steps = 4u;
@@ -79,9 +75,9 @@ SCENARIO( "step_sequencer_base plays 4 beats", "[step_sequencer]" )
     GIVEN( "a step sequencer one track with note on first quarter and one track with note on "
            "second quarter" )
     {
-        std::vector< midi::message_type > received_messages;
+        std::vector< std::array< std::byte, 3 > > received_messages;
         const auto midi_sender = [&received_messages]( const auto& message ) {
-            received_messages.push_back( make_message( message ) );
+            received_messages.push_back( message );
         };
 
         constexpr auto steps = 16u;
@@ -136,8 +132,8 @@ SCENARIO( "step_sequencer_base plays 4 beats", "[step_sequencer]" )
                 {
                     REQUIRE( received_messages.size() == 3 );
                     CHECK( received_messages[ 0 ] == note_on( 0, note_1 ) );
-                    CHECK( received_messages[ 1 ] == make_message( all_notes_off( 0 ) ) );
-                    CHECK( received_messages[ 2 ] == make_message( all_notes_off( 1 ) ) );
+                    CHECK( received_messages[ 1 ] == all_notes_off( 0 ) );
+                    CHECK( received_messages[ 2 ] == all_notes_off( 1 ) );
                 }
 
                 AND_WHEN( "sequencer receives continue message and 25 clock messages" )
@@ -260,9 +256,9 @@ SCENARIO( "step_sequencer_base, that is triggered by a midi clock, plays 4 beats
 
     GIVEN( "a step sequencer with an empty track" )
     {
-        std::vector< midi::message_type > received_messages;
+        std::vector< std::array< std::byte, 3 > > received_messages;
         const auto midi_sender = [&received_messages]( const auto& message ) {
-            received_messages.push_back( make_message( message ) );
+            received_messages.push_back( message );
         };
 
         constexpr auto steps = 4u;
@@ -309,9 +305,9 @@ SCENARIO( "step_sequencer_base, that is triggered by a midi clock, plays 4 beats
 
     GIVEN( "a step sequencer a track with notes on first two quarters" )
     {
-        std::vector< midi::message_type > received_messages;
+        std::vector< std::array< std::byte, 3 > > received_messages;
         const auto midi_sender = [&received_messages]( const auto& message ) {
-            received_messages.push_back( make_message( message ) );
+            received_messages.push_back( message );
         };
 
         constexpr auto steps = 16u;
@@ -400,7 +396,7 @@ SCENARIO( "step_sequencer_base, that is triggered by a midi clock, plays 4 beats
                 THEN( "all notes off message is send" )
                 {
                     REQUIRE( received_messages.size() == 2 );
-                    CHECK( received_messages[ 1 ] == make_message( all_notes_off( 0 ) ) );
+                    CHECK( received_messages[ 1 ] == all_notes_off( 0 ) );
                 }
 
                 AND_WHEN( "midi clock is started again and testing clock runs for 499 ms" )
@@ -453,9 +449,9 @@ SCENARIO( "step_sequencer_base sends notes to correct channels", "[step_sequence
 
     GIVEN( "a step sequencer with one track and note on first beat" )
     {
-        std::vector< midi::message_type > received_messages;
+        std::vector< std::array< std::byte, 3 > > received_messages;
         const auto midi_sender = [&received_messages]( const auto& message ) {
-            received_messages.push_back( make_message( message ) );
+            received_messages.push_back( message );
         };
 
         constexpr auto steps = 16u;

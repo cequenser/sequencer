@@ -4,7 +4,6 @@
 #include <sequencer/chrono/sequencer_clock.hpp>
 #include <sequencer/midi/clock.hpp>
 #include <sequencer/midi/message/channel_voice.hpp>
-#include <sequencer/midi/message/message_type.hpp>
 #include <sequencer/midi/message/realtime.hpp>
 #include <sequencer/midi/message/system_common.hpp>
 

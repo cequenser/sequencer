@@ -61,6 +61,6 @@ namespace qml
         decltype( sequencer::rtmidi::make_clock() ) clock_;
         std::future< void > clock_done_;
         std::uint8_t current_track_{0};
-        std::array< int, number_of_tracks > track_notes_;
+        std::array< sequencer::midi::note_t, number_of_tracks > track_notes_;
     };
 } // namespace qml

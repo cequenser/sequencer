@@ -44,6 +44,19 @@ namespace sequencer::midi
                 assert( message.size() == 3 );
                 return std::string( "spp:" ).append( std::to_string(
                     system::common::two_bytes_to_uint16( {message[ 1 ], message[ 2 ]} ) ) );
+            // song select
+            case 0xF3:
+                assert( message.size() == 2 );
+                return std::string( "song_select:" )
+                    .append( std::to_string( static_cast< int >( message.back() ) ) );
+            // tune request
+            case 0xF6:
+                assert( message.size() == 1 );
+                return "tune_request";
+            // end system exclusive
+            case 0xF7:
+                assert( message.size() == 1 );
+                return "end_sysex";
             default:
                 return invalid_string;
             }

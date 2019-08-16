@@ -82,7 +82,7 @@ SCENARIO( "two_bytes_to_uint16", "[system_common_message]" )
     }
 }
 
-SCENARIO( "song position messages", "[system_common_message]" )
+SCENARIO( "system common messages", "[system_common_message]" )
 {
     using namespace sequencer::midi::system::common;
 
@@ -133,6 +133,44 @@ SCENARIO( "song position messages", "[system_common_message]" )
         THEN( "third byte is 0x01" )
         {
             REQUIRE( message[ 2 ] == std::byte{0x01} );
+        }
+    }
+
+    GIVEN( "tune request message" )
+    {
+        const auto message = tune_request();
+        STATIC_REQUIRE( message.size() == 1 );
+
+        THEN( "byte is 0xF6" )
+        {
+            REQUIRE( message.front() == std::byte{0xF6} );
+        }
+    }
+
+    GIVEN( "end system exclusive message" )
+    {
+        const auto message = end_system_exclusive();
+        STATIC_REQUIRE( message.size() == 1 );
+
+        THEN( "byte is 0xF7" )
+        {
+            REQUIRE( message.front() == std::byte{0xF7} );
+        }
+    }
+
+    GIVEN( "song select message with value 73" )
+    {
+        const auto message = song_select( 73 );
+        STATIC_REQUIRE( message.size() == 2 );
+
+        THEN( "first byte is 0xF3" )
+        {
+            REQUIRE( message.front() == std::byte{0xF3} );
+        }
+
+        THEN( "second byte is 0x49" )
+        {
+            REQUIRE( message.back() == std::byte{0x49} );
         }
     }
 }

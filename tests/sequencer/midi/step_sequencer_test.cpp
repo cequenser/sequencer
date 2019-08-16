@@ -4,6 +4,7 @@
 #include <sequencer/midi/message/channel_mode.hpp>
 #include <sequencer/midi/message/channel_voice.hpp>
 #include <sequencer/midi/message/message_type.hpp>
+#include <sequencer/midi/note.hpp>
 #include <sequencer/midi/step_sequencer.hpp>
 #include <sequencer/midi/track.hpp>
 #include <sequencer/midi/util.hpp>
@@ -19,6 +20,7 @@
 
 using sequencer::midi::make_message;
 using sequencer::midi::make_midi_clock_raii_shutdown;
+using sequencer::midi::note_t;
 using sequencer::midi::step_sequencer;
 using sequencer::midi::tracks_for_step_sequencer;
 using sequencer::midi::channel::mode::all_notes_off;
@@ -30,14 +32,16 @@ const auto velocity = 32;
 
 namespace
 {
-    auto note_on( std::uint8_t channel, std::uint8_t note )
+    auto note_on( std::uint8_t channel, note_t note )
     {
-        return make_message( sequencer::midi::channel::voice::note_on( channel, note, velocity ) );
+        return make_message(
+            sequencer::midi::channel::voice::note_on( channel, to_uint8_t( note ), velocity ) );
     }
 
-    auto note_off( std::uint8_t channel, std::uint8_t note )
+    auto note_off( std::uint8_t channel, note_t note )
     {
-        return make_message( sequencer::midi::channel::voice::note_off( channel, note, velocity ) );
+        return make_message(
+            sequencer::midi::channel::voice::note_off( channel, to_uint8_t( note ), velocity ) );
     }
 } // namespace
 
@@ -82,8 +86,8 @@ SCENARIO( "step_sequencer_base plays 4 beats", "[step_sequencer]" )
 
         constexpr auto steps = 16u;
         auto midi_track = tracks_for_step_sequencer< steps, 2 >{};
-        const auto note_1 = 0;
-        const auto note_2 = 42;
+        const auto note_1 = note_t{1};
+        const auto note_2 = note_t{42};
         midi_track.track( 0 )[ 0 ] = note_1;
         midi_track.track( 1 )[ 4 ] = note_2;
         auto sequencer = step_sequencer{midi_track, midi_sender};
@@ -309,8 +313,8 @@ SCENARIO( "step_sequencer_base, that is triggered by a midi clock, plays 4 beats
 
         constexpr auto steps = 16u;
         auto midi_track = tracks_for_step_sequencer< steps, 1 >{};
-        const auto note_1 = 0;
-        const auto note_2 = 42;
+        const auto note_1 = note_t{1};
+        const auto note_2 = note_t{42};
         midi_track.track( 0 )[ 0 ] = note_1;
         midi_track.track( 0 )[ 4 ] = note_2;
         auto sequencer = step_sequencer{midi_track, midi_sender};
@@ -453,7 +457,7 @@ SCENARIO( "step_sequencer_base sends notes to correct channels", "[step_sequence
 
         constexpr auto steps = 16u;
         auto midi_track = tracks_for_step_sequencer< steps, 2 >{};
-        const auto note_1 = 0;
+        const auto note_1 = note_t{1};
         midi_track.track( 0 )[ 0 ] = note_1;
         auto sequencer = step_sequencer{midi_track, midi_sender};
 

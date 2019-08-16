@@ -6,6 +6,9 @@
 #include <cstdint>
 #include <iostream>
 
+using sequencer::midi::note_t;
+using sequencer::midi::percussion_key;
+
 namespace qml
 {
     backend::backend()
@@ -19,7 +22,7 @@ namespace qml
               step_sequencer_.update( message );
           } )}
     {
-        track_notes_.fill( min_note() );
+        track_notes_.fill( note_t( min_note() ) );
     }
 
     backend::~backend()
@@ -86,14 +89,13 @@ namespace qml
 
     void backend::set_step( int i, bool checked )
     {
-        const auto new_note =
-            checked ? static_cast< int >( track_notes_[ current_track_ ] ) : track::no_note;
+        const auto new_note = checked ? track_notes_[ current_track_ ] : note_t::no_note;
         step_sequencer_.tracks().track( current_track_ )[ track::size_type( i ) ] = new_note;
     }
 
     bool backend::is_step_set( int i ) const
     {
-        return step_sequencer_.tracks().track( current_track_ )[ i ] != track::no_note;
+        return step_sequencer_.tracks().track( current_track_ )[ i ] != note_t::no_note;
     }
 
     void backend::set_current_track( int i )
@@ -104,21 +106,19 @@ namespace qml
 
     int backend::min_note() const
     {
-        return static_cast< std::uint8_t >( sequencer::midi::percussion_key::AcousticBassDrum );
+        return static_cast< std::uint8_t >( percussion_key::AcousticBassDrum );
     }
 
     int backend::max_note() const
     {
-        return static_cast< std::uint8_t >( sequencer::midi::percussion_key::OpenTriangle );
+        return static_cast< std::uint8_t >( percussion_key::OpenTriangle );
     }
 
     QString backend::note_to_string( int note ) const
     {
         assert( note >= min_note() );
         assert( note <= max_note() );
-        return QString(
-            to_string( static_cast< sequencer::midi::percussion_key >( std::uint8_t( note ) ) )
-                .data() );
+        return QString( to_string( static_cast< percussion_key >( std::uint8_t( note ) ) ).data() );
     }
 
     QString backend::notes_to_string() const
@@ -137,7 +137,7 @@ namespace qml
 
     void backend::set_note_of_current_track( int note )
     {
-        track_notes_[ current_track_ ] = min_note() + note;
+        track_notes_[ current_track_ ] = note_t( min_note() + note );
         for ( auto step = 0; step < number_of_steps; ++step )
         {
             if ( is_step_set( step ) )

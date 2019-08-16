@@ -126,10 +126,6 @@ namespace sequencer::midi
         void send_all_notes_off_message( const Sender& sender ) const
         {
             sender( channel::mode::all_notes_off( channel() ) );
-        }
-
-        void clear_last_note() noexcept
-        {
             last_note_ = no_note;
         }
 
@@ -192,13 +188,6 @@ namespace sequencer::midi
         {
             for_each_track( [&sender]( const track_for_step_sequencer< number_of_steps >& track ) {
                 track.send_all_notes_off_message( sender );
-            } );
-        }
-
-        void clear_last_note() noexcept
-        {
-            for_each_track( []( track_for_step_sequencer< number_of_steps >& track ) {
-                track.clear_last_note();
             } );
         }
 

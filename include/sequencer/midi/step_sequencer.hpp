@@ -63,7 +63,6 @@ namespace sequencer::midi
             {
                 started_ = false;
                 track_.send_all_notes_off_message( sender_ );
-                track_.clear_last_note();
                 return true;
             }
 

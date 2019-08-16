@@ -137,9 +137,9 @@ SCENARIO( "track_for_step_sequencer", "[track]" )
                     }
                 }
 
-                WHEN( "clear_last_note is called" )
+                WHEN( "send_all_notes_off_message is called" )
                 {
-                    track.clear_last_note();
+                    track.send_all_notes_off_message( []( auto ) {} );
 
                     WHEN( "the 5th step is set to note 2" )
                     {
@@ -288,9 +288,9 @@ SCENARIO( "tracks_for_step_sequencer", "[track]" )
                     }
                 }
 
-                WHEN( "clear_last_note is called" )
+                WHEN( "send_all_notes_off_message is called" )
                 {
-                    tracks.clear_last_note();
+                    tracks.send_all_notes_off_message( []( auto ) {} );
 
                     WHEN( "in the first track the 5th step is set to note 2" )
                     {

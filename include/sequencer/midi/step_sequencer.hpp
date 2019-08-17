@@ -17,7 +17,7 @@ namespace sequencer::midi
         }
 
         template < class Sender >
-        void update( std::array< std::byte, 1 > message, const Sender& sender )
+        void update( message_t< 1 > message, const Sender& sender )
         {
             if ( process_control_message( message, sender ) || !started_ )
             {
@@ -29,7 +29,7 @@ namespace sequencer::midi
 
     private:
         template < class Sender >
-        bool process_control_message( std::array< std::byte, 1 > message, const Sender& sender )
+        bool process_control_message( message_t< 1 > message, const Sender& sender )
         {
             if ( message == realtime::realtime_start() )
             {

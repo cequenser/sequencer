@@ -2,6 +2,8 @@
 
 #include <catch2/catch.hpp>
 
+using sequencer::midi::message_t;
+
 SCENARIO( "start and stop messages", "[midi_clock_base]" )
 {
     using namespace sequencer;
@@ -47,7 +49,7 @@ SCENARIO( "start and stop messages", "[midi_clock_base]" )
             clock.start();
             THEN( "a start message is sent when update is called" )
             {
-                std::array< std::byte, 1 > received = {std::byte{0x00}};
+                message_t< 1 > received = {std::byte{0x00}};
                 clock.update( beat_time_point( 0.0_beats ),
                               [&received]( auto message ) { received = message; } );
                 REQUIRE( received == midi::realtime::realtime_start() );
@@ -64,7 +66,7 @@ SCENARIO( "start and stop messages", "[midi_clock_base]" )
 
                     THEN( "a stop message is sent when update is called again" )
                     {
-                        std::array< std::byte, 1 > received = {std::byte{0x00}};
+                        message_t< 1 > received = {std::byte{0x00}};
                         clock.update( beat_time_point( 1.0_beats ), [&received]( auto message ) {
                             REQUIRE( received.front() == std::byte{0x00} );
                             received = message;
@@ -83,7 +85,7 @@ SCENARIO( "start and stop messages", "[midi_clock_base]" )
                     clock.reset();
                     REQUIRE_FALSE( clock.is_started() );
 
-                    std::array< std::byte, 1 > received = {std::byte{0x00}};
+                    message_t< 1 > received = {std::byte{0x00}};
                     clock.update( beat_time_point( 1.0_beats ), [&received]( auto message ) {
                         REQUIRE( received.front() == std::byte{0x00} );
                         received = message;
@@ -161,7 +163,7 @@ SCENARIO( "continue", "[midi_clock_base]" )
             THEN( "starting the clock again sends a continue message" )
             {
                 clock.start();
-                std::array< std::byte, 1 > received = {std::byte{0x00}};
+                message_t< 1 > received = {std::byte{0x00}};
                 clock.update( beat_time_point( 0.0_beats ), [&received]( auto message ) {
                     REQUIRE( received.front() == std::byte{0x00} );
                     received = message;
@@ -178,7 +180,7 @@ SCENARIO( "continue", "[midi_clock_base]" )
             THEN( "starting the clock again sends a start message" )
             {
                 clock.start();
-                std::array< std::byte, 1 > received = {std::byte{0x00}};
+                message_t< 1 > received = {std::byte{0x00}};
                 clock.update( beat_time_point( 0.0_beats ), [&received]( auto message ) {
                     REQUIRE( received.front() == std::byte{0x00} );
                     received = message;

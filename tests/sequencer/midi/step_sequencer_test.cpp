@@ -17,6 +17,7 @@
 #include <vector>
 
 using sequencer::midi::make_midi_clock_raii_shutdown;
+using sequencer::midi::message_t;
 using sequencer::midi::note_t;
 using sequencer::midi::step_sequencer;
 using sequencer::midi::tracks_t;
@@ -46,7 +47,7 @@ SCENARIO( "step_sequencer_base plays 4 beats", "[step_sequencer]" )
 
     GIVEN( "a step sequencer with an empty track" )
     {
-        std::vector< std::array< std::byte, 3 > > received_messages;
+        std::vector< message_t< 3 > > received_messages;
         const auto midi_sender = [&received_messages]( const auto& message ) {
             received_messages.push_back( message );
         };
@@ -74,7 +75,7 @@ SCENARIO( "step_sequencer_base plays 4 beats", "[step_sequencer]" )
     GIVEN( "a step sequencer one track with note on first quarter and one track with note on "
            "second quarter" )
     {
-        std::vector< std::array< std::byte, 3 > > received_messages;
+        std::vector< message_t< 3 > > received_messages;
         const auto midi_sender = [&received_messages]( const auto& message ) {
             received_messages.push_back( message );
         };
@@ -252,7 +253,7 @@ SCENARIO( "step_sequencer_base, that is triggered by a midi clock, plays 4 beats
 
     GIVEN( "a step sequencer with an empty track" )
     {
-        std::vector< std::array< std::byte, 3 > > received_messages;
+        std::vector< message_t< 3 > > received_messages;
         const auto midi_sender = [&received_messages]( const auto& message ) {
             received_messages.push_back( message );
         };
@@ -300,7 +301,7 @@ SCENARIO( "step_sequencer_base, that is triggered by a midi clock, plays 4 beats
 
     GIVEN( "a step sequencer a track with notes on first two quarters" )
     {
-        std::vector< std::array< std::byte, 3 > > received_messages;
+        std::vector< message_t< 3 > > received_messages;
         const auto midi_sender = [&received_messages]( const auto& message ) {
             received_messages.push_back( message );
         };
@@ -443,7 +444,7 @@ SCENARIO( "step_sequencer_base sends notes to correct channels", "[step_sequence
 
     GIVEN( "a step sequencer with one track and note on first beat" )
     {
-        std::vector< std::array< std::byte, 3 > > received_messages;
+        std::vector< message_t< 3 > > received_messages;
         const auto midi_sender = [&received_messages]( const auto& message ) {
             received_messages.push_back( message );
         };

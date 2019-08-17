@@ -2,6 +2,7 @@
 
 #include <catch2/catch.hpp>
 
+using sequencer::midi::message_t;
 using sequencer::midi::no_note;
 using sequencer::midi::note_t;
 using sequencer::midi::track_t;
@@ -43,7 +44,7 @@ SCENARIO( "track_t", "[track]" )
 
             THEN( "send_messages(2, sender) returns note on message" )
             {
-                std::vector< std::array< std::byte, 3 > > received_messages;
+                std::vector< message_t< 3 > > received_messages;
                 const auto sender = [&received_messages]( const auto& msg ) {
                     received_messages.push_back( msg );
                 };
@@ -101,7 +102,7 @@ SCENARIO( "track_t", "[track]" )
 
         WHEN( "get_all_notes_off_message is called" )
         {
-            std::array< std::byte, 3 > received_message;
+            message_t< 3 > received_message = {std::byte{0x00}};
             const auto sender = [&received_message]( const auto& msg ) { received_message = msg; };
             track.send_all_notes_off_message( sender );
 
@@ -122,7 +123,7 @@ SCENARIO( "track_t", "[track]" )
 
             WHEN( "get_all_notes_off_message is called" )
             {
-                std::array< std::byte, 3 > received_message;
+                message_t< 3 > received_message;
                 const auto sender = [&received_message]( const auto& msg ) {
                     received_message = msg;
                 };
@@ -173,7 +174,7 @@ SCENARIO( "tracks_t", "[track]" )
 
             THEN( "send_messages(2, sender) returns note on message" )
             {
-                std::vector< std::array< std::byte, 3 > > received_messages;
+                std::vector< message_t< 3 > > received_messages;
                 const auto sender = [&received_messages]( const auto& msg ) {
                     received_messages.push_back( msg );
                 };
@@ -246,7 +247,7 @@ SCENARIO( "tracks_t", "[track]" )
 
         WHEN( "get_all_notes_off_message is called" )
         {
-            std::vector< std::array< std::byte, 3 > > received_messages;
+            std::vector< message_t< 3 > > received_messages;
             const auto sender = [&received_messages]( const auto& msg ) {
                 received_messages.push_back( msg );
             };
@@ -271,7 +272,7 @@ SCENARIO( "tracks_t", "[track]" )
 
             WHEN( "get_all_notes_off_message is called" )
             {
-                std::vector< std::array< std::byte, 3 > > received_messages;
+                std::vector< message_t< 3 > > received_messages;
                 const auto sender = [&received_messages]( const auto& msg ) {
                     received_messages.push_back( msg );
                 };

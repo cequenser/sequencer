@@ -431,6 +431,28 @@ SCENARIO( "channel voice messages", "[channel_voice_message]" )
         }
     }
 
+    GIVEN( "expression controller lsb and msb messages for channel 1 and value 8392" )
+    {
+        const auto [ expression_controller_lsb, expression_controller_msb ] =
+            expression_controller( 1, 8392 );
+
+        THEN( "expression controller controller lsb message is 0xB1 0x2B 0x48" )
+        {
+            REQUIRE( expression_controller_lsb.size() == 3 );
+            REQUIRE( expression_controller_lsb[ 0 ] == std::byte{0xB1} );
+            REQUIRE( expression_controller_lsb[ 1 ] == std::byte{0x2B} );
+            REQUIRE( expression_controller_lsb[ 2 ] == std::byte{0x48} );
+        }
+
+        THEN( "expression controller controller msb message is 0xB1 0x0B 0x41" )
+        {
+            REQUIRE( expression_controller_msb.size() == 3 );
+            REQUIRE( expression_controller_msb[ 0 ] == std::byte{0xB1} );
+            REQUIRE( expression_controller_msb[ 1 ] == std::byte{0x0B} );
+            REQUIRE( expression_controller_msb[ 2 ] == std::byte{0x41} );
+        }
+    }
+
     GIVEN( "an effects 1 depth message for channel 1 with value 17" )
     {
         const auto channel = 1;

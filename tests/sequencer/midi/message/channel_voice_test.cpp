@@ -368,6 +368,27 @@ SCENARIO( "channel voice messages", "[channel_voice_message]" )
         }
     }
 
+    GIVEN( "channel volume lsb and msb messages for channel 1 and value 8392" )
+    {
+        const auto [ channel_volume_lsb, channel_volume_msb ] = channel_volume( 1, 8392 );
+
+        THEN( "channel volume controller lsb message is 0xB1 0x27 0x48" )
+        {
+            REQUIRE( channel_volume_lsb.size() == 3 );
+            REQUIRE( channel_volume_lsb[ 0 ] == std::byte{0xB1} );
+            REQUIRE( channel_volume_lsb[ 1 ] == std::byte{0x27} );
+            REQUIRE( channel_volume_lsb[ 2 ] == std::byte{0x48} );
+        }
+
+        THEN( "channel volume controller msb message is 0xB1 0x07 0x41" )
+        {
+            REQUIRE( channel_volume_msb.size() == 3 );
+            REQUIRE( channel_volume_msb[ 0 ] == std::byte{0xB1} );
+            REQUIRE( channel_volume_msb[ 1 ] == std::byte{0x07} );
+            REQUIRE( channel_volume_msb[ 2 ] == std::byte{0x41} );
+        }
+    }
+
     GIVEN( "an effects 1 depth message for channel 1 with value 17" )
     {
         const auto channel = 1;

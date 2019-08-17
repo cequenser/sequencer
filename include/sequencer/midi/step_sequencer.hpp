@@ -12,7 +12,9 @@ namespace sequencer::midi
     class step_sequencer
     {
     public:
-        constexpr step_sequencer( const Tracks& tracks ) noexcept : track_( tracks )
+        constexpr step_sequencer( const Tracks& tracks,
+                                  unsigned pulses_per_quarter_note = 24 ) noexcept
+            : track_( tracks ), pulses_per_quarter_note_( pulses_per_quarter_note )
         {
         }
 
@@ -55,16 +57,15 @@ namespace sequencer::midi
         template < class Sender >
         void process_clock_message( const Sender& sender )
         {
-            constexpr auto midi_clock_messages_per_beat = 24u;
             const auto steps_per_beat = track_.steps() / 4u;
-            const auto midi_clock_messages_per_step = midi_clock_messages_per_beat / steps_per_beat;
+            const auto pulses_per_step = pulses_per_quarter_note_ / steps_per_beat;
 
-            if ( midi_beat_counter_ % midi_clock_messages_per_step == 0 )
+            if ( midi_beat_counter_ % pulses_per_step == 0 )
             {
-                const auto step = midi_beat_counter_ / midi_clock_messages_per_step;
+                const auto step = midi_beat_counter_ / pulses_per_step;
                 track_.send_messages( step, sender );
             }
-            if ( ++midi_beat_counter_ == track_.steps() * midi_clock_messages_per_step )
+            if ( ++midi_beat_counter_ == track_.steps() * pulses_per_step )
             {
                 midi_beat_counter_ = 0;
             }
@@ -72,6 +73,7 @@ namespace sequencer::midi
 
         const Tracks& track_;
         unsigned midi_beat_counter_ = 0;
+        unsigned pulses_per_quarter_note_ = 24;
         bool started_ = false;
     };
 } // namespace sequencer::midi

@@ -123,6 +123,7 @@ SCENARIO( "step_sequencer_base plays 4 beats", "[step_sequencer]" )
                 REQUIRE( received_messages.size() == 1 );
                 CHECK( received_messages.front() == note_on( 0, note_1 ) );
             }
+
             AND_WHEN( "sequencer receives stop message one clock message" )
             {
                 sequencer.update( midi::realtime::realtime_stop(), midi_sender );
@@ -210,6 +211,44 @@ SCENARIO( "step_sequencer_base plays 4 beats", "[step_sequencer]" )
                 {
                     CHECK( received_messages[ 1 ] == note_on( 1, note_2 ) );
                 }
+            }
+        }
+    }
+}
+
+SCENARIO( "step_sequencer_base with 48 pulses per quarter note", "[step_sequencer]" )
+{
+    using namespace sequencer;
+
+    GIVEN( "a step sequencer one track with note on first quarter and one track with note on "
+           "second quarter" )
+    {
+        std::vector< message_t< 3 > > received_messages;
+        const auto midi_sender = [&received_messages]( const auto& message ) {
+            received_messages.push_back( message );
+        };
+
+        constexpr auto steps = 16u;
+        auto midi_track = tracks_t< steps, 2 >{};
+        const auto note_1 = note_t{1};
+        const auto note_2 = note_t{42};
+        midi_track[ 0 ][ 0 ] = note_1;
+        midi_track[ 1 ][ 4 ] = note_2;
+        const auto pulses_per_quarter_note = 48;
+        auto sequencer = step_sequencer{midi_track, pulses_per_quarter_note};
+
+        WHEN( "sequencer receives start message and 25 clock messages" )
+        {
+            sequencer.update( midi::realtime::realtime_start(), midi_sender );
+            for ( auto i = 0u; i < 25; ++i )
+            {
+                sequencer.update( midi::realtime::realtime_clock(), midi_sender );
+            }
+
+            THEN( "one note on message is send" )
+            {
+                REQUIRE( received_messages.size() == 1 );
+                CHECK( received_messages[ 0 ] == note_on( 0, note_1 ) );
             }
         }
     }

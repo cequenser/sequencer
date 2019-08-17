@@ -23,4 +23,14 @@ namespace sequencer::midi::realtime
     {
         return {std::byte{0xFC}};
     }
+
+    constexpr message_t< 1 > active_sensing() noexcept
+    {
+        return {std::byte{0xFE}};
+    }
+
+    constexpr message_t< 1 > reset_all() noexcept
+    {
+        return {std::byte{0xFF}};
+    }
 } // namespace sequencer::midi::realtime

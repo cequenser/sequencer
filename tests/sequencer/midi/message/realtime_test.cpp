@@ -45,4 +45,24 @@ SCENARIO( "realtime messages", "[realtime_message]" )
             REQUIRE( message.front() == std::byte{0xFC} );
         }
     }
+
+    GIVEN( "realtime active sensing message" )
+    {
+        const auto message = active_sensing();
+
+        THEN( "its value equals 0xFE" )
+        {
+            REQUIRE( message.front() == std::byte{0xFE} );
+        }
+    }
+
+    GIVEN( "realtime reset all message" )
+    {
+        const auto message = reset_all();
+
+        THEN( "its value equals 0xFF" )
+        {
+            REQUIRE( message.front() == std::byte{0xFF} );
+        }
+    }
 }

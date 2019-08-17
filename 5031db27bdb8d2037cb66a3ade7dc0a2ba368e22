@@ -1,0 +1,24 @@
+{
+  "comments": [
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/517/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "36f6ca55_bb0beb9b",
+        "filename": "include/sequencer/midi/track.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-17T22:08:38Z",
+      "side": 1,
+      "message": "redundant return statement at the end of a function with a void return type [readability-redundant-control-flow,-warnings-as-errors]",
+      "revId": "5031db27bdb8d2037cb66a3ade7dc0a2ba368e22",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}

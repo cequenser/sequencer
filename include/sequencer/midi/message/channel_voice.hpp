@@ -198,6 +198,14 @@ namespace sequencer::midi::channel::voice
                 control_change( channel, std::byte{0x63}, msb )};
     }
 
+    constexpr std::array< message_t< 3 >, 2 >
+    registered_parameter_number( std::uint8_t channel, std::uint16_t value ) noexcept
+    {
+        const auto [ lsb, msb ] = uint16_to_two_bytes( value );
+        return {control_change( channel, std::byte{0x64}, lsb ),
+                control_change( channel, std::byte{0x65}, msb )};
+    }
+
     constexpr std::byte on_off_byte( bool on ) noexcept
     {
         return on ? std::byte{0x7F} : std::byte{0x00};

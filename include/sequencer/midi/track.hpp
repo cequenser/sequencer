@@ -6,32 +6,32 @@
 #include <array>
 #include <atomic>
 #include <cassert>
+#include <vector>
 
 namespace sequencer::midi
 {
-    template < std::size_t number_of_steps >
-    using track_base_t = std::array< std::atomic< note_t >, number_of_steps >;
+    using track_base_t = std::vector< std::atomic< note_t > >;
 
-    template < std::size_t number_of_steps >
-    void copy_track( const track_base_t< number_of_steps >& from,
-                     track_base_t< number_of_steps >& to )
+    inline void copy_track( const track_base_t& from, track_base_t& to )
     {
-        for ( auto step = std::size_t{0}; step < number_of_steps; ++step )
+        assert( from.size() <= to.size() );
+        for ( auto step = std::size_t{0}; step < from.size(); ++step )
         {
             to[ step ] = from[ step ].load();
         }
     }
 
-    template < std::size_t number_of_steps >
-    struct track_t
+    class track_t
     {
     public:
-        using size_type = typename track_base_t< number_of_steps >::size_type;
+        using size_type = typename track_base_t::size_type;
 
-        constexpr track_t() noexcept
+        constexpr track_t() noexcept = default;
+
+        explicit track_t( size_type size ) : track_( size )
         {
             clear();
-        };
+        }
 
         track_t( const track_t& other ) noexcept
             : channel_( other.channel_ ), velocity_( other.velocity_ )
@@ -50,9 +50,26 @@ namespace sequencer::midi
             return *this;
         }
 
-        constexpr std::size_t steps() const noexcept
+        std::size_t steps() const noexcept
         {
-            return number_of_steps;
+            return track_.size();
+        }
+
+        void set_steps( std::size_t steps ) noexcept
+        {
+            auto new_track = track_base_t( steps );
+            copy_track( track_, new_track );
+
+            if ( steps > track_.size() )
+            {
+                for ( size_type new_step = track_.size(); new_step < steps; ++new_step )
+                {
+                    new_track[ new_step ] = no_note();
+                }
+            }
+
+            track_ = std::move( new_track );
+            return;
         }
 
         std::atomic< note_t >& operator[]( size_type i ) noexcept
@@ -65,7 +82,7 @@ namespace sequencer::midi
             return track_[ i ];
         }
 
-        constexpr void clear() noexcept
+        void clear() noexcept
         {
             for ( auto& note : track_ )
             {
@@ -108,23 +125,24 @@ namespace sequencer::midi
         }
 
     private:
-        track_base_t< number_of_steps > track_{};
+        track_base_t track_{};
         mutable note_t last_note_ = no_note();
         std::uint8_t channel_{0};
         std::uint8_t velocity_{32};
     };
 
     template < std::size_t number_of_steps, std::size_t number_of_tracks >
-    struct tracks_t
+    class tracks_t
     {
     public:
-        using container = std::array< track_t< number_of_steps >, number_of_tracks >;
+        using container = std::array< track_t, number_of_tracks >;
         using size_type = typename container::size_type;
 
-        tracks_t() noexcept
+        tracks_t()
         {
             std::uint8_t channel = 0;
-            for_each_track( [&channel]( track_t< number_of_steps >& track ) {
+            for_each_track( [&channel]( track_t& track ) {
+                track.set_steps( number_of_steps );
                 track.set_channel( channel++ );
             } );
         }
@@ -134,35 +152,33 @@ namespace sequencer::midi
             return number_of_steps;
         }
 
-        track_t< number_of_steps >& operator[]( size_type i ) noexcept
+        track_t& operator[]( size_type i ) noexcept
         {
             return tracks_[ i ];
         }
 
-        const track_t< number_of_steps >& operator[]( size_type i ) const noexcept
+        const track_t& operator[]( size_type i ) const noexcept
         {
             return tracks_[ i ];
         }
 
         void clear() noexcept
         {
-            for_each_track( []( track_t< number_of_steps >& track ) { track.clear(); } );
+            for_each_track( []( track_t& track ) { track.clear(); } );
         }
 
         template < class Sender >
         void send_messages( std::size_t step, const Sender& sender ) const
         {
-            for_each_track( [&sender, step]( const track_t< number_of_steps >& track ) {
-                track.send_messages( step, sender );
-            } );
+            for_each_track(
+                [&sender, step]( const track_t& track ) { track.send_messages( step, sender ); } );
         }
 
         template < class Sender >
         void send_all_notes_off_message( const Sender& sender ) const
         {
-            for_each_track( [&sender]( const track_t< number_of_steps >& track ) {
-                track.send_all_notes_off_message( sender );
-            } );
+            for_each_track(
+                [&sender]( const track_t& track ) { track.send_all_notes_off_message( sender ); } );
         }
 
     private:

@@ -2,11 +2,11 @@
 
 #include <catch2/catch.hpp>
 
+using sequencer::midi::make_tracks;
 using sequencer::midi::message_t;
 using sequencer::midi::no_note;
 using sequencer::midi::note_t;
 using sequencer::midi::track_t;
-using sequencer::midi::tracks_t;
 using sequencer::midi::channel::voice::all_notes_off;
 using sequencer::midi::channel::voice::note_off;
 using sequencer::midi::channel::voice::note_on;
@@ -143,11 +143,10 @@ SCENARIO( "tracks_t", "[track]" )
     using namespace sequencer;
     constexpr auto number_of_steps = 16u;
     constexpr auto number_of_tracks = 2u;
-    using track_t = tracks_t< number_of_steps, number_of_tracks >;
 
     GIVEN( "tracks_t with 4 steps" )
     {
-        auto tracks = track_t{};
+        auto tracks = make_tracks< number_of_steps, number_of_tracks >();
         REQUIRE( tracks.steps() == number_of_steps );
         REQUIRE( tracks[ 0 ].channel() == 0u );
         REQUIRE( tracks[ 1 ].channel() == 1u );

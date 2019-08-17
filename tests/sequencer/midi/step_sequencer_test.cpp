@@ -17,10 +17,10 @@
 #include <vector>
 
 using sequencer::midi::make_midi_clock_raii_shutdown;
+using sequencer::midi::make_tracks;
 using sequencer::midi::message_t;
 using sequencer::midi::note_t;
 using sequencer::midi::step_sequencer;
-using sequencer::midi::tracks_t;
 using sequencer::midi::channel::voice::all_notes_off;
 using sequencer::midi::realtime::realtime_clock;
 using sequencer::midi::realtime::realtime_continue;
@@ -57,7 +57,7 @@ SCENARIO( "step_sequencer_base plays 4 beats", "[step_sequencer]" )
         };
 
         constexpr auto steps = 4u;
-        const auto midi_track = tracks_t< steps, 1 >{};
+        const auto midi_track = make_tracks< steps, 1 >();
         auto sequencer = step_sequencer{midi_track};
 
         WHEN( "sequencer receives start message and 96 clock messages (i.e. 4 beats @ 24 pulses "
@@ -85,7 +85,7 @@ SCENARIO( "step_sequencer_base plays 4 beats", "[step_sequencer]" )
         };
 
         constexpr auto steps = 16u;
-        auto midi_track = tracks_t< steps, 2 >{};
+        auto midi_track = make_tracks< steps, 2 >();
         const auto note_1 = note_t{1};
         const auto note_2 = note_t{42};
         midi_track[ 0 ][ 0 ] = note_1;
@@ -233,7 +233,7 @@ SCENARIO( "step_sequencer_base with 48 pulses per quarter note", "[step_sequence
         };
 
         constexpr auto steps = 16u;
-        auto midi_track = tracks_t< steps, 2 >{};
+        auto midi_track = make_tracks< steps, 2 >();
         const auto note_1 = note_t{1};
         const auto note_2 = note_t{42};
         midi_track[ 0 ][ 0 ] = note_1;
@@ -271,7 +271,7 @@ SCENARIO( "step_sequencer_base with 2 steps per beat", "[step_sequencer]" )
         };
 
         constexpr auto steps = 16u;
-        auto midi_track = tracks_t< steps, 2 >{};
+        auto midi_track = make_tracks< steps, 2 >();
         const auto note_1 = note_t{1};
         const auto note_2 = note_t{42};
         midi_track[ 0 ][ 0 ] = note_1;
@@ -340,7 +340,7 @@ SCENARIO( "step_sequencer_base, that is triggered by a midi clock, plays 4 beats
         };
 
         constexpr auto steps = 4u;
-        const auto midi_track = tracks_t< steps, 1 >{};
+        const auto midi_track = make_tracks< steps, 1 >();
         auto sequencer = step_sequencer{midi_track};
         underlying_clock_type testing_clock;
         sequencer_clock_type sequencer_clock{testing_clock};
@@ -388,7 +388,7 @@ SCENARIO( "step_sequencer_base, that is triggered by a midi clock, plays 4 beats
         };
 
         constexpr auto steps = 16u;
-        auto midi_track = tracks_t< steps, 1 >{};
+        auto midi_track = make_tracks< steps, 1 >();
         const auto note_1 = note_t{1};
         const auto note_2 = note_t{42};
         midi_track[ 0 ][ 0 ] = note_1;
@@ -531,7 +531,7 @@ SCENARIO( "step_sequencer_base sends notes to correct channels", "[step_sequence
         };
 
         constexpr auto steps = 16u;
-        auto midi_track = tracks_t< steps, 2 >{};
+        auto midi_track = make_tracks< steps, 2 >();
         const auto note_1 = note_t{1};
         midi_track[ 0 ][ 0 ] = note_1;
         auto sequencer = step_sequencer{midi_track};

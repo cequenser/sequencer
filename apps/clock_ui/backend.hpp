@@ -17,7 +17,8 @@ namespace qml
 
         static constexpr auto number_of_steps = 16;
         static constexpr auto number_of_tracks = 8;
-        using tracks_t = sequencer::midi::tracks_t< number_of_steps, number_of_tracks >;
+        using tracks_t =
+            decltype( sequencer::midi::make_tracks< number_of_steps, number_of_tracks >() );
 
     public:
         backend();

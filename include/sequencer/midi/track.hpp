@@ -186,4 +186,10 @@ namespace sequencer::midi
 
         container tracks_{};
     };
+
+    template < std::size_t number_of_steps, std::size_t number_of_tracks >
+    constexpr tracks_t< number_of_steps, number_of_tracks > make_tracks() noexcept
+    {
+        return {};
+    }
 } // namespace sequencer::midi

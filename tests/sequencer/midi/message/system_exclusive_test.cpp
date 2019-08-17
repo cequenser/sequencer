@@ -100,12 +100,12 @@ SCENARIO( "system exclusive non-realtime messages", "[system_exclusive_message]"
         const auto message = general_midi_system_disable( 65 );
         REQUIRE( message.size() == 6 );
 
-        THEN( "first byte is 0xF0 0x7E 0x41 <gm_system_byte> 0x02 0xF7" )
+        THEN( "first byte is 0xF0 0x7E 0x41 <gm_byte> 0x02 0xF7" )
         {
             REQUIRE( message[ 0 ] == start_byte );
             REQUIRE( message[ 1 ] == non_realtime::id_byte );
             REQUIRE( message[ 2 ] == std::byte{0x41} );
-            REQUIRE( message[ 3 ] == general_midi_system_byte );
+            REQUIRE( message[ 3 ] == gm_byte );
             REQUIRE( message[ 4 ] == std::byte{0x02} );
             REQUIRE( message[ 5 ] == end_byte );
         }
@@ -116,12 +116,12 @@ SCENARIO( "system exclusive non-realtime messages", "[system_exclusive_message]"
         const auto message = general_midi_1_system_enable( 65 );
         REQUIRE( message.size() == 6 );
 
-        THEN( "first byte is 0xF0 0x7E 0x41 <gm_system_byte> 0x01 0xF7" )
+        THEN( "first byte is 0xF0 0x7E 0x41 <gm_byte> 0x01 0xF7" )
         {
             REQUIRE( message[ 0 ] == start_byte );
             REQUIRE( message[ 1 ] == non_realtime::id_byte );
             REQUIRE( message[ 2 ] == std::byte{0x41} );
-            REQUIRE( message[ 3 ] == general_midi_system_byte );
+            REQUIRE( message[ 3 ] == gm_byte );
             REQUIRE( message[ 4 ] == std::byte{0x01} );
             REQUIRE( message[ 5 ] == end_byte );
         }
@@ -132,12 +132,80 @@ SCENARIO( "system exclusive non-realtime messages", "[system_exclusive_message]"
         const auto message = general_midi_2_system_enable( 65 );
         REQUIRE( message.size() == 6 );
 
-        THEN( "first byte is 0xF0 0x7E 0x41 <gm_system_byte> 0x01 0xF7" )
+        THEN( "first byte is 0xF0 0x7E 0x41 <gm_byte> 0x01 0xF7" )
         {
             REQUIRE( message[ 0 ] == start_byte );
             REQUIRE( message[ 1 ] == non_realtime::id_byte );
             REQUIRE( message[ 2 ] == std::byte{0x41} );
-            REQUIRE( message[ 3 ] == general_midi_system_byte );
+            REQUIRE( message[ 3 ] == gm_byte );
+            REQUIRE( message[ 4 ] == std::byte{0x03} );
+            REQUIRE( message[ 5 ] == end_byte );
+        }
+    }
+
+    GIVEN( "a sysex downloadable sounds on message for manufacturer 65" )
+    {
+        const auto on = true;
+        const auto message = downloadable_sounds( 65, on );
+        REQUIRE( message.size() == 6 );
+
+        THEN( "first byte is 0xF0 0x7E 0x41 <dls_byte> 0x01 0xF7" )
+        {
+            REQUIRE( message[ 0 ] == start_byte );
+            REQUIRE( message[ 1 ] == non_realtime::id_byte );
+            REQUIRE( message[ 2 ] == std::byte{0x41} );
+            REQUIRE( message[ 3 ] == dls_byte );
+            REQUIRE( message[ 4 ] == std::byte{0x01} );
+            REQUIRE( message[ 5 ] == end_byte );
+        }
+    }
+
+    GIVEN( "a sysex downloadable sounds off message for manufacturer 65" )
+    {
+        const auto off = false;
+        const auto message = downloadable_sounds( 65, off );
+        REQUIRE( message.size() == 6 );
+
+        THEN( "first byte is 0xF0 0x7E 0x41 <dls_byte> 0x02 0xF7" )
+        {
+            REQUIRE( message[ 0 ] == start_byte );
+            REQUIRE( message[ 1 ] == non_realtime::id_byte );
+            REQUIRE( message[ 2 ] == std::byte{0x41} );
+            REQUIRE( message[ 3 ] == dls_byte );
+            REQUIRE( message[ 4 ] == std::byte{0x02} );
+            REQUIRE( message[ 5 ] == end_byte );
+        }
+    }
+
+    GIVEN( "a sysex downloadable sounds voice allocation on message for manufacturer 65" )
+    {
+        const auto on = true;
+        const auto message = downloadable_sounds_voice_allocation( 65, on );
+        REQUIRE( message.size() == 6 );
+
+        THEN( "first byte is 0xF0 0x7E 0x41 <dls_byte> 0x04 0xF7" )
+        {
+            REQUIRE( message[ 0 ] == start_byte );
+            REQUIRE( message[ 1 ] == non_realtime::id_byte );
+            REQUIRE( message[ 2 ] == std::byte{0x41} );
+            REQUIRE( message[ 3 ] == dls_byte );
+            REQUIRE( message[ 4 ] == std::byte{0x04} );
+            REQUIRE( message[ 5 ] == end_byte );
+        }
+    }
+
+    GIVEN( "a sysex downloadable sounds voice allocation off message for manufacturer 65" )
+    {
+        const auto off = false;
+        const auto message = downloadable_sounds_voice_allocation( 65, off );
+        REQUIRE( message.size() == 6 );
+
+        THEN( "first byte is 0xF0 0x7E 0x41 <dls_byte> 0x03 0xF7" )
+        {
+            REQUIRE( message[ 0 ] == start_byte );
+            REQUIRE( message[ 1 ] == non_realtime::id_byte );
+            REQUIRE( message[ 2 ] == std::byte{0x41} );
+            REQUIRE( message[ 3 ] == dls_byte );
             REQUIRE( message[ 4 ] == std::byte{0x03} );
             REQUIRE( message[ 5 ] == end_byte );
         }

@@ -56,7 +56,8 @@ namespace sequencer::midi::system::exclusive
     namespace non_realtime
     {
         static constexpr auto id_byte = std::byte{0x7E};
-        static constexpr auto general_midi_system_byte = std::byte{0x09};
+        static constexpr auto gm_byte = std::byte{0x09};
+        static constexpr auto dls_byte = std::byte{0x0A};
 
         template < class... Data >
         constexpr message_t< sizeof...( Data ) + std::size_t{4} >
@@ -69,7 +70,7 @@ namespace sequencer::midi::system::exclusive
         constexpr message_t< 6 > general_midi_system( std::uint8_t manufacturer_id,
                                                       std::uint8_t value ) noexcept
         {
-            return system_exclusive( manufacturer_id, general_midi_system_byte, value );
+            return system_exclusive( manufacturer_id, gm_byte, value );
         }
 
         constexpr message_t< 6 >
@@ -88,6 +89,26 @@ namespace sequencer::midi::system::exclusive
         general_midi_2_system_enable( std::uint8_t manufacturer_id ) noexcept
         {
             return general_midi_system( manufacturer_id, 0x03 );
+        }
+
+        constexpr message_t< 6 > downloadable_sounds( std::uint8_t manufacturer_id,
+                                                      std::byte value ) noexcept
+        {
+            return system_exclusive( manufacturer_id, dls_byte, value );
+        }
+
+        constexpr message_t< 6 > downloadable_sounds( std::uint8_t manufacturer_id,
+                                                      bool on ) noexcept
+        {
+            const std::uint8_t value = on ? 0x01 : 0x02;
+            return downloadable_sounds( manufacturer_id, std::byte{value} );
+        }
+
+        constexpr message_t< 6 > downloadable_sounds_voice_allocation( std::uint8_t manufacturer_id,
+                                                                       bool on ) noexcept
+        {
+            const std::uint8_t value = on ? 0x04 : 0x03;
+            return downloadable_sounds( manufacturer_id, std::byte{value} );
         }
     } // namespace non_realtime
 } // namespace sequencer::midi::system::exclusive

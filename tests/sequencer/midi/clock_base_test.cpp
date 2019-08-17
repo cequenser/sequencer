@@ -2,8 +2,6 @@
 
 #include <catch2/catch.hpp>
 
-using sequencer::midi::realtime::message_type;
-
 SCENARIO( "start and stop messages", "[midi_clock_base]" )
 {
     using namespace sequencer;
@@ -49,10 +47,10 @@ SCENARIO( "start and stop messages", "[midi_clock_base]" )
             clock.start();
             THEN( "a start message is sent when update is called" )
             {
-                auto message = message_type::invalid;
+                std::array< std::byte, 1 > received = {std::byte{0x00}};
                 clock.update( beat_time_point( 0.0_beats ),
-                              [& msg = message]( auto message ) { msg = message; } );
-                REQUIRE( message == message_type::realtime_start );
+                              [&received]( auto message ) { received = message; } );
+                REQUIRE( received == midi::realtime::realtime_start() );
 
                 THEN( "nothing happens when update is called again" )
                 {
@@ -66,12 +64,12 @@ SCENARIO( "start and stop messages", "[midi_clock_base]" )
 
                     THEN( "a stop message is sent when update is called again" )
                     {
-                        auto received = message_type::invalid;
+                        std::array< std::byte, 1 > received = {std::byte{0x00}};
                         clock.update( beat_time_point( 1.0_beats ), [&received]( auto message ) {
-                            REQUIRE( received == message_type::invalid );
+                            REQUIRE( received.front() == std::byte{0x00} );
                             received = message;
                         } );
-                        REQUIRE( received == message_type::realtime_stop );
+                        REQUIRE( received == midi::realtime::realtime_stop() );
 
                         THEN( "nothing happens when update is called again" )
                         {
@@ -85,12 +83,12 @@ SCENARIO( "start and stop messages", "[midi_clock_base]" )
                     clock.reset();
                     REQUIRE_FALSE( clock.is_started() );
 
-                    auto received = message_type::invalid;
+                    std::array< std::byte, 1 > received = {std::byte{0x00}};
                     clock.update( beat_time_point( 1.0_beats ), [&received]( auto message ) {
-                        REQUIRE( received == message_type::invalid );
+                        REQUIRE( received.front() == std::byte{0x00} );
                         received = message;
                     } );
-                    REQUIRE( received == message_type::realtime_stop );
+                    REQUIRE( received == midi::realtime::realtime_stop() );
 
                     THEN( "nothing happens when update is called again" )
                     {
@@ -117,7 +115,7 @@ SCENARIO( "start and stop messages", "[midi_clock_base]" )
             {
                 int pulse_count = 0;
                 clock.update( beat_time_point( 1.0_beats ), [&pulse_count]( auto message ) {
-                    if ( message == message_type::realtime_clock )
+                    if ( message == midi::realtime::realtime_clock() )
                     {
                         pulse_count++;
                     }
@@ -132,7 +130,7 @@ SCENARIO( "start and stop messages", "[midi_clock_base]" )
                     {
                         int pulse_count = 0;
                         clock.update( beat_time_point( 1.0_beats ), [&pulse_count]( auto message ) {
-                            if ( message == message_type::realtime_clock )
+                            if ( message == midi::realtime::realtime_clock() )
                             {
                                 pulse_count++;
                             }
@@ -163,12 +161,12 @@ SCENARIO( "continue", "[midi_clock_base]" )
             THEN( "starting the clock again sends a continue message" )
             {
                 clock.start();
-                auto received = message_type::invalid;
+                std::array< std::byte, 1 > received = {std::byte{0x00}};
                 clock.update( beat_time_point( 0.0_beats ), [&received]( auto message ) {
-                    REQUIRE( received == message_type::invalid );
+                    REQUIRE( received.front() == std::byte{0x00} );
                     received = message;
                 } );
-                REQUIRE( received == message_type::realtime_continue );
+                REQUIRE( received == midi::realtime::realtime_continue() );
             }
         }
 
@@ -180,12 +178,12 @@ SCENARIO( "continue", "[midi_clock_base]" )
             THEN( "starting the clock again sends a start message" )
             {
                 clock.start();
-                auto received = message_type::invalid;
+                std::array< std::byte, 1 > received = {std::byte{0x00}};
                 clock.update( beat_time_point( 0.0_beats ), [&received]( auto message ) {
-                    REQUIRE( received == message_type::invalid );
+                    REQUIRE( received.front() == std::byte{0x00} );
                     received = message;
                 } );
-                REQUIRE( received == message_type::realtime_start );
+                REQUIRE( received == midi::realtime::realtime_start() );
             }
         }
     }
@@ -205,7 +203,7 @@ SCENARIO( "pulses", "[midi_clock_base]" )
             {
                 int pulse_count = 0;
                 clock.update( beat_time_point( 1.0_beats ), [&pulse_count]( auto message ) {
-                    if ( message == message_type::realtime_clock )
+                    if ( message == midi::realtime::realtime_clock() )
                     {
                         pulse_count++;
                     }
@@ -217,7 +215,7 @@ SCENARIO( "pulses", "[midi_clock_base]" )
                     {
                         pulse_count = 0;
                         clock.update( beat_time_point( 1.0_beats ), [&pulse_count]( auto message ) {
-                            if ( message == message_type::realtime_clock )
+                            if ( message == midi::realtime::realtime_clock() )
                             {
                                 pulse_count++;
                             }
@@ -234,7 +232,7 @@ SCENARIO( "pulses", "[midi_clock_base]" )
                     {
                         pulse_count = 0;
                         clock.update( beat_time_point( 1.0_beats ), [&pulse_count]( auto message ) {
-                            if ( message == message_type::realtime_clock )
+                            if ( message == midi::realtime::realtime_clock() )
                             {
                                 pulse_count++;
                             }
@@ -256,7 +254,7 @@ SCENARIO( "pulses", "[midi_clock_base]" )
             {
                 int pulse_count = 0;
                 clock.update( beat_time_point( 1.0_beats ), [&pulse_count]( auto message ) {
-                    if ( message == message_type::realtime_clock )
+                    if ( message == midi::realtime::realtime_clock() )
                     {
                         pulse_count++;
                     }

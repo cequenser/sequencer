@@ -23,18 +23,17 @@ namespace sequencer::midi
         template < typename Sender >
         void update( beat_time_point t, Sender sender )
         {
-            using realtime::message_type;
+            using namespace realtime;
 
             if ( !running_ && started_ )
             {
-                sender( continue_ ? message_type::realtime_continue
-                                  : message_type::realtime_start );
+                sender( continue_ ? realtime_continue() : realtime_start() );
                 running_ = true;
                 continue_ = true;
             }
             else if ( running_ && !started_ )
             {
-                sender( message_type::realtime_stop );
+                sender( realtime_stop() );
                 running_ = false;
             }
 
@@ -44,7 +43,7 @@ namespace sequencer::midi
                 while ( last_update_ + dt <= t )
                 {
                     last_update_ += dt;
-                    sender( message_type::realtime_clock );
+                    sender( realtime_clock() );
                 }
             }
         }

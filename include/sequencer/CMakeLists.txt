@@ -12,6 +12,7 @@ add_library(sequencer
     midi/step_sequencer.hpp
     midi/track.hpp
     midi/message/channel_voice.hpp
+    midi/message/message_type.hpp
     midi/message/realtime.hpp
     midi/message/system_common.hpp
     midi/message/util.hpp

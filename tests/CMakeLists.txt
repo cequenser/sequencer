@@ -4,7 +4,6 @@ add_executable(tests
     sequencer/beat_duration_test.cpp
     sequencer/beat_time_point_test.cpp
     sequencer/fixed_point_type_test.cpp
-    sequencer/rtmidi_sender_test.cpp
     sequencer/midi/clock_test.cpp
     sequencer/midi/clock_base_test.cpp
     sequencer/midi/step_sequencer_test.cpp

@@ -9,6 +9,7 @@
 
 using sequencer::rtmidi::cout_callback;
 using sequencer::rtmidi::make_midi_port;
+using sequencer::rtmidi::message_sender;
 
 void receiver( std::promise< void >& receiver_is_ready, std::future< void > sender_is_done )
 {
@@ -42,16 +43,13 @@ int main()
         return 1;
     }
 
-    const auto sender = [&midiout]( auto message ) {
-        const std::vector< unsigned char > messages = {static_cast< unsigned char >( message )};
-        midiout->sendMessage( &messages );
-    };
+    const auto sender = message_sender{*midiout};
 
-    using sequencer::midi::realtime::message_type;
-    sender( message_type::realtime_clock );
-    sender( message_type::realtime_continue );
-    sender( message_type::realtime_start );
-    sender( message_type::realtime_stop );
+    using namespace sequencer::midi::realtime;
+    sender( realtime_clock() );
+    sender( realtime_continue() );
+    sender( realtime_start() );
+    sender( realtime_stop() );
 
     std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
     sender_is_done.set_value();

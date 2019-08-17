@@ -330,7 +330,7 @@ SCENARIO( "channel voice messages", "[channel_voice_message]" )
     {
         const auto [ portamento_time_lsb, portamento_time_msb ] = portamento_time( 1, 8392 );
 
-        THEN( "portamento time controller lsb message is 0xB1 0x25 0x48" )
+        THEN( "portamento time lsb message is 0xB1 0x25 0x48" )
         {
             REQUIRE( portamento_time_lsb.size() == 3 );
             REQUIRE( portamento_time_lsb[ 0 ] == std::byte{0xB1} );
@@ -338,7 +338,7 @@ SCENARIO( "channel voice messages", "[channel_voice_message]" )
             REQUIRE( portamento_time_lsb[ 2 ] == std::byte{0x48} );
         }
 
-        THEN( "portamento time controller msb message is 0xB1 0x05 0x41" )
+        THEN( "portamento time msb message is 0xB1 0x05 0x41" )
         {
             REQUIRE( portamento_time_msb.size() == 3 );
             REQUIRE( portamento_time_msb[ 0 ] == std::byte{0xB1} );
@@ -351,7 +351,7 @@ SCENARIO( "channel voice messages", "[channel_voice_message]" )
     {
         const auto [ data_entry_lsb, data_entry_msb ] = data_entry( 1, 8392 );
 
-        THEN( "data entry controller lsb message is 0xB1 0x26 0x48" )
+        THEN( "data entry lsb message is 0xB1 0x26 0x48" )
         {
             REQUIRE( data_entry_lsb.size() == 3 );
             REQUIRE( data_entry_lsb[ 0 ] == std::byte{0xB1} );
@@ -359,7 +359,7 @@ SCENARIO( "channel voice messages", "[channel_voice_message]" )
             REQUIRE( data_entry_lsb[ 2 ] == std::byte{0x48} );
         }
 
-        THEN( "data entry controller msb message is 0xB1 0x06 0x41" )
+        THEN( "data entry msb message is 0xB1 0x06 0x41" )
         {
             REQUIRE( data_entry_msb.size() == 3 );
             REQUIRE( data_entry_msb[ 0 ] == std::byte{0xB1} );
@@ -372,7 +372,7 @@ SCENARIO( "channel voice messages", "[channel_voice_message]" )
     {
         const auto [ channel_volume_lsb, channel_volume_msb ] = channel_volume( 1, 8392 );
 
-        THEN( "channel volume controller lsb message is 0xB1 0x27 0x48" )
+        THEN( "channel volume lsb message is 0xB1 0x27 0x48" )
         {
             REQUIRE( channel_volume_lsb.size() == 3 );
             REQUIRE( channel_volume_lsb[ 0 ] == std::byte{0xB1} );
@@ -380,7 +380,7 @@ SCENARIO( "channel voice messages", "[channel_voice_message]" )
             REQUIRE( channel_volume_lsb[ 2 ] == std::byte{0x48} );
         }
 
-        THEN( "channel volume controller msb message is 0xB1 0x07 0x41" )
+        THEN( "channel volume msb message is 0xB1 0x07 0x41" )
         {
             REQUIRE( channel_volume_msb.size() == 3 );
             REQUIRE( channel_volume_msb[ 0 ] == std::byte{0xB1} );
@@ -393,7 +393,7 @@ SCENARIO( "channel voice messages", "[channel_voice_message]" )
     {
         const auto [ balance_lsb, balance_msb ] = balance( 1, 8392 );
 
-        THEN( "balance controller lsb message is 0xB1 0x28 0x48" )
+        THEN( "balance lsb message is 0xB1 0x28 0x48" )
         {
             REQUIRE( balance_lsb.size() == 3 );
             REQUIRE( balance_lsb[ 0 ] == std::byte{0xB1} );
@@ -401,7 +401,7 @@ SCENARIO( "channel voice messages", "[channel_voice_message]" )
             REQUIRE( balance_lsb[ 2 ] == std::byte{0x48} );
         }
 
-        THEN( "balance controller msb message is 0xB1 0x08 0x41" )
+        THEN( "balance msb message is 0xB1 0x08 0x41" )
         {
             REQUIRE( balance_msb.size() == 3 );
             REQUIRE( balance_msb[ 0 ] == std::byte{0xB1} );
@@ -414,7 +414,7 @@ SCENARIO( "channel voice messages", "[channel_voice_message]" )
     {
         const auto [ pan_lsb, pan_msb ] = pan( 1, 8392 );
 
-        THEN( "pan controller lsb message is 0xB1 0x2A 0x48" )
+        THEN( "pan lsb message is 0xB1 0x2A 0x48" )
         {
             REQUIRE( pan_lsb.size() == 3 );
             REQUIRE( pan_lsb[ 0 ] == std::byte{0xB1} );
@@ -422,7 +422,7 @@ SCENARIO( "channel voice messages", "[channel_voice_message]" )
             REQUIRE( pan_lsb[ 2 ] == std::byte{0x48} );
         }
 
-        THEN( "pan controller msb message is 0xB1 0x0A 0x41" )
+        THEN( "pan msb message is 0xB1 0x0A 0x41" )
         {
             REQUIRE( pan_msb.size() == 3 );
             REQUIRE( pan_msb[ 0 ] == std::byte{0xB1} );
@@ -436,7 +436,7 @@ SCENARIO( "channel voice messages", "[channel_voice_message]" )
         const auto [ expression_controller_lsb, expression_controller_msb ] =
             expression_controller( 1, 8392 );
 
-        THEN( "expression controller controller lsb message is 0xB1 0x2B 0x48" )
+        THEN( "expression controller lsb message is 0xB1 0x2B 0x48" )
         {
             REQUIRE( expression_controller_lsb.size() == 3 );
             REQUIRE( expression_controller_lsb[ 0 ] == std::byte{0xB1} );
@@ -444,7 +444,7 @@ SCENARIO( "channel voice messages", "[channel_voice_message]" )
             REQUIRE( expression_controller_lsb[ 2 ] == std::byte{0x48} );
         }
 
-        THEN( "expression controller controller msb message is 0xB1 0x0B 0x41" )
+        THEN( "expression controller msb message is 0xB1 0x0B 0x41" )
         {
             REQUIRE( expression_controller_msb.size() == 3 );
             REQUIRE( expression_controller_msb[ 0 ] == std::byte{0xB1} );
@@ -457,7 +457,7 @@ SCENARIO( "channel voice messages", "[channel_voice_message]" )
     {
         const auto [ effect_control_1_lsb, effect_control_1_msb ] = effect_control_1( 1, 8392 );
 
-        THEN( "effect control 1 controller lsb message is 0xB1 0x2C 0x48" )
+        THEN( "effect control 1 lsb message is 0xB1 0x2C 0x48" )
         {
             REQUIRE( effect_control_1_lsb.size() == 3 );
             REQUIRE( effect_control_1_lsb[ 0 ] == std::byte{0xB1} );
@@ -465,7 +465,7 @@ SCENARIO( "channel voice messages", "[channel_voice_message]" )
             REQUIRE( effect_control_1_lsb[ 2 ] == std::byte{0x48} );
         }
 
-        THEN( "effect control 1 controller msb message is 0xB1 0x0C 0x41" )
+        THEN( "effect control 1 msb message is 0xB1 0x0C 0x41" )
         {
             REQUIRE( effect_control_1_msb.size() == 3 );
             REQUIRE( effect_control_1_msb[ 0 ] == std::byte{0xB1} );
@@ -478,7 +478,7 @@ SCENARIO( "channel voice messages", "[channel_voice_message]" )
     {
         const auto [ effect_control_2_lsb, effect_control_2_msb ] = effect_control_2( 1, 8392 );
 
-        THEN( "effect control 2 controller lsb message is 0xB1 0x2D 0x48" )
+        THEN( "effect control 2 lsb message is 0xB1 0x2D 0x48" )
         {
             REQUIRE( effect_control_2_lsb.size() == 3 );
             REQUIRE( effect_control_2_lsb[ 0 ] == std::byte{0xB1} );
@@ -486,12 +486,100 @@ SCENARIO( "channel voice messages", "[channel_voice_message]" )
             REQUIRE( effect_control_2_lsb[ 2 ] == std::byte{0x48} );
         }
 
-        THEN( "effect control 2 controller msb message is 0xB1 0x0D 0x41" )
+        THEN( "effect control 2 msb message is 0xB1 0x0D 0x41" )
         {
             REQUIRE( effect_control_2_msb.size() == 3 );
             REQUIRE( effect_control_2_msb[ 0 ] == std::byte{0xB1} );
             REQUIRE( effect_control_2_msb[ 1 ] == std::byte{0x0D} );
             REQUIRE( effect_control_2_msb[ 2 ] == std::byte{0x41} );
+        }
+    }
+
+    GIVEN( "general purpose controller 1 lsb and msb messages for channel 1 and value 8392" )
+    {
+        const auto [ general_purpose_controller_lsb, general_purpose_controller_msb ] =
+            general_purpose_controller( 1, 1, 8392 );
+
+        THEN( "general purpose controller 1 lsb message is 0xB1 0x30 0x48" )
+        {
+            REQUIRE( general_purpose_controller_lsb.size() == 3 );
+            REQUIRE( general_purpose_controller_lsb[ 0 ] == std::byte{0xB1} );
+            REQUIRE( general_purpose_controller_lsb[ 1 ] == std::byte{0x30} );
+            REQUIRE( general_purpose_controller_lsb[ 2 ] == std::byte{0x48} );
+        }
+
+        THEN( "general purpose controller 1 msb message is 0xB1 0x10 0x41" )
+        {
+            REQUIRE( general_purpose_controller_msb.size() == 3 );
+            REQUIRE( general_purpose_controller_msb[ 0 ] == std::byte{0xB1} );
+            REQUIRE( general_purpose_controller_msb[ 1 ] == std::byte{0x10} );
+            REQUIRE( general_purpose_controller_msb[ 2 ] == std::byte{0x41} );
+        }
+    }
+
+    GIVEN( "general purpose controller 2 lsb and msb messages for channel 1 and value 8392" )
+    {
+        const auto [ general_purpose_controller_lsb, general_purpose_controller_msb ] =
+            general_purpose_controller( 2, 1, 8392 );
+
+        THEN( "general purpose controller 2 lsb message is 0xB1 0x31 0x48" )
+        {
+            REQUIRE( general_purpose_controller_lsb.size() == 3 );
+            REQUIRE( general_purpose_controller_lsb[ 0 ] == std::byte{0xB1} );
+            REQUIRE( general_purpose_controller_lsb[ 1 ] == std::byte{0x31} );
+            REQUIRE( general_purpose_controller_lsb[ 2 ] == std::byte{0x48} );
+        }
+
+        THEN( "general purpose controller 2 msb message is 0xB1 0x11 0x41" )
+        {
+            REQUIRE( general_purpose_controller_msb.size() == 3 );
+            REQUIRE( general_purpose_controller_msb[ 0 ] == std::byte{0xB1} );
+            REQUIRE( general_purpose_controller_msb[ 1 ] == std::byte{0x11} );
+            REQUIRE( general_purpose_controller_msb[ 2 ] == std::byte{0x41} );
+        }
+    }
+
+    GIVEN( "general purpose controller 3 lsb and msb messages for channel 1 and value 8392" )
+    {
+        const auto [ general_purpose_controller_lsb, general_purpose_controller_msb ] =
+            general_purpose_controller( 3, 1, 8392 );
+
+        THEN( "general purpose controller 3 lsb message is 0xB1 0x32 0x48" )
+        {
+            REQUIRE( general_purpose_controller_lsb.size() == 3 );
+            REQUIRE( general_purpose_controller_lsb[ 0 ] == std::byte{0xB1} );
+            REQUIRE( general_purpose_controller_lsb[ 1 ] == std::byte{0x32} );
+            REQUIRE( general_purpose_controller_lsb[ 2 ] == std::byte{0x48} );
+        }
+
+        THEN( "general purpose controller 3 msb message is 0xB1 0x12 0x41" )
+        {
+            REQUIRE( general_purpose_controller_msb.size() == 3 );
+            REQUIRE( general_purpose_controller_msb[ 0 ] == std::byte{0xB1} );
+            REQUIRE( general_purpose_controller_msb[ 1 ] == std::byte{0x12} );
+            REQUIRE( general_purpose_controller_msb[ 2 ] == std::byte{0x41} );
+        }
+    }
+
+    GIVEN( "general purpose controller 4 lsb and msb messages for channel 1 and value 8392" )
+    {
+        const auto [ general_purpose_controller_lsb, general_purpose_controller_msb ] =
+            general_purpose_controller( 4, 1, 8392 );
+
+        THEN( "general purpose controller 4 lsb message is 0xB1 0x33 0x48" )
+        {
+            REQUIRE( general_purpose_controller_lsb.size() == 3 );
+            REQUIRE( general_purpose_controller_lsb[ 0 ] == std::byte{0xB1} );
+            REQUIRE( general_purpose_controller_lsb[ 1 ] == std::byte{0x33} );
+            REQUIRE( general_purpose_controller_lsb[ 2 ] == std::byte{0x48} );
+        }
+
+        THEN( "general purpose controller 4 msb message is 0xB1 0x13 0x41" )
+        {
+            REQUIRE( general_purpose_controller_msb.size() == 3 );
+            REQUIRE( general_purpose_controller_msb[ 0 ] == std::byte{0xB1} );
+            REQUIRE( general_purpose_controller_msb[ 1 ] == std::byte{0x13} );
+            REQUIRE( general_purpose_controller_msb[ 2 ] == std::byte{0x41} );
         }
     }
 

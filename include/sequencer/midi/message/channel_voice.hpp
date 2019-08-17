@@ -179,6 +179,17 @@ namespace sequencer::midi::channel::voice
         return control_change_lsb_msb( channel, 0x0D, value );
     }
 
+    constexpr std::array< message_t< 3 >, 2 >
+    general_purpose_controller( std::uint8_t id, std::uint8_t channel,
+                                std::uint16_t value ) noexcept
+    {
+        assert( id >= 1 );
+        assert( id <= 4 );
+        const auto control_function =
+            ( id == 1 ) ? 0x10 : ( id == 2 ) ? 0x11 : ( id == 3 ) ? 0x12 : 0x13;
+        return control_change_lsb_msb( channel, control_function, value );
+    }
+
     constexpr std::byte on_off_byte( bool on ) noexcept
     {
         return on ? std::byte{0x7F} : std::byte{0x00};

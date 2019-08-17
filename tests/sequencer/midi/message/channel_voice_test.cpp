@@ -389,24 +389,45 @@ SCENARIO( "channel voice messages", "[channel_voice_message]" )
         }
     }
 
-    GIVEN( "channel balance lsb and msb messages for channel 1 and value 8392" )
+    GIVEN( "balance lsb and msb messages for channel 1 and value 8392" )
     {
-        const auto [ channel_balance_lsb, channel_balance_msb ] = channel_balance( 1, 8392 );
+        const auto [ balance_lsb, balance_msb ] = balance( 1, 8392 );
 
-        THEN( "channel balance controller lsb message is 0xB1 0x28 0x48" )
+        THEN( "balance controller lsb message is 0xB1 0x28 0x48" )
         {
-            REQUIRE( channel_balance_lsb.size() == 3 );
-            REQUIRE( channel_balance_lsb[ 0 ] == std::byte{0xB1} );
-            REQUIRE( channel_balance_lsb[ 1 ] == std::byte{0x28} );
-            REQUIRE( channel_balance_lsb[ 2 ] == std::byte{0x48} );
+            REQUIRE( balance_lsb.size() == 3 );
+            REQUIRE( balance_lsb[ 0 ] == std::byte{0xB1} );
+            REQUIRE( balance_lsb[ 1 ] == std::byte{0x28} );
+            REQUIRE( balance_lsb[ 2 ] == std::byte{0x48} );
         }
 
-        THEN( "channel balance controller msb message is 0xB1 0x08 0x41" )
+        THEN( "balance controller msb message is 0xB1 0x08 0x41" )
         {
-            REQUIRE( channel_balance_msb.size() == 3 );
-            REQUIRE( channel_balance_msb[ 0 ] == std::byte{0xB1} );
-            REQUIRE( channel_balance_msb[ 1 ] == std::byte{0x08} );
-            REQUIRE( channel_balance_msb[ 2 ] == std::byte{0x41} );
+            REQUIRE( balance_msb.size() == 3 );
+            REQUIRE( balance_msb[ 0 ] == std::byte{0xB1} );
+            REQUIRE( balance_msb[ 1 ] == std::byte{0x08} );
+            REQUIRE( balance_msb[ 2 ] == std::byte{0x41} );
+        }
+    }
+
+    GIVEN( "pan lsb and msb messages for channel 1 and value 8392" )
+    {
+        const auto [ pan_lsb, pan_msb ] = pan( 1, 8392 );
+
+        THEN( "pan controller lsb message is 0xB1 0x2A 0x48" )
+        {
+            REQUIRE( pan_lsb.size() == 3 );
+            REQUIRE( pan_lsb[ 0 ] == std::byte{0xB1} );
+            REQUIRE( pan_lsb[ 1 ] == std::byte{0x2A} );
+            REQUIRE( pan_lsb[ 2 ] == std::byte{0x48} );
+        }
+
+        THEN( "pan controller msb message is 0xB1 0x0A 0x41" )
+        {
+            REQUIRE( pan_msb.size() == 3 );
+            REQUIRE( pan_msb[ 0 ] == std::byte{0xB1} );
+            REQUIRE( pan_msb[ 1 ] == std::byte{0x0A} );
+            REQUIRE( pan_msb[ 2 ] == std::byte{0x41} );
         }
     }
 

@@ -1,6 +1,5 @@
 #pragma once
 
-#include <sequencer/midi/message/channel_mode.hpp>
 #include <sequencer/midi/message/channel_voice.hpp>
 #include <sequencer/midi/note.hpp>
 
@@ -101,7 +100,7 @@ namespace sequencer::midi
         template < class Sender >
         void send_all_notes_off_message( const Sender& sender ) const
         {
-            sender( channel::mode::all_notes_off( channel() ) );
+            sender( channel::voice::all_notes_off( channel() ) );
             last_note_ = no_note();
         }
 

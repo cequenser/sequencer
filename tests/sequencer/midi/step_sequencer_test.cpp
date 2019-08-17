@@ -1,7 +1,6 @@
 #include <sequencer/chrono/sequencer_clock.hpp>
 #include <sequencer/chrono/testing_clock.hpp>
 #include <sequencer/midi/clock.hpp>
-#include <sequencer/midi/message/channel_mode.hpp>
 #include <sequencer/midi/message/channel_voice.hpp>
 #include <sequencer/midi/note.hpp>
 #include <sequencer/midi/step_sequencer.hpp>
@@ -21,7 +20,7 @@ using sequencer::midi::make_midi_clock_raii_shutdown;
 using sequencer::midi::note_t;
 using sequencer::midi::step_sequencer;
 using sequencer::midi::tracks_t;
-using sequencer::midi::channel::mode::all_notes_off;
+using sequencer::midi::channel::voice::all_notes_off;
 
 using underlying_clock_type = sequencer::chrono::steady_testing_clock<>;
 using sequencer_clock_type = sequencer::chrono::sequencer_clock< const underlying_clock_type& >;

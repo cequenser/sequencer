@@ -284,27 +284,6 @@ SCENARIO( "channel voice messages", "[channel_voice_message]" )
         }
     }
 
-    GIVEN( "an effects 1 depth message for channel 1 with value 17" )
-    {
-        const auto channel = 1;
-        const auto message = effects_1_depth( channel, 17 );
-
-        THEN( "first byte is 0xB1" )
-        {
-            REQUIRE( message[ 0 ] == std::byte{0xB1} );
-        }
-
-        THEN( "second byte is 0x5B" )
-        {
-            REQUIRE( message[ 1 ] == std::byte{0x5B} );
-        }
-
-        THEN( "third byte is 0x11" )
-        {
-            REQUIRE( message[ 2 ] == std::byte{0x11} );
-        }
-    }
-
     GIVEN( "breath controller lsb and msb messages for channel 1 and value 8392" )
     {
         const auto [ breath_controller_lsb, breath_controller_msb ] = breath_controller( 1, 8392 );
@@ -344,6 +323,48 @@ SCENARIO( "channel voice messages", "[channel_voice_message]" )
             REQUIRE( foot_controller_msb[ 0 ] == std::byte{0xB1} );
             REQUIRE( foot_controller_msb[ 1 ] == std::byte{0x04} );
             REQUIRE( foot_controller_msb[ 2 ] == std::byte{0x41} );
+        }
+    }
+
+    GIVEN( "portamento time lsb and msb messages for channel 1 and value 8392" )
+    {
+        const auto [ portamento_time_lsb, portamento_time_msb ] = portamento_time( 1, 8392 );
+
+        THEN( "portamento time controller lsb message is 0xB1 0x22 0x48" )
+        {
+            REQUIRE( portamento_time_lsb.size() == 3 );
+            REQUIRE( portamento_time_lsb[ 0 ] == std::byte{0xB1} );
+            REQUIRE( portamento_time_lsb[ 1 ] == std::byte{0x25} );
+            REQUIRE( portamento_time_lsb[ 2 ] == std::byte{0x48} );
+        }
+
+        THEN( "portamento time controller msb message is 0xB1 0x02 0x41" )
+        {
+            REQUIRE( portamento_time_msb.size() == 3 );
+            REQUIRE( portamento_time_msb[ 0 ] == std::byte{0xB1} );
+            REQUIRE( portamento_time_msb[ 1 ] == std::byte{0x05} );
+            REQUIRE( portamento_time_msb[ 2 ] == std::byte{0x41} );
+        }
+    }
+
+    GIVEN( "an effects 1 depth message for channel 1 with value 17" )
+    {
+        const auto channel = 1;
+        const auto message = effects_1_depth( channel, 17 );
+
+        THEN( "first byte is 0xB1" )
+        {
+            REQUIRE( message[ 0 ] == std::byte{0xB1} );
+        }
+
+        THEN( "second byte is 0x5B" )
+        {
+            REQUIRE( message[ 1 ] == std::byte{0x5B} );
+        }
+
+        THEN( "third byte is 0x11" )
+        {
+            REQUIRE( message[ 2 ] == std::byte{0x11} );
         }
     }
 

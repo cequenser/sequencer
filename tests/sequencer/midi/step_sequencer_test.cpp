@@ -420,7 +420,7 @@ SCENARIO( "step_sequencer_base, that is triggered by a midi clock, plays 4 beats
                     testing_clock.set( testing_clock.now() + 10ms );
                     clock_message_count.wait_for_count( 28 );
                     testing_clock.set( testing_clock.now() + 491ms );
-                    clock_message_count.wait_for_count( 51 );
+                    clock_message_count.wait_for_count( 52 );
 
                     THEN( "one note on message is send" )
                     {

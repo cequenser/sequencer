@@ -90,18 +90,12 @@ namespace sequencer::midi::channel::voice
         return {status_byte_for( std::byte{0xE0}, channel ), lsb, msb};
     }
 
-    constexpr message_t< 3 > bank_select( std::uint8_t channel, std::byte value,
-                                          bool is_msb ) noexcept
-    {
-        const auto control_number = is_msb ? std::byte{0x00} : std::byte{0x20};
-        return control_change( channel, control_number, value );
-    }
-
     constexpr std::array< message_t< 3 >, 2 > bank_select( std::uint8_t channel,
                                                            std::uint16_t bank ) noexcept
     {
         const auto [ lsb, msb ] = uint16_to_two_bytes( bank );
-        return {bank_select( channel, lsb, false ), bank_select( channel, msb, true )};
+        return {control_change( channel, std::byte{0x20}, lsb ),
+                control_change( channel, std::byte{0x00}, msb )};
     }
 
     constexpr std::tuple< message_t< 3 >, message_t< 3 >, message_t< 2 > >
@@ -110,6 +104,14 @@ namespace sequencer::midi::channel::voice
     {
         const auto [ lsb, msb ] = bank_select( channel, bank );
         return {lsb, msb, program_change( channel, program )};
+    }
+
+    constexpr std::array< message_t< 3 >, 2 > modulation_wheel( std::uint8_t channel,
+                                                                std::uint16_t bank ) noexcept
+    {
+        const auto [ lsb, msb ] = uint16_to_two_bytes( bank );
+        return {control_change( channel, std::byte{0x21}, lsb ),
+                control_change( channel, std::byte{0x01}, msb )};
     }
 
     constexpr std::byte on_off_byte( bool on ) noexcept

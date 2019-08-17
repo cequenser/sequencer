@@ -263,6 +263,27 @@ SCENARIO( "channel voice messages", "[channel_voice_message]" )
         }
     }
 
+    GIVEN( "modulation wheel lsb and msb messages for channel 1 and value 8392" )
+    {
+        const auto [ modulation_wheel_lsb, modulation_wheel_msb ] = modulation_wheel( 1, 8392 );
+
+        THEN( "modulation wheel lsb message is 0xB1 0x21 0x48" )
+        {
+            REQUIRE( modulation_wheel_lsb.size() == 3 );
+            REQUIRE( modulation_wheel_lsb[ 0 ] == std::byte{0xB1} );
+            REQUIRE( modulation_wheel_lsb[ 1 ] == std::byte{0x21} );
+            REQUIRE( modulation_wheel_lsb[ 2 ] == std::byte{0x48} );
+        }
+
+        THEN( "modulation wheel msb message is 0xB1 0x01 0x41" )
+        {
+            REQUIRE( modulation_wheel_msb.size() == 3 );
+            REQUIRE( modulation_wheel_msb[ 0 ] == std::byte{0xB1} );
+            REQUIRE( modulation_wheel_msb[ 1 ] == std::byte{0x01} );
+            REQUIRE( modulation_wheel_msb[ 2 ] == std::byte{0x41} );
+        }
+    }
+
     GIVEN( "an effects 1 depth message for channel 1 with value 17" )
     {
         const auto channel = 1;

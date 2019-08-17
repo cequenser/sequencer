@@ -22,6 +22,10 @@ using sequencer::midi::note_t;
 using sequencer::midi::step_sequencer;
 using sequencer::midi::tracks_t;
 using sequencer::midi::channel::voice::all_notes_off;
+using sequencer::midi::realtime::realtime_clock;
+using sequencer::midi::realtime::realtime_continue;
+using sequencer::midi::realtime::realtime_start;
+using sequencer::midi::realtime::realtime_stop;
 
 using underlying_clock_type = sequencer::chrono::steady_testing_clock<>;
 using sequencer_clock_type = sequencer::chrono::sequencer_clock< const underlying_clock_type& >;
@@ -59,10 +63,10 @@ SCENARIO( "step_sequencer_base plays 4 beats", "[step_sequencer]" )
         WHEN( "sequencer receives start message and 96 clock messages (i.e. 4 beats @ 24 pulses "
               "per beat)" )
         {
-            sequencer.update( midi::realtime::realtime_start(), midi_sender );
+            sequencer.update( realtime_start(), midi_sender );
             for ( auto i = 0u; i < 96; ++i )
             {
-                sequencer.update( midi::realtime::realtime_clock(), midi_sender );
+                sequencer.update( realtime_clock(), midi_sender );
             }
 
             THEN( "no message is sent" )
@@ -90,8 +94,8 @@ SCENARIO( "step_sequencer_base plays 4 beats", "[step_sequencer]" )
 
         WHEN( "sequencer receives start message and one clock message" )
         {
-            sequencer.update( midi::realtime::realtime_start(), midi_sender );
-            sequencer.update( midi::realtime::realtime_clock(), midi_sender );
+            sequencer.update( realtime_start(), midi_sender );
+            sequencer.update( realtime_clock(), midi_sender );
 
             THEN( "one note on message is send" )
             {
@@ -102,7 +106,7 @@ SCENARIO( "step_sequencer_base plays 4 beats", "[step_sequencer]" )
 
         WHEN( "sequencer receives no start message and one clock message" )
         {
-            sequencer.update( midi::realtime::realtime_clock(), midi_sender );
+            sequencer.update( realtime_clock(), midi_sender );
 
             THEN( "one note on message is send" )
             {
@@ -112,10 +116,10 @@ SCENARIO( "step_sequencer_base plays 4 beats", "[step_sequencer]" )
 
         WHEN( "sequencer receives start message and 24 clock messages" )
         {
-            sequencer.update( midi::realtime::realtime_start(), midi_sender );
+            sequencer.update( realtime_start(), midi_sender );
             for ( auto i = 0u; i < 23; ++i )
             {
-                sequencer.update( midi::realtime::realtime_clock(), midi_sender );
+                sequencer.update( realtime_clock(), midi_sender );
             }
 
             THEN( "one note on message is send" )
@@ -126,8 +130,8 @@ SCENARIO( "step_sequencer_base plays 4 beats", "[step_sequencer]" )
 
             AND_WHEN( "sequencer receives stop message one clock message" )
             {
-                sequencer.update( midi::realtime::realtime_stop(), midi_sender );
-                sequencer.update( midi::realtime::realtime_clock(), midi_sender );
+                sequencer.update( realtime_stop(), midi_sender );
+                sequencer.update( realtime_clock(), midi_sender );
 
                 THEN( "one note on and two all notes off messages are send" )
                 {
@@ -139,10 +143,10 @@ SCENARIO( "step_sequencer_base plays 4 beats", "[step_sequencer]" )
 
                 AND_WHEN( "sequencer receives continue message and 25 clock messages" )
                 {
-                    sequencer.update( midi::realtime::realtime_continue(), midi_sender );
+                    sequencer.update( realtime_continue(), midi_sender );
                     for ( auto i = 0u; i < 25; ++i )
                     {
-                        sequencer.update( midi::realtime::realtime_clock(), midi_sender );
+                        sequencer.update( realtime_clock(), midi_sender );
                     }
 
                     THEN( "one note off message is send" )
@@ -154,10 +158,10 @@ SCENARIO( "step_sequencer_base plays 4 beats", "[step_sequencer]" )
 
                 AND_WHEN( "sequencer receives start message and 25 clock messages" )
                 {
-                    sequencer.update( midi::realtime::realtime_start(), midi_sender );
+                    sequencer.update( realtime_start(), midi_sender );
                     for ( auto i = 0u; i < 25; ++i )
                     {
-                        sequencer.update( midi::realtime::realtime_clock(), midi_sender );
+                        sequencer.update( realtime_clock(), midi_sender );
                     }
 
                     THEN( "one note on message is send" )
@@ -176,10 +180,10 @@ SCENARIO( "step_sequencer_base plays 4 beats", "[step_sequencer]" )
 
         WHEN( "sequencer receives start message and 25 clock messages" )
         {
-            sequencer.update( midi::realtime::realtime_start(), midi_sender );
+            sequencer.update( realtime_start(), midi_sender );
             for ( auto i = 0u; i < 25; ++i )
             {
-                sequencer.update( midi::realtime::realtime_clock(), midi_sender );
+                sequencer.update( realtime_clock(), midi_sender );
             }
 
             THEN( "one note on message is send" )
@@ -196,10 +200,10 @@ SCENARIO( "step_sequencer_base plays 4 beats", "[step_sequencer]" )
 
         WHEN( "sequencer receives start message and 96 clock messages" )
         {
-            sequencer.update( midi::realtime::realtime_start(), midi_sender );
+            sequencer.update( realtime_start(), midi_sender );
             for ( auto i = 0u; i < 96; ++i )
             {
-                sequencer.update( midi::realtime::realtime_clock(), midi_sender );
+                sequencer.update( realtime_clock(), midi_sender );
             }
 
             THEN( "one note on message is send" )
@@ -239,10 +243,48 @@ SCENARIO( "step_sequencer_base with 48 pulses per quarter note", "[step_sequence
 
         WHEN( "sequencer receives start message and 25 clock messages" )
         {
-            sequencer.update( midi::realtime::realtime_start(), midi_sender );
+            sequencer.update( realtime_start(), midi_sender );
             for ( auto i = 0u; i < 25; ++i )
             {
-                sequencer.update( midi::realtime::realtime_clock(), midi_sender );
+                sequencer.update( realtime_clock(), midi_sender );
+            }
+
+            THEN( "one note on message is send" )
+            {
+                REQUIRE( received_messages.size() == 1 );
+                CHECK( received_messages[ 0 ] == note_on( 0, note_1 ) );
+            }
+        }
+    }
+}
+
+SCENARIO( "step_sequencer_base with 2 steps per beat", "[step_sequencer]" )
+{
+    using namespace sequencer;
+
+    GIVEN( "a step sequencer one track with note on first quarter and one track with note on "
+           "second quarter" )
+    {
+        std::vector< message_t< 3 > > received_messages;
+        const auto midi_sender = [&received_messages]( const auto& message ) {
+            received_messages.push_back( message );
+        };
+
+        constexpr auto steps = 16u;
+        auto midi_track = tracks_t< steps, 2 >{};
+        const auto note_1 = note_t{1};
+        const auto note_2 = note_t{42};
+        midi_track[ 0 ][ 0 ] = note_1;
+        midi_track[ 1 ][ 4 ] = note_2;
+        auto sequencer = step_sequencer{midi_track};
+        sequencer.set_steps_per_beat( 2 );
+
+        WHEN( "sequencer receives start message and 25 clock messages" )
+        {
+            sequencer.update( realtime_start(), midi_sender );
+            for ( auto i = 0u; i < 25; ++i )
+            {
+                sequencer.update( realtime_clock(), midi_sender );
             }
 
             THEN( "one note on message is send" )
@@ -496,8 +538,8 @@ SCENARIO( "step_sequencer_base sends notes to correct channels", "[step_sequence
 
         WHEN( "sequencer receives start message and 1 clock message" )
         {
-            sequencer.update( midi::realtime::realtime_start(), midi_sender );
-            sequencer.update( midi::realtime::realtime_clock(), midi_sender );
+            sequencer.update( realtime_start(), midi_sender );
+            sequencer.update( realtime_clock(), midi_sender );
 
             THEN( "one note on message is send for channel 0" )
             {
@@ -512,8 +554,8 @@ SCENARIO( "step_sequencer_base sends notes to correct channels", "[step_sequence
             midi_track[ 0 ].set_channel( new_channel );
             AND_WHEN( "sequencer receives start message and 1 clock message" )
             {
-                sequencer.update( midi::realtime::realtime_start(), midi_sender );
-                sequencer.update( midi::realtime::realtime_clock(), midi_sender );
+                sequencer.update( realtime_start(), midi_sender );
+                sequencer.update( realtime_clock(), midi_sender );
 
                 THEN( "one note on message is send for channel 1" )
                 {

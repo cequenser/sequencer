@@ -263,6 +263,27 @@ SCENARIO( "channel voice messages", "[channel_voice_message]" )
         }
     }
 
+    GIVEN( "breath controller lsb and msb messages for channel 1 and value 8392" )
+    {
+        const auto [ breath_controller_lsb, breath_controller_msb ] = breath_controller( 1, 8392 );
+
+        THEN( "breath controller lsb message is 0xB1 0x22 0x48" )
+        {
+            REQUIRE( breath_controller_lsb.size() == 3 );
+            REQUIRE( breath_controller_lsb[ 0 ] == std::byte{0xB1} );
+            REQUIRE( breath_controller_lsb[ 1 ] == std::byte{0x22} );
+            REQUIRE( breath_controller_lsb[ 2 ] == std::byte{0x48} );
+        }
+
+        THEN( "breath controller msb message is 0xB1 0x02 0x41" )
+        {
+            REQUIRE( breath_controller_msb.size() == 3 );
+            REQUIRE( breath_controller_msb[ 0 ] == std::byte{0xB1} );
+            REQUIRE( breath_controller_msb[ 1 ] == std::byte{0x02} );
+            REQUIRE( breath_controller_msb[ 2 ] == std::byte{0x41} );
+        }
+    }
+
     GIVEN( "modulation wheel lsb and msb messages for channel 1 and value 8392" )
     {
         const auto [ modulation_wheel_lsb, modulation_wheel_msb ] = modulation_wheel( 1, 8392 );

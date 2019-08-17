@@ -114,6 +114,14 @@ namespace sequencer::midi::channel::voice
                 control_change( channel, std::byte{0x01}, msb )};
     }
 
+    constexpr std::array< message_t< 3 >, 2 > breath_controller( std::uint8_t channel,
+                                                                 std::uint16_t bank ) noexcept
+    {
+        const auto [ lsb, msb ] = uint16_to_two_bytes( bank );
+        return {control_change( channel, std::byte{0x22}, lsb ),
+                control_change( channel, std::byte{0x02}, msb )};
+    }
+
     constexpr std::byte on_off_byte( bool on ) noexcept
     {
         return on ? std::byte{0x7F} : std::byte{0x00};

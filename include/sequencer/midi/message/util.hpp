@@ -8,6 +8,7 @@
 namespace sequencer::midi
 {
     static constexpr auto invalid_string = "invalid";
+    static constexpr auto max_14bit = 16384;
 
     constexpr std::byte status_byte_for( std::byte status_byte, std::uint8_t channel ) noexcept
     {
@@ -16,7 +17,7 @@ namespace sequencer::midi
 
     constexpr std::pair< std::byte, std::byte > uint16_to_two_bytes( std::uint16_t value ) noexcept
     {
-        assert( value < 16384 );
+        assert( value < max_14bit );
         return value < 128
                    ? std::pair( std::byte{static_cast< std::uint8_t >( value )}, std::byte{0x00} )
                    : std::make_pair( std::byte{static_cast< std::uint8_t >( value % 128 )},

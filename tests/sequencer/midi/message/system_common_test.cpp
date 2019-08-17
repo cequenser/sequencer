@@ -147,17 +147,6 @@ SCENARIO( "system common messages", "[system_common_message]" )
         }
     }
 
-    GIVEN( "end system exclusive message" )
-    {
-        const auto message = end_system_exclusive();
-        STATIC_REQUIRE( message.size() == 1 );
-
-        THEN( "byte is 0xF7" )
-        {
-            REQUIRE( message.front() == std::byte{0xF7} );
-        }
-    }
-
     GIVEN( "song select message with value 73" )
     {
         const auto message = song_select( 73 );

@@ -73,7 +73,7 @@ namespace sequencer::midi::channel::voice
     constexpr message_t< 3 > pitch_bend_change( std::uint8_t channel, std::uint16_t value ) noexcept
     {
         assert( channel < 16 );
-        assert( value < 16384 );
+        assert( value < max_14bit );
 
         const auto hex_value = uint16_to_two_bytes( value );
         return {status_byte_for( std::byte{0xE0}, channel ), hex_value.first, hex_value.second};

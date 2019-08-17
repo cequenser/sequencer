@@ -24,9 +24,4 @@ namespace sequencer::midi::system::common
     {
         return {std::byte{0xF6}};
     }
-
-    constexpr message_t< 1 > end_system_exclusive() noexcept
-    {
-        return {std::byte{0xF7}};
-    }
 } // namespace sequencer::midi::system::common

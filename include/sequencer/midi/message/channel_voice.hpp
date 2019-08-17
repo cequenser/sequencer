@@ -156,4 +156,39 @@ namespace sequencer::midi::channel::voice
         assert( channel < 16 );
         return make_message( control_change_status_byte( channel ), std::byte{0x7F} );
     }
+
+    constexpr message_t< 3 > effects_1_depth( std::uint8_t channel, std::uint8_t value ) noexcept
+    {
+        assert( channel < 16 );
+        assert( value < 128 );
+        return {control_change_status_byte( channel ), std::byte{0x5B}, std::byte{value}};
+    }
+
+    constexpr message_t< 3 > effects_2_depth( std::uint8_t channel, std::uint8_t value ) noexcept
+    {
+        assert( channel < 16 );
+        assert( value < 128 );
+        return {control_change_status_byte( channel ), std::byte{0x5C}, std::byte{value}};
+    }
+
+    constexpr message_t< 3 > effects_3_depth( std::uint8_t channel, std::uint8_t value ) noexcept
+    {
+        assert( channel < 16 );
+        assert( value < 128 );
+        return {control_change_status_byte( channel ), std::byte{0x5D}, std::byte{value}};
+    }
+
+    constexpr message_t< 3 > effects_4_depth( std::uint8_t channel, std::uint8_t value ) noexcept
+    {
+        assert( channel < 16 );
+        assert( value < 128 );
+        return {control_change_status_byte( channel ), std::byte{0x5E}, std::byte{value}};
+    }
+
+    constexpr message_t< 3 > effects_5_depth( std::uint8_t channel, std::uint8_t value ) noexcept
+    {
+        assert( channel < 16 );
+        assert( value < 128 );
+        return {control_change_status_byte( channel ), std::byte{0x5F}, std::byte{value}};
+    }
 } // namespace sequencer::midi::channel::voice

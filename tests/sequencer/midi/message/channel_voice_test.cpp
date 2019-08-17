@@ -212,6 +212,111 @@ SCENARIO( "channel voice messages", "[channel_voice_message]" )
         }
     }
 
+    GIVEN( "an effects 1 depth message for channel 1 with value 17" )
+    {
+        const auto channel = 1;
+        const auto message = effects_1_depth( channel, 17 );
+
+        THEN( "first byte is 0xB1" )
+        {
+            REQUIRE( message[ 0 ] == std::byte{0xB1} );
+        }
+
+        THEN( "second byte is 0x5B" )
+        {
+            REQUIRE( message[ 1 ] == std::byte{0x5B} );
+        }
+
+        THEN( "third byte is 0x11" )
+        {
+            REQUIRE( message[ 2 ] == std::byte{0x11} );
+        }
+    }
+
+    GIVEN( "an effects 2 depth message for channel 1 with value 17" )
+    {
+        const auto channel = 1;
+        const auto message = effects_2_depth( channel, 17 );
+
+        THEN( "first byte is 0xB1" )
+        {
+            REQUIRE( message[ 0 ] == std::byte{0xB1} );
+        }
+
+        THEN( "second byte is 0x5C" )
+        {
+            REQUIRE( message[ 1 ] == std::byte{0x5C} );
+        }
+
+        THEN( "third byte is 0x11" )
+        {
+            REQUIRE( message[ 2 ] == std::byte{0x11} );
+        }
+    }
+
+    GIVEN( "an effects 3 depth message for channel 1 with value 17" )
+    {
+        const auto channel = 1;
+        const auto message = effects_3_depth( channel, 17 );
+
+        THEN( "first byte is 0xB1" )
+        {
+            REQUIRE( message[ 0 ] == std::byte{0xB1} );
+        }
+
+        THEN( "second byte is 0x5D" )
+        {
+            REQUIRE( message[ 1 ] == std::byte{0x5D} );
+        }
+
+        THEN( "third byte is 0x11" )
+        {
+            REQUIRE( message[ 2 ] == std::byte{0x11} );
+        }
+    }
+
+    GIVEN( "an effects 4 depth message for channel 1 with value 17" )
+    {
+        const auto channel = 1;
+        const auto message = effects_4_depth( channel, 17 );
+
+        THEN( "first byte is 0xB1" )
+        {
+            REQUIRE( message[ 0 ] == std::byte{0xB1} );
+        }
+
+        THEN( "second byte is 0x5E" )
+        {
+            REQUIRE( message[ 1 ] == std::byte{0x5E} );
+        }
+
+        THEN( "third byte is 0x11" )
+        {
+            REQUIRE( message[ 2 ] == std::byte{0x11} );
+        }
+    }
+
+    GIVEN( "an effects 5 depth message for channel 1 with value 17" )
+    {
+        const auto channel = 1;
+        const auto message = effects_5_depth( channel, 17 );
+
+        THEN( "first byte is 0xB1" )
+        {
+            REQUIRE( message[ 0 ] == std::byte{0xB1} );
+        }
+
+        THEN( "second byte is 0x5F" )
+        {
+            REQUIRE( message[ 1 ] == std::byte{0x5F} );
+        }
+
+        THEN( "third byte is 0x11" )
+        {
+            REQUIRE( message[ 2 ] == std::byte{0x11} );
+        }
+    }
+
     GIVEN( "an all sounds off message for channel 1" )
     {
         const auto channel = 1;

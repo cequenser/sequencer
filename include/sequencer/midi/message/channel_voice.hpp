@@ -167,6 +167,18 @@ namespace sequencer::midi::channel::voice
         return control_change_lsb_msb( channel, 0x0B, value );
     }
 
+    constexpr std::array< message_t< 3 >, 2 > effect_control_1( std::uint8_t channel,
+                                                                std::uint16_t value ) noexcept
+    {
+        return control_change_lsb_msb( channel, 0x0C, value );
+    }
+
+    constexpr std::array< message_t< 3 >, 2 > effect_control_2( std::uint8_t channel,
+                                                                std::uint16_t value ) noexcept
+    {
+        return control_change_lsb_msb( channel, 0x0D, value );
+    }
+
     constexpr std::byte on_off_byte( bool on ) noexcept
     {
         return on ? std::byte{0x7F} : std::byte{0x00};

@@ -453,6 +453,48 @@ SCENARIO( "channel voice messages", "[channel_voice_message]" )
         }
     }
 
+    GIVEN( "effect control 1 lsb and msb messages for channel 1 and value 8392" )
+    {
+        const auto [ effect_control_1_lsb, effect_control_1_msb ] = effect_control_1( 1, 8392 );
+
+        THEN( "effect control 1 controller lsb message is 0xB1 0x2C 0x48" )
+        {
+            REQUIRE( effect_control_1_lsb.size() == 3 );
+            REQUIRE( effect_control_1_lsb[ 0 ] == std::byte{0xB1} );
+            REQUIRE( effect_control_1_lsb[ 1 ] == std::byte{0x2C} );
+            REQUIRE( effect_control_1_lsb[ 2 ] == std::byte{0x48} );
+        }
+
+        THEN( "effect control 1 controller msb message is 0xB1 0x0C 0x41" )
+        {
+            REQUIRE( effect_control_1_msb.size() == 3 );
+            REQUIRE( effect_control_1_msb[ 0 ] == std::byte{0xB1} );
+            REQUIRE( effect_control_1_msb[ 1 ] == std::byte{0x0C} );
+            REQUIRE( effect_control_1_msb[ 2 ] == std::byte{0x41} );
+        }
+    }
+
+    GIVEN( "effect control 2 lsb and msb messages for channel 1 and value 8392" )
+    {
+        const auto [ effect_control_2_lsb, effect_control_2_msb ] = effect_control_2( 1, 8392 );
+
+        THEN( "effect control 2 controller lsb message is 0xB1 0x2D 0x48" )
+        {
+            REQUIRE( effect_control_2_lsb.size() == 3 );
+            REQUIRE( effect_control_2_lsb[ 0 ] == std::byte{0xB1} );
+            REQUIRE( effect_control_2_lsb[ 1 ] == std::byte{0x2D} );
+            REQUIRE( effect_control_2_lsb[ 2 ] == std::byte{0x48} );
+        }
+
+        THEN( "effect control 2 controller msb message is 0xB1 0x0D 0x41" )
+        {
+            REQUIRE( effect_control_2_msb.size() == 3 );
+            REQUIRE( effect_control_2_msb[ 0 ] == std::byte{0xB1} );
+            REQUIRE( effect_control_2_msb[ 1 ] == std::byte{0x0D} );
+            REQUIRE( effect_control_2_msb[ 2 ] == std::byte{0x41} );
+        }
+    }
+
     GIVEN( "an effects 1 depth message for channel 1 with value 17" )
     {
         const auto channel = 1;

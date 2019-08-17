@@ -15,11 +15,10 @@ SCENARIO( "track_t", "[track]" )
 {
     using namespace sequencer;
     constexpr auto number_of_steps = 16u;
-    using track_t = track_t< number_of_steps >;
 
     GIVEN( "track_t with 4 steps" )
     {
-        auto track = track_t{};
+        auto track = track_t{number_of_steps};
         REQUIRE( track.steps() == number_of_steps );
         REQUIRE( track.channel() == 0u );
         REQUIRE( track[ 0 ] == no_note() );

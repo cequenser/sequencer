@@ -1,15 +1,26 @@
 #pragma once
 
-#include <cstdint>
+#include <sequencer/midi/message/message_type.hpp>
 
 namespace sequencer::midi::realtime
 {
-    enum class message_type : std::uint8_t
+    constexpr message_t< 1 > realtime_clock() noexcept
     {
-        invalid = 0,
-        realtime_clock = 0xF8,
-        realtime_start = 0xFA,
-        realtime_continue = 0xFB,
-        realtime_stop = 0XFC
-    };
+        return {std::byte{0xF8}};
+    }
+
+    constexpr message_t< 1 > realtime_start() noexcept
+    {
+        return {std::byte{0xFA}};
+    }
+
+    constexpr message_t< 1 > realtime_continue() noexcept
+    {
+        return {std::byte{0xFB}};
+    }
+
+    constexpr message_t< 1 > realtime_stop() noexcept
+    {
+        return {std::byte{0xFC}};
+    }
 } // namespace sequencer::midi::realtime

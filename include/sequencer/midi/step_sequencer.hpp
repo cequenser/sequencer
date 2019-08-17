@@ -17,7 +17,7 @@ namespace sequencer::midi
         }
 
         template < class Sender >
-        void update( realtime::message_type message, const Sender& sender )
+        void update( std::array< std::byte, 1 > message, const Sender& sender )
         {
             if ( process_control_message( message, sender ) || !started_ )
             {
@@ -29,20 +29,20 @@ namespace sequencer::midi
 
     private:
         template < class Sender >
-        bool process_control_message( realtime::message_type message, const Sender& sender )
+        bool process_control_message( std::array< std::byte, 1 > message, const Sender& sender )
         {
-            if ( message == realtime::message_type::realtime_start )
+            if ( message == realtime::realtime_start() )
             {
                 started_ = true;
                 midi_beat_counter_ = 0;
                 return true;
             }
-            if ( message == realtime::message_type::realtime_continue )
+            if ( message == realtime::realtime_continue() )
             {
                 started_ = true;
                 return true;
             }
-            if ( message == realtime::message_type::realtime_stop )
+            if ( message == realtime::realtime_stop() )
             {
                 started_ = false;
                 track_.send_all_notes_off_message( sender );

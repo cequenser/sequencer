@@ -48,23 +48,6 @@ namespace sequencer::rtmidi
         std::cin.get( input );
     }
 
-    class realtime_message_sender
-    {
-    public:
-        explicit realtime_message_sender( RtMidiOut& rtmidiout ) : rtmidiout_( rtmidiout )
-        {
-        }
-
-        void operator()( midi::realtime::message_type message ) const
-        {
-            const std::vector< unsigned char > messages = {static_cast< unsigned char >( message )};
-            rtmidiout_.sendMessage( &messages );
-        }
-
-    private:
-        RtMidiOut& rtmidiout_;
-    };
-
     class message_sender
     {
     public:

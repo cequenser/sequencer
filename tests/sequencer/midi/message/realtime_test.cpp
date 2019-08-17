@@ -2,69 +2,47 @@
 
 #include <catch2/catch.hpp>
 
-using sequencer::midi::realtime::message_type;
-
 SCENARIO( "realtime messages", "[realtime_message]" )
 {
     using namespace sequencer::midi::realtime;
 
     GIVEN( "realtime clock message" )
     {
-        const auto message = message_type::realtime_clock;
+        const auto message = realtime_clock();
 
-        WHEN( "static_cast to unsigned char" )
+        THEN( "its value equals 0xF8" )
         {
-            const auto as_char = static_cast< unsigned char >( message );
-
-            THEN( "its value equals 0xF8" )
-            {
-                REQUIRE( as_char == 0xF8 );
-            }
+            REQUIRE( message.front() == std::byte{0xF8} );
         }
     }
 
     GIVEN( "realtime start message" )
     {
-        const auto message = message_type::realtime_start;
+        const auto message = realtime_start();
 
-        WHEN( "static_cast to unsigned char" )
+        THEN( "its value equals 0xFA" )
         {
-            const auto as_char = static_cast< unsigned char >( message );
-
-            THEN( "its value equals 0xFA" )
-            {
-                REQUIRE( as_char == 0xFA );
-            }
+            REQUIRE( message.front() == std::byte{0xFA} );
         }
     }
 
     GIVEN( "realtime continue message" )
     {
-        const auto message = message_type::realtime_continue;
+        const auto message = realtime_continue();
 
-        WHEN( "static_cast to unsigned char" )
+        THEN( "its value equals 0xFB" )
         {
-            const auto as_char = static_cast< unsigned char >( message );
-
-            THEN( "its value equals 0xFB" )
-            {
-                REQUIRE( as_char == 0xFB );
-            }
+            REQUIRE( message.front() == std::byte{0xFB} );
         }
     }
 
     GIVEN( "realtime stop message" )
     {
-        const auto message = message_type::realtime_stop;
+        const auto message = realtime_stop();
 
-        WHEN( "static_cast to unsigned char" )
+        THEN( "its value equals 0xFC" )
         {
-            const auto as_char = static_cast< unsigned char >( message );
-
-            THEN( "its value equals 0xFC" )
-            {
-                REQUIRE( as_char == 0xFC );
-            }
+            REQUIRE( message.front() == std::byte{0xFC} );
         }
     }
 }

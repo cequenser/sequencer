@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/484/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "cdbb837b_f3e628ac",
+        "filename": "tests/sequencer/midi/message/channel_voice_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-17T08:36:54Z",
+      "side": 1,
+      "message": "jenkins/workspace/psv/clang-tidy/tests/sequencer/midi/message/channel_voice_test.cpp:5:1: note: 980 statements (threshold 800)",
+      "revId": "ce174be402e70eec526ada47966b53d57e9217e2",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/484/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "adb26c2d_2813fdaa",
+        "filename": "tests/sequencer/midi/message/channel_voice_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-17T08:36:54Z",
+      "side": 1,
+      "message": "function \u0027____C_A_T_C_H____T_E_S_T____0\u0027 exceeds recommended size/complexity thresholds [readability-function-size,-warnings-as-errors]",
+      "revId": "ce174be402e70eec526ada47966b53d57e9217e2",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}

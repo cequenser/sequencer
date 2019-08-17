@@ -34,7 +34,6 @@ namespace sequencer::midi::system::exclusive
     {
         static constexpr auto id_byte = std::byte{0x7F};
         static constexpr auto device_control_byte = std::byte{0x04};
-        static constexpr auto master_volume_byte = std::byte{0x01};
 
         template < class... Data >
         constexpr message_t< sizeof...( Data ) + std::size_t{4} >
@@ -44,12 +43,42 @@ namespace sequencer::midi::system::exclusive
                                                 std::forward< Data >( data )... );
         }
 
-        constexpr message_t< 8 > master_volume( std::uint8_t manufacturer_id,
-                                                std::uint16_t volume ) noexcept
+        constexpr message_t< 8 > device_control( std::uint8_t manufacturer_id, std::uint8_t key,
+                                                 std::uint16_t value ) noexcept
         {
-            const auto hex_value = uint16_to_two_bytes( volume );
-            return system_exclusive( manufacturer_id, device_control_byte, master_volume_byte,
-                                     hex_value.first, hex_value.second );
+            const auto hex_value = uint16_to_two_bytes( value );
+            return system_exclusive( manufacturer_id, device_control_byte, key, hex_value.first,
+                                     hex_value.second );
+        }
+
+        constexpr message_t< 8 > master_volume( std::uint8_t manufacturer_id,
+                                                std::uint16_t value ) noexcept
+        {
+            return device_control( manufacturer_id, 0x01, value );
+        }
+
+        constexpr message_t< 8 > master_balance( std::uint8_t manufacturer_id,
+                                                 std::uint16_t value ) noexcept
+        {
+            return device_control( manufacturer_id, 0x02, value );
+        }
+
+        constexpr message_t< 8 > master_fine_tuning( std::uint8_t manufacturer_id,
+                                                     std::uint16_t value ) noexcept
+        {
+            return device_control( manufacturer_id, 0x03, value );
+        }
+
+        constexpr message_t< 8 > master_coarse_tuning( std::uint8_t manufacturer_id,
+                                                       std::uint16_t value ) noexcept
+        {
+            return device_control( manufacturer_id, 0x04, value );
+        }
+
+        constexpr message_t< 8 > global_parameter_control( std::uint8_t manufacturer_id,
+                                                           std::uint16_t value ) noexcept
+        {
+            return device_control( manufacturer_id, 0x05, value );
         }
     } // namespace realtime
 

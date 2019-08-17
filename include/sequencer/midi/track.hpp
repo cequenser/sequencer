@@ -28,7 +28,10 @@ namespace sequencer::midi
     public:
         using size_type = typename track_base_t< number_of_steps >::size_type;
 
-        constexpr track_t() noexcept = default;
+        constexpr track_t() noexcept
+        {
+            clear();
+        };
 
         track_t( const track_t& other ) noexcept
             : channel_( other.channel_ ), velocity_( other.velocity_ )
@@ -62,7 +65,7 @@ namespace sequencer::midi
             return track_[ i ];
         }
 
-        void clear() noexcept
+        constexpr void clear() noexcept
         {
             for ( auto& note : track_ )
             {

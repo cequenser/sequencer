@@ -1,12 +1,13 @@
 #pragma once
 
 #include <cstdint>
+#include <limits>
 
 namespace sequencer::midi
 {
     enum class note_t : std::uint8_t
     {
-        no_note = 0
+        no_note = std::numeric_limits< std::uint8_t >::max()
     };
 
     constexpr note_t no_note() noexcept

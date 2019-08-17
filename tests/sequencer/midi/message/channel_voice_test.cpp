@@ -583,6 +583,28 @@ SCENARIO( "channel voice messages", "[channel_voice_message]" )
         }
     }
 
+    GIVEN( "non-registered parameter number lsb and msb messages for channel 1 and value 8392" )
+    {
+        const auto [ non_registered_parameter_number_lsb, non_registered_parameter_number_msb ] =
+            non_registered_parameter_number( 1, 8392 );
+
+        THEN( "non-registered parameter number lsb message is 0xB1 0x62 0x48" )
+        {
+            REQUIRE( non_registered_parameter_number_lsb.size() == 3 );
+            REQUIRE( non_registered_parameter_number_lsb[ 0 ] == std::byte{0xB1} );
+            REQUIRE( non_registered_parameter_number_lsb[ 1 ] == std::byte{0x62} );
+            REQUIRE( non_registered_parameter_number_lsb[ 2 ] == std::byte{0x48} );
+        }
+
+        THEN( "non-registered parameter number msb message is 0xB1 0x63 0x41" )
+        {
+            REQUIRE( non_registered_parameter_number_msb.size() == 3 );
+            REQUIRE( non_registered_parameter_number_msb[ 0 ] == std::byte{0xB1} );
+            REQUIRE( non_registered_parameter_number_msb[ 1 ] == std::byte{0x63} );
+            REQUIRE( non_registered_parameter_number_msb[ 2 ] == std::byte{0x41} );
+        }
+    }
+
     GIVEN( "an effects 1 depth message for channel 1 with value 17" )
     {
         const auto channel = 1;

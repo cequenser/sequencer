@@ -212,6 +212,57 @@ SCENARIO( "channel voice messages", "[channel_voice_message]" )
         }
     }
 
+    GIVEN( "bank select lsb and msb messages for channel 1 and bank 8392" )
+    {
+        const auto [ bank_select_lsb, bank_select_msb ] = bank_select( 1, 8392 );
+
+        THEN( "bank select lsb message is 0xB1 0x20 0x48" )
+        {
+            REQUIRE( bank_select_lsb.size() == 3 );
+            REQUIRE( bank_select_lsb[ 0 ] == std::byte{0xB1} );
+            REQUIRE( bank_select_lsb[ 1 ] == std::byte{0x20} );
+            REQUIRE( bank_select_lsb[ 2 ] == std::byte{0x48} );
+        }
+
+        THEN( "bank select msb message is 0xB1 0x00 0x41" )
+        {
+            REQUIRE( bank_select_msb.size() == 3 );
+            REQUIRE( bank_select_msb[ 0 ] == std::byte{0xB1} );
+            REQUIRE( bank_select_msb[ 1 ] == std::byte{0x00} );
+            REQUIRE( bank_select_msb[ 2 ] == std::byte{0x41} );
+        }
+    }
+
+    GIVEN( "bank select lsb and msb and program change messages for channel 1 and bank 8392 and "
+           "program 3" )
+    {
+        const auto [ bank_select_lsb, bank_select_msb, prog_change ] =
+            bank_select_with_program( 1, 8392, 3 );
+
+        THEN( "bank select lsb message is 0xB1 0x20 0x48" )
+        {
+            REQUIRE( bank_select_lsb.size() == 3 );
+            REQUIRE( bank_select_lsb[ 0 ] == std::byte{0xB1} );
+            REQUIRE( bank_select_lsb[ 1 ] == std::byte{0x20} );
+            REQUIRE( bank_select_lsb[ 2 ] == std::byte{0x48} );
+        }
+
+        THEN( "bank select msb message is 0xB1 0x00 0x41" )
+        {
+            REQUIRE( bank_select_msb.size() == 3 );
+            REQUIRE( bank_select_msb[ 0 ] == std::byte{0xB1} );
+            REQUIRE( bank_select_msb[ 1 ] == std::byte{0x00} );
+            REQUIRE( bank_select_msb[ 2 ] == std::byte{0x41} );
+        }
+
+        THEN( "program change message is 0xCF 0x03" )
+        {
+            REQUIRE( prog_change.size() == 2 );
+            REQUIRE( prog_change[ 0 ] == std::byte{0xC1} );
+            REQUIRE( prog_change[ 1 ] == std::byte{0x03} );
+        }
+    }
+
     GIVEN( "an effects 1 depth message for channel 1 with value 17" )
     {
         const auto channel = 1;

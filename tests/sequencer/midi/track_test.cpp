@@ -6,7 +6,7 @@ using sequencer::midi::no_note;
 using sequencer::midi::note_t;
 using sequencer::midi::track_t;
 using sequencer::midi::tracks_t;
-using sequencer::midi::channel::mode::all_notes_off;
+using sequencer::midi::channel::voice::all_notes_off;
 using sequencer::midi::channel::voice::note_off;
 using sequencer::midi::channel::voice::note_on;
 

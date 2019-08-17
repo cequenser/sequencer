@@ -11,9 +11,7 @@ add_library(sequencer
     midi/percussion_key.hpp
     midi/step_sequencer.hpp
     midi/track.hpp
-    midi/message/channel_mode.hpp
     midi/message/channel_voice.hpp
-    midi/message/control_change.hpp
     midi/message/realtime.hpp
     midi/message/system_common.hpp
     midi/message/util.hpp

@@ -86,7 +86,7 @@ namespace sequencer::midi::channel::voice
         assert( value > -max_14bit / 2 );
 
         const std::int32_t offset = 8192;
-        const auto [ lsb, msb ] = uint16_to_two_bytes( std::uint16_t( offset + value ) );
+        const auto [ lsb, msb ] = uint16_to_lsb_msb( std::uint16_t( offset + value ) );
         return {status_byte_for( std::byte{0xE0}, channel ), lsb, msb};
     }
 
@@ -94,7 +94,7 @@ namespace sequencer::midi::channel::voice
                                                                       std::uint8_t control_function,
                                                                       std::uint16_t value )
     {
-        const auto [ lsb, msb ] = uint16_to_two_bytes( value );
+        const auto [ lsb, msb ] = uint16_to_lsb_msb( value );
         return {control_change( channel, std::byte( control_function + 32 ), lsb ),
                 control_change( channel, std::byte{control_function}, msb )};
     }
@@ -190,7 +190,7 @@ namespace sequencer::midi::channel::voice
     constexpr std::array< message_t< 3 >, 2 >
     non_registered_parameter_number( std::uint8_t channel, std::uint16_t value ) noexcept
     {
-        const auto [ lsb, msb ] = uint16_to_two_bytes( value );
+        const auto [ lsb, msb ] = uint16_to_lsb_msb( value );
         return {control_change( channel, std::byte{0x62}, lsb ),
                 control_change( channel, std::byte{0x63}, msb )};
     }
@@ -198,7 +198,7 @@ namespace sequencer::midi::channel::voice
     constexpr std::array< message_t< 3 >, 2 >
     registered_parameter_number( std::uint8_t channel, std::uint16_t value ) noexcept
     {
-        const auto [ lsb, msb ] = uint16_to_two_bytes( value );
+        const auto [ lsb, msb ] = uint16_to_lsb_msb( value );
         return {control_change( channel, std::byte{0x64}, lsb ),
                 control_change( channel, std::byte{0x65}, msb )};
     }

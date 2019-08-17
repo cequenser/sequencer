@@ -46,7 +46,7 @@ namespace sequencer::midi::system::exclusive
         constexpr message_t< 8 > device_control( std::uint8_t manufacturer_id, std::uint8_t key,
                                                  std::uint16_t value ) noexcept
         {
-            const auto hex_value = uint16_to_two_bytes( value );
+            const auto hex_value = uint16_to_lsb_msb( value );
             return system_exclusive( manufacturer_id, device_control_byte, key, hex_value.first,
                                      hex_value.second );
         }

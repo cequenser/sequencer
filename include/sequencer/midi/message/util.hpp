@@ -15,7 +15,7 @@ namespace sequencer::midi
         return status_byte | std::byte{channel};
     }
 
-    constexpr std::pair< std::byte, std::byte > uint16_to_two_bytes( std::uint16_t value ) noexcept
+    constexpr std::pair< std::byte, std::byte > uint16_to_lsb_msb( std::uint16_t value ) noexcept
     {
         assert( value < max_14bit );
         return value < 128
@@ -25,7 +25,7 @@ namespace sequencer::midi
     }
 
     constexpr std::uint16_t
-    two_bytes_to_uint16( const std::pair< std::byte, std::byte >& two_bytes ) noexcept
+    lsb_msb_to_uint16( const std::pair< std::byte, std::byte >& two_bytes ) noexcept
     {
         return static_cast< std::uint8_t >( two_bytes.second ) * std::uint16_t( 128 ) +
                static_cast< std::uint8_t >( two_bytes.first );

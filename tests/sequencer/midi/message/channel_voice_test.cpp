@@ -309,7 +309,7 @@ SCENARIO( "channel voice messages", "[channel_voice_message]" )
     {
         const auto [ foot_controller_lsb, foot_controller_msb ] = foot_controller( 1, 8392 );
 
-        THEN( "foot controller lsb message is 0xB1 0x22 0x48" )
+        THEN( "foot controller lsb message is 0xB1 0x24 0x48" )
         {
             REQUIRE( foot_controller_lsb.size() == 3 );
             REQUIRE( foot_controller_lsb[ 0 ] == std::byte{0xB1} );
@@ -317,7 +317,7 @@ SCENARIO( "channel voice messages", "[channel_voice_message]" )
             REQUIRE( foot_controller_lsb[ 2 ] == std::byte{0x48} );
         }
 
-        THEN( "foot controller msb message is 0xB1 0x02 0x41" )
+        THEN( "foot controller msb message is 0xB1 0x04 0x41" )
         {
             REQUIRE( foot_controller_msb.size() == 3 );
             REQUIRE( foot_controller_msb[ 0 ] == std::byte{0xB1} );
@@ -330,7 +330,7 @@ SCENARIO( "channel voice messages", "[channel_voice_message]" )
     {
         const auto [ portamento_time_lsb, portamento_time_msb ] = portamento_time( 1, 8392 );
 
-        THEN( "portamento time controller lsb message is 0xB1 0x22 0x48" )
+        THEN( "portamento time controller lsb message is 0xB1 0x25 0x48" )
         {
             REQUIRE( portamento_time_lsb.size() == 3 );
             REQUIRE( portamento_time_lsb[ 0 ] == std::byte{0xB1} );
@@ -338,12 +338,33 @@ SCENARIO( "channel voice messages", "[channel_voice_message]" )
             REQUIRE( portamento_time_lsb[ 2 ] == std::byte{0x48} );
         }
 
-        THEN( "portamento time controller msb message is 0xB1 0x02 0x41" )
+        THEN( "portamento time controller msb message is 0xB1 0x05 0x41" )
         {
             REQUIRE( portamento_time_msb.size() == 3 );
             REQUIRE( portamento_time_msb[ 0 ] == std::byte{0xB1} );
             REQUIRE( portamento_time_msb[ 1 ] == std::byte{0x05} );
             REQUIRE( portamento_time_msb[ 2 ] == std::byte{0x41} );
+        }
+    }
+
+    GIVEN( "data entry lsb and msb messages for channel 1 and value 8392" )
+    {
+        const auto [ data_entry_lsb, data_entry_msb ] = data_entry( 1, 8392 );
+
+        THEN( "data entry controller lsb message is 0xB1 0x26 0x48" )
+        {
+            REQUIRE( data_entry_lsb.size() == 3 );
+            REQUIRE( data_entry_lsb[ 0 ] == std::byte{0xB1} );
+            REQUIRE( data_entry_lsb[ 1 ] == std::byte{0x26} );
+            REQUIRE( data_entry_lsb[ 2 ] == std::byte{0x48} );
+        }
+
+        THEN( "data entry controller msb message is 0xB1 0x06 0x41" )
+        {
+            REQUIRE( data_entry_msb.size() == 3 );
+            REQUIRE( data_entry_msb[ 0 ] == std::byte{0xB1} );
+            REQUIRE( data_entry_msb[ 1 ] == std::byte{0x06} );
+            REQUIRE( data_entry_msb[ 2 ] == std::byte{0x41} );
         }
     }
 

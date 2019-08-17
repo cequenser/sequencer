@@ -29,6 +29,11 @@ namespace sequencer::midi
             process_clock_message( sender );
         }
 
+        constexpr void set_steps_per_beat( unsigned steps ) noexcept
+        {
+            steps_per_beat_ = steps;
+        }
+
     private:
         template < class Sender >
         bool process_control_message( message_t< 1 > message, const Sender& sender )
@@ -57,8 +62,7 @@ namespace sequencer::midi
         template < class Sender >
         void process_clock_message( const Sender& sender )
         {
-            const auto steps_per_beat = track_.steps() / 4u;
-            const auto pulses_per_step = pulses_per_quarter_note_ / steps_per_beat;
+            const auto pulses_per_step = pulses_per_quarter_note_ / steps_per_beat_;
 
             if ( midi_beat_counter_ % pulses_per_step == 0 )
             {
@@ -73,7 +77,8 @@ namespace sequencer::midi
 
         const Tracks& track_;
         unsigned midi_beat_counter_ = 0;
-        unsigned pulses_per_quarter_note_ = 24;
+        unsigned pulses_per_quarter_note_;
+        unsigned steps_per_beat_ = 4;
         bool started_ = false;
     };
 } // namespace sequencer::midi

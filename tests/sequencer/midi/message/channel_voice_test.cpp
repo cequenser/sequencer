@@ -263,27 +263,6 @@ SCENARIO( "channel voice messages", "[channel_voice_message]" )
         }
     }
 
-    GIVEN( "breath controller lsb and msb messages for channel 1 and value 8392" )
-    {
-        const auto [ breath_controller_lsb, breath_controller_msb ] = breath_controller( 1, 8392 );
-
-        THEN( "breath controller lsb message is 0xB1 0x22 0x48" )
-        {
-            REQUIRE( breath_controller_lsb.size() == 3 );
-            REQUIRE( breath_controller_lsb[ 0 ] == std::byte{0xB1} );
-            REQUIRE( breath_controller_lsb[ 1 ] == std::byte{0x22} );
-            REQUIRE( breath_controller_lsb[ 2 ] == std::byte{0x48} );
-        }
-
-        THEN( "breath controller msb message is 0xB1 0x02 0x41" )
-        {
-            REQUIRE( breath_controller_msb.size() == 3 );
-            REQUIRE( breath_controller_msb[ 0 ] == std::byte{0xB1} );
-            REQUIRE( breath_controller_msb[ 1 ] == std::byte{0x02} );
-            REQUIRE( breath_controller_msb[ 2 ] == std::byte{0x41} );
-        }
-    }
-
     GIVEN( "modulation wheel lsb and msb messages for channel 1 and value 8392" )
     {
         const auto [ modulation_wheel_lsb, modulation_wheel_msb ] = modulation_wheel( 1, 8392 );
@@ -323,6 +302,48 @@ SCENARIO( "channel voice messages", "[channel_voice_message]" )
         THEN( "third byte is 0x11" )
         {
             REQUIRE( message[ 2 ] == std::byte{0x11} );
+        }
+    }
+
+    GIVEN( "breath controller lsb and msb messages for channel 1 and value 8392" )
+    {
+        const auto [ breath_controller_lsb, breath_controller_msb ] = breath_controller( 1, 8392 );
+
+        THEN( "breath controller lsb message is 0xB1 0x22 0x48" )
+        {
+            REQUIRE( breath_controller_lsb.size() == 3 );
+            REQUIRE( breath_controller_lsb[ 0 ] == std::byte{0xB1} );
+            REQUIRE( breath_controller_lsb[ 1 ] == std::byte{0x22} );
+            REQUIRE( breath_controller_lsb[ 2 ] == std::byte{0x48} );
+        }
+
+        THEN( "breath controller msb message is 0xB1 0x02 0x41" )
+        {
+            REQUIRE( breath_controller_msb.size() == 3 );
+            REQUIRE( breath_controller_msb[ 0 ] == std::byte{0xB1} );
+            REQUIRE( breath_controller_msb[ 1 ] == std::byte{0x02} );
+            REQUIRE( breath_controller_msb[ 2 ] == std::byte{0x41} );
+        }
+    }
+
+    GIVEN( "foot controller lsb and msb messages for channel 1 and value 8392" )
+    {
+        const auto [ foot_controller_lsb, foot_controller_msb ] = foot_controller( 1, 8392 );
+
+        THEN( "foot controller lsb message is 0xB1 0x22 0x48" )
+        {
+            REQUIRE( foot_controller_lsb.size() == 3 );
+            REQUIRE( foot_controller_lsb[ 0 ] == std::byte{0xB1} );
+            REQUIRE( foot_controller_lsb[ 1 ] == std::byte{0x24} );
+            REQUIRE( foot_controller_lsb[ 2 ] == std::byte{0x48} );
+        }
+
+        THEN( "foot controller msb message is 0xB1 0x02 0x41" )
+        {
+            REQUIRE( foot_controller_msb.size() == 3 );
+            REQUIRE( foot_controller_msb[ 0 ] == std::byte{0xB1} );
+            REQUIRE( foot_controller_msb[ 1 ] == std::byte{0x04} );
+            REQUIRE( foot_controller_msb[ 2 ] == std::byte{0x41} );
         }
     }
 

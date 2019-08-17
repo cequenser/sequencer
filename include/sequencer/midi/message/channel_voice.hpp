@@ -90,12 +90,19 @@ namespace sequencer::midi::channel::voice
         return {status_byte_for( std::byte{0xE0}, channel ), lsb, msb};
     }
 
+    constexpr std::array< message_t< 3 >, 2 > control_change_lsb_msb( std::uint8_t channel,
+                                                                      std::uint8_t control_function,
+                                                                      std::uint16_t value )
+    {
+        const auto [ lsb, msb ] = uint16_to_two_bytes( value );
+        return {control_change( channel, std::byte( control_function + 32 ), lsb ),
+                control_change( channel, std::byte{control_function}, msb )};
+    }
+
     constexpr std::array< message_t< 3 >, 2 > bank_select( std::uint8_t channel,
                                                            std::uint16_t bank ) noexcept
     {
-        const auto [ lsb, msb ] = uint16_to_two_bytes( bank );
-        return {control_change( channel, std::byte{0x20}, lsb ),
-                control_change( channel, std::byte{0x00}, msb )};
+        return control_change_lsb_msb( channel, 0x00, bank );
     }
 
     constexpr std::tuple< message_t< 3 >, message_t< 3 >, message_t< 2 > >
@@ -107,19 +114,21 @@ namespace sequencer::midi::channel::voice
     }
 
     constexpr std::array< message_t< 3 >, 2 > modulation_wheel( std::uint8_t channel,
-                                                                std::uint16_t bank ) noexcept
+                                                                std::uint16_t value ) noexcept
     {
-        const auto [ lsb, msb ] = uint16_to_two_bytes( bank );
-        return {control_change( channel, std::byte{0x21}, lsb ),
-                control_change( channel, std::byte{0x01}, msb )};
+        return control_change_lsb_msb( channel, 0x01, value );
     }
 
     constexpr std::array< message_t< 3 >, 2 > breath_controller( std::uint8_t channel,
-                                                                 std::uint16_t bank ) noexcept
+                                                                 std::uint16_t value ) noexcept
     {
-        const auto [ lsb, msb ] = uint16_to_two_bytes( bank );
-        return {control_change( channel, std::byte{0x22}, lsb ),
-                control_change( channel, std::byte{0x02}, msb )};
+        return control_change_lsb_msb( channel, 0x02, value );
+    }
+
+    constexpr std::array< message_t< 3 >, 2 > foot_controller( std::uint8_t channel,
+                                                               std::uint16_t value ) noexcept
+    {
+        return control_change_lsb_msb( channel, 0x04, value );
     }
 
     constexpr std::byte on_off_byte( bool on ) noexcept

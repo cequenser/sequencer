@@ -206,9 +206,9 @@ SCENARIO( "channel voice messages", "[channel_voice_message]" )
             REQUIRE( message[ 1 ] == std::byte{0x48} );
         }
 
-        THEN( "third byte is 0x01" )
+        THEN( "third byte is 0x41" )
         {
-            REQUIRE( message[ 2 ] == std::byte{0x01} );
+            REQUIRE( message[ 2 ] == std::byte{0x41} );
         }
     }
 

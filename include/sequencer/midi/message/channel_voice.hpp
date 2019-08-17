@@ -70,12 +70,14 @@ namespace sequencer::midi::channel::voice
         return {status_byte_for( std::byte{0xD0}, channel ), std::byte{pressure}};
     }
 
-    constexpr message_t< 3 > pitch_bend_change( std::uint8_t channel, std::uint16_t value ) noexcept
+    constexpr message_t< 3 > pitch_bend_change( std::uint8_t channel, std::int16_t value ) noexcept
     {
         assert( channel < 16 );
-        assert( value < max_14bit );
+        assert( value < max_14bit / 2 );
+        assert( value > -max_14bit / 2 );
 
-        const auto hex_value = uint16_to_two_bytes( value );
+        const std::int32_t offset = 8192;
+        const auto hex_value = uint16_to_two_bytes( std::uint16_t( offset + value ) );
         return {status_byte_for( std::byte{0xE0}, channel ), hex_value.first, hex_value.second};
     }
 

@@ -151,6 +151,73 @@ SCENARIO( "track_t", "[track]" )
     }
 }
 
+SCENARIO( "track_t set_steps", "[track]" )
+{
+    GIVEN( "an empty track" )
+    {
+        auto track = track_t{};
+
+        WHEN( "number of steps is changed to 3" )
+        {
+            track.set_steps( 3 );
+
+            THEN( "track has 3 steps with no note" )
+            {
+                REQUIRE( track.steps() == 3 );
+                REQUIRE( track[ 0 ] == no_note() );
+                REQUIRE( track[ 1 ] == no_note() );
+                REQUIRE( track[ 2 ] == no_note() );
+            }
+        }
+    }
+
+    GIVEN( "a track with 4 steps and second step set to note 42" )
+    {
+        auto track = track_t{4};
+        const auto note = note_t{42};
+        track[ 1 ] = note;
+
+        WHEN( "number of steps is changed to 3" )
+        {
+            track.set_steps( 3 );
+
+            THEN( "track has 3 steps with note 42 on second step" )
+            {
+                REQUIRE( track.steps() == 3 );
+                REQUIRE( track[ 0 ] == no_note() );
+                REQUIRE( track[ 1 ] == note );
+                REQUIRE( track[ 2 ] == no_note() );
+            }
+        }
+
+        WHEN( "number of steps is changed to 3" )
+        {
+            track.set_steps( 0 );
+
+            THEN( "track has 0 steps" )
+            {
+                REQUIRE( track.steps() == 0 );
+            }
+        }
+
+        WHEN( "number of steps is changed to 6" )
+        {
+            track.set_steps( 6 );
+
+            THEN( "track has 6 steps with note 42 on second step" )
+            {
+                REQUIRE( track.steps() == 6 );
+                REQUIRE( track[ 0 ] == no_note() );
+                REQUIRE( track[ 1 ] == note );
+                REQUIRE( track[ 2 ] == no_note() );
+                REQUIRE( track[ 3 ] == no_note() );
+                REQUIRE( track[ 4 ] == no_note() );
+                REQUIRE( track[ 5 ] == no_note() );
+            }
+        }
+    }
+}
+
 SCENARIO( "track_t copy", "[track]" )
 {
     GIVEN( "an empty track" )

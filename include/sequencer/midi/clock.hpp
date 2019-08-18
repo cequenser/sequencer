@@ -24,28 +24,28 @@ namespace sequencer::midi
         {
         }
 
-        void start() noexcept
+        void start()
         {
             std::lock_guard lock{clock_mutex_};
             clock_base_.start();
             sequencer_clock_.start();
         }
 
-        void stop() noexcept
+        void stop()
         {
             std::lock_guard lock{clock_mutex_};
             clock_base_.stop();
             sequencer_clock_.stop();
         }
 
-        void reset() noexcept
+        void reset()
         {
             std::lock_guard lock{clock_mutex_};
             clock_base_.reset();
             sequencer_clock_.reset();
         }
 
-        void shut_down() noexcept
+        void shut_down()
         {
             std::lock_guard lock{clock_mutex_};
             shut_down_ = true;
@@ -58,7 +58,7 @@ namespace sequencer::midi
             return clock_base_.pulses_per_quarter_note();
         }
 
-        void set_tempo( beats_per_minute tempo ) noexcept
+        void set_tempo( beats_per_minute tempo )
         {
             std::lock_guard lock( clock_mutex_ );
             offset_ = now_as_beat_duration();

@@ -151,6 +151,107 @@ SCENARIO( "track_t", "[track]" )
     }
 }
 
+SCENARIO( "track_t copy", "[track]" )
+{
+    GIVEN( "an empty track" )
+    {
+        auto track = track_t{};
+
+        WHEN( "track is copy-constructed" )
+        {
+            const auto other = track;
+
+            THEN( "other track has 0 steps" )
+            {
+                REQUIRE( other.steps() == std::size_t{0} );
+            }
+        }
+
+        WHEN( "track is copy-assigned to empty track" )
+        {
+            auto other = track_t{};
+            other = track;
+
+            THEN( "other track has 0 steps" )
+            {
+
+                REQUIRE( other.steps() == std::size_t{0} );
+            }
+        }
+
+        WHEN( "track is copy-assigned to track with 4 steps" )
+        {
+            auto other = track_t{4};
+            other = track;
+
+            THEN( "other track has 0 steps" )
+            {
+
+                REQUIRE( other.steps() == std::size_t{0} );
+            }
+        }
+    }
+
+    GIVEN( "a track_t with 4 steps and note on step 1" )
+    {
+        auto track = track_t{4};
+        const auto note = note_t{42};
+        track[ 1 ] = note;
+
+        WHEN( "track is copy-constructed" )
+        {
+            const auto other = track;
+
+            THEN( "other track has also one note on step 1" )
+            {
+                REQUIRE( other[ 0 ] == no_note() );
+                REQUIRE( other[ 1 ] == note );
+                REQUIRE( other[ 2 ] == no_note() );
+                REQUIRE( other[ 3 ] == no_note() );
+            }
+        }
+
+        WHEN( "track is copy-assigned to empty track" )
+        {
+            auto other = track_t{};
+            other = track;
+
+            THEN( "other track has 4 steps" )
+            {
+                REQUIRE( other.steps() == std::size_t{4} );
+            }
+
+            THEN( "other track has also one note on step 1" )
+            {
+                REQUIRE( other[ 0 ] == no_note() );
+                REQUIRE( other[ 1 ] == note );
+                REQUIRE( other[ 2 ] == no_note() );
+                REQUIRE( other[ 3 ] == no_note() );
+            }
+        }
+
+        WHEN( "track is copy-assigned to track with 5 steps" )
+        {
+            auto other = track_t{5};
+            other = track;
+
+            THEN( "other track has 4 steps" )
+            {
+
+                REQUIRE( other.steps() == std::size_t{4} );
+            }
+
+            THEN( "other track has also one note on step 1" )
+            {
+                REQUIRE( other[ 0 ] == no_note() );
+                REQUIRE( other[ 1 ] == note );
+                REQUIRE( other[ 2 ] == no_note() );
+                REQUIRE( other[ 3 ] == no_note() );
+            }
+        }
+    }
+}
+
 SCENARIO( "sequencer_track_t", "[track]" )
 {
     constexpr auto number_of_steps = 16u;

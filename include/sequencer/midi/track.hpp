@@ -45,6 +45,7 @@ namespace sequencer::midi
         {
             if ( this != &other )
             {
+                track_ = track_base_t{other.track_.size()};
                 copy_track( other.track_, track_ );
                 channel_ = other.channel_;
                 velocity_ = other.velocity_;

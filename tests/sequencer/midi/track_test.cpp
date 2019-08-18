@@ -237,7 +237,6 @@ SCENARIO( "track_t copy", "[track]" )
 
             THEN( "other track has 4 steps" )
             {
-
                 REQUIRE( other.steps() == std::size_t{4} );
             }
 
@@ -247,6 +246,25 @@ SCENARIO( "track_t copy", "[track]" )
                 REQUIRE( other[ 1 ] == note );
                 REQUIRE( other[ 2 ] == no_note() );
                 REQUIRE( other[ 3 ] == no_note() );
+            }
+        }
+
+        WHEN( "track is copy-assigned to itself" )
+        {
+            track = track;
+
+            THEN( "other track has 4 steps" )
+            {
+
+                REQUIRE( track.steps() == std::size_t{4} );
+            }
+
+            THEN( "track has still one note on step 1" )
+            {
+                REQUIRE( track[ 0 ] == no_note() );
+                REQUIRE( track[ 1 ] == note );
+                REQUIRE( track[ 2 ] == no_note() );
+                REQUIRE( track[ 3 ] == no_note() );
             }
         }
     }

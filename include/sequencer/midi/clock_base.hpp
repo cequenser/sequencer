@@ -10,7 +10,7 @@ namespace sequencer::midi
     public:
         static constexpr int initial_pulses_per_quarter_note = 24;
 
-        constexpr clock_base() = default;
+        constexpr clock_base() noexcept = default;
 
         constexpr explicit clock_base(
             beat_time_point start_time,

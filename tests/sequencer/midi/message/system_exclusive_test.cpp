@@ -62,14 +62,14 @@ SCENARIO( "system exclusive realtime messages", "[system_exclusive_message]" )
         THEN( "message is 0xF0 0x7F 0x41 <device_control_byte> 0x01 0x48 0x01 "
               "0xF7" )
         {
-            REQUIRE( message[ 0 ] == start_byte );
-            REQUIRE( message[ 1 ] == realtime::id_byte );
-            REQUIRE( message[ 2 ] == std::byte{0x41} );
-            REQUIRE( message[ 3 ] == device_control_byte );
-            REQUIRE( message[ 4 ] == std::byte{0x01} );
-            REQUIRE( message[ 5 ] == std::byte{0x48} );
-            REQUIRE( message[ 6 ] == std::byte{0x01} );
-            REQUIRE( message[ 7 ] == end_byte );
+            CHECK( message[ 0 ] == start_byte );
+            CHECK( message[ 1 ] == realtime::id_byte );
+            CHECK( message[ 2 ] == std::byte{0x41} );
+            CHECK( message[ 3 ] == device_control_byte );
+            CHECK( message[ 4 ] == std::byte{0x01} );
+            CHECK( message[ 5 ] == std::byte{0x48} );
+            CHECK( message[ 6 ] == std::byte{0x01} );
+            CHECK( message[ 7 ] == end_byte );
         }
     }
 
@@ -81,14 +81,14 @@ SCENARIO( "system exclusive realtime messages", "[system_exclusive_message]" )
         THEN( "message is 0xF0 0x7F 0x41 <device_control_byte> 0x02 0x48 0x01 "
               "0xF7" )
         {
-            REQUIRE( message[ 0 ] == start_byte );
-            REQUIRE( message[ 1 ] == realtime::id_byte );
-            REQUIRE( message[ 2 ] == std::byte{0x41} );
-            REQUIRE( message[ 3 ] == device_control_byte );
-            REQUIRE( message[ 4 ] == std::byte{0x02} );
-            REQUIRE( message[ 5 ] == std::byte{0x48} );
-            REQUIRE( message[ 6 ] == std::byte{0x01} );
-            REQUIRE( message[ 7 ] == end_byte );
+            CHECK( message[ 0 ] == start_byte );
+            CHECK( message[ 1 ] == realtime::id_byte );
+            CHECK( message[ 2 ] == std::byte{0x41} );
+            CHECK( message[ 3 ] == device_control_byte );
+            CHECK( message[ 4 ] == std::byte{0x02} );
+            CHECK( message[ 5 ] == std::byte{0x48} );
+            CHECK( message[ 6 ] == std::byte{0x01} );
+            CHECK( message[ 7 ] == end_byte );
         }
     }
 
@@ -100,14 +100,14 @@ SCENARIO( "system exclusive realtime messages", "[system_exclusive_message]" )
         THEN( "message is 0xF0 0x7F 0x41 <device_control_byte> 0x03 0x48 0x01 "
               "0xF7" )
         {
-            REQUIRE( message[ 0 ] == start_byte );
-            REQUIRE( message[ 1 ] == realtime::id_byte );
-            REQUIRE( message[ 2 ] == std::byte{0x41} );
-            REQUIRE( message[ 3 ] == device_control_byte );
-            REQUIRE( message[ 4 ] == std::byte{0x03} );
-            REQUIRE( message[ 5 ] == std::byte{0x48} );
-            REQUIRE( message[ 6 ] == std::byte{0x01} );
-            REQUIRE( message[ 7 ] == end_byte );
+            CHECK( message[ 0 ] == start_byte );
+            CHECK( message[ 1 ] == realtime::id_byte );
+            CHECK( message[ 2 ] == std::byte{0x41} );
+            CHECK( message[ 3 ] == device_control_byte );
+            CHECK( message[ 4 ] == std::byte{0x03} );
+            CHECK( message[ 5 ] == std::byte{0x48} );
+            CHECK( message[ 6 ] == std::byte{0x01} );
+            CHECK( message[ 7 ] == end_byte );
         }
     }
 
@@ -129,23 +129,214 @@ SCENARIO( "system exclusive realtime messages", "[system_exclusive_message]" )
             REQUIRE( message[ 7 ] == end_byte );
         }
     }
+}
 
-    GIVEN( "a sysex global parameter control message for manufacturer 65 with value 200" )
+// NOLINTNEXTLINE(readability-function-size)
+SCENARIO( "system exclusive - global parameter control", "[system_exlusive_message]" )
+{
+    using namespace sequencer::midi::system::exclusive;
+    using namespace sequencer::midi::system::exclusive::realtime;
+
+    GIVEN( "a global parameter control message for manufacturer 65 with no slot path and 1-byte id "
+           "2 and 1-byte value 60" )
     {
-        const auto message = global_parameter_control( 65, 200 );
-        REQUIRE( message.size() == 8 );
+        std::array< std::pair< std::uint8_t, std::uint8_t >, 1 > id_value_pairs = {
+            std::pair{std::uint8_t{2}, std::uint8_t{60}}};
+        const auto message = global_parameter_control( 65, id_value_pairs );
+        REQUIRE( message.size() == 11 );
 
-        THEN( "message is 0xF0 0x7F 0x41 <device_control_byte> 0x05 0x48 0x01 "
-              "0xF7" )
+        THEN( "message is 0xF0 0x7F 0x41 <device_control_byte> 0x05 0x00 0x01 "
+              "0x01 0x02 0x3C 0xF7" )
         {
-            REQUIRE( message[ 0 ] == start_byte );
-            REQUIRE( message[ 1 ] == realtime::id_byte );
-            REQUIRE( message[ 2 ] == std::byte{0x41} );
-            REQUIRE( message[ 3 ] == device_control_byte );
-            REQUIRE( message[ 4 ] == std::byte{0x05} );
-            REQUIRE( message[ 5 ] == std::byte{0x48} );
-            REQUIRE( message[ 6 ] == std::byte{0x01} );
-            REQUIRE( message[ 7 ] == end_byte );
+            CHECK( message[ 0 ] == start_byte );
+            CHECK( message[ 1 ] == realtime::id_byte );
+            CHECK( message[ 2 ] == std::byte{0x41} );
+            CHECK( message[ 3 ] == device_control_byte );
+            CHECK( message[ 4 ] == std::byte{0x05} );
+            CHECK( message[ 5 ] == std::byte{0x00} );
+            CHECK( message[ 6 ] == std::byte{0x01} );
+            CHECK( message[ 7 ] == std::byte{0x01} );
+            CHECK( message[ 8 ] == std::byte{0x02} );
+            CHECK( message[ 9 ] == std::byte{0x3C} );
+            CHECK( message[ 10 ] == end_byte );
+        }
+    }
+
+    GIVEN( "a global parameter control message for manufacturer 65 with slot path of length 1 with "
+           "value 200 and 1-byte id 2 and 1-byte value 60" )
+    {
+        std::array< std::uint16_t, 1 > slot_path = {200};
+        std::array< std::pair< std::uint8_t, std::uint8_t >, 1 > id_value_pairs = {
+            std::pair{std::uint8_t{2}, std::uint8_t{60}}};
+        const auto message = global_parameter_control( 65, id_value_pairs, slot_path );
+        REQUIRE( message.size() == 13 );
+
+        THEN( "message is 0xF0 0x7F 0x41 <device_control_byte> 0x05 0x01 0x01 "
+              "0x01 0x01 0x048 0x02 0x3C 0xF7" )
+        {
+            CHECK( message[ 0 ] == start_byte );
+            CHECK( message[ 1 ] == realtime::id_byte );
+            CHECK( message[ 2 ] == std::byte{0x41} );
+            CHECK( message[ 3 ] == device_control_byte );
+            CHECK( message[ 4 ] == std::byte{0x05} );
+            CHECK( message[ 5 ] == std::byte{0x01} );
+            CHECK( message[ 6 ] == std::byte{0x01} );
+            CHECK( message[ 7 ] == std::byte{0x01} );
+            CHECK( message[ 8 ] == std::byte{0x01} );
+            CHECK( message[ 9 ] == std::byte{0x48} );
+            CHECK( message[ 10 ] == std::byte{0x02} );
+            CHECK( message[ 11 ] == std::byte{0x3C} );
+            CHECK( message[ 12 ] == end_byte );
+        }
+    }
+
+    GIVEN( "a global parameter control message for manufacturer 65 with slot path of length 2 with "
+           "value 200, 10 and 1-byte id 2 and 1-byte value 60" )
+    {
+        std::array< std::uint16_t, 2 > slot_path = {200, 10};
+        std::array< std::pair< std::uint8_t, std::uint8_t >, 1 > id_value_pairs = {
+            std::pair{std::uint8_t{2}, std::uint8_t{60}}};
+        const auto message = global_parameter_control( 65, id_value_pairs, slot_path );
+        REQUIRE( message.size() == 15 );
+
+        THEN( "message is 0xF0 0x7F 0x41 <device_control_byte> 0x05 0x02 0x01 "
+              "0x01 0x01 0x048 0x00 0x0A 0x02 0x3C 0xF7" )
+        {
+            CHECK( message[ 0 ] == start_byte );
+            CHECK( message[ 1 ] == realtime::id_byte );
+            CHECK( message[ 2 ] == std::byte{0x41} );
+            CHECK( message[ 3 ] == device_control_byte );
+            CHECK( message[ 4 ] == std::byte{0x05} );
+            CHECK( message[ 5 ] == std::byte{0x02} );
+            CHECK( message[ 6 ] == std::byte{0x01} );
+            CHECK( message[ 7 ] == std::byte{0x01} );
+            CHECK( message[ 8 ] == std::byte{0x01} );
+            CHECK( message[ 9 ] == std::byte{0x48} );
+            CHECK( message[ 10 ] == std::byte{0x00} );
+            CHECK( message[ 11 ] == std::byte{0x0A} );
+            CHECK( message[ 12 ] == std::byte{0x02} );
+            CHECK( message[ 13 ] == std::byte{0x3C} );
+            CHECK( message[ 14 ] == end_byte );
+        }
+    }
+
+    GIVEN( "a global parameter control message for manufacturer 65 with no slot path and 1-byte "
+           "ids 2, 3 and 1-byte values 60, 70" )
+    {
+        std::array< std::pair< std::uint8_t, std::uint8_t >, 2 > id_value_pairs = {
+            std::pair{std::uint8_t{2}, std::uint8_t{60}},
+            std::pair{std::uint8_t{3}, std::uint8_t{70}}};
+        const auto message = global_parameter_control( 65, id_value_pairs );
+        REQUIRE( message.size() == 13 );
+
+        THEN( "message is 0xF0 0x7F 0x41 <device_control_byte> 0x05 0x00 0x01 "
+              "0x01 0x02 0x3C 0x03 0x46 0xF7" )
+        {
+            CHECK( message[ 0 ] == start_byte );
+            CHECK( message[ 1 ] == realtime::id_byte );
+            CHECK( message[ 2 ] == std::byte{0x41} );
+            CHECK( message[ 3 ] == device_control_byte );
+            CHECK( message[ 4 ] == std::byte{0x05} );
+            CHECK( message[ 5 ] == std::byte{0x00} );
+            CHECK( message[ 6 ] == std::byte{0x01} );
+            CHECK( message[ 7 ] == std::byte{0x01} );
+            CHECK( message[ 8 ] == std::byte{0x02} );
+            CHECK( message[ 9 ] == std::byte{0x3C} );
+            CHECK( message[ 10 ] == std::byte{0x03} );
+            CHECK( message[ 11 ] == std::byte{0x46} );
+            CHECK( message[ 12 ] == end_byte );
+        }
+    }
+
+    GIVEN( "a global parameter control message for manufacturer 65 with no slot path and 1-byte "
+           "ids 2, 3 and 2-byte values 60, 270" )
+    {
+        std::array< std::pair< std::uint8_t, std::uint16_t >, 2 > id_value_pairs = {
+            std::pair{std::uint8_t{2}, std::uint16_t{60}},
+            std::pair{std::uint8_t{3}, std::uint16_t{270}}};
+        const auto message = global_parameter_control( 65, id_value_pairs );
+        REQUIRE( message.size() == 15 );
+
+        THEN( "message is 0xF0 0x7F 0x41 <device_control_byte> 0x05 0x00 0x01 "
+              "0x02 0x02 0x3C 0x00 0x03 0x0E 0x02 0xF7" )
+        {
+            CHECK( message[ 0 ] == start_byte );
+            CHECK( message[ 1 ] == realtime::id_byte );
+            CHECK( message[ 2 ] == std::byte{0x41} );
+            CHECK( message[ 3 ] == device_control_byte );
+            CHECK( message[ 4 ] == std::byte{0x05} );
+            CHECK( message[ 5 ] == std::byte{0x00} );
+            CHECK( message[ 6 ] == std::byte{0x01} );
+            CHECK( message[ 7 ] == std::byte{0x02} );
+            CHECK( message[ 8 ] == std::byte{0x02} );
+            CHECK( message[ 9 ] == std::byte{0x3C} );
+            CHECK( message[ 10 ] == std::byte{0x00} );
+            CHECK( message[ 11 ] == std::byte{0x03} );
+            CHECK( message[ 12 ] == std::byte{0x0E} );
+            CHECK( message[ 13 ] == std::byte{0x02} );
+            CHECK( message[ 14 ] == end_byte );
+        }
+    }
+
+    GIVEN( "a global parameter control message for manufacturer 65 with no slot path and 2-byte "
+           "ids 200, 3 and 1-byte values 60, 70" )
+    {
+        std::array< std::pair< std::uint16_t, std::uint8_t >, 2 > id_value_pairs = {
+            std::pair{std::uint16_t{200}, std::uint8_t{60}},
+            std::pair{std::uint16_t{3}, std::uint8_t{70}}};
+        const auto message = global_parameter_control( 65, id_value_pairs );
+        REQUIRE( message.size() == 15 );
+
+        THEN( "message is 0xF0 0x7F 0x41 <device_control_byte> 0x05 0x00 0x02 "
+              "0x01 0x01 0x48 0x3C 0x00 0x03 0x46 0xF7" )
+        {
+            CHECK( message[ 0 ] == start_byte );
+            CHECK( message[ 1 ] == realtime::id_byte );
+            CHECK( message[ 2 ] == std::byte{0x41} );
+            CHECK( message[ 3 ] == device_control_byte );
+            CHECK( message[ 4 ] == std::byte{0x05} );
+            CHECK( message[ 5 ] == std::byte{0x00} );
+            CHECK( message[ 6 ] == std::byte{0x02} );
+            CHECK( message[ 7 ] == std::byte{0x01} );
+            CHECK( message[ 8 ] == std::byte{0x01} );
+            CHECK( message[ 9 ] == std::byte{0x48} );
+            CHECK( message[ 10 ] == std::byte{0x3C} );
+            CHECK( message[ 11 ] == std::byte{0x00} );
+            CHECK( message[ 12 ] == std::byte{0x03} );
+            CHECK( message[ 13 ] == std::byte{0x46} );
+            CHECK( message[ 14 ] == end_byte );
+        }
+    }
+
+    GIVEN( "a global parameter control message for manufacturer 65 with no slot path and 2-byte "
+           "ids 200, 3 and 2-byte values 60, 270" )
+    {
+        std::array< std::pair< std::uint16_t, std::uint16_t >, 2 > id_value_pairs = {
+            std::pair{std::uint16_t{200}, std::uint16_t{60}},
+            std::pair{std::uint16_t{3}, std::uint16_t{270}}};
+        const auto message = global_parameter_control( 65, id_value_pairs );
+        REQUIRE( message.size() == 17 );
+
+        THEN( "message is 0xF0 0x7F 0x41 <device_control_byte> 0x05 0x00 0x02 "
+              "0x02 0x01 0x48 0x3C 0x00 0x00 0x03 0x0E 0x02 0xF7" )
+        {
+            CHECK( message[ 0 ] == start_byte );
+            CHECK( message[ 1 ] == realtime::id_byte );
+            CHECK( message[ 2 ] == std::byte{0x41} );
+            CHECK( message[ 3 ] == device_control_byte );
+            CHECK( message[ 4 ] == std::byte{0x05} );
+            CHECK( message[ 5 ] == std::byte{0x00} );
+            CHECK( message[ 6 ] == std::byte{0x02} );
+            CHECK( message[ 7 ] == std::byte{0x02} );
+            CHECK( message[ 8 ] == std::byte{0x01} );
+            CHECK( message[ 9 ] == std::byte{0x48} );
+            CHECK( message[ 10 ] == std::byte{0x3C} );
+            CHECK( message[ 11 ] == std::byte{0x00} );
+            CHECK( message[ 12 ] == std::byte{0x00} );
+            CHECK( message[ 13 ] == std::byte{0x03} );
+            CHECK( message[ 14 ] == std::byte{0x0E} );
+            CHECK( message[ 15 ] == std::byte{0x02} );
+            CHECK( message[ 16 ] == end_byte );
         }
     }
 }

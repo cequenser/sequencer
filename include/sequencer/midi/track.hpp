@@ -14,7 +14,7 @@ namespace sequencer::midi
 {
     using track_base_t = std::vector< std::atomic< note_t > >;
 
-    inline void copy_track( const track_base_t& from, track_base_t& to )
+    inline void copy_track( const track_base_t& from, track_base_t& to ) noexcept
     {
         const auto size = std::min( from.size(), to.size() );
         for ( auto step = std::size_t{0}; step < size; ++step )
@@ -35,13 +35,13 @@ namespace sequencer::midi
             clear();
         }
 
-        track_t( const track_t& other ) noexcept
+        track_t( const track_t& other )
             : track_{other.track_.size()}, channel_( other.channel_ ), velocity_( other.velocity_ )
         {
             copy_track( other.track_, track_ );
         }
 
-        track_t& operator=( const track_t& other ) noexcept
+        track_t& operator=( const track_t& other )
         {
             if ( this != &other )
             {
@@ -58,7 +58,7 @@ namespace sequencer::midi
             return track_.size();
         }
 
-        void set_steps( std::size_t new_steps ) noexcept
+        void set_steps( std::size_t new_steps )
         {
             auto new_track = track_base_t( new_steps );
             copy_track( track_, new_track );
@@ -164,7 +164,7 @@ namespace sequencer::midi
             steps_per_beat_ = steps;
         }
 
-        void set_pulses_per_quarter_note( std::size_t pulses_per_quarter_note ) noexcept
+        constexpr void set_pulses_per_quarter_note( std::size_t pulses_per_quarter_note ) noexcept
         {
             pulses_per_quarter_note_ = pulses_per_quarter_note;
         }

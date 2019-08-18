@@ -119,20 +119,233 @@ SCENARIO( "system exclusive realtime messages", "[system_exclusive_message]" )
         THEN( "message is 0xF0 0x7F 0x41 <device_control_byte> 0x04 0x48 0x01 "
               "0xF7" )
         {
-            REQUIRE( message[ 0 ] == start_byte );
-            REQUIRE( message[ 1 ] == realtime::id_byte );
-            REQUIRE( message[ 2 ] == std::byte{0x41} );
-            REQUIRE( message[ 3 ] == device_control_byte );
-            REQUIRE( message[ 4 ] == std::byte{0x04} );
-            REQUIRE( message[ 5 ] == std::byte{0x48} );
-            REQUIRE( message[ 6 ] == std::byte{0x01} );
-            REQUIRE( message[ 7 ] == end_byte );
+            CHECK( message[ 0 ] == start_byte );
+            CHECK( message[ 1 ] == realtime::id_byte );
+            CHECK( message[ 2 ] == std::byte{0x41} );
+            CHECK( message[ 3 ] == device_control_byte );
+            CHECK( message[ 4 ] == std::byte{0x04} );
+            CHECK( message[ 5 ] == std::byte{0x48} );
+            CHECK( message[ 6 ] == std::byte{0x01} );
+            CHECK( message[ 7 ] == end_byte );
+        }
+    }
+}
+
+SCENARIO( "system exclusive - key based instrument control", "[system_exclusive]" )
+{
+    using namespace sequencer::midi::system::exclusive;
+    using namespace sequencer::midi::system::exclusive::realtime;
+
+    GIVEN( "a key based instrument control message for manufacturer 65 with channel 5, key 60, "
+           "controller number 50 and controller value 40" )
+    {
+        const std::uint8_t manufacturer_id = 65;
+        const std::uint8_t channel = 5;
+        const std::uint8_t key = 60;
+        const std::array< std::pair< std::uint8_t, std::uint8_t >, 1 > controller_number_value = {
+            std::pair{std::uint8_t{50}, std::uint8_t{40}}};
+        const auto message =
+            key_based_instrument_control( manufacturer_id, channel, key, controller_number_value );
+
+        THEN( "message is 0xF0 0x7F 0x41 0x0A 0x01 0x05 0x3C 0x32 0x28 0xF7" )
+        {
+            REQUIRE( message.size() == 10 );
+            CHECK( message[ 0 ] == start_byte );
+            CHECK( message[ 1 ] == realtime::id_byte );
+            CHECK( message[ 2 ] == std::byte{0x41} );
+            CHECK( message[ 3 ] == std::byte{0x0A} );
+            CHECK( message[ 4 ] == std::byte{0x01} );
+            CHECK( message[ 5 ] == std::byte{0x05} );
+            CHECK( message[ 6 ] == std::byte{0x3C} );
+            CHECK( message[ 7 ] == std::byte{0x32} );
+            CHECK( message[ 8 ] == std::byte{0x28} );
+            CHECK( message[ 9 ] == end_byte );
+        }
+    }
+
+    GIVEN( "a key based instrument control message for manufacturer 65 with channel 5, key 60, "
+           "controller numbers 50, 45 and controller values 40, 30" )
+    {
+        const std::uint8_t manufacturer_id = 65;
+        const std::uint8_t channel = 5;
+        const std::uint8_t key = 60;
+        const std::array< std::pair< std::uint8_t, std::uint8_t >, 2 > controller_number_value = {
+            std::pair{std::uint8_t{50}, std::uint8_t{40}},
+            std::pair{std::uint8_t{45}, std::uint8_t{30}}};
+        const auto message =
+            key_based_instrument_control( manufacturer_id, channel, key, controller_number_value );
+
+        THEN( "message is 0xF0 0x7F 0x41 0x0A 0x01 0x05 0x3C 0x32 0x28 0x2D 0x1E 0xF7" )
+        {
+            REQUIRE( message.size() == 12 );
+            CHECK( message[ 0 ] == start_byte );
+            CHECK( message[ 1 ] == realtime::id_byte );
+            CHECK( message[ 2 ] == std::byte{0x41} );
+            CHECK( message[ 3 ] == std::byte{0x0A} );
+            CHECK( message[ 4 ] == std::byte{0x01} );
+            CHECK( message[ 5 ] == std::byte{0x05} );
+            CHECK( message[ 6 ] == std::byte{0x3C} );
+            CHECK( message[ 7 ] == std::byte{0x32} );
+            CHECK( message[ 8 ] == std::byte{0x28} );
+            CHECK( message[ 9 ] == std::byte{0x2D} );
+            CHECK( message[ 10 ] == std::byte{0x1E} );
+            CHECK( message[ 11 ] == end_byte );
+        }
+    }
+
+    GIVEN( "key_based_instrument_control_type::note_volume" )
+    {
+        const auto value = key_based_instrument_control_type::note_volume;
+
+        THEN( "value is 0x07" )
+        {
+            REQUIRE( to_uint8( value ) == 0x07 );
+        }
+    }
+
+    GIVEN( "key_based_instrument_control_type::pan" )
+    {
+        const auto value = key_based_instrument_control_type::pan;
+
+        THEN( "value is 0x0A" )
+        {
+            REQUIRE( to_uint8( value ) == 0x0A );
+        }
+    }
+
+    GIVEN( "key_based_instrument_control_type::timbre_harmonic_intensity" )
+    {
+        const auto value = key_based_instrument_control_type::timbre_harmonic_intensity;
+
+        THEN( "value is 0x47" )
+        {
+            REQUIRE( to_uint8( value ) == 0x47 );
+        }
+    }
+
+    GIVEN( "key_based_instrument_control_type::release_time" )
+    {
+        const auto value = key_based_instrument_control_type::release_time;
+
+        THEN( "value is 0x48" )
+        {
+            REQUIRE( to_uint8( value ) == 0x48 );
+        }
+    }
+
+    GIVEN( "key_based_instrument_control_type::attack_time" )
+    {
+        const auto value = key_based_instrument_control_type::attack_time;
+
+        THEN( "value is 0x49" )
+        {
+            REQUIRE( to_uint8( value ) == 0x49 );
+        }
+    }
+
+    GIVEN( "key_based_instrument_control_type::brightness" )
+    {
+        const auto value = key_based_instrument_control_type::brightness;
+
+        THEN( "value is 0x4A" )
+        {
+            REQUIRE( to_uint8( value ) == 0x4A );
+        }
+    }
+
+    GIVEN( "key_based_instrument_control_type::decay_time" )
+    {
+        const auto value = key_based_instrument_control_type::decay_time;
+
+        THEN( "value is 0x4B" )
+        {
+            REQUIRE( to_uint8( value ) == 0x4B );
+        }
+    }
+
+    GIVEN( "key_based_instrument_control_type::decay_time" )
+    {
+        const auto value = key_based_instrument_control_type::decay_time;
+
+        THEN( "value is 0x4B" )
+        {
+            REQUIRE( to_uint8( value ) == 0x4B );
+        }
+    }
+
+    GIVEN( "key_based_instrument_control_type::vibrato_rate" )
+    {
+        const auto value = key_based_instrument_control_type::vibrato_rate;
+
+        THEN( "value is 0x4C" )
+        {
+            REQUIRE( to_uint8( value ) == 0x4C );
+        }
+    }
+
+    GIVEN( "key_based_instrument_control_type::vibrato_depth" )
+    {
+        const auto value = key_based_instrument_control_type::vibrato_depth;
+
+        THEN( "value is 0x4D" )
+        {
+            REQUIRE( to_uint8( value ) == 0x4D );
+        }
+    }
+
+    GIVEN( "key_based_instrument_control_type::vibrato_delay" )
+    {
+        const auto value = key_based_instrument_control_type::vibrato_delay;
+
+        THEN( "value is 0x4E" )
+        {
+            REQUIRE( to_uint8( value ) == 0x4E );
+        }
+    }
+
+    GIVEN( "key_based_instrument_control_type::reverb_send" )
+    {
+        const auto value = key_based_instrument_control_type::reverb_send;
+
+        THEN( "value is 0x5B" )
+        {
+            REQUIRE( to_uint8( value ) == 0x5B );
+        }
+    }
+
+    GIVEN( "key_based_instrument_control_type::chorus_send" )
+    {
+        const auto value = key_based_instrument_control_type::chorus_send;
+
+        THEN( "value is 0x5D" )
+        {
+            REQUIRE( to_uint8( value ) == 0x5D );
+        }
+    }
+
+    GIVEN( "key_based_instrument_control_type::fine_tuning" )
+    {
+        const auto value = key_based_instrument_control_type::fine_tuning;
+
+        THEN( "value is 0x78" )
+        {
+            REQUIRE( to_uint8( value ) == 0x78 );
+        }
+    }
+
+    GIVEN( "key_based_instrument_control_type::coarse_tuning" )
+    {
+        const auto value = key_based_instrument_control_type::coarse_tuning;
+
+        THEN( "value is 0x79" )
+        {
+            REQUIRE( to_uint8( value ) == 0x79 );
         }
     }
 }
 
 // NOLINTNEXTLINE(readability-function-size)
-SCENARIO( "system exclusive - global parameter control", "[system_exlusive_message]" )
+SCENARIO( "system exclusive - global parameter control", "[system_exclusive]" )
 {
     using namespace sequencer::midi::system::exclusive;
     using namespace sequencer::midi::system::exclusive::realtime;

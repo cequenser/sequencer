@@ -149,6 +149,78 @@ namespace sequencer::midi::system::exclusive
             return make_sysex( manufacturer_id, data,
                                std::make_index_sequence< 5 + user_data_size >() );
         }
+
+        enum class key_based_instrument_control_type : std::uint8_t
+        {
+            note_volume = 0x07,
+            pan = 0x0A,
+            timbre_harmonic_intensity = 0x47,
+            release_time = 0x48,
+            attack_time = 0x49,
+            brightness = 0x4A,
+            decay_time = 0x4B,
+            vibrato_rate = 0x4C,
+            vibrato_depth = 0x4D,
+            vibrato_delay = 0x4E,
+            reverb_send = 0x5B,
+            chorus_send = 0x5D,
+            fine_tuning = 0x78,
+            coarse_tuning = 0x79
+        };
+
+        constexpr std::uint8_t to_uint8( key_based_instrument_control_type type ) noexcept
+        {
+            return static_cast< std::uint8_t >( type );
+        }
+
+        template < std::size_t number_of_entries >
+        constexpr message_t< 8 + 2 * number_of_entries > key_based_instrument_control(
+            std::uint8_t manufacturer_id, std::uint8_t channel, std::uint8_t key,
+            const std::array< std::pair< std::uint8_t, std::uint8_t >, number_of_entries >&
+                number_value_pairs ) noexcept
+        {
+            assert( channel < 16 );
+            constexpr auto fixed_entry_offset = 4u;
+            constexpr auto data_size = fixed_entry_offset + 2 * number_of_entries;
+            message_t< data_size > data;
+            data[ 0 ] = std::byte{0x0A};
+            data[ 1 ] = std::byte{0x01};
+            data[ 2 ] = std::byte{channel};
+            data[ 3 ] = std::byte{key};
+            for ( auto i = std::size_t{0}; i < number_of_entries; ++i )
+            {
+                const auto id = number_value_pairs[ i ].first;
+                const auto value = number_value_pairs[ i ].second;
+                data[ fixed_entry_offset + 2 * i ] = std::byte{id};
+                assert( !( id == to_uint8( key_based_instrument_control_type::note_volume ) ) ||
+                        ( value <= 0x40 ) );
+                assert(
+                    !( id ==
+                       to_uint8( key_based_instrument_control_type::timbre_harmonic_intensity ) ) ||
+                    ( value <= 0x40 ) );
+                assert( !( id == to_uint8( key_based_instrument_control_type::release_time ) ) ||
+                        ( value <= 0x40 ) );
+                assert( !( id == to_uint8( key_based_instrument_control_type::attack_time ) ) ||
+                        ( value <= 0x40 ) );
+                assert( !( id == to_uint8( key_based_instrument_control_type::brightness ) ) ||
+                        ( value <= 0x40 ) );
+                assert( !( id == to_uint8( key_based_instrument_control_type::decay_time ) ) ||
+                        ( value <= 0x40 ) );
+                assert( !( id == to_uint8( key_based_instrument_control_type::vibrato_rate ) ) ||
+                        ( value <= 0x40 ) );
+                assert( !( id == to_uint8( key_based_instrument_control_type::vibrato_depth ) ) ||
+                        ( value <= 0x40 ) );
+                assert( !( id == to_uint8( key_based_instrument_control_type::vibrato_delay ) ) ||
+                        ( value <= 0x40 ) );
+                assert( !( id == to_uint8( key_based_instrument_control_type::fine_tuning ) ) ||
+                        ( value <= 0x40 ) );
+                assert( !( id == to_uint8( key_based_instrument_control_type::coarse_tuning ) ) ||
+                        ( value <= 0x40 ) );
+                data[ fixed_entry_offset + 2 * i + 1 ] = std::byte{value};
+            }
+
+            return make_sysex( manufacturer_id, data, std::make_index_sequence< data_size >() );
+        }
     } // namespace realtime
 
     namespace non_realtime

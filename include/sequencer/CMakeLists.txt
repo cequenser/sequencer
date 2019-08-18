@@ -9,7 +9,6 @@ add_library(sequencer
     midi/clock_base.hpp
     midi/note.hpp
     midi/percussion_key.hpp
-    midi/step_sequencer.hpp
     midi/track.hpp
     midi/message/channel_voice.hpp
     midi/message/message_type.hpp

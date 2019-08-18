@@ -13,12 +13,14 @@ using sequencer::midi::percussion_key;
 namespace qml
 {
     backend::backend()
-        : midiout_{RtMidiOut()}, step_sequencer_{tracks_}, clock_{sequencer::rtmidi::make_clock()},
+        : midiout_{RtMidiOut()}, tracks_{sequencer::midi::make_tracks( number_of_tracks,
+                                                                       number_of_steps )},
+          clock_{sequencer::rtmidi::make_clock()},
           clock_done_{start_clock_in_thread( clock_, [this]( auto message ) {
               midiout_.sendMessage(
                   static_cast< const unsigned char* >( static_cast< const void* >( &message ) ),
                   1 );
-              step_sequencer_.update( message, sequencer::rtmidi::message_sender{midiout_} );
+              send_messages( tracks_, message, sequencer::rtmidi::message_sender{midiout_} );
           } )}
     {
         track_notes_.fill( note_t( min_note() ) );
@@ -26,7 +28,7 @@ namespace qml
 
     backend::~backend()
     {
-        tracks_.send_all_notes_off_message( sequencer::rtmidi::message_sender{midiout_} );
+        send_all_notes_off_message( tracks_, sequencer::rtmidi::message_sender{midiout_} );
         clock_.shut_down();
     }
 

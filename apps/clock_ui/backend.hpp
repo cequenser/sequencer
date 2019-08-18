@@ -1,6 +1,5 @@
 #pragma once
 
-#include <sequencer/midi/step_sequencer.hpp>
 #include <sequencer/midi/track.hpp>
 #include <sequencer/rtmidi/util.hpp>
 
@@ -8,6 +7,7 @@
 #include <QString>
 #include <RtMidi.h>
 #include <future>
+#include <vector>
 
 namespace qml
 {
@@ -17,8 +17,7 @@ namespace qml
 
         static constexpr auto number_of_steps = 16;
         static constexpr auto number_of_tracks = 8;
-        using tracks_t =
-            decltype( sequencer::midi::make_tracks< number_of_steps, number_of_tracks >() );
+        using tracks_t = std::vector< sequencer::midi::sequencer_track_t >;
 
     public:
         backend();
@@ -57,8 +56,7 @@ namespace qml
 
     private:
         RtMidiOut midiout_;
-        tracks_t tracks_{};
-        sequencer::midi::step_sequencer< tracks_t > step_sequencer_;
+        tracks_t tracks_;
         decltype( sequencer::rtmidi::make_clock() ) clock_;
         std::future< void > clock_done_;
         std::uint8_t current_track_{0};

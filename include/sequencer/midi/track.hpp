@@ -1,9 +1,11 @@
 #pragma once
 
 #include <sequencer/midi/message/channel_voice.hpp>
+#include <sequencer/midi/message/message_type.hpp>
+#include <sequencer/midi/message/realtime.hpp>
 #include <sequencer/midi/note.hpp>
 
-#include <array>
+#include <algorithm>
 #include <atomic>
 #include <cassert>
 #include <vector>
@@ -14,8 +16,8 @@ namespace sequencer::midi
 
     inline void copy_track( const track_base_t& from, track_base_t& to )
     {
-        assert( from.size() <= to.size() );
-        for ( auto step = std::size_t{0}; step < from.size(); ++step )
+        const auto size = std::min( from.size(), to.size() );
+        for ( auto step = std::size_t{0}; step < size; ++step )
         {
             to[ step ] = from[ step ].load();
         }
@@ -34,7 +36,7 @@ namespace sequencer::midi
         }
 
         track_t( const track_t& other ) noexcept
-            : channel_( other.channel_ ), velocity_( other.velocity_ )
+            : track_{other.track_.size()}, channel_( other.channel_ ), velocity_( other.velocity_ )
         {
             copy_track( other.track_, track_ );
         }
@@ -55,14 +57,14 @@ namespace sequencer::midi
             return track_.size();
         }
 
-        void set_steps( std::size_t steps ) noexcept
+        void set_steps( std::size_t new_steps ) noexcept
         {
-            auto new_track = track_base_t( steps );
+            auto new_track = track_base_t( new_steps );
             copy_track( track_, new_track );
 
-            if ( steps > track_.size() )
+            if ( new_steps > steps() )
             {
-                for ( size_type new_step = track_.size(); new_step < steps; ++new_step )
+                for ( size_type new_step = track_.size(); new_step < new_steps; ++new_step )
                 {
                     new_track[ new_step ] = no_note();
                 }
@@ -125,86 +127,112 @@ namespace sequencer::midi
 
     private:
         track_base_t track_{};
-        mutable note_t last_note_ = no_note();
+        mutable note_t last_note_{no_note()};
         std::uint8_t channel_{0};
         std::uint8_t velocity_{32};
     };
 
-    template < std::size_t number_of_steps, std::size_t number_of_tracks >
-    class tracks_t
+    template < class Track >
+    class real_time_to_step_t : public Track
     {
     public:
-        using container = std::array< track_t, number_of_tracks >;
-        using size_type = typename container::size_type;
-
-        tracks_t()
-        {
-            std::uint8_t channel = 0;
-            for_each_track( [&channel]( track_t& track ) {
-                track.set_steps( number_of_steps );
-                track.set_channel( channel++ );
-            } );
-        }
-
-        constexpr std::size_t steps() const noexcept
-        {
-            return number_of_steps;
-        }
-
-        track_t& operator[]( size_type i ) noexcept
-        {
-            return tracks_[ i ];
-        }
-
-        const track_t& operator[]( size_type i ) const noexcept
-        {
-            return tracks_[ i ];
-        }
-
-        void clear() noexcept
-        {
-            for_each_track( []( track_t& track ) { track.clear(); } );
-        }
+        using Track::Track;
 
         template < class Sender >
-        void send_messages( std::size_t step, const Sender& sender ) const
+        void send_messages( message_t< 1 > message, const Sender& sender ) const
         {
-            for_each_track(
-                [&sender, step]( const track_t& track ) { track.send_messages( step, sender ); } );
+            if ( process_control_message( message, sender ) || !started_ )
+            {
+                return;
+            }
+
+            const auto pulses_per_step = pulses_per_quarter_note_ / steps_per_beat_;
+            if ( midi_beat_counter_ % pulses_per_step == 0 )
+            {
+                const auto step = midi_beat_counter_ / pulses_per_step;
+                Track::send_messages( step, sender );
+            }
+            if ( ++midi_beat_counter_ == Track::steps() * pulses_per_step )
+            {
+                midi_beat_counter_ = 0;
+            }
         }
 
-        template < class Sender >
-        void send_all_notes_off_message( const Sender& sender ) const
+        constexpr void set_steps_per_beat( std::size_t steps ) noexcept
         {
-            for_each_track(
-                [&sender]( const track_t& track ) { track.send_all_notes_off_message( sender ); } );
+            steps_per_beat_ = steps;
+        }
+
+        void set_pulses_per_quarter_note( std::size_t pulses_per_quarter_note ) noexcept
+        {
+            pulses_per_quarter_note_ = pulses_per_quarter_note;
         }
 
     private:
-        template < class Operation >
-        void for_each_track( Operation op )
+        template < class Sender >
+        bool process_control_message( message_t< 1 > message, const Sender& sender ) const
         {
-            for ( auto& track : tracks_ )
+            if ( message == realtime::realtime_start() )
             {
-                op( track );
+                started_ = true;
+                midi_beat_counter_ = 0;
+                return true;
             }
+            if ( message == realtime::realtime_continue() )
+            {
+                started_ = true;
+                return true;
+            }
+            if ( message == realtime::realtime_stop() )
+            {
+                started_ = false;
+                Track::send_all_notes_off_message( sender );
+                return true;
+            }
+
+            return false;
         }
 
-        template < class Operation >
-        void for_each_track( Operation op ) const
-        {
-            for ( const auto& track : tracks_ )
-            {
-                op( track );
-            }
-        }
-
-        container tracks_{};
+        mutable std::size_t midi_beat_counter_{0};
+        std::size_t steps_per_beat_{4};
+        std::size_t pulses_per_quarter_note_{24};
+        mutable bool started_{false};
     };
 
-    template < std::size_t number_of_steps, std::size_t number_of_tracks >
-    constexpr tracks_t< number_of_steps, number_of_tracks > make_tracks() noexcept
+    using sequencer_track_t = real_time_to_step_t< track_t >;
+
+    std::vector< sequencer_track_t > inline make_tracks(
+        std::size_t number_of_tracks, std::size_t number_of_steps,
+        std::size_t pulses_per_quarter_note = std::size_t{24} ) noexcept
     {
-        return {};
+        std::vector< sequencer_track_t > tracks( number_of_tracks,
+                                                 sequencer_track_t{number_of_steps} );
+        std::uint8_t channel = 0;
+
+        for ( auto& track : tracks )
+        {
+            track.set_channel( channel++ );
+            track.set_pulses_per_quarter_note( pulses_per_quarter_note );
+        };
+
+        return tracks;
+    }
+
+    template < class Tracks, class Sender >
+    void send_messages( Tracks& tracks, message_t< 1 > message, const Sender& sender )
+    {
+        for ( auto& track : tracks )
+        {
+            track.send_messages( message, sender );
+        }
+    }
+
+    template < class Tracks, class Sender >
+    void send_all_notes_off_message( Tracks& tracks, const Sender& sender )
+    {
+        for ( auto& track : tracks )
+        {
+            track.send_all_notes_off_message( sender );
+        }
     }
 } // namespace sequencer::midi

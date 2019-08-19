@@ -7,7 +7,6 @@
 
 namespace sequencer::chrono
 {
-
     template < typename UnderlyingClock = clock_object_adapter< std::chrono::steady_clock > >
     class sequencer_clock
     {

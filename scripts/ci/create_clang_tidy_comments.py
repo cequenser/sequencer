@@ -6,33 +6,62 @@ import sys
 
 indent = '  '
 
-def extract_filename_dictionary_clang_tidy(clang_filename, newline_placeholder, base_path):
-    clang_file = open(clang_filename, 'r')
+
+def get_message_start_index(line):
+    message_start = line.find('error:') + 7
+    if message_start == 6:
+        message_start = line.find('note:')
+    return message_start
+
+
+def get_filename_and_linenumber(line, base_path = None):
+    if base_path:
+        m = re.match(r'^' + base_path + r'(\S*):([0-9]+):[0-9]+:', line)
+    else:
+        m = re.match(r'^(\S+):([0-9]+):[0-9]+:', line)
+    if m:
+         return m.groups()[0], m.groups()[1]
+    return None, None    
+
+
+def read_message(clang_file, line, base_path):
+    if not line.startswith(base_path):
+        line = clang_file.readline()
+        return line, None, None
+
+    filename, linenumber = get_filename_and_linenumber(line, base_path)
+    message = line[get_message_start_index(line):]
+
+    line = clang_file.readline()
+    while line and not line in ['\n', '\r\n'] and not "warnings generated" in line:
+	message += line
+        line = clang_file.readline()
+        other_filename, other_linenumber = get_filename_and_linenumber(line)
+        if other_filename and other_filename != filename:
+            break
+
+    if "warnings generated" in line:
+        line = clang_file.readline()
+
+    return line, filename, [linenumber, message]
+
+
+def extract_filename_dictionary(filename, base_path):
+    clang_file = open(filename, 'r')
     comments = {}
 
-    for line in clang_file:
-        offset = 0
-        if not line.startswith(base_path):
-            continue
-        firstColon = line.find(':')
-        filename = line[len(base_path):firstColon]
-        line_number = line[firstColon+1:line.find(':', firstColon+1)]
-        message_start = line.find('error:')+7
-        message_end = max(line.find(base_path, message_start), line.find('Suppressed', message_start))
-        m = re.match(".*(" + newline_placeholder + "\s*[0-9]+\s*warnings\s+generated.).*", line[message_start:])
-        if m:
-            message_end = line.find(m.groups()[0], message_start)
-        message = line[message_start:message_end].replace(newline_placeholder, '\n')
-
-        if filename in comments.keys():
-            if not [line_number, message] in comments[filename]:
-                comments[filename].append([line_number, message])
-        else:
-            comments[filename] = [[line_number, message]]
-    return comments
+    line = clang_file.readline()
+    while line:
+        line, filename, message = read_message(clang_file, line, base_path)
+        if filename:
+            if filename in comments.keys():
+                comments[filename].append(message)
+            else:
+                comments[filename] = [message]
+    return comments        
 
 
-def create_comment_section_clang_tidy(comments, robot_id, robot_run_id):
+def create_comment_section(comments, robot_id, robot_run_id):
     comment_section = ""
     first_filename = True
     for filename, comment in comments.items():
@@ -57,11 +86,11 @@ def create_comment_section_clang_tidy(comments, robot_id, robot_run_id):
     return comment_section
 
 
-def create_clang_tidy_comments(clang_filename, newline_placeholder, robot_id, robot_run_id, base_path):
-    comments = extract_filename_dictionary_clang_tidy(clang_filename, newline_placeholder, base_path)
-    comment_section = create_comment_section_clang_tidy(comments, robot_id, robot_run_id)
+def create_clang_tidy_comments(clang_filename, robot_id, robot_run_id, base_path):
+    comments = extract_filename_dictionary(clang_filename, base_path)
+    comment_section = create_comment_section(comments, robot_id, robot_run_id)
     print comment_section
 
 
-if len(sys.argv) == 6:
-    create_clang_tidy_comments(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5])
+if len(sys.argv) == 5:
+    create_clang_tidy_comments(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4])

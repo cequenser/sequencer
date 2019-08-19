@@ -344,7 +344,6 @@ SCENARIO( "system exclusive - key based instrument control", "[system_exclusive]
     }
 }
 
-// NOLINTNEXTLINE(readability-function-size)
 SCENARIO( "system exclusive - global parameter control", "[system_exclusive]" )
 {
     using namespace sequencer::midi::system::exclusive;

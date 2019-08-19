@@ -131,7 +131,6 @@ SCENARIO( "system exclusive realtime messages", "[system_exclusive_message]" )
     }
 }
 
-// NOLINTNEXTLINE(readability-function-size)
 SCENARIO( "system exclusive - global parameter control", "[system_exlusive_message]" )
 {
     using namespace sequencer::midi::system::exclusive;

@@ -1,0 +1,284 @@
+{
+  "comments": [
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/542/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "f681a134_ccad5bf0",
+        "filename": "include/sequencer/midi/message/system_exclusive.hpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-19T13:06:48Z",
+      "side": 1,
+      "message": "invalid case style for variable \u0027FFFFFF\u0027 [readability-identifier-naming,-warnings-as-errors]\n    static constexpr auto FFFFFF \u003d std::byte{0xF7};\n                          ^~~~~~\n                          ffffff",
+      "revId": "80004303bc4220005ae95f3d67e9b426a3ee7755",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/542/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "f4dc8e39_055f5116",
+        "filename": "include/sequencer/midi/message/system_exclusive.hpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-19T13:06:48Z",
+      "side": 1,
+      "message": "do not use array subscript when the index is not an integer constant expression; use gsl::at() instead [cppcoreguidelines-pro-bounds-constant-array-index,-warnings-as-errors]\n                const auto [ lsb, msb ] \u003d uint16_to_lsb_msb( slots[ i ] );\n                                                             ^",
+      "revId": "80004303bc4220005ae95f3d67e9b426a3ee7755",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/542/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "cd36f72e_f74ae9ce",
+        "filename": "include/sequencer/midi/message/system_exclusive.hpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-19T13:06:48Z",
+      "side": 1,
+      "message": "do not use array subscript when the index is not an integer constant expression; use gsl::at() instead [cppcoreguidelines-pro-bounds-constant-array-index,-warnings-as-errors]\n                    data[ offset + pair_size * i ] \u003d std::byte{id_value_pairs[ i ].first};\n                                                               ^",
+      "revId": "80004303bc4220005ae95f3d67e9b426a3ee7755",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/542/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "bd446c85_42348a74",
+        "filename": "include/sequencer/midi/message/system_exclusive.hpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-19T13:06:48Z",
+      "side": 1,
+      "message": "do not use array subscript when the index is not an integer constant expression; use gsl::at() instead [cppcoreguidelines-pro-bounds-constant-array-index,-warnings-as-errors]\n                    data[ offset + pair_size * i + 1 ] \u003d std::byte{id_value_pairs[ i ].second};\n                                                                   ^",
+      "revId": "80004303bc4220005ae95f3d67e9b426a3ee7755",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/542/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "57adad0a_4c5eff7e",
+        "filename": "include/sequencer/midi/message/system_exclusive.hpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-19T13:06:48Z",
+      "side": 1,
+      "message": "do not use array subscript when the index is not an integer constant expression; use gsl::at() instead [cppcoreguidelines-pro-bounds-constant-array-index,-warnings-as-errors]\n                    const auto [ id_lsb, id_msb ] \u003d uint16_to_lsb_msb( id_value_pairs[ i ].first );\n                                                                       ^",
+      "revId": "80004303bc4220005ae95f3d67e9b426a3ee7755",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/542/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "6a3353e2_cbdcaaa4",
+        "filename": "include/sequencer/midi/message/system_exclusive.hpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-19T13:06:48Z",
+      "side": 1,
+      "message": "do not use array subscript when the index is not an integer constant expression; use gsl::at() instead [cppcoreguidelines-pro-bounds-constant-array-index,-warnings-as-errors]\n                    data[ offset + pair_size * i + 2 ] \u003d std::byte{id_value_pairs[ i ].second};\n                                                                   ^",
+      "revId": "80004303bc4220005ae95f3d67e9b426a3ee7755",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/542/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "054884e5_01e3d410",
+        "filename": "include/sequencer/midi/message/system_exclusive.hpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-19T13:06:48Z",
+      "side": 1,
+      "message": "do not use array subscript when the index is not an integer constant expression; use gsl::at() instead [cppcoreguidelines-pro-bounds-constant-array-index,-warnings-as-errors]\n                        uint16_to_lsb_msb( id_value_pairs[ i ].second );\n                                           ^",
+      "revId": "80004303bc4220005ae95f3d67e9b426a3ee7755",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/542/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "a76a441f_67ed6db3",
+        "filename": "include/sequencer/midi/message/system_exclusive.hpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-19T13:06:48Z",
+      "side": 1,
+      "message": "do not use array subscript when the index is not an integer constant expression; use gsl::at() instead [cppcoreguidelines-pro-bounds-constant-array-index,-warnings-as-errors]\n                    data[ offset + pair_size * i ] \u003d std::byte{id_value_pairs[ i ].first};\n                                                               ^",
+      "revId": "80004303bc4220005ae95f3d67e9b426a3ee7755",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/542/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "5484eb38_1e066334",
+        "filename": "include/sequencer/midi/message/system_exclusive.hpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-19T13:06:48Z",
+      "side": 1,
+      "message": "do not use array subscript when the index is not an integer constant expression; use gsl::at() instead [cppcoreguidelines-pro-bounds-constant-array-index,-warnings-as-errors]\n                    const auto [ id_lsb, id_msb ] \u003d uint16_to_lsb_msb( id_value_pairs[ i ].first );\n                                                                       ^",
+      "revId": "80004303bc4220005ae95f3d67e9b426a3ee7755",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/542/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "1c44c739_cb2f972b",
+        "filename": "include/sequencer/midi/message/system_exclusive.hpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-19T13:06:48Z",
+      "side": 1,
+      "message": "do not use array subscript when the index is not an integer constant expression; use gsl::at() instead [cppcoreguidelines-pro-bounds-constant-array-index,-warnings-as-errors]\n                        uint16_to_lsb_msb( id_value_pairs[ i ].second );\n                                           ^",
+      "revId": "80004303bc4220005ae95f3d67e9b426a3ee7755",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/542/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "1ce5252f_8b5f548a",
+        "filename": "include/sequencer/midi/message/system_exclusive.hpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-19T13:06:48Z",
+      "side": 1,
+      "message": "do not use array subscript when the index is not an integer constant expression; use gsl::at() instead [cppcoreguidelines-pro-bounds-constant-array-index,-warnings-as-errors]\n                const auto id \u003d number_value_pairs[ i ].first;\n                                ^",
+      "revId": "80004303bc4220005ae95f3d67e9b426a3ee7755",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/542/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "4497772d_30abb5c2",
+        "filename": "include/sequencer/midi/message/system_exclusive.hpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-19T13:06:48Z",
+      "side": 1,
+      "message": "do not use array subscript when the index is not an integer constant expression; use gsl::at() instead [cppcoreguidelines-pro-bounds-constant-array-index,-warnings-as-errors]\n                const auto value \u003d number_value_pairs[ i ].second;\n                                   ^",
+      "revId": "80004303bc4220005ae95f3d67e9b426a3ee7755",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/542/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "92ce4b49_6e0fca4c",
+        "filename": "tests/sequencer/midi/message/system_exclusive_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-19T13:06:48Z",
+      "side": 1,
+      "message": "note: 802 statements (threshold 800)",
+      "revId": "80004303bc4220005ae95f3d67e9b426a3ee7755",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/542/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "6447388a_50f410fe",
+        "filename": "tests/sequencer/midi/message/system_exclusive_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-19T13:06:48Z",
+      "side": 1,
+      "message": "function \u0027____C_A_T_C_H____T_E_S_T____54\u0027 exceeds recommended size/complexity thresholds [readability-function-size,-warnings-as-errors]\nSCENARIO( \"system exclusive - global parameter control\", \"[system_exclusive]\" )\n^",
+      "revId": "80004303bc4220005ae95f3d67e9b426a3ee7755",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}

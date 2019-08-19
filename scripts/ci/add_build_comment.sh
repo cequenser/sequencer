@@ -1,0 +1,11 @@
+#!/bin/bash
+
+LOG_FILE=$1
+BUILD_URL=$2
+COMPILER=$3
+
+sed 's/"/\\\\"/g' $LOG_FILE | sed 's@build/../include@include@g' | sed 's@build/../tests@tests@g' | sed "s@^../include@include@g" | sed "s@ ../include@ include@g" | sed "s@^../tests@tests@g" | sed "s@ ../tests@ tests@g" > tmp_comments.log 2>&1
+
+python2.7 create_build_comment.py tmp_comments.log $BUILD_URL $COMPILER > tmp_gerrit_comments2.log 2>&1
+
+sed -i "s/<COMMENTS>/$(sed -e 's/[\&/]/\\&/g' -e 's/$/\\n/' tmp_gerrit_comments.log | tr -d '\n')/" tests.json

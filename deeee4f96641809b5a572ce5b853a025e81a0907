@@ -39,6 +39,26 @@
       "revId": "deeee4f96641809b5a572ce5b853a025e81a0907",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "robotId": "clang++-8",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/psv-clang/499/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "195c580d_d936e354",
+        "filename": "tests/sequencer/midi/track_test.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 514,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-19T20:16:28Z",
+      "side": 1,
+      "message": "in instantiation of template class \u0027sequencer::chrono::sequencer_clock\u003cconst sequencer::chrono::testing_clock\u003clong, std::ratio\u003c1, 1000000000\u003e, true\u003e \u0026\u003e\u0027 requested here\n        sequencer_clock_type sequencer_clock{testing_clock};\n                             ^\n\ninclude/sequencer/chrono/sequencer_clock.hpp:21:9: error: static_assert failed due to requirement \u0027testing_clock\u003clong, std::ratio\u003c1, 1000000000\u003e, true\u003e::is_steady\u0027 \"Underlying clock must be steady\"\n        static_assert( underlying_clock_type::is_steady, \"Underlying clock must be steady\" );\n        ^              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+      "revId": "deeee4f96641809b5a572ce5b853a025e81a0907",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }

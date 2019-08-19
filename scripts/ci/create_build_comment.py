@@ -11,6 +11,7 @@ indent = '  '
 def create_build_comment(log_filename, robot_run_id, compiler):
     build_log = open(log_filename, 'r')
     line = build_log.readline()
+    line = build_log.readline()
     m = re.match('^\S*g\+\+.* (\S+\.cpp)', line)
     if not m:
         return
@@ -28,13 +29,15 @@ def create_build_comment(log_filename, robot_run_id, compiler):
         return
     linenumber = m.group(1)
     pos = int(m.group(2))
+    message_start = 'error in: '
     with open(filename) as fp:
         for i, line in enumerate(fp):
-            if i == int(linenumber):
-                message_start = line
-            elif i > linenumber:
+            if i == int(linenumber) - 1:
+                message_start += line
+                number_of_leading_whitespaces = len(line) - len(line.lstrip(' '))
+            elif i > int(linenumber):
                 break
-    message_start += ' ' * pos + '^' + '~'*20
+    message_start += ' ' * (pos-1-number_of_leading_whitespaces) + '^' + '~'*20
 
     # actual error
     line = build_log.readline()
@@ -50,13 +53,14 @@ def create_build_comment(log_filename, robot_run_id, compiler):
         line = build_log.readlin()
 
     # gerrit comment
-    print indent*2 + '"' + filename + '": ['
+    print indent*1 + '"' + filename + '": ['
     print indent*3 + '{'
     print indent*4 + '"robot_id": "' + compiler + '",'
     print indent*4 + '"robot_run_id": "' + robot_run_id + '",' 
     print indent*4 + '"line": "' + linenumber + '",' 
     print indent*4 + '"message": "' + message_start +'\n' + message + '"' 
     print indent*3 + '}' 
+    print indent*2 + ']'
     
 
 if len(sys.argv) == 4:

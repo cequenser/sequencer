@@ -18,7 +18,7 @@ namespace sequencer::chrono
         using duration = std::chrono::duration< rep, period >;
         using time_point = std::chrono::time_point< testing_clock< rep, period, Steady > >;
 
-        constexpr static bool is_steady = Steady;
+        constexpr static bool is_steady = !Steady;
 
         time_point now() const noexcept
         {

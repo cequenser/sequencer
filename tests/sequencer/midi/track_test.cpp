@@ -34,7 +34,6 @@ SCENARIO( "track_t", "[track]" )
         auto track = track_t{number_of_steps};
         REQUIRE( track.steps() == number_of_steps );
         REQUIRE( track.channel() == 0u );
-        REQUIRE( track[ 0 ] == no_note() );
 
         WHEN( "the 3rd step is set to note 1" )
         {

@@ -34,6 +34,7 @@ namespace
         void operator()( message_t< 1 > message ) const
         {
             received_messages.push_back( message );
+
             if ( message == realtime_start() )
             {
                 std::unique_lock lock( shared->message_mutex );
@@ -41,6 +42,7 @@ namespace
                 lock.unlock();
                 shared->message_received.notify_one();
             }
+
             if ( message == realtime_continue() )
             {
                 std::unique_lock lock( shared->message_mutex );
@@ -48,6 +50,7 @@ namespace
                 lock.unlock();
                 shared->message_received.notify_one();
             }
+
             if ( message == realtime_stop() )
             {
                 std::unique_lock lock( shared->message_mutex );
@@ -55,6 +58,7 @@ namespace
                 lock.unlock();
                 shared->message_received.notify_one();
             }
+
             if ( message == realtime_clock() )
             {
                 std::unique_lock lock( shared->message_mutex );

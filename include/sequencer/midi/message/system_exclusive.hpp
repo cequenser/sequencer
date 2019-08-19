@@ -9,6 +9,7 @@ namespace sequencer::midi::system::exclusive
 {
     static constexpr auto start_byte = std::byte{0xF0};
     static constexpr auto end_byte = std::byte{0xF7};
+    static constexpr auto FFFFFF = std::byte{0xF7};
 
     constexpr message_t< 1 > end_system_exclusive() noexcept
     {

@@ -11,6 +11,7 @@ indent = '  '
 def create_build_comment(log_filename, robot_run_id, compiler):
     build_log = open(log_filename, 'r')
     line = build_log.readline()
+    line = build_log.readline()
     m = re.match('^\S*g\+\+.* (\S+\.cpp)', line)
     if not m:
         return

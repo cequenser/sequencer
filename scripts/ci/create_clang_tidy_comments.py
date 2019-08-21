@@ -81,6 +81,8 @@ def extract_filename_dictionary(filename, base_path):
             else:
                 comments[filename] = [message]
 
+    for key in comments.keys():
+        comments[key] = list(set(tuple(comments[key])))
     return comments        
 
 

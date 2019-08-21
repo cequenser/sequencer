@@ -8,7 +8,7 @@ SCENARIO( "reset frame index", "[sample]" )
 {
     using namespace sequencer::audio;
 
-    GIVEN( "an empty audio sample with max 10 frames and 2 channels" )
+    GIVEN( "an empty audio stereo sample with max 10 frames" )
     {
         const auto max_frames = 10u;
         auto sample = sample_t{max_frames};
@@ -45,11 +45,10 @@ SCENARIO( "write and read", "[sample]" )
 {
     using namespace sequencer::audio;
 
-    GIVEN( "an empty audio sample with max 10 frames and 1 channel" )
+    GIVEN( "an empty mono audio sample with max 10 frames" )
     {
         const auto max_frames = 10u;
-        const auto n_channels = 1u;
-        auto sample = sample_t{max_frames, n_channels};
+        auto sample = sample_t{max_frames, sequencer::audio::mode_t::mono};
 
         WHEN( "1.0f 2.0f 3.0f is read" )
         {

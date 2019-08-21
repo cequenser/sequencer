@@ -1,0 +1,24 @@
+{
+  "comments": [
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/587/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "229a0496_103a652c",
+        "filename": "include/sequencer/audio/sample.hpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-21T19:59:34Z",
+      "side": 1,
+      "message": "implicit conversion \u0027const float *\u0027 -\u003e bool [readability-implicit-bool-conversion,-warnings-as-errors]\n            if ( data )\n                 ^\n                      !\u003d nullptr",
+      "revId": "0a812bb7b725088c2d8b173428002770c1f212cc",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}

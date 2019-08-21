@@ -12,9 +12,9 @@ env:
   global:
     - SHARED_DIR=/home/shared
   matrix:
-    - NAME=g++-8 COMMAND="docker run --rm -ti -e COVERALLS_TOKEN -v ${TRAVIS_BUILD_DIR}:${SHARED_DIR} -w ${SHARED_DIR} cequenser/sequencer-ci-linux ${SHARED_DIR}/scripts/run_tests.sh g++-8 gcov-8"
-    - NAME=clang++-8 COMMAND="docker run --rm -ti -e COVERALLS_TOKEN -v ${TRAVIS_BUILD_DIR}:${SHARED_DIR} -w ${SHARED_DIR} cequenser/sequencer-ci-linux ${SHARED_DIR}/scripts/run_tests.sh clang++-8"
-    - NAME=clang-tidy COMMAND="docker run --rm -ti -v ${TRAVIS_BUILD_DIR}:${SHARED_DIR} -w ${SHARED_DIR} cequenser/sequencer-ci-linux ${SHARED_DIR}/scripts/run_clang_tidy.sh clang++-8"
+    - NAME=g++-8 COMMAND="docker run --rm -ti -e COVERALLS_TOKEN -v ${TRAVIS_BUILD_DIR}:${SHARED_DIR} -w ${SHARED_DIR} cequenser/sequencer-ci-linux ${SHARED_DIR}/scripts/run_tests.sh g++-8 gcc-8 gcov-8"
+    - NAME=clang++-8 COMMAND="docker run --rm -ti -e COVERALLS_TOKEN -v ${TRAVIS_BUILD_DIR}:${SHARED_DIR} -w ${SHARED_DIR} cequenser/sequencer-ci-linux ${SHARED_DIR}/scripts/run_tests.sh clang++-8 clang-8"
+    - NAME=clang-tidy COMMAND="docker run --rm -ti -v ${TRAVIS_BUILD_DIR}:${SHARED_DIR} -w ${SHARED_DIR} cequenser/sequencer-ci-linux ${SHARED_DIR}/scripts/run_clang_tidy.sh clang++-8 clang-8"
     - NAME=clang-format COMMAND="docker run --rm -ti -v ${TRAVIS_BUILD_DIR}:${SHARED_DIR} -w ${SHARED_DIR} cequenser/sequencer-ci-linux ${SHARED_DIR}/scripts/run_clang_format.sh"
      
 install:

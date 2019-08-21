@@ -11,8 +11,7 @@ SCENARIO( "reset frame index", "[sample]" )
     GIVEN( "an empty audio sample with max 10 frames and 2 channels" )
     {
         const auto max_frames = 10u;
-        const auto n_channels = 2u;
-        auto sample = sample_t{max_frames, n_channels};
+        auto sample = sample_t{max_frames};
 
         THEN( "there are 10 frames left" )
         {

@@ -10,7 +10,7 @@ namespace sequencer::audio
     {
     public:
         sample_t( std::size_t max_frame_index, std::size_t n_channels = 2 )
-            : max_frame_index_( max_frame_index ), n_channels_( n_channels )
+            : max_frame_index_{max_frame_index}, n_channels_{n_channels}
         {
         }
 

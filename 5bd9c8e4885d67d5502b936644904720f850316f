@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/584/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "f263f7fd_395a9b61",
+        "filename": "include/sequencer/audio/sample.hpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-21T19:24:09Z",
+      "side": 1,
+      "message": "implicit conversion \u0027const float *\u0027 -\u003e bool [readability-implicit-bool-conversion,-warnings-as-errors]\n            if ( data )\n                 ^\n                      !\u003d nullptr",
+      "revId": "5bd9c8e4885d67d5502b936644904720f850316f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/584/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "b8d99ac0_4a97e8b0",
+        "filename": "include/sequencer/audio/sample.hpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-21T19:24:09Z",
+      "side": 1,
+      "message": "implicit conversion \u0027const float *\u0027 -\u003e bool [readability-implicit-bool-conversion,-warnings-as-errors]\n            if ( data )\n                 ^\n                      !\u003d nullptr",
+      "revId": "5bd9c8e4885d67d5502b936644904720f850316f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}

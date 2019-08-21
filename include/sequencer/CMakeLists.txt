@@ -5,6 +5,7 @@ add_library(sequencer
     beat_time_point.hpp
     beats_per_minute.hpp
     fixed_point_type.hpp
+    audio/sample.hpp
     midi/clock.hpp
     midi/clock_base.hpp
     midi/note.hpp
@@ -20,6 +21,7 @@ add_library(sequencer
     chrono/sequencer_clock.hpp
     chrono/units.hpp
     rtmidi/util.hpp
+    portaudio/portaudio.hpp
 )
 target_compile_features(sequencer PUBLIC cxx_std_17)
 set_target_properties(sequencer PROPERTIES CXX_EXTENSIONS OFF)
@@ -27,8 +29,8 @@ target_include_directories(sequencer
   PUBLIC
     $<INSTALL_INTERFACE:include>
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
-  PRIVATE
-    ${PROJECT_SOURCE_DIR}/external/repo/install/rtmidi/include
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/external/repo/install/portaudio/include>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/external/repo/install/rtmidi/include>
 )
 
 # configure installation and registration

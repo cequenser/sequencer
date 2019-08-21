@@ -134,7 +134,7 @@ namespace sequencer::midi
     };
 
     template < class Track >
-    class real_time_to_step_t : public Track
+    class clock_to_step_t : public Track
     {
     public:
         using Track::Track;
@@ -200,7 +200,7 @@ namespace sequencer::midi
         mutable bool started_{false};
     };
 
-    using sequencer_track_t = real_time_to_step_t< track_t >;
+    using sequencer_track_t = clock_to_step_t< track_t >;
 
     std::vector< sequencer_track_t > inline make_tracks(
         std::size_t number_of_tracks, std::size_t number_of_steps,

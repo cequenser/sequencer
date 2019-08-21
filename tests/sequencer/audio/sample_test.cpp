@@ -61,7 +61,7 @@ SCENARIO( "write and read", "[sample]" )
             {
                 sample.reset_frame_index();
 
-                THEN( "read with 1 frames per buffer returns 1.0f" )
+                THEN( "write with 1 frames per buffer returns 1.0f" )
                 {
                     std::vector< float > w( 10, -1.0f );
                     sample.write( w.data(), 1 );
@@ -70,7 +70,7 @@ SCENARIO( "write and read", "[sample]" )
                     CHECK( w[ 1 ] == -1.0f );
                 }
 
-                THEN( "read with 4 frames per buffer returns 1.0f 2.0f 3.0f 0.0f" )
+                THEN( "write with 4 frames per buffer returns 1.0f 2.0f 3.0f 0.0f" )
                 {
                     std::vector< float > w( 10, -1.0f );
                     sample.write( w.data(), 4 );
@@ -108,6 +108,35 @@ SCENARIO( "write and read", "[sample]" )
                         CHECK( w[ 1 ] == 2.0f );
                         CHECK( w[ 9 ] == 10.0f );
                         CHECK( w[ 10 ] == -1.0f );
+                    }
+                }
+            }
+
+            AND_WHEN( "nullptr is read with 3 frames per buffer" )
+            {
+                std::vector< float > v( 3, 0.0f );
+                sample.read( v.data(), 3 );
+
+                AND_WHEN( "4.0f is read" )
+                {
+                    std::vector< float > v( 1, 4.0f );
+                    sample.read( v.data(), 1 );
+
+                    AND_WHEN( "frame index is reset" )
+                    {
+                        sample.reset_frame_index();
+
+                        THEN( "write return 1.0f 2.0f 3.0f 0.0f 0.0f 0.0f 4.0f" )
+                        {
+                            std::vector< float > w( 7, -1.0f );
+                            sample.write( w.data(), 7 );
+
+                            CHECK( w[ 0 ] == 1.0f );
+                            CHECK( w[ 2 ] == 3.0f );
+                            CHECK( w[ 3 ] == 0.0f );
+                            CHECK( w[ 5 ] == 0.0f );
+                            CHECK( w[ 6 ] == 4.0f );
+                        }
                     }
                 }
             }

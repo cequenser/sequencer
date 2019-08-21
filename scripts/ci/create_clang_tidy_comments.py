@@ -65,7 +65,9 @@ def read_message(clang_file, line, base_path):
     message, line = get_error_message(clang_file, line, filename)
     message, line = add_notes(clang_file, line, filename, base_path, message)
 
-    return line, filename, [linenumber, message]
+    if not '^' in message:
+        return line, None, None
+    return line, filename, (linenumber, message)
 
 
 def extract_filename_dictionary(filename, base_path):
@@ -81,7 +83,9 @@ def extract_filename_dictionary(filename, base_path):
             else:
                 comments[filename] = [message]
 
-    return comments        
+    for key in comments.keys():
+        comments[key] = list(set(tuple(comments[key])))
+    return comments
 
 
 def create_comment_section(comments, robot_id, robot_run_id):

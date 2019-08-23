@@ -28,6 +28,7 @@ namespace qml
 
     backend::~backend()
     {
+        stop_recording();
         send_all_notes_off_message( tracks_, sequencer::rtmidi::message_sender{midiout_} );
         clock_.shut_down();
     }
@@ -63,7 +64,7 @@ namespace qml
             sequencer::midi::system::common::song_position_pointer( song_position_in_16th_notes ) );
     }
 
-    QString backend::available_ports()
+    QString backend::available_midi_ports()
     {
         QString ports = "no port selected";
         for ( auto id = 0u; id < midiout_.getPortCount(); ++id )
@@ -71,6 +72,22 @@ namespace qml
             ports += ( ";" + midiout_.getPortName( id ) ).c_str();
         }
         return ports;
+    }
+
+    QString backend::available_audio_devices()
+    {
+        QString audio_devices = "no device selected";
+        for ( const auto& name : portaudio_.get_device_names() )
+        {
+            audio_devices += ";";
+            audio_devices += name.c_str();
+        }
+        return audio_devices;
+    }
+
+    void backend::set_audio_device( int id )
+    {
+        audio_device_id_ = id - 1;
     }
 
     bool backend::open_port( unsigned id )
@@ -147,5 +164,68 @@ namespace qml
                 set_step( step, true );
             }
         }
+    }
+
+    void backend::start_recording()
+    {
+        std::lock_guard lock{recording_mutex_};
+        if ( is_recording_ )
+        {
+            return;
+        }
+
+        is_recording_ = true;
+
+        recording_done_ = std::async( std::launch::async, [this] {
+            sample_ = sequencer::audio::sample_t( max_recording_time_.count() * sample_rate_ );
+
+            const auto parameters = portaudio_.get_parameters( audio_device_id_ );
+
+            sequencer::portaudio::stream_t stream;
+            stream.open_input_stream( parameters, sample_rate_, frames_per_buffer_,
+                                      sequencer::portaudio::record_callback, &sample_ );
+            stream.start();
+
+            while ( stream.is_active() )
+            {
+                std::this_thread::sleep_for( std::chrono::milliseconds( 1 ) );
+            }
+
+            sample_.trim();
+            stream.close();
+        } );
+    }
+
+    bool backend::is_recording() const noexcept
+    {
+        return is_recording_;
+    }
+
+    void backend::stop_recording()
+    {
+        std::lock_guard lock{recording_mutex_};
+        if ( !is_recording_ )
+        {
+            return;
+        }
+
+        is_recording_ = false;
+    }
+
+    void backend::playback()
+    {
+        recording_done_.wait();
+        recording_done_ = std::async( std::launch::async, [this] {
+            sample_.reset_frame_index();
+            const auto parameters = portaudio_.get_parameters( audio_device_id_ );
+
+            sequencer::portaudio::stream_t stream;
+            stream.open_output_stream( parameters, sample_rate_, frames_per_buffer_,
+                                       sequencer::portaudio::play_callback, &sample_ );
+            stream.start();
+            while ( stream.is_active() )
+                std::this_thread::sleep_for( std::chrono::milliseconds( 1 ) );
+            stream.close();
+        } );
     }
 } // namespace qml

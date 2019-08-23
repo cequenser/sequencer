@@ -8,32 +8,85 @@ SCENARIO( "reset frame index", "[sample]" )
 {
     using namespace sequencer::audio;
 
-    GIVEN( "an empty audio stereo sample with max 10 frames" )
+    GIVEN( "an empty audio stereo sample with max 2 frames" )
     {
-        const auto max_frames = 10u;
+        const auto max_frames = 2u;
         auto sample = sample_t{max_frames};
 
-        THEN( "there are 10 frames left" )
+        THEN( "there are frames left" )
         {
-            CHECK( sample.frames_left() == 10u );
+            CHECK( sample.has_frames_left() );
         }
 
-        WHEN( "5 bytes are read" )
+        WHEN( "trim is called" )
         {
-            std::vector< float > data{4};
+            sample.trim();
+
+            THEN( "no frames are left" )
+            {
+                CHECK_FALSE( sample.has_frames_left() );
+            }
+        }
+
+        WHEN( "16 bytes are read" )
+        {
+            std::vector< float > data = {3.0f, 4.0f, 5.0f, 6.0f};
             sample.read( data.data(), 2 );
 
-            THEN( "there are 8 frames left" )
+            THEN( "there are no frames left" )
             {
-                CHECK( sample.frames_left() == 8u );
+                CHECK_FALSE( sample.has_frames_left() );
 
                 WHEN( "frame index is reset" )
                 {
                     sample.reset_frame_index();
 
-                    THEN( "there are 10 frames left" )
+                    THEN( "there are frames left" )
                     {
-                        CHECK( sample.frames_left() == 10u );
+                        CHECK( sample.has_frames_left() );
+                    }
+
+                    AND_WHEN( "8 bytes are read" )
+                    {
+                        std::vector< float > data = {1.0f, 2.0f};
+                        sample.read( data.data(), 1 );
+
+                        AND_WHEN( "frame index is reset" )
+                        {
+                            sample.reset_frame_index();
+
+                            THEN( "write returns 16 bytes" )
+                            {
+                                std::vector< float > received_data( 4, 0 );
+                                sample.write( received_data.data(), 2 );
+
+                                CHECK( received_data[ 0 ] == 1.0f );
+                                CHECK( received_data[ 1 ] == 2.0f );
+                                CHECK( received_data[ 2 ] == 5.0f );
+                                CHECK( received_data[ 3 ] == 6.0f );
+                            }
+                        }
+
+                        AND_WHEN( "trim is called" )
+                        {
+                            sample.trim();
+
+                            AND_WHEN( "frame index is reset" )
+                            {
+                                sample.reset_frame_index();
+
+                                THEN( "write returns 8 bytes" )
+                                {
+                                    std::vector< float > received_data( 4, 0 );
+                                    sample.write( received_data.data(), 2 );
+
+                                    CHECK( received_data[ 0 ] == 1.0f );
+                                    CHECK( received_data[ 1 ] == 2.0f );
+                                    CHECK( received_data[ 2 ] == 0.0f );
+                                    CHECK( received_data[ 3 ] == 0.0f );
+                                }
+                            }
+                        }
                     }
                 }
             }

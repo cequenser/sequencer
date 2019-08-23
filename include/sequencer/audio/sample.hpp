@@ -21,14 +21,16 @@ namespace sequencer::audio
     class sample_t
     {
     public:
+        using frame_rep = float;
+
         sample_t( std::size_t max_frame_index, mode_t mode = mode_t::stereo )
             : max_frame_index_{max_frame_index}, mode_{mode}
         {
         }
 
-        constexpr std::size_t frames_left() const noexcept
+        constexpr void trim() noexcept
         {
-            return max_frame_index_ - frame_index_;
+            max_frame_index_ = frame_index_;
         }
 
         constexpr void reset_frame_index() noexcept
@@ -36,7 +38,7 @@ namespace sequencer::audio
             frame_index_ = 0;
         }
 
-        void read( const float* data, std::size_t frames_per_buffer )
+        void read( const frame_rep* data, std::size_t frames_per_buffer )
         {
             const auto size = frames_to_copy( frames_per_buffer );
             if ( data != nullptr )
@@ -46,17 +48,23 @@ namespace sequencer::audio
             increase_frame_index( size );
         }
 
-        void write( float* data, std::size_t frames_per_buffer )
+        void write( frame_rep* data, std::size_t frames_per_buffer )
         {
             const auto size = frames_to_copy( frames_per_buffer );
             std::memcpy( data, current_frame(), size * frame_size_in_bytes() );
             increase_frame_index( size );
         }
 
+        constexpr bool has_frames_left() const noexcept
+        {
+            return frame_index_ < max_frame_index_;
+        }
+
     private:
         constexpr std::size_t frames_to_copy( std::size_t frames_per_buffer ) const noexcept
         {
-            return std::min( frames_left(), frames_per_buffer );
+            const auto frames_left = max_frame_index_ - frame_index_;
+            return std::min( frames_left, frames_per_buffer );
         }
 
         constexpr void increase_frame_index( unsigned long increment ) noexcept
@@ -64,14 +72,14 @@ namespace sequencer::audio
             frame_index_ += increment;
         }
 
-        float* current_frame()
+        frame_rep* current_frame()
         {
             return &recorded_samples_[ frame_index_ * channels() ];
         }
 
         constexpr std::size_t frame_size_in_bytes() const noexcept
         {
-            return sizeof( float ) * channels();
+            return sizeof( frame_rep ) * channels();
         }
 
         constexpr underlying_t::mode_t channels() const noexcept
@@ -82,7 +90,7 @@ namespace sequencer::audio
         std::size_t frame_index_{0};
         std::size_t max_frame_index_;
         mode_t mode_;
-        std::vector< float > recorded_samples_ =
-            std::vector< float >( max_frame_index_ * channels(), 0 );
+        std::vector< frame_rep > recorded_samples_ =
+            std::vector< frame_rep >( max_frame_index_ * channels(), 0 );
     };
 } // namespace sequencer::audio

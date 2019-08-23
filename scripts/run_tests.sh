@@ -6,8 +6,6 @@ GCOV=$3
 
 cd /home/shared
 
-scripts/ci/install_dependencies_linux.sh ${CXX_COMPILER} ${C_COMPILER}
-
 mkdir -p build
 cd build
 rm -rf *

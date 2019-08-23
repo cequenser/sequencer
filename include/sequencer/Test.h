@@ -1,6 +1,8 @@
 #pragma once
 
+#include <sequencer/sequencer_export.hpp>
+
 namespace tst
 {
-    int get_zero() noexcept;
+    int SEQUENCER_EXPORT get_zero() noexcept;
 }

@@ -16,16 +16,16 @@ namespace sequencer::midi::system::exclusive
     }
 
     template < class... Data >
-    constexpr message_t< sizeof...( Data ) + std::size_t{3} >
-    system_exclusive( std::byte manufacturer_id, Data&&... data ) noexcept
+    constexpr message_t< sizeof...( Data ) + 3u > system_exclusive( std::byte manufacturer_id,
+                                                                    Data&&... data ) noexcept
     {
         return {start_byte, manufacturer_id, std::byte( std::forward< Data >( data ) )...,
                 end_byte};
     }
 
     template < class... Data >
-    constexpr message_t< sizeof...( Data ) + std::size_t{3} >
-    system_exclusive( std::uint8_t manufacturer_id, Data&&... data ) noexcept
+    constexpr message_t< sizeof...( Data ) + 3u > system_exclusive( std::uint8_t manufacturer_id,
+                                                                    Data&&... data ) noexcept
     {
         return system_exclusive( std::byte{manufacturer_id}, std::forward< Data >( data )... );
     }
@@ -36,7 +36,7 @@ namespace sequencer::midi::system::exclusive
         static constexpr auto device_control_byte = std::byte{0x04};
 
         template < class... Data >
-        constexpr message_t< sizeof...( Data ) + std::size_t{4} >
+        constexpr message_t< sizeof...( Data ) + 4u >
         system_exclusive( std::uint8_t manufacturer_id, Data&&... data ) noexcept
         {
             return exclusive::system_exclusive( id_byte, manufacturer_id,
@@ -230,7 +230,7 @@ namespace sequencer::midi::system::exclusive
         static constexpr auto dls_byte = std::byte{0x0A};
 
         template < class... Data >
-        constexpr message_t< sizeof...( Data ) + std::size_t{4} >
+        constexpr message_t< sizeof...( Data ) + 4u >
         system_exclusive( std::uint8_t manufacturer_id, Data&&... data ) noexcept
         {
             return exclusive::system_exclusive( id_byte, manufacturer_id,

@@ -33,6 +33,7 @@ target_include_directories(sequencer
     $<INSTALL_INTERFACE:include>
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
     $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/external/repo/portaudio/include>
 )
 target_link_libraries(sequencer PUBLIC RtMidi::rtmidi Threads::Threads)
 

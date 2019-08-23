@@ -54,8 +54,10 @@ IncludeCategories:
   - Regex:           '^((<|")catch2)'
     Priority:        30
   - Regex:           '.*'
-    Priority:        50
+    Priority:        40
   - Regex:           '^((<|")RtMidi.h)'
+    Priority:        50
+  - Regex:           '^((<|")portaudio.h)'
     Priority:        60
   - Regex:           '^((<|")(QObject|QString))'
     Priority:        70

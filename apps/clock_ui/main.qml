@@ -6,7 +6,7 @@ import Sequencer 1.0
 ApplicationWindow {
     visible: true
     width: 900
-    height: 300
+    height: 400
     title: qsTr("MIDI Clock")
 
     Backend
@@ -77,7 +77,7 @@ ApplicationWindow {
                 value: 0
                 Layout.columnSpan: 3
 
-                property var items: backend.available_ports().split(";")
+                property var items: backend.available_midi_ports().split(";")
 
                 textFromValue: function(value) {
                     return items[value];
@@ -317,6 +317,61 @@ ApplicationWindow {
 
                 onClicked: {
                     backend.set_step(15, checked);
+                }
+            }
+        }
+
+        RowLayout {
+            id: audio_layout
+
+            Button {
+                id: audio_record_start_button
+                text: qsTr("Record")
+
+                onClicked: {
+                    status_label.text = "Recording"
+                    backend.start_recording()
+                }
+            }
+
+            Button {
+                id: audio_record_stop_button
+                text: qsTr("Stop")
+
+                onClicked: {
+                    status_label.text = ""
+                    backend.stop_recording()
+                }
+            }
+
+            Button {
+                id: audio_record_play_button
+                text: qsTr("Play")
+
+                onClicked: {
+                    backend.playback()
+                }
+            }
+
+            SpinBox {
+                id: audio_spinbox
+                from: 0
+                to: items.length - 1
+                value: 0
+                Layout.columnSpan: 3
+
+                property var items: backend.available_audio_devices().split(";")
+
+                textFromValue: function(value) {
+                    return items[value];
+                }
+
+                valueFromText: function(text) {
+                    for (var i = 0; i < items.length; ++i) {
+                        if (items[i].toLowerCase().indexOf(text.toLowerCase()) === 0)
+                            return i
+                    }
+                    return sb.value
                 }
             }
         }

@@ -1,0 +1,24 @@
+{
+  "comments": [
+    {
+      "robotId": "clang-format",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-format/529/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "3241f264_bebbd91b",
+        "filename": "include/sequencer/midi/message/message_type.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-23T14:54:08Z",
+      "side": 1,
+      "message": "using message_t \u003d\n         std::conditional_t\u003c greater_than\u003c number_of_bytes, 0 \u003e::value,\n                             std::array\u003c std::byte, number_of_bytes \u003e, std::vector\u003c std::byte \u003e \u003e;\n-}\n+} // namespace sequencer::midi",
+      "revId": "b21cce7a8dd38d13de92ab3065d75c2cf1749c08",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}

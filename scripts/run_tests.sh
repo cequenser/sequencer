@@ -6,8 +6,6 @@ GCOV=$3
 
 cd /home/shared
 
-scripts/ci/install_dependencies_linux.sh ${CXX_COMPILER} ${C_COMPILER}
-
 mkdir -p build
 cd build
 rm -rf *
@@ -17,8 +15,7 @@ if [ -n "${GCOV}" ]; then
     cmake . -DCoverage=ON
 fi
 cmake --build .
-
-tests/tests
+cmake --build . --target test
 
 if [ -n "${GCOV}" ]; then
       lcov --gcov-tool ${GCOV} --capture --no-external --directory . --base-directory ../include -rc lcov_branch_coverage=1 --output-file coverage.info

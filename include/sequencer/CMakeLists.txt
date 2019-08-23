@@ -29,13 +29,19 @@ target_include_directories(sequencer
   PUBLIC
     $<INSTALL_INTERFACE:include>
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
-    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/external/repo/install/portaudio/include>
-    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/external/repo/install/rtmidi/include>
+    $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/external/repo/portaudio/include>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/external/repo/rtmidi>
 )
 
 # configure installation and registration
 set_target_properties(sequencer PROPERTIES EXPORT_NAME Sequencer)
 add_library(Sequencer::Sequencer ALIAS sequencer)
+
+include(GenerateExportHeader)
+generate_export_header(sequencer
+    EXPORT_FILE_NAME sequencer_export.hpp
+    )
 
 include(GNUInstallDirs)
 set(INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/sequencer)
@@ -45,7 +51,13 @@ install(TARGETS sequencer
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
-install(DIRECTORY . DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/sequencer FILES_MATCHING PATTERN "*.hpp")
+install(DIRECTORY .
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/sequencer
+    FILES_MATCHING PATTERN "*.hpp"
+    )
+install(FILES ${PROJECT_BINARY_DIR}/include/sequencer/sequencer_export.hpp
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/sequencer
+)
 install(EXPORT sequencer-targets
   FILE
     SequencerTargets.cmake

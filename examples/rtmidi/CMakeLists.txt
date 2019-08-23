@@ -2,8 +2,6 @@ function(add_example name)
     add_executable(${name} ${name}.cpp)
     target_link_libraries(${name} PRIVATE
         Sequencer::Sequencer RtMidi::rtmidi)
-    target_include_directories(${name} PRIVATE
-      ${PROJECT_SOURCE_DIR}/external/repo/install/rtmidi/include)
 endfunction()
 
 add_example(midi_clock)

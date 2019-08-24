@@ -4,7 +4,6 @@
 #include <sequencer/chrono/units.hpp>
 #include <sequencer/fixed_point_type.hpp>
 
-#include <cassert>
 #include <chrono>
 #include <limits>
 #include <ostream>

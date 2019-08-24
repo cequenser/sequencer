@@ -1,6 +1,7 @@
 add_library(sequencer
     Test.h
     Test.cpp
+    assert.hpp
     beat_duration.hpp
     beat_time_point.hpp
     beats_per_minute.hpp

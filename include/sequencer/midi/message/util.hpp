@@ -1,6 +1,7 @@
 #pragma once
 
-#include <cassert>
+#include <sequencer/assert.hpp>
+
 #include <cstddef>
 #include <cstdint>
 #include <utility>
@@ -17,7 +18,7 @@ namespace sequencer::midi
 
     constexpr std::pair< std::byte, std::byte > uint16_to_lsb_msb( std::uint16_t value ) noexcept
     {
-        assert( value < max_14bit );
+        SEQUENCER_ASSERT( value < max_14bit );
         return value < 128
                    ? std::pair( std::byte{static_cast< std::uint8_t >( value )}, std::byte{0x00} )
                    : std::make_pair( std::byte{static_cast< std::uint8_t >( value % 128 )},

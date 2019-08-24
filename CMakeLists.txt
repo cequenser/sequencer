@@ -12,6 +12,7 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 option(BuildTests "build tests" OFF)
 option(BuildExamples "build examples" OFF)
 option(Coverage "gather coverage data" OFF)
+option(DisableAssert "disable asserts" OFF)
 
 project(sequencer VERSION 0.0.1 LANGUAGES CXX)
 
@@ -25,6 +26,10 @@ list(APPEND CMAKE_MODULE_PATH
 if(Coverage)
     set(CMAKE_BUILD_TYPE Debug)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
+endif()
+
+if(DisableAssert)
+    add_definitions(-DSEQUENCER_DISABLE_ASSERT)
 endif()
 
 add_subdirectory(include)

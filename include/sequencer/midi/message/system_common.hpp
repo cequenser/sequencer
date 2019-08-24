@@ -1,9 +1,9 @@
 #pragma once
 
+#include <sequencer/assert.hpp>
 #include <sequencer/midi/message/message_type.hpp>
 #include <sequencer/midi/message/util.hpp>
 
-#include <cassert>
 #include <cstdint>
 
 namespace sequencer::midi::system::common
@@ -16,7 +16,7 @@ namespace sequencer::midi::system::common
 
     constexpr message_t< 2 > song_select( std::uint8_t song_number ) noexcept
     {
-        assert( song_number < 128 );
+        SEQUENCER_ASSERT( song_number < 128 );
         return {std::byte{0xF3}, std::byte{song_number}};
     }
 

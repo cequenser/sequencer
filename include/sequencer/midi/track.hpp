@@ -1,5 +1,6 @@
 #pragma once
 
+#include <sequencer/assert.hpp>
 #include <sequencer/midi/message/channel_voice.hpp>
 #include <sequencer/midi/message/message_type.hpp>
 #include <sequencer/midi/message/realtime.hpp>
@@ -7,7 +8,6 @@
 
 #include <algorithm>
 #include <atomic>
-#include <cassert>
 #include <vector>
 
 namespace sequencer::midi
@@ -94,7 +94,7 @@ namespace sequencer::midi
 
         constexpr void set_channel( std::uint8_t channel ) noexcept
         {
-            assert( channel < 16 );
+            SEQUENCER_ASSERT( channel < 16 );
             channel_ = channel;
         }
 

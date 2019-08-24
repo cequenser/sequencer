@@ -1,9 +1,9 @@
 #pragma once
 
+#include <sequencer/assert.hpp>
 #include <sequencer/midi/message/message_type.hpp>
 #include <sequencer/midi/message/util.hpp>
 
-#include <cassert>
 #include <cstdint>
 #include <tuple>
 
@@ -12,9 +12,9 @@ namespace sequencer::midi::channel::voice
     constexpr message_t< 3 > note_on( std::uint8_t channel, std::uint8_t note,
                                       std::uint8_t velocity ) noexcept
     {
-        assert( channel < 16 );
-        assert( note < 128 );
-        assert( velocity < 128 );
+        SEQUENCER_ASSERT( channel < 16 );
+        SEQUENCER_ASSERT( note < 128 );
+        SEQUENCER_ASSERT( velocity < 128 );
 
         return {status_byte_for( std::byte{0x90}, channel ), std::byte{note}, std::byte{velocity}};
     }
@@ -22,9 +22,9 @@ namespace sequencer::midi::channel::voice
     constexpr message_t< 3 > note_off( std::uint8_t channel, std::uint8_t note,
                                        std::uint8_t velocity ) noexcept
     {
-        assert( channel < 16 );
-        assert( note < 128 );
-        assert( velocity < 128 );
+        SEQUENCER_ASSERT( channel < 16 );
+        SEQUENCER_ASSERT( note < 128 );
+        SEQUENCER_ASSERT( velocity < 128 );
 
         return {status_byte_for( std::byte{0x80}, channel ), std::byte{note}, std::byte{velocity}};
     }
@@ -32,9 +32,9 @@ namespace sequencer::midi::channel::voice
     constexpr message_t< 3 > polymorphic_key_pressure( std::uint8_t channel, std::uint8_t key,
                                                        std::uint8_t pressure ) noexcept
     {
-        assert( channel < 16 );
-        assert( key < 128 );
-        assert( pressure < 128 );
+        SEQUENCER_ASSERT( channel < 16 );
+        SEQUENCER_ASSERT( key < 128 );
+        SEQUENCER_ASSERT( pressure < 128 );
 
         return {status_byte_for( std::byte{0xA0}, channel ), std::byte{key}, std::byte{pressure}};
     }
@@ -47,7 +47,7 @@ namespace sequencer::midi::channel::voice
     constexpr message_t< 3 > control_change( std::uint8_t channel, std::byte controller,
                                              std::byte value ) noexcept
     {
-        assert( channel < 16 );
+        SEQUENCER_ASSERT( channel < 16 );
 
         return {control_change_status_byte( channel ), controller, value};
     }
@@ -55,17 +55,17 @@ namespace sequencer::midi::channel::voice
     constexpr message_t< 3 > control_change( std::uint8_t channel, std::uint8_t controller,
                                              std::uint8_t value ) noexcept
     {
-        assert( channel < 16 );
-        assert( controller < 120 );
-        assert( value < 128 );
+        SEQUENCER_ASSERT( channel < 16 );
+        SEQUENCER_ASSERT( controller < 120 );
+        SEQUENCER_ASSERT( value < 128 );
 
         return control_change( channel, std::byte{controller}, std::byte{value} );
     }
 
     constexpr message_t< 2 > program_change( std::uint8_t channel, std::uint8_t program ) noexcept
     {
-        assert( channel < 16 );
-        assert( program < 128 );
+        SEQUENCER_ASSERT( channel < 16 );
+        SEQUENCER_ASSERT( program < 128 );
 
         return {status_byte_for( std::byte{0xC0}, channel ), std::byte{program}};
     }
@@ -73,17 +73,17 @@ namespace sequencer::midi::channel::voice
     constexpr message_t< 2 > channel_pressure( std::uint8_t channel,
                                                std::uint8_t pressure ) noexcept
     {
-        assert( channel < 16 );
-        assert( pressure < 128 );
+        SEQUENCER_ASSERT( channel < 16 );
+        SEQUENCER_ASSERT( pressure < 128 );
 
         return {status_byte_for( std::byte{0xD0}, channel ), std::byte{pressure}};
     }
 
     constexpr message_t< 3 > pitch_bend_change( std::uint8_t channel, std::int16_t value ) noexcept
     {
-        assert( channel < 16 );
-        assert( value < max_14bit / 2 );
-        assert( value > -max_14bit / 2 );
+        SEQUENCER_ASSERT( channel < 16 );
+        SEQUENCER_ASSERT( value < max_14bit / 2 );
+        SEQUENCER_ASSERT( value > -max_14bit / 2 );
 
         const std::int32_t offset = 8192;
         const auto [ lsb, msb ] = uint16_to_lsb_msb( std::uint16_t( offset + value ) );
@@ -170,8 +170,8 @@ namespace sequencer::midi::channel::voice
     constexpr std::array< message_t< 3 >, 2 > effect_control( std::uint8_t id, std::uint8_t channel,
                                                               std::uint16_t value ) noexcept
     {
-        assert( id >= 1 );
-        assert( id <= 2 );
+        SEQUENCER_ASSERT( id >= 1 );
+        SEQUENCER_ASSERT( id <= 2 );
         const auto control_function = ( id == 1 ) ? 0x0C : 0x0D;
         return control_change_lsb_msb( channel, control_function, value );
     }
@@ -180,8 +180,8 @@ namespace sequencer::midi::channel::voice
     general_purpose_controller( std::uint8_t id, std::uint8_t channel,
                                 std::uint16_t value ) noexcept
     {
-        assert( id >= 1 );
-        assert( id <= 4 );
+        SEQUENCER_ASSERT( id >= 1 );
+        SEQUENCER_ASSERT( id <= 4 );
         const auto control_function =
             ( id == 1 ) ? 0x10 : ( id == 2 ) ? 0x11 : ( id == 3 ) ? 0x12 : 0x13;
         return control_change_lsb_msb( channel, control_function, value );
@@ -241,79 +241,79 @@ namespace sequencer::midi::channel::voice
 
     constexpr message_t< 3 > all_sounds_off( std::uint8_t channel ) noexcept
     {
-        assert( channel < 16 );
+        SEQUENCER_ASSERT( channel < 16 );
         return control_change( channel, std::byte{0x78} );
     }
 
     constexpr message_t< 3 > reset_all_controllers( std::uint8_t channel ) noexcept
     {
-        assert( channel < 16 );
+        SEQUENCER_ASSERT( channel < 16 );
         return control_change( channel, std::byte{0x79} );
     }
 
     constexpr message_t< 3 > local_control( std::uint8_t channel, bool on ) noexcept
     {
-        assert( channel < 16 );
+        SEQUENCER_ASSERT( channel < 16 );
         const auto data_byte = on ? std::byte{0x7F} : std::byte{0x00};
         return control_change( channel, std::byte{0x7A}, data_byte );
     }
 
     constexpr message_t< 3 > all_notes_off( std::uint8_t channel ) noexcept
     {
-        assert( channel < 16 );
+        SEQUENCER_ASSERT( channel < 16 );
         return control_change( channel, std::byte{0x7B} );
     }
 
     constexpr message_t< 3 > omni_mode_off( std::uint8_t channel ) noexcept
     {
-        assert( channel < 16 );
+        SEQUENCER_ASSERT( channel < 16 );
         return control_change( channel, std::byte{0x7C} );
     }
 
     constexpr message_t< 3 > omni_mode_on( std::uint8_t channel ) noexcept
     {
-        assert( channel < 16 );
+        SEQUENCER_ASSERT( channel < 16 );
         return control_change( channel, std::byte{0x7D} );
     }
 
     constexpr message_t< 3 > poly_mode_on( std::uint8_t channel ) noexcept
     {
-        assert( channel < 16 );
+        SEQUENCER_ASSERT( channel < 16 );
         return control_change( channel, std::byte{0x7F} );
     }
 
     constexpr message_t< 3 > effects_1_depth( std::uint8_t channel, std::uint8_t value ) noexcept
     {
-        assert( channel < 16 );
-        assert( value < 128 );
+        SEQUENCER_ASSERT( channel < 16 );
+        SEQUENCER_ASSERT( value < 128 );
         return control_change( channel, std::byte{0x5B}, std::byte{value} );
     }
 
     constexpr message_t< 3 > effects_2_depth( std::uint8_t channel, std::uint8_t value ) noexcept
     {
-        assert( channel < 16 );
-        assert( value < 128 );
+        SEQUENCER_ASSERT( channel < 16 );
+        SEQUENCER_ASSERT( value < 128 );
         return control_change( channel, std::byte{0x5C}, std::byte{value} );
     }
 
     constexpr message_t< 3 > effects_3_depth( std::uint8_t channel, std::uint8_t value ) noexcept
     {
-        assert( channel < 16 );
-        assert( value < 128 );
+        SEQUENCER_ASSERT( channel < 16 );
+        SEQUENCER_ASSERT( value < 128 );
         return control_change( channel, std::byte{0x5D}, std::byte{value} );
     }
 
     constexpr message_t< 3 > effects_4_depth( std::uint8_t channel, std::uint8_t value ) noexcept
     {
-        assert( channel < 16 );
-        assert( value < 128 );
+        SEQUENCER_ASSERT( channel < 16 );
+        SEQUENCER_ASSERT( value < 128 );
         return control_change( channel, std::byte{0x5E}, std::byte{value} );
     }
 
     constexpr message_t< 3 > effects_5_depth( std::uint8_t channel, std::uint8_t value ) noexcept
     {
-        assert( channel < 16 );
-        assert( value < 128 );
+        SEQUENCER_ASSERT( channel < 16 );
+        SEQUENCER_ASSERT( value < 128 );
         return control_change( channel, std::byte{0x5F}, std::byte{value} );
     }
 } // namespace sequencer::midi::channel::voice

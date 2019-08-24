@@ -1,5 +1,6 @@
 #pragma once
 
+#include <sequencer/assert.hpp>
 #include <sequencer/midi/message/message_type.hpp>
 #include <sequencer/midi/message/util.hpp>
 
@@ -179,7 +180,7 @@ namespace sequencer::midi::system::exclusive
             const std::array< std::pair< std::uint8_t, std::uint8_t >, number_of_entries >&
                 number_value_pairs ) noexcept
         {
-            assert( channel < 16 );
+            SEQUENCER_ASSERT( channel < 16 );
             constexpr auto fixed_entry_offset = 4u;
             constexpr auto data_size = fixed_entry_offset + 2 * number_of_entries;
             message_t< data_size > data;
@@ -192,30 +193,40 @@ namespace sequencer::midi::system::exclusive
                 const auto id = number_value_pairs[ i ].first;
                 const auto value = number_value_pairs[ i ].second;
                 data[ fixed_entry_offset + 2 * i ] = std::byte{id};
-                assert( !( id == to_uint8( key_based_instrument_control_type::note_volume ) ) ||
-                        ( value <= 0x40 ) );
-                assert(
+                SEQUENCER_ASSERT(
+                    !( id == to_uint8( key_based_instrument_control_type::note_volume ) ) ||
+                    ( value <= 0x40 ) );
+                SEQUENCER_ASSERT(
                     !( id ==
                        to_uint8( key_based_instrument_control_type::timbre_harmonic_intensity ) ) ||
                     ( value <= 0x40 ) );
-                assert( !( id == to_uint8( key_based_instrument_control_type::release_time ) ) ||
-                        ( value <= 0x40 ) );
-                assert( !( id == to_uint8( key_based_instrument_control_type::attack_time ) ) ||
-                        ( value <= 0x40 ) );
-                assert( !( id == to_uint8( key_based_instrument_control_type::brightness ) ) ||
-                        ( value <= 0x40 ) );
-                assert( !( id == to_uint8( key_based_instrument_control_type::decay_time ) ) ||
-                        ( value <= 0x40 ) );
-                assert( !( id == to_uint8( key_based_instrument_control_type::vibrato_rate ) ) ||
-                        ( value <= 0x40 ) );
-                assert( !( id == to_uint8( key_based_instrument_control_type::vibrato_depth ) ) ||
-                        ( value <= 0x40 ) );
-                assert( !( id == to_uint8( key_based_instrument_control_type::vibrato_delay ) ) ||
-                        ( value <= 0x40 ) );
-                assert( !( id == to_uint8( key_based_instrument_control_type::fine_tuning ) ) ||
-                        ( value <= 0x40 ) );
-                assert( !( id == to_uint8( key_based_instrument_control_type::coarse_tuning ) ) ||
-                        ( value <= 0x40 ) );
+                SEQUENCER_ASSERT(
+                    !( id == to_uint8( key_based_instrument_control_type::release_time ) ) ||
+                    ( value <= 0x40 ) );
+                SEQUENCER_ASSERT(
+                    !( id == to_uint8( key_based_instrument_control_type::attack_time ) ) ||
+                    ( value <= 0x40 ) );
+                SEQUENCER_ASSERT(
+                    !( id == to_uint8( key_based_instrument_control_type::brightness ) ) ||
+                    ( value <= 0x40 ) );
+                SEQUENCER_ASSERT(
+                    !( id == to_uint8( key_based_instrument_control_type::decay_time ) ) ||
+                    ( value <= 0x40 ) );
+                SEQUENCER_ASSERT(
+                    !( id == to_uint8( key_based_instrument_control_type::vibrato_rate ) ) ||
+                    ( value <= 0x40 ) );
+                SEQUENCER_ASSERT(
+                    !( id == to_uint8( key_based_instrument_control_type::vibrato_depth ) ) ||
+                    ( value <= 0x40 ) );
+                SEQUENCER_ASSERT(
+                    !( id == to_uint8( key_based_instrument_control_type::vibrato_delay ) ) ||
+                    ( value <= 0x40 ) );
+                SEQUENCER_ASSERT(
+                    !( id == to_uint8( key_based_instrument_control_type::fine_tuning ) ) ||
+                    ( value <= 0x40 ) );
+                SEQUENCER_ASSERT(
+                    !( id == to_uint8( key_based_instrument_control_type::coarse_tuning ) ) ||
+                    ( value <= 0x40 ) );
                 data[ fixed_entry_offset + 2 * i + 1 ] = std::byte{value};
             }
 

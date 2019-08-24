@@ -10,7 +10,7 @@ mkdir -p build
 cd build
 rm -rf *
 
-cmake .. -DBuildTests=ON -DBuildExamples=ON -DCMAKE_CXX_COMPILER=${CXX_COMPILER} -DDisableAssert=ON
+cmake .. -DBuildTests=ON -DBuildExamples=ON -DCMAKE_CXX_COMPILER=${CXX_COMPILER} -DCMAKE_C_COMPILER=${C_COMPILER} -DDisableAssert=ON
 if [ -n "${GCOV}" ]; then
     cmake . -DCoverage=ON
 fi

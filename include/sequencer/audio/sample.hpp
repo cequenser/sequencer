@@ -43,7 +43,7 @@ namespace sequencer::audio
             using std::rend;
             const auto last_non_zero = std::find_if_not(
                 rbegin( frames ), rend( frames ), []( frame_rep value ) { return value == 0.0f; } );
-            frames.resize( std::distance( last_non_zero, rend( frames ) ) );
+            frames.resize( size_type( std::distance( last_non_zero, rend( frames ) ) ) );
         }
 
         void clear()

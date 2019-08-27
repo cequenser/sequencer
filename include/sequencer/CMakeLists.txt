@@ -1,3 +1,5 @@
+find_package(Threads REQUIRED)
+
 add_library(sequencer
     Test.h
     Test.cpp
@@ -31,9 +33,8 @@ target_include_directories(sequencer
     $<INSTALL_INTERFACE:include>
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
     $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
-    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/external/repo/portaudio/include>
-    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/external/repo/rtmidi>
 )
+target_link_libraries(sequencer PUBLIC RtMidi::rtmidi Threads::Threads)
 
 # configure installation and registration
 set_target_properties(sequencer PROPERTIES EXPORT_NAME Sequencer)

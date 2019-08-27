@@ -60,12 +60,6 @@ namespace sequencer::audio
         mode_t mode{mode_t::stereo};
     };
 
-    struct read_write_locks_t
-    {
-        std::atomic_bool block_reading{false};
-        std::atomic_bool block_writing{false};
-    };
-
     template < class Type >
     struct read_write_lockable : Type
     {
@@ -73,38 +67,39 @@ namespace sequencer::audio
 
         constexpr bool block_reading( bool lock ) noexcept
         {
-            if ( locks_.block_writing )
+            if ( block_writing_ )
             {
                 return false;
             }
 
-            locks_.block_reading = lock;
+            block_reading_ = lock;
             return true;
         }
 
         constexpr bool block_writing( bool lock ) noexcept
         {
-            if ( locks_.block_reading )
+            if ( block_reading_ )
             {
                 return false;
             }
 
-            locks_.block_writing = lock;
+            block_writing_ = lock;
             return true;
         }
 
         constexpr bool reading_is_blocked() const noexcept
         {
-            return locks_.block_reading;
+            return block_reading_;
         }
 
         constexpr bool writing_is_blocked() const noexcept
         {
-            return locks_.block_writing;
+            return block_writing_;
         }
 
     private:
-        read_write_locks_t locks_;
+        std::atomic_bool block_reading_{false};
+        std::atomic_bool block_writing_{false};
     };
 
     class sample_read_write_base_t

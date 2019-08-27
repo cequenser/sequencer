@@ -93,6 +93,11 @@ namespace sequencer
         return beat_duration( value );
     }
 
+    constexpr beat_duration operator"" _beats( unsigned long long int value ) noexcept
+    {
+        return beat_duration( value );
+    }
+
     static_assert( std::chrono::seconds( 30 ) * 120.0_bpm == beat_duration( 60.0 ) );
     static_assert( ( std::chrono::seconds( 30 ) * 120.0_bpm ) / 120.0_bpm ==
                    chrono::seconds( 30.0 ) );

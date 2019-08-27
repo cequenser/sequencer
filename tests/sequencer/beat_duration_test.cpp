@@ -38,7 +38,7 @@ SCENARIO( "Convert beat_duration to std::chrono::duration<>", "[beat_duration]" 
 
         WHEN( "there is another duration of 13 beats" )
         {
-            beat_duration another_duration{13.0};
+            auto another_duration = 13_beats;
             THEN( "in-place summation yields 29 beats" )
             {
                 another_duration += sixteen_beats;
@@ -48,7 +48,7 @@ SCENARIO( "Convert beat_duration to std::chrono::duration<>", "[beat_duration]" 
 
         WHEN( "there is another constexpr duration of 13 beats" )
         {
-            constexpr beat_duration thirteen_beats{13.0};
+            constexpr auto thirteen_beats = 13_beats;
             THEN( "summation yields 29 beats" )
             {
                 constexpr auto twenty_nine_beats = thirteen_beats + sixteen_beats;
@@ -85,7 +85,7 @@ SCENARIO( "Convert beat_duration to std::chrono::duration<>", "[beat_duration]" 
 
     GIVEN( "A beat_duration of 30 beats" )
     {
-        constexpr auto thirty_beats = 30.0_beats;
+        constexpr auto thirty_beats = 30_beats;
         static_assert( thirty_beats.to_double() == 30.0 );
 
         WHEN( "the duration is calculated at 120 beats per minute" )

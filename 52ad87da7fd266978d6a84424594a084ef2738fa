@@ -1,0 +1,2344 @@
+{
+  "comments": [
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "58674e5a_fce1678d",
+        "filename": "external/repo/fftw-3.3.8/api/mktensor-iodims.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "unknown type name \u0027IODIM\u0027 [clang-diagnostic-error]\ntensor* MKTENSOR_IODIMS( int rank, const IODIM* dims, int is, int os )\n                                         ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "7d7672c8_ec1c1c7a",
+        "filename": "external/repo/fftw-3.3.8/api/mktensor-iodims.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "unknown type name \u0027IODIM\u0027 [clang-diagnostic-error]\nstatic int iodims_kosherp( int rank, const IODIM* dims, int allow_minfty )\n                                           ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "d493ea68_de00ccc1",
+        "filename": "external/repo/fftw-3.3.8/api/mktensor-iodims.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "unknown type name \u0027IODIM\u0027 [clang-diagnostic-error]\nint GURU_KO4 errors generated.\nError while processing /home/jenkins/workspace/psv/clang-tidy/external/repo/fftw-3.3.8/api/mktensor-iodims.c.\nFound compiler error(s).\nSHERP( int rank, const IODIM* dims, int howmany_rank, const IODIM* howmany_dims )\n                                                                       ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "8df908a5_7a9868c9",
+        "filename": "external/repo/fftw-3.3.8/api/mktensor-iodims.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "unknown type name \u0027IODIM\u0027 [clang-diagnostic-error]\nint GURU_KOSHERP( int rank, const IODIM* dims, int howmany_rank, const IODIM* howmany_dims )\n                                  ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "aa4da3d5_511ab546",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-dft-c2r.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "unknown type name \u0027IODIM\u0027 [clang-diagnostic-error]\nXGURU( dft_c2r )( int rank, const IODIM* dims, int howmany_rank, const IODIM* howmany_dims, C* in,\n                                  ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "8edbc9bc_caa9e8ad",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-dft-c2r.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "function cannot return function type \u0027fftw_plan (int, const int *, int, const int *, C *, R *, unsigned int)\u0027 (aka \u0027struct fftw_plan_s *(int, const int *, int, const int *, R (*)[2], double *, unsigned int)\u0027) [clang-diagnostic-error]\nXGURU( dft_c2r )( int rank, const IODIM* dims, int howmany_rank, const IODIM* howmany_dims, C* in,\n     ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "26a5caaa_29a7d5ed",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-dft-c2r.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "unknown type name \u0027IODIM\u0027 [clang-diagnostic-error]\nXGURU( dft_c2r )( int rank, const IODIM* dims, int howmany_rank, const IODIM* howmany_dims, C* in,\n                                                                       ^\n/home/jenkins/workspace/psv/clang-tidy/ex2 warnings and 16 errors generated.\nError while processing /home/jenkins/workspace/psv/clang-tidy/external/repo/fftw-3.3.8/api/plan-guru-dft-c2r.c.\nSuppressed 2 warnings (2 with check filters).\nFound compiler error(s).",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "026caa9f_f8703d51",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-dft-c2r.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027howmany_rank\u0027 [clang-diagnostic-error]\n    if ( !GURU_KOSHERP( rank, dims, howmany_rank, howmany_dims ) )\n                                    ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "504bc373_264c6940",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-dft-c2r.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027dims\u0027 [clang-diagnostic-error]\n    if ( !GURU_KOSHERP( rank, dims, howmany_rank, howmany_dims ) )\n                              ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "e8440f9f_294b45f0",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-dft-c2r.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027howmany_dims\u0027 [clang-diagnostic-error]\n    if ( !GURU_KOSHERP( rank, dims, howmany_rank, howmany_dims ) )\n                                                  ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "6ec36f1f_f3886f9d",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-dft-c2r.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027in\u0027 [clang-diagnostic-error]\n    EXTRACT_REIM( FFT_SIGN, in, \u0026ri, \u0026ii );\n                            ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "1b70ceab_34d1b2a9",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-dft-c2r.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027out\u0027 [clang-diagnostic-error]\n    if ( out !\u003d ri )\n         ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "580b16e8_3b90f3b1",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-dft-c2r.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027flags\u0027 [clang-diagnostic-error]\n        flags |\u003d FFTW_DESTROY_INPUT;\n        ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "3211443e_a8388434",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-dft-c2r.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027flags\u0027 [clang-diagnostic-error]\n    return X( mkapiplan )( 0, flags,\n                              ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "37b7e3d9_c06a8a8c",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-dft-c2r.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027dims\u0027 [clang-diagnostic-error]\n                               MKTENSOR_IODIMS( rank, dims, 2, 1 ),\n                                                      ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "a9e3f293_91a3d494",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-dft-c2r.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027rank\u0027; did you mean \u0027rand\u0027? [clang-diagnostic-error]\n                               MKTENSOR_IODIMS( rank, dims, 2, 1 ),\n                                                ^~~~\n                                                rand",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "486190f5_fd2a1cc4",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-dft-c2r.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027howmany_dims\u0027 [clang-diagnostic-error]\n                               MKTENSOR_IODIMS( howmany_rank, howmany_dims, 2, 1 ),\n                                                              ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "fe46c030_d925942f",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-dft-c2r.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027howmany_rank\u0027 [clang-diagnostic-error]\n                               MKTENSOR_IODIMS( howmany_rank, howmany_dims, 2, 1 ),\n                                                ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "1399d3c4_3acff025",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-dft-c2r.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027out\u0027 [clang-diagnostic-error]\n                               TAINT_UNALIGNED( out, flags ), TAINT_UNALIGNED( ri, flags ),\n                                                ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "bf0ea88c_c645b336",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-dft-r2c.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "function cannot return function type \u0027fftw_plan (int, const int *, int, const int *, R *, C *, unsigned int)\u0027 (aka \u0027struct fftw_plan_s *(int, const int *, int, const int *, double *, R (*)[2], unsigned int)\u0027) [c2 warnings and 14 errors generated.\nError while processing /home/jenkins/workspace/psv/clang-tidy/external/repo/fftw-3.3.8/api/plan-guru-dft-r2c.c.\nSuppressed 2 warnings (2 with check filters).\nFound compiler error(s).\nlang-diagnostic-error]\nXGURU( dft_r2c )( int rank, const IODIM* dims, int howmany_rank, const IODIM* howmany_dims, R* in,\n     ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "f315b935_74726949",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-dft-r2c.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "unknown type name \u0027IODIM\u0027 [clang-diagnostic-error]\nXGURU( dft_r2c )( int rank, const IODIM* dims, int howmany_rank, const IODIM* howmany_dims, R* in,\n                                                                       ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "45633e32_432972e8",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-dft-r2c.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "unknown type name \u0027IODIM\u0027 [clang-diagnostic-error]\nXGURU( dft_r2c )( int rank, const IODIM* dims, int howmany_rank, const IODIM* howmany_dims, R* in,\n                                  ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "44ce2a41_c316b296",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-dft-r2c.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027dims\u0027 [clang-diagnostic-error]\n    if ( !GURU_KOSHERP( rank, dims, howmany_rank, howmany_dims ) )\n                              ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "fdbc18f4_f3198ba9",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-dft-r2c.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027rank\u0027 [clang-diagnostic-error]\n    if ( !GURU_KOSHERP( rank, dims, howmany_rank, howmany_dims ) )\n                        ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "dca34b17_dba5821a",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-dft-r2c.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027howmany_rank\u0027 [clang-diagnostic-error]\n    if ( !GURU_KOSHERP( rank, dims, howmany_rank, howmany_dims ) )\n                                    ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "083f716c_3919e273",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-dft-r2c.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027howmany_dims\u0027 [clang-diagnostic-error]\n    if ( !GURU_KOSHERP( rank, dims, howmany_rank, howmany_dims ) )\n                                                  ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "3d02b1a5_898bce90",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-dft-r2c.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027out\u0027 [clang-diagnostic-error]\n    EXTRACT_REIM( FFT_SIGN, out, \u0026ro, \u0026io );\n                            ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "6266b71e_6058dfd8",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-dft-r2c.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027flags\u0027 [clang-diagnostic-error]\n    return X( mkapiplan )( 0, flags,\n                              ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "8b463eac_48d51d3a",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-dft-r2c.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027rank\u0027; did you mean \u0027rand\u0027? [clang-diagnostic-error]\n                               MKTENSOR_IODIMS( rank, dims, 1, 2 ),\n                                                ^~~~\n                                                rand",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "8d450b94_aea0a2b1",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-dft-r2c.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027dims\u0027 [clang-diagnostic-error]\n                               MKTENSOR_IODIMS( rank, dims, 1, 2 ),\n                                                      ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "05dd9da1_73f9caae",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-dft-r2c.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027howmany_rank\u0027 [clang-diagnostic-error]\n                               MKTENSOR_IODIMS( howmany_rank, howmany_dims, 1, 2 ),\n                                                ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "47bd056a_f20f5cf8",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-dft-r2c.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027howmany_dims\u0027 [clang-diagnostic-error]\n                               MKTENSOR_IODIMS( howmany_rank, howmany_dims, 1, 2 ),\n                                                              ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "5cf7fe1a_97fbc198",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-dft-r2c.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027in\u0027 [clang-diagnostic-error]\n                               TAINT_UNALIGNED( in, flags ), TAINT_UNALIGNED( ro, flags ),\n                                                ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "d6972569_2d949fcb",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-dft.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "function cannot return function type \u0027fftw_plan (int, const int *, int, const int *, C *, C *, int, unsigned int)\u0027 (aka \u0027struct fftw_plan_s *(int, const int *, int, const int *, R (*)[2], R (*)[2], int, unsigned int)\u0027) [clang-diagnostic-error]\nXGURU( dft )( int rank, const IODIM* dims, int howmany_rank, const IODIM* howmany_dims, C* in,\n     ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "c48ff644_78656701",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-dft.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "unknown type name \u0027IODIM\u0027 [clang-diagnostic-error]\nXGURU( dft )( int rank, const IODIM* dims, int howmany_rank, const IODIM* howmany_dims, C* in,\n                                                                   ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "df3e4630_5afb360e",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-dft.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "unknown type name \u0027IODIM\u0027 [clang-diagnostic-error]\nXGURU( dft )( int rank, const IODIM* dims, int howmany_rank, const IODIM* howmany_dims, C* in,\n                              ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "535bf647_0bab09a7",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-dft.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027howmany_dims\u0027 [clang-diagnostic-error]\n    if ( !GURU_KOSHERP( rank, dims, howmany_rank, howmany_dims ) )\n                                                  ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "c0b714ee_ce7581ab",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-dft.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027rank\u0027 [clang-diagnostic-error]\n    if ( !GURU_KOSHERP( rank, dims, howmany_rank, howmany_dims ) )\n                        ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "dce27470_a0c3815d",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-dft.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027dims\u0027 [clang-diagnostic-error]\n    if ( !GURU_KOSHERP( rank, dims, howmany_rank, howmany_dims ) )\n                              ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "838b55fe_7c526daa",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-dft.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027howmany_rank\u0027 [clang-diagnostic-error]\n    if ( !GURU_KOSHERP( rank, dims, howmany_rank, howmany_dims ) )\n                                    ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "a5a694df_bda7da91",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-dft.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027sign\u0027 [clang-diagnostic-error]\n    EXTRACT_REIM( sign, in, \u0026ri, \u0026ii );\n                  ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "d315ea24_aace0c05",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-dft.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027in\u0027 [clang-diagnostic-error]\n    EXTRACT_REIM( sign, in, \u0026ri, \u0026ii );\n                        ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "b5b9b35b_212bb6fe",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-dft.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027out\u0027 [clang-diagnostic-error]\n    EXTRACT_REIM( sign, out, \u0026ro, \u0026io );\n                        ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "56232e73_9b32ba95",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-dft.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identif2 warnings and 17 errors generated.\nError while processing /home/jenkins/workspace/psv/clang-tidy/external/repo/fftw-3.3.8/api/plan-guru-dft.c.\nSuppressed 2 warnings (2 with check filters).\nFound compiler error(s).\nier \u0027sign\u0027 [clang-diagnostic-error]\n    EXTRACT_REIM( sign, out, \u0026ro, \u0026io );\n                  ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "35d91d43_8adf5da4",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-dft.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027flags\u0027 [clang-diagnostic-error]\n        sign, flags,\n              ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "da5c6545_54219a50",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-dft.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027sign\u0027 [clang-diagnostic-error]\n        sign, flags,\n        ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "c5cb4ca5_b20fd8cd",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-dft.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027rank\u0027; did you mean \u0027rand\u0027? [clang-diagnostic-error]\n        X( mkproblem_dft_d )( MKTENSOR_IODIMS( rank, dims, 2, 2 ),\n                                               ^~~~\n                                               rand",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "51445983_11b5367e",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-dft.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027dims\u0027 [clang-diagnostic-error]\n        X( mkproblem_dft_d )( MKTENSOR_IODIMS( rank, dims, 2, 2 ),\n                                                     ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "fc517119_8e670247",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-dft.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027howmany_rank\u0027 [clang-diagnostic-error]\n                              MKTENSOR_IODIMS( howmany_rank, howmany_dims, 2, 2 ),\n                                               ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "5e0aff4a_fcc9b3a6",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-dft.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027howmany_dims\u0027 [clang-diagnostic-error]\n                              MKTENSOR_IODIMS( howmany_rank, howmany_dims, 2, 2 ),\n                                                             ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "c40fa2d5_dc96569c",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-r2r.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "function cannot return function type \u0027fftw_plan (int, const int *, int, const int *, R *, R *, const fftw_r2r_kind *, unsigned int)\u0027 (aka \u0027struct fftw_plan_s *(int, const int *, int, const int *, double *, double *, const enum fftw_r2r_kind_do_not_use_me *, unsigned int)\u0027) [clang-diagnostic-error]\nXGURU( r2r )( int rank, const IODIM* dims, int howmany_rank, const IODIM* howmany_dims, R* in,\n     ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "87ccbaf6_cfe5eb85",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-r2r.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "unknown type name \u0027IODIM\u0027 [clang-diagnostic-error]\nXGURU( r2r )( int rank, const IODIM* dims, int howmany_rank, const IODIM* howmany_dims, R* in,\n                                                                   ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "b33d2e5f_3ea00416",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-r2r.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "unknown type name \u0027IODIM\u0027 [clang-diagnostic-error]\nXGURU( r2r )( int rank, const IODIM* dims, int howmany_rank, const IODIM* howmany_dims, R* in,\n                              ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "4dd5d1cc_cbffee9a",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-r2r.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027rank\u0027 [clang-diagnostic-error]\n    if ( !GURU_KOSHERP( rank, dims, howmany_rank, howmany_dims ) )\n                        ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "28d8f6f1_313174d3",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-r2r.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027dims\u0027 [clang-diagnostic-error]\n    if ( !GURU_KOSHERP( rank, dims, howmany_rank, howmany_dims ) )\n                              ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "46c18539_249cfadd",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-r2r.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027howmany_dims\u0027 [clang-diagnostic-error]\n    if ( !GURU_KOSHERP( rank, dims, howmany_rank, howmany_dims ) )\n                                                  ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "fffe099d_ec94fad6",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-r2r.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027howmany_rank\u0027 [clang-diagnostic-error]\n    if ( !GURU_KOSHERP( rank, dims, howmany_rank, howmany_dims ) )\n                                    ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "531dbab1_f5fc2354",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-r2r.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027kind\u0027; did you mean \u0027rand\u0027? [clang-diagnostic-error]\n    k \u003d X( map_r2r_kind )( rank, kind );\n                                 ^~~~\n                                 rand",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "b8f66711_6c36fc90",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-r2r.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027rank\u0027; did you mean \u0027rand\u0027? [clang-diagnostic-error]\n    k \u003d X( map_r2r_kind )( rank, kind );\n                           ^~~~\n                           rand",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "df6a24de_61b4c1f9",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-r2r.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027flags\u0027 [clang-diagnostic-error]\n    p \u003d X( mkapiplan )( 0, flags,\n                           ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "2aa6403b_f7b57f0e",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-r2r.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027rank\u0027; did you mean \u0027rand\u0027? [clang-diagnostic-error]\n                        X( mkproblem_rdft_d )( MKTENSOR_IODIMS( rank, dims, 1, 1 ),\n                                                                ^~~~\n                                                                rand",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "ad91b9a4_47b279a8",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-r2r.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027dims\u0027 [clang-diagnostic-error]\n                        X( mkproblem_rdft_d )( MKTENSOR_IODIMS( rank, dims, 1, 1 ),\n                                                                      ^\n/home/jenkins/workspace/psv/clang-tidy/external3 warnings and 16 errors generated.\nError while processing /home/jenkins/workspace/psv/clang-tidy/external/repo/fftw-3.3.8/api/plan-guru-r2r.c.\nSuppressed 3 warnings (3 with check filters).\nFound compiler error(s).",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "d7ebe9e3_2d25d037",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-r2r.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027howmany_dims\u0027 [clang-diagnostic-error]\n                                               MKTENSOR_IODIMS( howmany_rank, howmany_dims, 1, 1 ),\n                                                                              ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "c33f651f_512a0950",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-r2r.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027in\u0027 [clang-diagnostic-error]\n                                               TAINT_UNALIGNED( in, flags ),\n                                                                ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "5d4f145f_8ab31afa",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-r2r.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027out\u0027 [clang-diagnostic-error]\n                                               TAINT_UNALIGNED( out, flags ), k ) );\n                                                                ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "fd75c992_565ca08d",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-split-dft-c2r.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "unknown type name \u0027IODIM\u0027 [clang-diagnostic-error]\nXGURU( split_dft_c2r )( int rank, const IODIM* dims, int howmany_rank, const IODIM* howmany_dims,\n                                        ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "7bc95cf3_31ae08ed",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-split-dft-c2r.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "unknown type name \u0027IODIM\u0027 [clang-diagnostic-error]\nXGURU( split_dft_c2r )( int rank, const IODIM* dims, int howmany_rank, const IODIM* howmany_dims,\n                                                                             ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "7166cf59_3d4fbf03",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-split-dft-c2r.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "function cannot return function type \u0027fftw_plan (int, const int *, int, const int *, R *, R *, R *, unsigned int)\u0027 (aka \u0027struct fftw_plan_s *(int, const int *, int, const int *, double *, double *, double *, unsigned int)\u0027) [clang-diagnostic-error]\nXGURU( split_dft_c2r )( int rank, const IODIM* dims, int howmany_rank, const IODIM* howmany_dims,\n     ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "f09618de_2e350f3a",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-split-dft-c2r.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027dims\u0027 [clang-diagnostic-error]\n    if ( !GURU_KOSHERP( rank, dims, howmany_rank, howmany_dims ) )\n                              ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "e2a1fdb3_809c4974",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-split-dft-c2r.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027howmany_rank\u0027 [clang-diagnostic-error]\n    if ( !GURU_KOSHERP( rank, dims, how2 warnings and 18 errors generated.\nError while processing /home/jenkins/workspace/psv/clang-tidy/external/repo/fftw-3.3.8/api/plan-guru-split-dft-c2r.c.\nSuppressed 2 warnings (2 with check filters).\nFound compiler error(s).\nmany_rank, howmany_dims ) )\n                                    ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "2fd7e812_44ef142a",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-split-dft-c2r.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027rank\u0027 [clang-diagnostic-error]\n    if ( !GURU_KOSHERP( rank, dims, howmany_rank, howmany_dims ) )\n                        ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "a3e6e10c_cbaad716",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-split-dft-c2r.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027howmany_dims\u0027 [clang-diagnostic-error]\n    if ( !GURU_KOSHERP( rank, dims, howmany_rank, howmany_dims ) )\n                                                  ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "5366d755_7948df5c",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-split-dft-c2r.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027out\u0027 [clang-diagnostic-error]\n    if ( out !\u003d ri )\n         ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "4bc74e14_504f463c",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-split-dft-c2r.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027ri\u0027 [clang-diagnostic-error]\n    if ( out !\u003d ri )\n                ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "b2a93047_4afd3d75",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-split-dft-c2r.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027flags\u0027 [clang-diagnostic-error]\n        flags |\u003d FFTW_DESTROY_INPUT;\n        ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "f8b7931e_420feb10",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-split-dft-c2r.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027flags\u0027 [clang-diagnostic-error]\n    return X( mkapiplan )( 0, flags,\n                              ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "b6247ca6_1916e876",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-split-dft-c2r.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027rank\u0027; did you mean \u0027rand\u0027? [clang-diagnostic-error]\n                               MKTENSOR_IODIMS( rank, dims, 1, 1 ),\n                                                ^~~~\n                                                rand",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "5abf3514_279e554b",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-split-dft-c2r.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027dims\u0027 [clang-diagnostic-error]\n                               MKTENSOR_IODIMS( rank, dims, 1, 1 ),\n                                                      ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "b4db6b4a_8cc6e2e3",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-split-dft-c2r.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027howmany_rank\u0027 [clang-diagnostic-error]\n                               MKTENSOR_IODIMS( howmany_rank, howmany_dims, 1, 1 ),\n                                                ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "7fd4a1b8_eea3a3b2",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-split-dft-c2r.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027howmany_dims\u0027 [clang-diagnostic-error]\n                               MKTENSOR_IODIMS( howmany_rank, howmany_dims, 1, 1 ),\n                                                              ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "a52aa305_b2c2d7a3",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-split-dft-c2r.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027out\u0027 [clang-diagnostic-error]\n                               TAINT_UNALIGNED( out, flags ), TAINT_UNALIGNED( ri, flags ),\n                                                ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "cc78e1ec_8d75bc85",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-split-dft-c2r.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027ri\u0027 [clang-diagnostic-error]\n                               TAINT_UNALIGNED( out, flags ), TAINT_UNALIGNED( ri, flags ),\n                                                                               ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "bc9176ff_0b187af1",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-split-dft-c2r.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027ii\u0027 [clang-diagnostic-error]\n                               TAINT_UNALIGNED( ii, flags ), HC2R ) );\n                                                ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "7f9b7eee_931196ba",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-split-dft-r2c.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "function cannot return function type \u0027fftw_plan (int, const int *, int, const int *, R *, R *, R *, unsigned int)\u0027 (aka \u0027struct fftw_plan_s *(int, const int *, int, const int *, double *, double *, double *, unsigned int)\u0027) [clang-diagnostic-error]\nXGURU( split_dft_r2c )( int rank, const IODIM* dims, int howmany_rank, const IODIM* howmany_dims,\n     ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "0a43e1d4_b6b474be",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-split-dft-r2c.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "unknown type name \u0027IODIM\u0027 [clang-diagnostic-error]\nXGURU( split_dft_r2c )( int rank, const IODIM* dims, int howmany_rank, const IODIM* howmany_dims,\n                                        ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "8e7f288c_d784fa22",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-split-dft-r2c.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "unknown type name \u0027IODIM\u0027 [clang-diagnostic-error]\nXGURU( split_dft_r2c )( int rank, const IODIM* dims, int howmany_rank, const IODIM* howmany_dims,\n                                                                             ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "ca43df70_156378a1",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-split-dft-r2c.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027dims\u0027 [clang-diagnostic-error]\n    if ( !GURU_KOSHERP( rank, dims, howmany_rank, howmany_dims ) )\n                              ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "f3862e5c_91a4249e",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-split-dft-r2c.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027rank\u0027 [clang-diagnostic-error]\n    if ( !GURU_KOSHERP( rank, dims, howmany_rank, howmany_dims ) )\n                        ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "f532f416_49471a74",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-split-dft-r2c.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027howmany_dims\u0027 [clang-diagnostic-error]\n    if ( !GURU_KOSHERP( rank, dims, howmany_rank, howmany_dims ) )\n                                                  ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "a2764459_a9d3057c",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-split-dft-r2c.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027howmany_rank\u0027 [clang-diagnostic-error]\n    if ( !GURU_KOSHERP( rank, dims, howmany_rank, howmany_dims ) )\n                                    ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "0cd8af4b_1dcee4c1",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-split-dft-r2c.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027flags\u0027 [clang-diagnostic-error]\n    return X( mkapiplan )( 0, flags,\n                              ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "075d92bc_b3e84206",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-split-dft-r2c.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027rank\u0027; did you mean \u0027rand\u0027? [clang-diagnostic-error]\n                               MKTENSOR_IODIMS( rank, dims, 1, 1 ),\n                                                ^~~~\n                                                rand",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "339dd4e4_ca4d1bbd",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-split-dft-r2c.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027dims\u0027 [clang-diagnostic-error]\n                               MKTENSOR_IODIMS( rank, dims, 1, 1 ),\n                                                      ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "8ee9d42d_bf09e37f",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-split-dft-r2c.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027howmany_dims\u0027 [clang-diagnostic-error]\n                               MKTENSOR_IODIMS( howmany_rank, howmany_dims, 1, 1 ),\n                                                              ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "455eb3d4_bb88c639",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-split-dft-r2c.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027howmany_rank\u0027 [clang-diagnostic-error]\n                               MKTENSOR_IODIMS( howmany_rank, howmany_dims, 1, 1 ),\n                                                ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "a2ab08cf_bb20b206",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-split-dft-r2c.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027in\u0027 [clang-diagnostic-error]\n                               TAINT_UNALIGNED( in, flags ), TAINT_UNALIGNED( ro, flags ),\n                                                ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "c661bcb9_a48cb165",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-split-dft-r2c.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027ro\u0027 [clang-diagnostic-error]\n                               TAINT_UNALIGNED( in, flags ), TAINT_UNALIGNED( ro, flags ),\n                               2 warnings and 15 errors generated.\nError while processing /home/jenkins/workspace/psv/clang-tidy/external/repo/fftw-3.3.8/api/plan-guru-split-dft-r2c.c.\nSuppressed 2 warnings (2 with check filters).\nFound compiler error(s).\n                                               ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "2f6233ea_60ae1da7",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-split-dft-r2c.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027io\u0027 [clang-diagnostic-error]\n                               TAINT_UNALIGNED( io, flags ), R2HC ) );\n                                                ^\nerror: too many errors emitted, stopping now [clang-diagnostic-error]",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "e70e0681_35c6a3a7",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-split-dft.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "unknown type name \u0027IODIM\u0027 [clang-diagnostic-error]\nXGURU( split_dft )( int rank, const IODIM* dims, int howmany_rank, const IODIM* howmany_dims, R* ri,\n                                                                         ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "10d53f07_a606b5a8",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-split-dft.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "function cannot return function type \u0027fftw_plan (int, const int *, int, const int *, R *, R *, R *, R *, unsigned int)\u0027 (aka \u0027struct fftw_plan_s *(int, const int *, int, const int *, double *, double *, double *, double *, unsigned int)\u0027) [clang-diagnostic-error]\nXGURU( split_dft )( int rank, const IODIM* dims, int howmany_rank, const IODIM* howmany_dims, R* ri,\n     ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "61c0bb41_ead5821d",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-split-dft.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "unknown type name \u0027IODIM\u0027 [clang-diagnostic-error]\nXGURU( split_dft )( int rank, const IODIM* dims, int howmany_rank, const IODIM* howmany_dims, R* ri,\n                                    ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "c9bd2917_83e751c9",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-split-dft.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027howmany_rank\u0027 [clang-diagnostic-error]\n    if ( !GURU_KOSHERP( rank, dims, howmany_rank, howmany_dims ) )\n                                    ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "f5cfd5f6_d6861c3e",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-split-dft.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027rank\u0027 [clang-diagnostic-error]\n    if ( !GURU_KOSHERP( rank, dims, howmany_rank, howmany_dims ) )\n                        ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "a5e56461_5e62a2ae",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-split-dft.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027howmany_dims\u0027 [clang-diagnostic-error]\n    if ( !GURU_KOSHERP( rank, dims, howmany_rank, howmany_dims ) )\n                                                  ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "0402b478_936bd7d6",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-split-dft.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027dims\u0027 [clang-diagnostic-error]\n    if ( !GURU_KOSHERP( rank, dims, howmany_rank, howmany_dims ) )\n                              ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "0aa7d19c_324ccfc0",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-split-dft.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027io\u0027 [clang-diagnostic-error]\n        ii - ri \u003d\u003d 1 \u0026\u0026 io - ro \u003d\u003d 1 ? FFT_SIGN : -FFT_SIGN, flags,\n                        ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "043a5e86_de0a22dd",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-split-dft.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027ro\u0027 [clang-diagnostic-error]\n        ii - ri \u003d\u003d 1 \u0026\u0026 io - ro \u003d\u003d 1 ? FFT_SIGN : -FFT_SIGN, flags,\n                             ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "8eb87bce_e2d0f0ee",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-split-dft.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027ii\u0027 [clang-diagnostic-error]\n        ii - ri \u003d\u003d 1 \u0026\u0026 io - ro \u003d\u003d 1 ? FFT_SIGN : -FFT_SIGN, flags,\n        ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "13d1671d_e58e496c",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-split-dft.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027ri\u0027 [clang-diagnostic-error]\n        ii - ri \u003d\u003d 1 \u0026\u0026 io - ro \u003d\u003d 1 ? FFT_SIGN : -FFT_SIGN, flags,\n             ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "27bef434_de845adc",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-split-dft.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027dims\u0027 [clang-diagnostic-error]\n        X( mkproblem_dft_d )( MKTENSOR_IODIMS( rank, dims, 1, 1 ),\n                                                     ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "3d18d909_91439ea0",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-split-dft.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027rank\u0027; did you mean \u0027rand\u0027? [clang-diagnostic-error]\n        X( mkproblem_dft_d )( MKTENSOR_IODIMS( rank, dims, 1, 1 ),\n                                           2 warnings and 20 errors generated.\nError while processing /home/jenkins/workspace/psv/clang-tidy/external/repo/fftw-3.3.8/api/plan-guru-split-dft.c.\nSuppressed 2 warnings (2 with check filters).\nFound compiler error(s).\n    ^~~~\n                                               rand",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "4b95a6a8_fdc545a8",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-split-dft.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027howmany_dims\u0027 [clang-diagnostic-error]\n                              MKTENSOR_IODIMS( howmany_rank, howmany_dims, 1, 1 ),\n                                                             ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "97e6add2_215071c6",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-split-dft.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027howmany_rank\u0027 [clang-diagnostic-error]\n                              MKTENSOR_IODIMS( howmany_rank, howmany_dims, 1, 1 ),\n                                               ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "53df2717_0c3c464d",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-split-dft.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027ii\u0027 [clang-diagnostic-error]\n                              TAINT_UNALIGNED( ri, flags ), TAINT_UNALIGNED( ii, flags ),\n                                                                             ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "7bd949eb_de447993",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-split-dft.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027ri\u0027 [clang-diagnostic-error]\n                              TAINT_UNALIGNED( ri, flags ), TAINT_UNALIGNED( ii, flags ),\n                                               ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "2af4e4fd_b1790f7a",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-split-dft.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027io\u0027 [clang-diagnostic-error]\n                              TAINT_UNALIGNED( ro, flags ), TAINT_UNALIGNED( io, flags ) ) );\n                                                                             ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/619/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "52eb8a17_8082c937",
+        "filename": "external/repo/fftw-3.3.8/api/plan-guru-split-dft.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T19:16:09Z",
+      "side": 1,
+      "message": "use of undeclared identifier \u0027ro\u0027 [clang-diagnostic-error]\n                              TAINT_UNALIGNED( ro, flags ), TAINT_UNALIGNED( io, flags ) ) );\n                                               ^",
+      "revId": "52ad87da7fd266978d6a84424594a084ef2738fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}

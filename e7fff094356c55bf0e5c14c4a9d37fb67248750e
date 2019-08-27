@@ -1,0 +1,24 @@
+{
+  "comments": [
+    {
+      "robotId": "g++-8",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/psv-gcc/570/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "478d5803_fe1a67f3",
+        "filename": "include/sequencer/audio/sample.hpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T18:00:33Z",
+      "side": 1,
+      "message": "include/sequencer/audio/sample.hpp:128:59: error: call to non-\u0027constexpr\u0027 function \u0027sequencer::audio::sample_t::size_type sequencer::audio::sample_t::number_of_frames() const\u0027\n             return frame_index_ \u003c sample_.number_of_frames();\n                                   ~~~~~~~~~~~~~~~~~~~~~~~~^~",
+      "revId": "e7fff094356c55bf0e5c14c4a9d37fb67248750e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}

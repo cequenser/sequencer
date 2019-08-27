@@ -15,6 +15,9 @@ if(BuildExternalDeps)
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/external/repo/portaudio/include>
     )
     add_library(PortAudio::portaudio ALIAS portaudio)
+
+    message(STATUS "Configure fftw")
+    add_subdirectory(external/repo/fftw-3.3.8)
 else()
     find_package(RtMidi REQUIRED)
     find_package(portaudio REQUIRED)

@@ -9,10 +9,10 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
-option(BuildTests "build tests" OFF)
-option(BuildExamples "build examples" OFF)
-option(Coverage "gather coverage data" OFF)
-option(DisableAssert "disable asserts" OFF)
+option(SEQUENCER_BuildTests "build tests" OFF)
+option(SEQUENCER_BuildExamples "build examples" OFF)
+option(SEQUENCER_Coverage "gather coverage data" OFF)
+option(SEQUENCER_DisableAssert "disable asserts" OFF)
 
 project(sequencer VERSION 0.0.1 LANGUAGES CXX)
 

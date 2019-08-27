@@ -1,8 +1,10 @@
 #pragma once
 
 #include <algorithm>
+#include <atomic>
 #include <cstdint>
 #include <cstring>
+#include <iterator>
 #include <vector>
 
 namespace sequencer::audio
@@ -18,19 +20,103 @@ namespace sequencer::audio
         stereo = 2
     };
 
-    class sample_t
+    constexpr underlying_t::mode_t channels( mode_t mode ) noexcept
     {
-    public:
-        using frame_rep = float;
+        return static_cast< underlying_t::mode_t >( mode );
+    }
 
-        sample_t( std::size_t max_frame_index, mode_t mode = mode_t::stereo )
-            : max_frame_index_{max_frame_index}, mode_{mode}
+    struct sample_t
+    {
+        using frame_rep = float;
+        using size_type = std::vector< frame_rep >::size_type;
+
+        sample_t() = default;
+
+        explicit sample_t( size_type number_of_frames, mode_t mode = mode_t::stereo )
+            : frames( number_of_frames * channels( mode ), 0 ), mode( mode )
         {
         }
 
-        constexpr void trim() noexcept
+        void trim()
         {
-            max_frame_index_ = frame_index_;
+            using std::begin;
+            using std::rbegin;
+            using std::rend;
+            const auto last_non_zero = std::find_if_not(
+                rbegin( frames ), rend( frames ), []( frame_rep value ) { return value == 0.0f; } );
+            frames.resize( std::distance( last_non_zero, rend( frames ) ) );
+        }
+
+        void clear()
+        {
+            frames = std::vector< frame_rep >( frames.size(), frame_rep{0} );
+        }
+
+        constexpr size_type number_of_frames() const noexcept
+        {
+            return frames.size() / channels( mode );
+        }
+
+        std::vector< frame_rep > frames{};
+        mode_t mode{mode_t::stereo};
+    };
+
+    struct read_write_locks_t
+    {
+        std::atomic_bool block_reading{false};
+        std::atomic_bool block_writing{false};
+    };
+
+    template < class Type >
+    struct read_write_lockable : Type
+    {
+        using Type::Type;
+
+        constexpr bool block_reading( bool lock ) noexcept
+        {
+            if ( locks.block_writing )
+            {
+                return false;
+            }
+
+            locks.block_reading = lock;
+            return true;
+        }
+
+        constexpr bool block_writing( bool lock ) noexcept
+        {
+            if ( locks.block_reading )
+            {
+                return false;
+            }
+
+            locks.block_writing = lock;
+            return true;
+        }
+
+        constexpr bool reading_is_blocked() const noexcept
+        {
+            return locks.block_reading;
+        }
+
+        constexpr bool writing_is_blocked() const noexcept
+        {
+            return locks.block_writing;
+        }
+
+    private:
+        read_write_locks_t locks;
+    };
+
+    class sample_read_write_base_t
+    {
+    public:
+        using frame_rep = sample_t::frame_rep;
+        using size_type = sample_t::size_type;
+
+        explicit sample_read_write_base_t( read_write_lockable< sample_t >& sample ) noexcept
+            : sample_{sample}
+        {
         }
 
         constexpr void reset_frame_index() noexcept
@@ -38,32 +124,15 @@ namespace sequencer::audio
             frame_index_ = 0;
         }
 
-        void read( const frame_rep* data, std::size_t frames_per_buffer )
-        {
-            const auto size = frames_to_copy( frames_per_buffer );
-            if ( data != nullptr )
-            {
-                std::memcpy( current_frame(), data, size * frame_size_in_bytes() );
-            }
-            increase_frame_index( size );
-        }
-
-        void write( frame_rep* data, std::size_t frames_per_buffer )
-        {
-            const auto size = frames_to_copy( frames_per_buffer );
-            std::memcpy( data, current_frame(), size * frame_size_in_bytes() );
-            increase_frame_index( size );
-        }
-
         constexpr bool has_frames_left() const noexcept
         {
-            return frame_index_ < max_frame_index_;
+            return frame_index_ < sample_.number_of_frames();
         }
 
-    private:
-        constexpr std::size_t frames_to_copy( std::size_t frames_per_buffer ) const noexcept
+    protected:
+        constexpr size_type frames_to_copy( size_type frames_per_buffer ) const noexcept
         {
-            const auto frames_left = max_frame_index_ - frame_index_;
+            const auto frames_left = sample_.number_of_frames() - frame_index_;
             return std::min( frames_left, frames_per_buffer );
         }
 
@@ -74,23 +143,56 @@ namespace sequencer::audio
 
         frame_rep* current_frame()
         {
-            return &recorded_samples_[ frame_index_ * channels() ];
+            return &sample_.frames[ frame_index_ * channels( sample_.mode ) ];
         }
 
-        constexpr std::size_t frame_size_in_bytes() const noexcept
+        constexpr size_type frame_size_in_bytes() const noexcept
         {
-            return sizeof( frame_rep ) * channels();
+            return sizeof( frame_rep ) * channels( sample_.mode );
         }
 
-        constexpr underlying_t::mode_t channels() const noexcept
+        read_write_lockable< sample_t >& sample_;
+
+    private:
+        size_type frame_index_{0};
+    };
+
+    class sample_writer_t : public sample_read_write_base_t
+    {
+    public:
+        using sample_read_write_base_t::sample_read_write_base_t;
+
+        void write( const frame_rep* data, std::size_t frames_per_buffer )
         {
-            return static_cast< underlying_t::mode_t >( mode_ );
-        }
+            if ( sample_.writing_is_blocked() )
+            {
+                return;
+            }
 
-        std::size_t frame_index_{0};
-        std::size_t max_frame_index_;
-        mode_t mode_;
-        std::vector< frame_rep > recorded_samples_ =
-            std::vector< frame_rep >( max_frame_index_ * channels(), 0 );
+            const auto size = frames_to_copy( frames_per_buffer );
+            if ( data != nullptr )
+            {
+                std::memcpy( current_frame(), data, size * frame_size_in_bytes() );
+            }
+            increase_frame_index( size );
+        }
+    };
+
+    class sample_reader_t : public sample_read_write_base_t
+    {
+    public:
+        using sample_read_write_base_t::sample_read_write_base_t;
+
+        void read( frame_rep* data, std::size_t frames_per_buffer )
+        {
+            if ( sample_.reading_is_blocked() )
+            {
+                return;
+            }
+
+            const auto size = frames_to_copy( frames_per_buffer );
+            std::memcpy( data, current_frame(), size * frame_size_in_bytes() );
+            increase_frame_index( size );
+        }
     };
 } // namespace sequencer::audio

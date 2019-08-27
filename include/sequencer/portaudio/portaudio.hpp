@@ -166,19 +166,21 @@ namespace sequencer::portaudio
                                 const PaStreamCallbackTimeInfo*, PaStreamCallbackFlags,
                                 void* user_data )
     {
-        using sequencer::audio::sample_t;
-        auto* data = static_cast< sample_t* >( user_data );
-        data->read( static_cast< const sample_t::frame_rep* >( input_buffer ), frames_per_buffer );
-        return data->has_frames_left() ? paContinue : paComplete;
+        using sequencer::audio::sample_writer_t;
+        auto* writer = static_cast< sample_writer_t* >( user_data );
+        writer->write( static_cast< const sample_writer_t::frame_rep* >( input_buffer ),
+                       frames_per_buffer );
+        return writer->has_frames_left() ? paContinue : paComplete;
     }
 
     inline int play_callback( const void*, void* output_buffer, unsigned long frames_per_buffer,
                               const PaStreamCallbackTimeInfo*, PaStreamCallbackFlags,
                               void* user_data )
     {
-        using sequencer::audio::sample_t;
-        auto* data = static_cast< sample_t* >( user_data );
-        data->write( static_cast< sample_t::frame_rep* >( output_buffer ), frames_per_buffer );
-        return data->has_frames_left() ? paContinue : paComplete;
+        using sequencer::audio::sample_reader_t;
+        auto* reader = static_cast< sample_reader_t* >( user_data );
+        reader->read( static_cast< sample_reader_t::frame_rep* >( output_buffer ),
+                      frames_per_buffer );
+        return reader->has_frames_left() ? paContinue : paComplete;
     }
 } // namespace sequencer::portaudio

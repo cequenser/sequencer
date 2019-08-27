@@ -168,64 +168,65 @@ namespace qml
 
     void backend::start_recording()
     {
-        std::lock_guard lock{recording_mutex_};
-        if ( is_recording_ )
+        if ( !sample_.block_reading( true ) || no_device_selected() )
         {
             return;
         }
 
-        is_recording_ = true;
-
+        stop_recording_ = false;
         recording_done_ = std::async( std::launch::async, [this] {
-            sample_ = sequencer::audio::sample_t( max_recording_time_.count() * sample_rate_ );
+            sample_.clear();
+            auto writer = sequencer::audio::sample_writer_t{sample_};
 
             const auto parameters = portaudio_.get_parameters( audio_device_id_ );
 
             sequencer::portaudio::stream_t stream;
             stream.open_input_stream( parameters, sample_rate_, frames_per_buffer_,
-                                      sequencer::portaudio::record_callback, &sample_ );
+                                      sequencer::portaudio::record_callback, &writer );
             stream.start();
 
-            while ( stream.is_active() )
+            while ( stream.is_active() && !stop_recording_ )
             {
                 std::this_thread::sleep_for( std::chrono::milliseconds( 1 ) );
             }
 
             sample_.trim();
+            sample_.block_reading( false );
             stream.close();
         } );
     }
 
     bool backend::is_recording() const noexcept
     {
-        return is_recording_;
+        return sample_.reading_is_blocked();
     }
 
     void backend::stop_recording()
     {
-        std::lock_guard lock{recording_mutex_};
-        if ( !is_recording_ )
-        {
-            return;
-        }
-
-        is_recording_ = false;
+        stop_recording_ = true;
     }
 
     void backend::playback()
     {
+        if ( !sample_.block_writing( true ) )
+        {
+            return;
+        }
+
         recording_done_.wait();
+        stop_recording_ = false;
         recording_done_ = std::async( std::launch::async, [this] {
-            sample_.reset_frame_index();
             const auto parameters = portaudio_.get_parameters( audio_device_id_ );
+            auto reader = sequencer::audio::sample_reader_t{sample_};
 
             sequencer::portaudio::stream_t stream;
             stream.open_output_stream( parameters, sample_rate_, frames_per_buffer_,
-                                       sequencer::portaudio::play_callback, &sample_ );
+                                       sequencer::portaudio::play_callback, &reader );
             stream.start();
-            while ( stream.is_active() )
+            while ( stream.is_active() && !stop_recording_ )
                 std::this_thread::sleep_for( std::chrono::milliseconds( 1 ) );
             stream.close();
+            sample_.block_writing( false );
         } );
     }
 } // namespace qml

@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/608/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "76c9b502_994f035a",
+        "filename": "include/sequencer/audio/sample.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T15:50:51Z",
+      "side": 1,
+      "message": "invalid case style for private member \u0027locks\u0027 [readability-identifier-naming,-warnings-as-errors]\n        read_write_locks_t locks;\n                           ^~~~~\n                           locks_",
+      "revId": "cdefbcce059bd366b1e9dae5a90421ae0cb5d793",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/608/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "4dd1c562_80e963b8",
+        "filename": "include/sequencer/audio/sample.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T15:50:51Z",
+      "side": 1,
+      "message": "member variable \u0027sample_\u0027 has protected visibility [cppcoreguidelines-non-private-member-variables-in-classes,-warnings-as-errors]\n        read_write_lockable\u003c sample_t \u003e\u0026 sample_;\n                                         ^",
+      "revId": "cdefbcce059bd366b1e9dae5a90421ae0cb5d793",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}

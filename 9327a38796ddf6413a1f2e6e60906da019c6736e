@@ -1,0 +1,24 @@
+{
+  "comments": [
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/609/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "6e2fc651_f3cc46e7",
+        "filename": "include/sequencer/audio/sample.hpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-08-27T16:10:37Z",
+      "side": 1,
+      "message": "member variable \u0027sample_\u0027 has protected visibility [cppcoreguidelines-non-private-member-variables-in-classes,-warnings-as-errors]\n        read_write_lockable\u003c sample_t \u003e\u0026 sample_;\n                                         ^",
+      "revId": "9327a38796ddf6413a1f2e6e60906da019c6736e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}

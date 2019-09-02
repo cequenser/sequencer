@@ -8,6 +8,8 @@ add_library(sequencer
     beat_time_point.hpp
     beats_per_minute.hpp
     fixed_point_type.hpp
+    type_traits.hpp
+    audio/fft.hpp
     audio/sample.hpp
     midi/clock.hpp
     midi/clock_base.hpp

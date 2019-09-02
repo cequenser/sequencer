@@ -1,0 +1,144 @@
+{
+  "comments": [
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/628/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "96b4903b_93fe1521",
+        "filename": "include/sequencer/audio/fft.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-09-02T20:11:26Z",
+      "side": 1,
+      "message": "invalid case style for type alias \u0027CT\u0027 [readability-identifier-naming,-warnings-as-errors]\n        using CT \u003d typename Container::value_type;\n              ^~\n              ct",
+      "revId": "759688cb397518fbb1a1340e369a6a47c6d849c3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/628/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "e909eb6e_85531151",
+        "filename": "include/sequencer/audio/fft.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-09-02T20:11:26Z",
+      "side": 1,
+      "message": "invalid case style for type alias \u0027T\u0027 [readability-identifier-naming,-warnings-as-errors]\n        using T \u003d typename CT::value_type;\n              ^\n              t",
+      "revId": "759688cb397518fbb1a1340e369a6a47c6d849c3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/628/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "a828a17f_475af1a1",
+        "filename": "include/sequencer/audio/fft.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-09-02T20:11:26Z",
+      "side": 1,
+      "message": "invalid case style for variable \u0027N\u0027 [readability-identifier-naming,-warnings-as-errors]\n        const auto N \u003d x.size();\n                   ^\n                   n",
+      "revId": "759688cb397518fbb1a1340e369a6a47c6d849c3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/628/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "454a379b_f89540fd",
+        "filename": "include/sequencer/audio/fft.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-09-02T20:11:26Z",
+      "side": 1,
+      "message": "invalid case style for type alias \u0027T\u0027 [readability-identifier-naming,-warnings-as-errors]\n        using T \u003d typename Container::value_type::value_type;\n              ^\n              t\nSuppressed 7065 warnings (7065 in non-user code).\nUse -header-filter\u003d.* to display errors from all non-system headers. Use -system-headers to display errors from system headers as well.\n8 warnings treated as errors\nSuppressed 7388 warnings (7388 in non-user code).\nUse -header-filter\u003d.* to display errors from all non-system headers. Use -system-headers to display errors from system headers as well.\nSuppressed 6688 warnings (6688 in non-user code).\nUse -header-filter\u003d.* to display errors from all non-system headers. Use -system-headers to display errors from system headers as well.\nSuppressed 6686 warnings (6686 in non-user code).\nUse -header-filter\u003d.* to display errors from all non-system headers. Use -system-headers to display errors from system headers as well.\nSuppressed 6689 warnings (6689 in non-user code).\nUse -header-filter\u003d.* to display errors from all non-system headers. Use -system-headers to display errors from system headers as well.\nSuppressed 6699 warnings (6698 in non-user code, 1 NOLINT).\nUse -header-filter\u003d.* to display errors from all non-system headers. Use -system-headers to display errors from system headers as well.\nSuppressed 6739 warnings (6738 in non-user code, 1 NOLINT).\nUse -header-filter\u003d.* to display errors from all non-system headers. Use -system-headers to display errors from system headers as well.\nSuppressed 7263 warnings (7263 in non-user code).\nUse -header-filter\u003d.* to display errors from all non-system headers. Use -system-headers to display errors from system headers as well.\nSuppressed 6680 warnings (6680 in non-user code).\nUse -header-filter\u003d.* to display errors from all non-system headers. Use -system-headers to display errors from system headers as well.\nSuppressed 3762 warnings (3762 in non-user code).\nUse -header-filter\u003d.* to display errors from all non-system headers. Use -system-headers to display errors from system headers as well.\nSuppressed 11472 warnings (11472 in non-user code).\nUse -header-filter\u003d.* to display errors from all non-system headers. Use -system-headers to display errors from system headers as well.\nSuppressed 6746 warnings (6746 in non-user code).\nUse -header-filter\u003d.* to display errors from all non-system headers. Use -system-headers to display errors from system headers as well.\nSuppressed 4150 warnings (4150 in non-user code).\nUse -header-filter\u003d.* to display errors from all non-system headers. Use -system-headers to display errors from system headers as well.\nSuppressed 3652 warnings (3652 in non-user code).\nUse -header-filter\u003d.* to display errors from all non-system headers. Use -system-headers to display errors from system headers as well.\nSuppressed 4036 warnings (4036 in non-user code).\nUse -header-filter\u003d.* to display errors from all non-system headers. Use -system-headers to display errors from system headers as well.\nSuppressed 6749 warnings (6749 in non-user code).\nUse -header-filter\u003d.* to display errors from all non-system headers. Use -system-headers to display errors from system headers as well.",
+      "revId": "759688cb397518fbb1a1340e369a6a47c6d849c3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/628/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "c27ec763_e3eb2f46",
+        "filename": "include/sequencer/audio/fft.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-09-02T20:11:26Z",
+      "side": 1,
+      "message": "invalid case style for variable \u0027M_k\u0027 [readability-identifier-naming,-warnings-as-errors]\n            const auto M_k \u003d (k\u003d\u003d0) ? 0 : M-k;\n                       ^~~\n                       m_k",
+      "revId": "759688cb397518fbb1a1340e369a6a47c6d849c3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/628/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "c666e921_2fa4d434",
+        "filename": "include/sequencer/audio/fft.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-09-02T20:11:26Z",
+      "side": 1,
+      "message": "invalid case style for variable \u0027M\u0027 [readability-identifier-naming,-warnings-as-errors]\n        const auto M \u003d result.size();\n                   ^\n                   m",
+      "revId": "759688cb397518fbb1a1340e369a6a47c6d849c3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/628/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "09ca5cc8_2f941153",
+        "filename": "include/sequencer/audio/fft.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-09-02T20:11:26Z",
+      "side": 1,
+      "message": "invalid case style for variable \u0027M_k\u0027 [readability-identifier-naming,-warnings-as-errors]\n            const auto M_k \u003d (k\u003d\u003d0) ? 0 : M-k;\n                       ^~~\n                       m_k",
+      "revId": "759688cb397518fbb1a1340e369a6a47c6d849c3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}

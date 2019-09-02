@@ -9,10 +9,10 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
-option(BuildTests "build tests" OFF)
-option(BuildExamples "build examples" OFF)
-option(Coverage "gather coverage data" OFF)
-option(DisableAssert "disable asserts" OFF)
+option(SEQUENCER_BuildTests "build tests" OFF)
+option(SEQUENCER_BuildExamples "build examples" OFF)
+option(SEQUENCER_Coverage "gather coverage data" OFF)
+option(SEQUENCER_DisableAssert "disable asserts" OFF)
 
 project(sequencer VERSION 0.0.1 LANGUAGES CXX)
 
@@ -23,23 +23,23 @@ list(APPEND CMAKE_MODULE_PATH
     ${CMAKE_CURRENT_SOURCE_DIR}/cmake
 )
 
-if(Coverage)
+if(SEQUENCER_Coverage)
     set(CMAKE_BUILD_TYPE Debug)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
 endif()
 
-if(DisableAssert)
+if(SEQUENCER_DisableAssert)
     add_definitions(-DSEQUENCER_DISABLE_ASSERT)
 endif()
 
 add_subdirectory(include)
 
-if(BuildTests)
+if(SEQUENCER_BuildTests)
     enable_testing()
     add_subdirectory(tests)
 endif()
 
-if(BuildExamples)
+if(SEQUENCER_BuildExamples)
     add_subdirectory(examples)
 endif()
 

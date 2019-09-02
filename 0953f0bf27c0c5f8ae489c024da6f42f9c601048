@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/630/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "44cdc49e_ad41d060",
+        "filename": "include/sequencer/audio/fft.hpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-09-02T20:28:05Z",
+      "side": 1,
+      "message": "invalid case style for variable \u0027N\u0027 [readability-identifier-naming,-warnings-as-errors]\n        const auto N \u003d x.size();\n                   ^\n                   n",
+      "revId": "0953f0bf27c0c5f8ae489c024da6f42f9c601048",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/630/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "e211f71b_e2b947c3",
+        "filename": "include/sequencer/audio/fft.hpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-09-02T20:28:05Z",
+      "side": 1,
+      "message": "invalid case style for type alias \u0027T\u0027 [readability-identifier-naming,-warnings-as-errors]\n        using T \u003d typename Container::value_type::value_type;\n              ^\n              t",
+      "revId": "0953f0bf27c0c5f8ae489c024da6f42f9c601048",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}

@@ -22,12 +22,14 @@ namespace sequencer::audio
         auto y = radix2( const_vector_view{&x, 0, 2} );
         const auto z = radix2( const_vector_view{&x, 1, 2} );
 
+        static constexpr auto i = typename Container::value_type{0, 1};
         y.resize( x.size() );
         for ( typename Container::size_type k = 0; k < x.size() / 2; ++k )
         {
-            using namespace std::complex_literals;
+            using value_type = typename Container::value_type::value_type;
             const auto dy =
-                std::exp( minus_two_pi< double > * 1i * ( double( k ) / x.size() ) ) * z[ k ];
+                std::exp( minus_two_pi< value_type > * i * ( value_type( k ) / x.size() ) ) *
+                z[ k ];
             y[ x.size() / 2 + k ] = y[ k ] - dy;
             y[ k ] += dy;
         }
@@ -49,11 +51,13 @@ namespace sequencer::audio
         radix2( const_vector_view{&x, 0, 2}, even_result_view );
         radix2( const_vector_view{&x, 1, 2}, odd_result_view );
 
+        static constexpr auto i = typename Container::value_type{0, 1};
         for ( typename Container::size_type k = 0; k < x.size() / 2; ++k )
         {
-            using namespace std::complex_literals;
-            const auto dy = std::exp( minus_two_pi< double > * 1i * ( double( k ) / x.size() ) ) *
-                            result[ result.size() / 2 + k ];
+            using value_type = typename Container::value_type::value_type;
+            const auto dy =
+                std::exp( minus_two_pi< value_type > * i * ( value_type( k ) / x.size() ) ) *
+                result[ result.size() / 2 + k ];
             result[ x.size() / 2 + k ] = result[ k ] - dy;
             result[ k ] += dy;
         }
@@ -69,7 +73,8 @@ namespace sequencer::audio
 
         auto y = radix2( x );
 
-        const auto scale = 1.0 / y.size();
+        using value_type = typename Container::value_type::value_type;
+        const auto scale = value_type( 1.0 ) / y.size();
         for ( auto& v : y )
         {
             v = scale * conj( v );
@@ -81,21 +86,21 @@ namespace sequencer::audio
     template < class T, std::enable_if_t< !is_complex_v< T > >* = nullptr >
     std::vector< std::complex< T > > fft( const std::vector< T >& x )
     {
-        using namespace std::complex_literals;
         using size_type = typename std::vector< std::complex< T > >::size_type;
 
         assert( x.size() % 2 == 0 );
         const auto half_result =
             radix2( reinterpret_cast< const std::vector< std::complex< T > >& >( x ) );
 
+        static constexpr auto i = std::complex< T >{0, 1};
         std::vector< std::complex< T > > result( half_result.size() );
         for ( size_type k = 0; k < result.size(); ++k )
         {
             const auto s_k = ( k == 0 ) ? 0 : result.size() - k;
             const auto z = conj( half_result[ s_k ] );
             result[ k ] = T( 0.5 ) * ( ( half_result[ k ] + z ) -
-                                       1i * ( half_result[ k ] - z ) *
-                                           exp( minus_two_pi< T > * 1i * ( T( k ) / x.size() ) ) );
+                                       i * ( half_result[ k ] - z ) *
+                                           exp( minus_two_pi< T > * i * ( T( k ) / x.size() ) ) );
         }
 
         return result;
@@ -104,10 +109,10 @@ namespace sequencer::audio
     template < class T, std::enable_if_t< !is_complex_v< T > >* = nullptr >
     void fft( const std::vector< T >& x, std::vector< std::complex< T > >& result )
     {
-        using namespace std::complex_literals;
         using size_type = typename std::vector< std::complex< T > >::size_type;
 
         assert( x.size() % 2 == 0 );
+        static constexpr auto i = std::complex< T >{0, 1};
         std::vector< std::complex< T > > half_result( x.size() / 2 );
         radix2( reinterpret_cast< const std::vector< std::complex< T > >& >( x ), half_result );
 
@@ -116,30 +121,30 @@ namespace sequencer::audio
             const auto s_k = ( k == 0 ) ? 0 : result.size() - k;
             const auto z = conj( half_result[ s_k ] );
             result[ k ] = T( 0.5 ) * ( ( half_result[ k ] + z ) -
-                                       1i * ( half_result[ k ] - z ) *
-                                           exp( minus_two_pi< T > * 1i * ( T( k ) / x.size() ) ) );
+                                       i * ( half_result[ k ] - z ) *
+                                           exp( minus_two_pi< T > * i * ( T( k ) / x.size() ) ) );
         }
     }
 
     template < class T, std::enable_if_t< !is_complex_v< T > >* = nullptr >
     std::vector< T > fft_abs_scaled( const std::vector< T >& x )
     {
-        using namespace std::complex_literals;
         using size_type = typename std::vector< std::complex< T > >::size_type;
 
         assert( x.size() % 2 == 0 );
         const auto half_result =
             radix2( reinterpret_cast< const std::vector< std::complex< T > >& >( x ) );
 
+        static constexpr auto i = std::complex< T >{0, 1};
         std::vector< T > result( half_result.size() );
-        const auto scale = T{0.5 / result.size()};
+        const auto scale = T( 0.5 ) / result.size();
         for ( size_type k = 0; k < result.size(); ++k )
         {
             const auto s_k = ( k == 0 ) ? 0 : result.size() - k;
             const auto z = conj( half_result[ s_k ] );
             result[ k ] = scale * abs( ( half_result[ k ] + z ) -
-                                       1i * ( half_result[ k ] - z ) *
-                                           exp( minus_two_pi< T > * 1i * ( T( k ) / x.size() ) ) );
+                                       i * ( half_result[ k ] - z ) *
+                                           exp( minus_two_pi< T > * i * ( T( k ) / x.size() ) ) );
         }
 
         return result;
@@ -148,18 +153,19 @@ namespace sequencer::audio
     template < class T, std::enable_if_t< !is_complex_v< T > >* = nullptr >
     std::vector< T > inverse_fft( const std::vector< std::complex< T > >& x )
     {
-        using namespace std::complex_literals;
         using size_type = typename std::vector< std::complex< T > >::size_type;
 
         assert( x.size() % 2 == 0 );
+        static constexpr auto i = std::complex< T >{0, 1};
         std::vector< std::complex< T > > y( x.size() );
         for ( size_type k = 0; k < y.size(); ++k )
         {
             const auto s_k = ( k == 0 ) ? 0 : y.size() - k;
             const auto z = conj( x[ s_k ] );
-            y[ s_k ] = T( 0.5 ) * conj( ( x[ k ] + z ) - 1i * ( x[ k ] - z ) *
-                                                             exp( two_pi< T > * 1i *
-                                                                  ( T( k ) / ( 2 * x.size() ) ) ) );
+            y[ s_k ] =
+                T( 0.5 ) *
+                conj( ( x[ k ] + z ) -
+                      i * ( x[ k ] - z ) * exp( two_pi< T > * i * ( T( k ) / ( 2 * x.size() ) ) ) );
         }
 
         const auto complex_result = inverse_radix2( y );

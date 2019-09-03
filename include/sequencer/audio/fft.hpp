@@ -3,6 +3,7 @@
 #include <sequencer/type_traits.hpp>
 #include <sequencer/vector_view.hpp>
 
+#include <array>
 #include <cassert>
 #include <cmath>
 #include <complex>
@@ -13,6 +14,75 @@ namespace sequencer::audio
 {
     template < class T >
     constexpr std::complex< T > imag = std::complex< T >{0, 1};
+
+    template < class T >
+    auto create_table()
+    {
+        std::array< std::vector< std::complex< T > >, 16 > table;
+
+        auto size = 2u;
+        for ( auto size_exp = 0u; size_exp < table.size(); ++size_exp )
+        {
+            table[ size_exp ].resize( size );
+            for ( auto k = 0u; k < table[ size_exp ].size(); ++k )
+            {
+                table[ size_exp ][ k ] =
+                    std::exp( minus_two_pi< T > * imag< T > * ( T( k ) / size ) );
+            }
+            size *= 2;
+        }
+
+        return table;
+    }
+
+    template < class T >
+    auto& gauss_table()
+    {
+        static auto table = create_table< T >();
+        return table;
+    }
+
+    template < class T, class Size >
+    std::complex< T > compute_gauss( Size k, Size size )
+    {
+        switch ( size )
+        {
+        case 2:
+            return gauss_table< T >()[ 0 ][ k ];
+        case 4:
+            return gauss_table< T >()[ 1 ][ k ];
+        case 8:
+            return gauss_table< T >()[ 2 ][ k ];
+        case 16:
+            return gauss_table< T >()[ 3 ][ k ];
+        case 32:
+            return gauss_table< T >()[ 4 ][ k ];
+        case 64:
+            return gauss_table< T >()[ 5 ][ k ];
+        case 128:
+            return gauss_table< T >()[ 6 ][ k ];
+        case 256:
+            return gauss_table< T >()[ 7 ][ k ];
+        case 512:
+            return gauss_table< T >()[ 8 ][ k ];
+        case 1024:
+            return gauss_table< T >()[ 9 ][ k ];
+        case 2048:
+            return gauss_table< T >()[ 10 ][ k ];
+        case 4096:
+            return gauss_table< T >()[ 11 ][ k ];
+        case 8192:
+            return gauss_table< T >()[ 12 ][ k ];
+        case 16384:
+            return gauss_table< T >()[ 13 ][ k ];
+        case 32768:
+            return gauss_table< T >()[ 14 ][ k ];
+        case 65536:
+            return gauss_table< T >()[ 15 ][ k ];
+        }
+
+        return std::exp( minus_two_pi< T > * imag< T > * ( T( k ) / size ) );
+    }
 
     template < class Container >
     auto radix2( const Container& x )
@@ -29,9 +99,7 @@ namespace sequencer::audio
         for ( typename Container::size_type k = 0; k < x.size() / 2; ++k )
         {
             using value_type = typename Container::value_type::value_type;
-            const auto dy = std::exp( minus_two_pi< value_type > * imag< value_type > *
-                                      ( value_type( k ) / x.size() ) ) *
-                            z[ k ];
+            const auto dy = compute_gauss< value_type >( k, x.size() ) * z[ k ];
             y[ x.size() / 2 + k ] = y[ k ] - dy;
             y[ k ] += dy;
         }
@@ -56,9 +124,8 @@ namespace sequencer::audio
         for ( typename Container::size_type k = 0; k < x.size() / 2; ++k )
         {
             using value_type = typename Container::value_type::value_type;
-            const auto dy = std::exp( minus_two_pi< value_type > * imag< value_type > *
-                                      ( value_type( k ) / x.size() ) ) *
-                            result[ result.size() / 2 + k ];
+            const auto dy =
+                compute_gauss< value_type >( k, x.size() ) * result[ result.size() / 2 + k ];
             result[ x.size() / 2 + k ] = result[ k ] - dy;
             result[ k ] += dy;
         }
@@ -99,9 +166,8 @@ namespace sequencer::audio
             const auto s_k = ( k == 0 ) ? 0 : result.size() - k;
             const auto z = conj( half_result[ s_k ] );
             result[ k ] =
-                T( 0.5 ) * ( ( half_result[ k ] + z ) -
-                             imag< T > * ( half_result[ k ] - z ) *
-                                 exp( minus_two_pi< T > * imag< T > * ( T( k ) / x.size() ) ) );
+                T( 0.5 ) * ( ( half_result[ k ] + z ) - imag< T > * ( half_result[ k ] - z ) *
+                                                            compute_gauss< T >( k, x.size() ) );
         }
 
         return result;
@@ -121,9 +187,8 @@ namespace sequencer::audio
             const auto s_k = ( k == 0 ) ? 0 : result.size() - k;
             const auto z = conj( half_result[ s_k ] );
             result[ k ] =
-                T( 0.5 ) * ( ( half_result[ k ] + z ) -
-                             imag< T > * ( half_result[ k ] - z ) *
-                                 exp( minus_two_pi< T > * imag< T > * ( T( k ) / x.size() ) ) );
+                T( 0.5 ) * ( ( half_result[ k ] + z ) - imag< T > * ( half_result[ k ] - z ) *
+                                                            compute_gauss< T >( k, x.size() ) );
         }
     }
 
@@ -143,9 +208,8 @@ namespace sequencer::audio
             const auto s_k = ( k == 0 ) ? 0 : result.size() - k;
             const auto z = conj( half_result[ s_k ] );
             result[ k ] =
-                scale * abs( ( half_result[ k ] + z ) -
-                             imag< T > * ( half_result[ k ] - z ) *
-                                 exp( minus_two_pi< T > * imag< T > * ( T( k ) / x.size() ) ) );
+                scale * abs( ( half_result[ k ] + z ) - imag< T > * ( half_result[ k ] - z ) *
+                                                            compute_gauss< T >( k, x.size() ) );
         }
 
         return result;
@@ -162,9 +226,9 @@ namespace sequencer::audio
         {
             const auto s_k = ( k == 0 ) ? 0 : y.size() - k;
             const auto z = conj( x[ s_k ] );
-            y[ s_k ] = T( 0.5 ) * conj( ( x[ k ] + z ) - imag< T > * ( x[ k ] - z ) *
-                                                             exp( two_pi< T > * imag< T > *
-                                                                  ( T( k ) / ( 2 * x.size() ) ) ) );
+            y[ s_k ] =
+                T( 0.5 ) * conj( ( x[ k ] + z ) - imag< T > * ( x[ k ] - z ) /
+                                                      compute_gauss< T >( k, 2 * x.size() ) );
         }
 
         const auto complex_result = inverse_radix2( y );

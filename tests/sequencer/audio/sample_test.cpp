@@ -175,49 +175,21 @@ SCENARIO( "read-write lockable sample", "[sample]" )
 
         WHEN( "writing is blocked" )
         {
-            CHECK( sample.block_writing( true ) );
-            CHECK( sample.writing_is_blocked() );
+            sample.block_writing( true );
 
-            THEN( "reading can not be blocked" )
+            THEN( "writing is blocked" )
             {
-                CHECK_FALSE( sample.block_reading( true ) );
-                CHECK_FALSE( sample.reading_is_blocked() );
-            }
-
-            AND_WHEN( "writing is unblocked" )
-            {
-                CHECK( sample.block_writing( false ) );
-                CHECK_FALSE( sample.writing_is_blocked() );
-
-                THEN( "reading can be blocked" )
-                {
-                    CHECK( sample.block_reading( true ) );
-                    CHECK( sample.reading_is_blocked() );
-                }
+                CHECK( sample.writing_is_blocked() );
             }
         }
 
         WHEN( "reading is blocked" )
         {
-            CHECK( sample.block_reading( true ) );
-            CHECK( sample.reading_is_blocked() );
+            sample.block_reading( true );
 
-            THEN( "writing can not be blocked" )
+            THEN( "reading is blocked" )
             {
-                CHECK_FALSE( sample.block_writing( true ) );
-                CHECK_FALSE( sample.writing_is_blocked() );
-            }
-
-            AND_WHEN( "writing is unblocked" )
-            {
-                CHECK( sample.block_reading( false ) );
-                CHECK_FALSE( sample.reading_is_blocked() );
-
-                THEN( "reading can be blocked" )
-                {
-                    CHECK( sample.block_writing( true ) );
-                    CHECK( sample.writing_is_blocked() );
-                }
+                CHECK( sample.reading_is_blocked() );
             }
         }
     }

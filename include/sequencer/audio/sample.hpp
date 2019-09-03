@@ -65,26 +65,14 @@ namespace sequencer::audio
     {
         using Type::Type;
 
-        constexpr bool block_reading( bool lock ) noexcept
+        constexpr void block_reading( bool lock ) noexcept
         {
-            if ( block_writing_ )
-            {
-                return false;
-            }
-
             block_reading_ = lock;
-            return true;
         }
 
-        constexpr bool block_writing( bool lock ) noexcept
+        constexpr void block_writing( bool lock ) noexcept
         {
-            if ( block_reading_ )
-            {
-                return false;
-            }
-
             block_writing_ = lock;
-            return true;
         }
 
         constexpr bool reading_is_blocked() const noexcept

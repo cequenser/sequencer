@@ -12,7 +12,7 @@ rm -rf *
 
 cmake .. -DSEQUENCER_BuildTests=ON -DSEQUENCER_BuildExamples=ON -DCMAKE_CXX_COMPILER=${CXX_COMPILER} -DCMAKE_C_COMPILER=${C_COMPILER} -DSEQUENCER_DisableAssert=ON
 if [ -n "${GCOV}" ]; then
-    cmake . -DCoverage=ON
+    cmake . -DSEQUENCER_Coverage=ON
 fi
 cmake --build .
 cmake --build . --target test

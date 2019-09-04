@@ -4,6 +4,7 @@
 
 SCENARIO( "system exclusive messages", "[system_exclusive_message]" )
 {
+    using namespace sequencer::midi;
     using namespace sequencer::midi::system::exclusive;
 
     GIVEN( "end system exclusive message" )
@@ -13,7 +14,7 @@ SCENARIO( "system exclusive messages", "[system_exclusive_message]" )
 
         THEN( "message is 0xF7" )
         {
-            REQUIRE( message.front() == std::byte{0xF7} );
+            REQUIRE( message.front() == byte::sysex_end );
         }
     }
 
@@ -24,17 +25,18 @@ SCENARIO( "system exclusive messages", "[system_exclusive_message]" )
 
         THEN( "message is 0xF0 0x41 0x01 0x34 0xF7" )
         {
-            REQUIRE( message[ 0 ] == std::byte{0xF0} );
+            REQUIRE( message[ 0 ] == byte::sysex_start );
             REQUIRE( message[ 1 ] == std::byte{0x41} );
             REQUIRE( message[ 2 ] == std::byte{0x01} );
             REQUIRE( message[ 3 ] == std::byte{0x34} );
-            REQUIRE( message[ 4 ] == std::byte{0xF7} );
+            REQUIRE( message[ 4 ] == byte::sysex_end );
         }
     }
 }
 
 SCENARIO( "system exclusive realtime messages", "[system_exclusive_message]" )
 {
+    using namespace sequencer::midi;
     using namespace sequencer::midi::system::exclusive;
     using namespace sequencer::midi::system::exclusive::realtime;
 
@@ -45,12 +47,12 @@ SCENARIO( "system exclusive realtime messages", "[system_exclusive_message]" )
 
         THEN( "message is 0xF0 0x7F 0x41 0x01 0x34 0xF7" )
         {
-            REQUIRE( message[ 0 ] == start_byte );
+            REQUIRE( message[ 0 ] == byte::sysex_start );
             REQUIRE( message[ 1 ] == realtime::id_byte );
             REQUIRE( message[ 2 ] == std::byte{0x41} );
             REQUIRE( message[ 3 ] == std::byte{0x01} );
             REQUIRE( message[ 4 ] == std::byte{0x34} );
-            REQUIRE( message[ 5 ] == end_byte );
+            REQUIRE( message[ 5 ] == byte::sysex_end );
         }
     }
 
@@ -59,17 +61,17 @@ SCENARIO( "system exclusive realtime messages", "[system_exclusive_message]" )
         const auto message = master_volume( 65, 200 );
         REQUIRE( message.size() == 8 );
 
-        THEN( "message is 0xF0 0x7F 0x41 <device_control_byte> 0x01 0x48 0x01 "
+        THEN( "message is 0xF0 0x7F 0x41 <byte::sysex::device_control> 0x01 0x48 0x01 "
               "0xF7" )
         {
-            CHECK( message[ 0 ] == start_byte );
+            CHECK( message[ 0 ] == byte::sysex_start );
             CHECK( message[ 1 ] == realtime::id_byte );
             CHECK( message[ 2 ] == std::byte{0x41} );
-            CHECK( message[ 3 ] == device_control_byte );
+            CHECK( message[ 3 ] == byte::sysex::device_control );
             CHECK( message[ 4 ] == std::byte{0x01} );
             CHECK( message[ 5 ] == std::byte{0x48} );
             CHECK( message[ 6 ] == std::byte{0x01} );
-            CHECK( message[ 7 ] == end_byte );
+            CHECK( message[ 7 ] == byte::sysex_end );
         }
     }
 
@@ -78,17 +80,17 @@ SCENARIO( "system exclusive realtime messages", "[system_exclusive_message]" )
         const auto message = master_balance( 65, 200 );
         REQUIRE( message.size() == 8 );
 
-        THEN( "message is 0xF0 0x7F 0x41 <device_control_byte> 0x02 0x48 0x01 "
+        THEN( "message is 0xF0 0x7F 0x41 <byte::sysex::device_control> 0x02 0x48 0x01 "
               "0xF7" )
         {
-            CHECK( message[ 0 ] == start_byte );
+            CHECK( message[ 0 ] == byte::sysex_start );
             CHECK( message[ 1 ] == realtime::id_byte );
             CHECK( message[ 2 ] == std::byte{0x41} );
-            CHECK( message[ 3 ] == device_control_byte );
+            CHECK( message[ 3 ] == byte::sysex::device_control );
             CHECK( message[ 4 ] == std::byte{0x02} );
             CHECK( message[ 5 ] == std::byte{0x48} );
             CHECK( message[ 6 ] == std::byte{0x01} );
-            CHECK( message[ 7 ] == end_byte );
+            CHECK( message[ 7 ] == byte::sysex_end );
         }
     }
 
@@ -97,17 +99,17 @@ SCENARIO( "system exclusive realtime messages", "[system_exclusive_message]" )
         const auto message = master_fine_tuning( 65, 200 );
         REQUIRE( message.size() == 8 );
 
-        THEN( "message is 0xF0 0x7F 0x41 <device_control_byte> 0x03 0x48 0x01 "
+        THEN( "message is 0xF0 0x7F 0x41 <byte::sysex::device_control> 0x03 0x48 0x01 "
               "0xF7" )
         {
-            CHECK( message[ 0 ] == start_byte );
+            CHECK( message[ 0 ] == byte::sysex_start );
             CHECK( message[ 1 ] == realtime::id_byte );
             CHECK( message[ 2 ] == std::byte{0x41} );
-            CHECK( message[ 3 ] == device_control_byte );
+            CHECK( message[ 3 ] == byte::sysex::device_control );
             CHECK( message[ 4 ] == std::byte{0x03} );
             CHECK( message[ 5 ] == std::byte{0x48} );
             CHECK( message[ 6 ] == std::byte{0x01} );
-            CHECK( message[ 7 ] == end_byte );
+            CHECK( message[ 7 ] == byte::sysex_end );
         }
     }
 
@@ -116,23 +118,24 @@ SCENARIO( "system exclusive realtime messages", "[system_exclusive_message]" )
         const auto message = master_coarse_tuning( 65, 200 );
         REQUIRE( message.size() == 8 );
 
-        THEN( "message is 0xF0 0x7F 0x41 <device_control_byte> 0x04 0x48 0x01 "
+        THEN( "message is 0xF0 0x7F 0x41 <byte::sysex::device_control> 0x04 0x48 0x01 "
               "0xF7" )
         {
-            CHECK( message[ 0 ] == start_byte );
+            CHECK( message[ 0 ] == byte::sysex_start );
             CHECK( message[ 1 ] == realtime::id_byte );
             CHECK( message[ 2 ] == std::byte{0x41} );
-            CHECK( message[ 3 ] == device_control_byte );
+            CHECK( message[ 3 ] == byte::sysex::device_control );
             CHECK( message[ 4 ] == std::byte{0x04} );
             CHECK( message[ 5 ] == std::byte{0x48} );
             CHECK( message[ 6 ] == std::byte{0x01} );
-            CHECK( message[ 7 ] == end_byte );
+            CHECK( message[ 7 ] == byte::sysex_end );
         }
     }
 }
 
 SCENARIO( "system exclusive - key based instrument control", "[system_exclusive]" )
 {
+    using namespace sequencer::midi;
     using namespace sequencer::midi::system::exclusive;
     using namespace sequencer::midi::system::exclusive::realtime;
 
@@ -150,7 +153,7 @@ SCENARIO( "system exclusive - key based instrument control", "[system_exclusive]
         THEN( "message is 0xF0 0x7F 0x41 0x0A 0x01 0x05 0x3C 0x32 0x28 0xF7" )
         {
             REQUIRE( message.size() == 10 );
-            CHECK( message[ 0 ] == start_byte );
+            CHECK( message[ 0 ] == byte::sysex_start );
             CHECK( message[ 1 ] == realtime::id_byte );
             CHECK( message[ 2 ] == std::byte{0x41} );
             CHECK( message[ 3 ] == std::byte{0x0A} );
@@ -159,7 +162,7 @@ SCENARIO( "system exclusive - key based instrument control", "[system_exclusive]
             CHECK( message[ 6 ] == std::byte{0x3C} );
             CHECK( message[ 7 ] == std::byte{0x32} );
             CHECK( message[ 8 ] == std::byte{0x28} );
-            CHECK( message[ 9 ] == end_byte );
+            CHECK( message[ 9 ] == byte::sysex_end );
         }
     }
 
@@ -178,7 +181,7 @@ SCENARIO( "system exclusive - key based instrument control", "[system_exclusive]
         THEN( "message is 0xF0 0x7F 0x41 0x0A 0x01 0x05 0x3C 0x32 0x28 0x2D 0x1E 0xF7" )
         {
             REQUIRE( message.size() == 12 );
-            CHECK( message[ 0 ] == start_byte );
+            CHECK( message[ 0 ] == byte::sysex_start );
             CHECK( message[ 1 ] == realtime::id_byte );
             CHECK( message[ 2 ] == std::byte{0x41} );
             CHECK( message[ 3 ] == std::byte{0x0A} );
@@ -189,7 +192,7 @@ SCENARIO( "system exclusive - key based instrument control", "[system_exclusive]
             CHECK( message[ 8 ] == std::byte{0x28} );
             CHECK( message[ 9 ] == std::byte{0x2D} );
             CHECK( message[ 10 ] == std::byte{0x1E} );
-            CHECK( message[ 11 ] == end_byte );
+            CHECK( message[ 11 ] == byte::sysex_end );
         }
     }
 
@@ -347,6 +350,7 @@ SCENARIO( "system exclusive - key based instrument control", "[system_exclusive]
 // NOLINTNEXTLINE(readability-function-size)
 SCENARIO( "system exclusive - global parameter control", "[system_exclusive]" )
 {
+    using namespace sequencer::midi;
     using namespace sequencer::midi::system::exclusive;
     using namespace sequencer::midi::system::exclusive::realtime;
 
@@ -358,20 +362,20 @@ SCENARIO( "system exclusive - global parameter control", "[system_exclusive]" )
         const auto message = global_parameter_control( 65, id_value_pairs );
         REQUIRE( message.size() == 11 );
 
-        THEN( "message is 0xF0 0x7F 0x41 <device_control_byte> 0x05 0x00 0x01 "
+        THEN( "message is 0xF0 0x7F 0x41 <byte::sysex::device_control> 0x05 0x00 0x01 "
               "0x01 0x02 0x3C 0xF7" )
         {
-            CHECK( message[ 0 ] == start_byte );
+            CHECK( message[ 0 ] == byte::sysex_start );
             CHECK( message[ 1 ] == realtime::id_byte );
             CHECK( message[ 2 ] == std::byte{0x41} );
-            CHECK( message[ 3 ] == device_control_byte );
+            CHECK( message[ 3 ] == byte::sysex::device_control );
             CHECK( message[ 4 ] == std::byte{0x05} );
             CHECK( message[ 5 ] == std::byte{0x00} );
             CHECK( message[ 6 ] == std::byte{0x01} );
             CHECK( message[ 7 ] == std::byte{0x01} );
             CHECK( message[ 8 ] == std::byte{0x02} );
             CHECK( message[ 9 ] == std::byte{0x3C} );
-            CHECK( message[ 10 ] == end_byte );
+            CHECK( message[ 10 ] == byte::sysex_end );
         }
     }
 
@@ -384,13 +388,13 @@ SCENARIO( "system exclusive - global parameter control", "[system_exclusive]" )
         const auto message = global_parameter_control( 65, id_value_pairs, slot_path );
         REQUIRE( message.size() == 13 );
 
-        THEN( "message is 0xF0 0x7F 0x41 <device_control_byte> 0x05 0x01 0x01 "
+        THEN( "message is 0xF0 0x7F 0x41 <byte::sysex::device_control> 0x05 0x01 0x01 "
               "0x01 0x01 0x048 0x02 0x3C 0xF7" )
         {
-            CHECK( message[ 0 ] == start_byte );
+            CHECK( message[ 0 ] == byte::sysex_start );
             CHECK( message[ 1 ] == realtime::id_byte );
             CHECK( message[ 2 ] == std::byte{0x41} );
-            CHECK( message[ 3 ] == device_control_byte );
+            CHECK( message[ 3 ] == byte::sysex::device_control );
             CHECK( message[ 4 ] == std::byte{0x05} );
             CHECK( message[ 5 ] == std::byte{0x01} );
             CHECK( message[ 6 ] == std::byte{0x01} );
@@ -399,7 +403,7 @@ SCENARIO( "system exclusive - global parameter control", "[system_exclusive]" )
             CHECK( message[ 9 ] == std::byte{0x48} );
             CHECK( message[ 10 ] == std::byte{0x02} );
             CHECK( message[ 11 ] == std::byte{0x3C} );
-            CHECK( message[ 12 ] == end_byte );
+            CHECK( message[ 12 ] == byte::sysex_end );
         }
     }
 
@@ -412,13 +416,13 @@ SCENARIO( "system exclusive - global parameter control", "[system_exclusive]" )
         const auto message = global_parameter_control( 65, id_value_pairs, slot_path );
         REQUIRE( message.size() == 15 );
 
-        THEN( "message is 0xF0 0x7F 0x41 <device_control_byte> 0x05 0x02 0x01 "
+        THEN( "message is 0xF0 0x7F 0x41 <byte::sysex::device_control> 0x05 0x02 0x01 "
               "0x01 0x01 0x048 0x00 0x0A 0x02 0x3C 0xF7" )
         {
-            CHECK( message[ 0 ] == start_byte );
+            CHECK( message[ 0 ] == byte::sysex_start );
             CHECK( message[ 1 ] == realtime::id_byte );
             CHECK( message[ 2 ] == std::byte{0x41} );
-            CHECK( message[ 3 ] == device_control_byte );
+            CHECK( message[ 3 ] == byte::sysex::device_control );
             CHECK( message[ 4 ] == std::byte{0x05} );
             CHECK( message[ 5 ] == std::byte{0x02} );
             CHECK( message[ 6 ] == std::byte{0x01} );
@@ -429,7 +433,7 @@ SCENARIO( "system exclusive - global parameter control", "[system_exclusive]" )
             CHECK( message[ 11 ] == std::byte{0x0A} );
             CHECK( message[ 12 ] == std::byte{0x02} );
             CHECK( message[ 13 ] == std::byte{0x3C} );
-            CHECK( message[ 14 ] == end_byte );
+            CHECK( message[ 14 ] == byte::sysex_end );
         }
     }
 
@@ -442,13 +446,13 @@ SCENARIO( "system exclusive - global parameter control", "[system_exclusive]" )
         const auto message = global_parameter_control( 65, id_value_pairs );
         REQUIRE( message.size() == 13 );
 
-        THEN( "message is 0xF0 0x7F 0x41 <device_control_byte> 0x05 0x00 0x01 "
+        THEN( "message is 0xF0 0x7F 0x41 <byte::sysex::device_control> 0x05 0x00 0x01 "
               "0x01 0x02 0x3C 0x03 0x46 0xF7" )
         {
-            CHECK( message[ 0 ] == start_byte );
+            CHECK( message[ 0 ] == byte::sysex_start );
             CHECK( message[ 1 ] == realtime::id_byte );
             CHECK( message[ 2 ] == std::byte{0x41} );
-            CHECK( message[ 3 ] == device_control_byte );
+            CHECK( message[ 3 ] == byte::sysex::device_control );
             CHECK( message[ 4 ] == std::byte{0x05} );
             CHECK( message[ 5 ] == std::byte{0x00} );
             CHECK( message[ 6 ] == std::byte{0x01} );
@@ -457,7 +461,7 @@ SCENARIO( "system exclusive - global parameter control", "[system_exclusive]" )
             CHECK( message[ 9 ] == std::byte{0x3C} );
             CHECK( message[ 10 ] == std::byte{0x03} );
             CHECK( message[ 11 ] == std::byte{0x46} );
-            CHECK( message[ 12 ] == end_byte );
+            CHECK( message[ 12 ] == byte::sysex_end );
         }
     }
 
@@ -470,13 +474,13 @@ SCENARIO( "system exclusive - global parameter control", "[system_exclusive]" )
         const auto message = global_parameter_control( 65, id_value_pairs );
         REQUIRE( message.size() == 15 );
 
-        THEN( "message is 0xF0 0x7F 0x41 <device_control_byte> 0x05 0x00 0x01 "
+        THEN( "message is 0xF0 0x7F 0x41 <byte::sysex::device_control> 0x05 0x00 0x01 "
               "0x02 0x02 0x3C 0x00 0x03 0x0E 0x02 0xF7" )
         {
-            CHECK( message[ 0 ] == start_byte );
+            CHECK( message[ 0 ] == byte::sysex_start );
             CHECK( message[ 1 ] == realtime::id_byte );
             CHECK( message[ 2 ] == std::byte{0x41} );
-            CHECK( message[ 3 ] == device_control_byte );
+            CHECK( message[ 3 ] == byte::sysex::device_control );
             CHECK( message[ 4 ] == std::byte{0x05} );
             CHECK( message[ 5 ] == std::byte{0x00} );
             CHECK( message[ 6 ] == std::byte{0x01} );
@@ -487,7 +491,7 @@ SCENARIO( "system exclusive - global parameter control", "[system_exclusive]" )
             CHECK( message[ 11 ] == std::byte{0x03} );
             CHECK( message[ 12 ] == std::byte{0x0E} );
             CHECK( message[ 13 ] == std::byte{0x02} );
-            CHECK( message[ 14 ] == end_byte );
+            CHECK( message[ 14 ] == byte::sysex_end );
         }
     }
 
@@ -500,13 +504,13 @@ SCENARIO( "system exclusive - global parameter control", "[system_exclusive]" )
         const auto message = global_parameter_control( 65, id_value_pairs );
         REQUIRE( message.size() == 15 );
 
-        THEN( "message is 0xF0 0x7F 0x41 <device_control_byte> 0x05 0x00 0x02 "
+        THEN( "message is 0xF0 0x7F 0x41 <byte::sysex::device_control> 0x05 0x00 0x02 "
               "0x01 0x01 0x48 0x3C 0x00 0x03 0x46 0xF7" )
         {
-            CHECK( message[ 0 ] == start_byte );
+            CHECK( message[ 0 ] == byte::sysex_start );
             CHECK( message[ 1 ] == realtime::id_byte );
             CHECK( message[ 2 ] == std::byte{0x41} );
-            CHECK( message[ 3 ] == device_control_byte );
+            CHECK( message[ 3 ] == byte::sysex::device_control );
             CHECK( message[ 4 ] == std::byte{0x05} );
             CHECK( message[ 5 ] == std::byte{0x00} );
             CHECK( message[ 6 ] == std::byte{0x02} );
@@ -517,7 +521,7 @@ SCENARIO( "system exclusive - global parameter control", "[system_exclusive]" )
             CHECK( message[ 11 ] == std::byte{0x00} );
             CHECK( message[ 12 ] == std::byte{0x03} );
             CHECK( message[ 13 ] == std::byte{0x46} );
-            CHECK( message[ 14 ] == end_byte );
+            CHECK( message[ 14 ] == byte::sysex_end );
         }
     }
 
@@ -530,13 +534,13 @@ SCENARIO( "system exclusive - global parameter control", "[system_exclusive]" )
         const auto message = global_parameter_control( 65, id_value_pairs );
         REQUIRE( message.size() == 17 );
 
-        THEN( "message is 0xF0 0x7F 0x41 <device_control_byte> 0x05 0x00 0x02 "
+        THEN( "message is 0xF0 0x7F 0x41 <byte::sysex::device_control> 0x05 0x00 0x02 "
               "0x02 0x01 0x48 0x3C 0x00 0x00 0x03 0x0E 0x02 0xF7" )
         {
-            CHECK( message[ 0 ] == start_byte );
+            CHECK( message[ 0 ] == byte::sysex_start );
             CHECK( message[ 1 ] == realtime::id_byte );
             CHECK( message[ 2 ] == std::byte{0x41} );
-            CHECK( message[ 3 ] == device_control_byte );
+            CHECK( message[ 3 ] == byte::sysex::device_control );
             CHECK( message[ 4 ] == std::byte{0x05} );
             CHECK( message[ 5 ] == std::byte{0x00} );
             CHECK( message[ 6 ] == std::byte{0x02} );
@@ -549,13 +553,14 @@ SCENARIO( "system exclusive - global parameter control", "[system_exclusive]" )
             CHECK( message[ 13 ] == std::byte{0x03} );
             CHECK( message[ 14 ] == std::byte{0x0E} );
             CHECK( message[ 15 ] == std::byte{0x02} );
-            CHECK( message[ 16 ] == end_byte );
+            CHECK( message[ 16 ] == byte::sysex_end );
         }
     }
 }
 
 SCENARIO( "system exclusive non-realtime messages", "[system_exclusive_message]" )
 {
+    using namespace sequencer::midi;
     using namespace sequencer::midi::system::exclusive;
     using namespace sequencer::midi::system::exclusive::non_realtime;
 
@@ -566,12 +571,12 @@ SCENARIO( "system exclusive non-realtime messages", "[system_exclusive_message]"
 
         THEN( "message is 0xF0 0x7F 0x41 0x01 0x34 0xF7" )
         {
-            REQUIRE( message[ 0 ] == start_byte );
+            REQUIRE( message[ 0 ] == byte::sysex_start );
             REQUIRE( message[ 1 ] == non_realtime::id_byte );
             REQUIRE( message[ 2 ] == std::byte{0x41} );
             REQUIRE( message[ 3 ] == std::byte{0x01} );
             REQUIRE( message[ 4 ] == std::byte{0x34} );
-            REQUIRE( message[ 5 ] == end_byte );
+            REQUIRE( message[ 5 ] == byte::sysex_end );
         }
     }
 
@@ -582,12 +587,12 @@ SCENARIO( "system exclusive non-realtime messages", "[system_exclusive_message]"
 
         THEN( "message is 0xF0 0x7E 0x41 <gm_byte> 0x02 0xF7" )
         {
-            REQUIRE( message[ 0 ] == start_byte );
+            REQUIRE( message[ 0 ] == byte::sysex_start );
             REQUIRE( message[ 1 ] == non_realtime::id_byte );
             REQUIRE( message[ 2 ] == std::byte{0x41} );
             REQUIRE( message[ 3 ] == gm_byte );
             REQUIRE( message[ 4 ] == std::byte{0x02} );
-            REQUIRE( message[ 5 ] == end_byte );
+            REQUIRE( message[ 5 ] == byte::sysex_end );
         }
     }
 
@@ -598,12 +603,12 @@ SCENARIO( "system exclusive non-realtime messages", "[system_exclusive_message]"
 
         THEN( "message is 0xF0 0x7E 0x41 <gm_byte> 0x01 0xF7" )
         {
-            REQUIRE( message[ 0 ] == start_byte );
+            REQUIRE( message[ 0 ] == byte::sysex_start );
             REQUIRE( message[ 1 ] == non_realtime::id_byte );
             REQUIRE( message[ 2 ] == std::byte{0x41} );
             REQUIRE( message[ 3 ] == gm_byte );
             REQUIRE( message[ 4 ] == std::byte{0x01} );
-            REQUIRE( message[ 5 ] == end_byte );
+            REQUIRE( message[ 5 ] == byte::sysex_end );
         }
     }
 
@@ -614,12 +619,12 @@ SCENARIO( "system exclusive non-realtime messages", "[system_exclusive_message]"
 
         THEN( "message is 0xF0 0x7E 0x41 <gm_byte> 0x01 0xF7" )
         {
-            REQUIRE( message[ 0 ] == start_byte );
+            REQUIRE( message[ 0 ] == byte::sysex_start );
             REQUIRE( message[ 1 ] == non_realtime::id_byte );
             REQUIRE( message[ 2 ] == std::byte{0x41} );
             REQUIRE( message[ 3 ] == gm_byte );
             REQUIRE( message[ 4 ] == std::byte{0x03} );
-            REQUIRE( message[ 5 ] == end_byte );
+            REQUIRE( message[ 5 ] == byte::sysex_end );
         }
     }
 
@@ -631,12 +636,12 @@ SCENARIO( "system exclusive non-realtime messages", "[system_exclusive_message]"
 
         THEN( "message is 0xF0 0x7E 0x41 <dls_byte> 0x01 0xF7" )
         {
-            REQUIRE( message[ 0 ] == start_byte );
+            REQUIRE( message[ 0 ] == byte::sysex_start );
             REQUIRE( message[ 1 ] == non_realtime::id_byte );
             REQUIRE( message[ 2 ] == std::byte{0x41} );
             REQUIRE( message[ 3 ] == dls_byte );
             REQUIRE( message[ 4 ] == std::byte{0x01} );
-            REQUIRE( message[ 5 ] == end_byte );
+            REQUIRE( message[ 5 ] == byte::sysex_end );
         }
     }
 
@@ -648,12 +653,12 @@ SCENARIO( "system exclusive non-realtime messages", "[system_exclusive_message]"
 
         THEN( "message is 0xF0 0x7E 0x41 <dls_byte> 0x02 0xF7" )
         {
-            REQUIRE( message[ 0 ] == start_byte );
+            REQUIRE( message[ 0 ] == byte::sysex_start );
             REQUIRE( message[ 1 ] == non_realtime::id_byte );
             REQUIRE( message[ 2 ] == std::byte{0x41} );
             REQUIRE( message[ 3 ] == dls_byte );
             REQUIRE( message[ 4 ] == std::byte{0x02} );
-            REQUIRE( message[ 5 ] == end_byte );
+            REQUIRE( message[ 5 ] == byte::sysex_end );
         }
     }
 
@@ -665,12 +670,12 @@ SCENARIO( "system exclusive non-realtime messages", "[system_exclusive_message]"
 
         THEN( "message is 0xF0 0x7E 0x41 <dls_byte> 0x04 0xF7" )
         {
-            REQUIRE( message[ 0 ] == start_byte );
+            REQUIRE( message[ 0 ] == byte::sysex_start );
             REQUIRE( message[ 1 ] == non_realtime::id_byte );
             REQUIRE( message[ 2 ] == std::byte{0x41} );
             REQUIRE( message[ 3 ] == dls_byte );
             REQUIRE( message[ 4 ] == std::byte{0x04} );
-            REQUIRE( message[ 5 ] == end_byte );
+            REQUIRE( message[ 5 ] == byte::sysex_end );
         }
     }
 
@@ -682,12 +687,12 @@ SCENARIO( "system exclusive non-realtime messages", "[system_exclusive_message]"
 
         THEN( "message is 0xF0 0x7E 0x41 <dls_byte> 0x03 0xF7" )
         {
-            REQUIRE( message[ 0 ] == start_byte );
+            REQUIRE( message[ 0 ] == byte::sysex_start );
             REQUIRE( message[ 1 ] == non_realtime::id_byte );
             REQUIRE( message[ 2 ] == std::byte{0x41} );
             REQUIRE( message[ 3 ] == dls_byte );
             REQUIRE( message[ 4 ] == std::byte{0x03} );
-            REQUIRE( message[ 5 ] == end_byte );
+            REQUIRE( message[ 5 ] == byte::sysex_end );
         }
     }
 }

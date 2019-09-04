@@ -1,36 +1,37 @@
 #pragma once
 
+#include <sequencer/midi/message/byte.hpp>
 #include <sequencer/midi/message/message_type.hpp>
 
 namespace sequencer::midi::realtime
 {
     constexpr message_t< 1 > realtime_clock() noexcept
     {
-        return {std::byte{0xF8}};
+        return {byte::realtime_clock};
     }
 
     constexpr message_t< 1 > realtime_start() noexcept
     {
-        return {std::byte{0xFA}};
+        return {byte::realtime_start};
     }
 
     constexpr message_t< 1 > realtime_continue() noexcept
     {
-        return {std::byte{0xFB}};
+        return {byte::realtime_continue};
     }
 
     constexpr message_t< 1 > realtime_stop() noexcept
     {
-        return {std::byte{0xFC}};
+        return {byte::realtime_stop};
     }
 
     constexpr message_t< 1 > active_sensing() noexcept
     {
-        return {std::byte{0xFE}};
+        return {byte::active_sensing};
     }
 
     constexpr message_t< 1 > reset_all() noexcept
     {
-        return {std::byte{0xFF}};
+        return {byte::reset_all};
     }
 } // namespace sequencer::midi::realtime

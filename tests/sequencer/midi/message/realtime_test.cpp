@@ -4,6 +4,7 @@
 
 SCENARIO( "realtime messages", "[realtime_message]" )
 {
+    using namespace sequencer::midi;
     using namespace sequencer::midi::realtime;
 
     GIVEN( "realtime clock message" )
@@ -12,7 +13,7 @@ SCENARIO( "realtime messages", "[realtime_message]" )
 
         THEN( "its value equals 0xF8" )
         {
-            REQUIRE( message.front() == std::byte{0xF8} );
+            REQUIRE( message.front() == byte::realtime_clock );
         }
     }
 
@@ -22,7 +23,7 @@ SCENARIO( "realtime messages", "[realtime_message]" )
 
         THEN( "its value equals 0xFA" )
         {
-            REQUIRE( message.front() == std::byte{0xFA} );
+            REQUIRE( message.front() == byte::realtime_start );
         }
     }
 
@@ -32,7 +33,7 @@ SCENARIO( "realtime messages", "[realtime_message]" )
 
         THEN( "its value equals 0xFB" )
         {
-            REQUIRE( message.front() == std::byte{0xFB} );
+            REQUIRE( message.front() == byte::realtime_continue );
         }
     }
 
@@ -42,7 +43,7 @@ SCENARIO( "realtime messages", "[realtime_message]" )
 
         THEN( "its value equals 0xFC" )
         {
-            REQUIRE( message.front() == std::byte{0xFC} );
+            REQUIRE( message.front() == byte::realtime_stop );
         }
     }
 
@@ -52,7 +53,7 @@ SCENARIO( "realtime messages", "[realtime_message]" )
 
         THEN( "its value equals 0xFE" )
         {
-            REQUIRE( message.front() == std::byte{0xFE} );
+            REQUIRE( message.front() == byte::active_sensing );
         }
     }
 
@@ -62,7 +63,7 @@ SCENARIO( "realtime messages", "[realtime_message]" )
 
         THEN( "its value equals 0xFF" )
         {
-            REQUIRE( message.front() == std::byte{0xFF} );
+            REQUIRE( message.front() == byte::reset_all );
         }
     }
 }

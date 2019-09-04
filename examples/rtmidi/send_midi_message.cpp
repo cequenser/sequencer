@@ -30,14 +30,14 @@ void receiver( std::promise< void >& receiver_is_ready, std::future< void > send
 
 int main()
 {
-    //    std::promise< void > receiver_is_ready_promise;
-    //    std::promise< void > sender_is_done;
-    //    const auto receiver_is_ready = receiver_is_ready_promise.get_future();
-    //    const auto receiver_is_done =
-    //        std::async( std::launch::async, [&receiver_is_ready_promise, &sender_is_done] {
-    //            receiver( receiver_is_ready_promise, sender_is_done.get_future() );
-    //        } );
-    //    receiver_is_ready.wait();
+    std::promise< void > receiver_is_ready_promise;
+    std::promise< void > sender_is_done;
+    const auto receiver_is_ready = receiver_is_ready_promise.get_future();
+    const auto receiver_is_done =
+        std::async( std::launch::async, [&receiver_is_ready_promise, &sender_is_done] {
+            receiver( receiver_is_ready_promise, sender_is_done.get_future() );
+        } );
+    receiver_is_ready.wait();
 
     auto midiout = make_midi_port< RtMidiOut >( 1 );
     if ( !midiout )

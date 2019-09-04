@@ -1,6 +1,7 @@
 #pragma once
 
 #include <sequencer/assert.hpp>
+#include <sequencer/midi/message/byte.hpp>
 #include <sequencer/midi/message/message_type.hpp>
 #include <sequencer/midi/message/util.hpp>
 
@@ -8,20 +9,17 @@
 
 namespace sequencer::midi::system::exclusive
 {
-    static constexpr auto start_byte = std::byte{0xF0};
-    static constexpr auto end_byte = std::byte{0xF7};
-
     constexpr message_t< 1 > end_system_exclusive() noexcept
     {
-        return {end_byte};
+        return {byte::sysex_end};
     }
 
     template < class... Data >
     constexpr message_t< sizeof...( Data ) + 3u > system_exclusive( std::byte manufacturer_id,
                                                                     Data&&... data ) noexcept
     {
-        return {start_byte, manufacturer_id, std::byte( std::forward< Data >( data ) )...,
-                end_byte};
+        return {byte::sysex_start, manufacturer_id, std::byte( std::forward< Data >( data ) )...,
+                byte::sysex_end};
     }
 
     template < class... Data >
@@ -33,8 +31,7 @@ namespace sequencer::midi::system::exclusive
 
     namespace realtime
     {
-        static constexpr auto id_byte = std::byte{0x7F};
-        static constexpr auto device_control_byte = std::byte{0x04};
+        constexpr auto id_byte = std::byte{0x7F};
 
         template < class... Data >
         constexpr message_t< sizeof...( Data ) + 4u >
@@ -48,8 +45,8 @@ namespace sequencer::midi::system::exclusive
                                                  std::uint16_t value ) noexcept
         {
             const auto hex_value = uint16_to_lsb_msb( value );
-            return system_exclusive( manufacturer_id, device_control_byte, key, hex_value.first,
-                                     hex_value.second );
+            return system_exclusive( manufacturer_id, byte::sysex::device_control, key,
+                                     hex_value.first, hex_value.second );
         }
 
         constexpr message_t< 8 > master_volume( std::uint8_t manufacturer_id,
@@ -96,7 +93,7 @@ namespace sequencer::midi::system::exclusive
             constexpr auto pair_size = sizeof( Id ) + sizeof( Value );
             constexpr auto user_data_size = pair_size * number_of_values + 2 * number_of_slots;
             message_t< 5 + user_data_size > data;
-            data[ 0 ] = device_control_byte;
+            data[ 0 ] = byte::sysex::device_control;
             data[ 1 ] = std::byte{0x05}; // global parameter control
             data[ 2 ] = std::byte{number_of_slots};
             data[ 3 ] = std::byte{sizeof( Id )};

@@ -5,6 +5,7 @@
 // NOLINTNEXTLINE(readability-function-size)
 SCENARIO( "channel voice messages", "[channel_voice_message]" )
 {
+    using sequencer::midi::read_channel_with_two_7bit_values;
     using namespace sequencer::midi::channel::voice;
 
     GIVEN( "a note on message for channel 1 with value 40 and velocity 73" )
@@ -28,14 +29,27 @@ SCENARIO( "channel voice messages", "[channel_voice_message]" )
         {
             CHECK( message[ 2 ] == std::byte{0x49} );
         }
+
+        WHEN( "read_channel_with_two_7bit_values is called on message" )
+        {
+            const auto [ read_channel, read_note, read_velocity ] =
+                read_channel_with_two_7bit_values( message );
+
+            THEN( "given channel, note and velocity are returned" )
+            {
+                CHECK( read_channel == channel );
+                CHECK( read_note == note );
+                CHECK( read_velocity == velocity );
+            }
+        }
     }
 
     GIVEN( "a note on message for channel 15 with value 37 and velocity 0" )
     {
         const auto channel = 15;
-        const auto value = 47;
+        const auto note = 47;
         const auto velocity = 0;
-        const auto message = note_on( channel, value, velocity );
+        const auto message = note_on( channel, note, velocity );
 
         THEN( "the first byte is 0x9F" )
         {
@@ -51,7 +65,21 @@ SCENARIO( "channel voice messages", "[channel_voice_message]" )
         {
             CHECK( message[ 2 ] == std::byte{0x00} );
         }
+
+        WHEN( "read_channel_with_two_7bit_values is called on message" )
+        {
+            const auto [ read_channel, read_note, read_velocity ] =
+                read_channel_with_two_7bit_values( message );
+
+            THEN( "given channel, note and velocity are returned" )
+            {
+                CHECK( read_channel == channel );
+                CHECK( read_note == note );
+                CHECK( read_velocity == velocity );
+            }
+        }
     }
+
     GIVEN( "a note off message for channel 1 with value 40 and velocity 73" )
     {
         const auto channel = 1;
@@ -73,14 +101,27 @@ SCENARIO( "channel voice messages", "[channel_voice_message]" )
         {
             CHECK( message[ 2 ] == std::byte{0x49} );
         }
+
+        WHEN( "read_channel_with_two_7bit_values is called on message" )
+        {
+            const auto [ read_channel, read_note, read_velocity ] =
+                read_channel_with_two_7bit_values( message );
+
+            THEN( "given channel, note and velocity are returned" )
+            {
+                CHECK( read_channel == channel );
+                CHECK( read_note == note );
+                CHECK( read_velocity == velocity );
+            }
+        }
     }
 
     GIVEN( "a note off message for channel 15 with value 37 and velocity 0" )
     {
         const auto channel = 15;
-        const auto value = 47;
+        const auto note = 47;
         const auto velocity = 0;
-        const auto message = note_off( channel, value, velocity );
+        const auto message = note_off( channel, note, velocity );
 
         THEN( "the first byte is 0x8F" )
         {
@@ -95,6 +136,19 @@ SCENARIO( "channel voice messages", "[channel_voice_message]" )
         THEN( "the third byte is 0x00" )
         {
             CHECK( message[ 2 ] == std::byte{0x00} );
+        }
+
+        WHEN( "read_channel_with_two_7bit_values is called on message" )
+        {
+            const auto [ read_channel, read_note, read_velocity ] =
+                read_channel_with_two_7bit_values( message );
+
+            THEN( "given channel, note and velocity are returned" )
+            {
+                CHECK( read_channel == channel );
+                CHECK( read_note == note );
+                CHECK( read_velocity == velocity );
+            }
         }
     }
 
@@ -119,6 +173,19 @@ SCENARIO( "channel voice messages", "[channel_voice_message]" )
         {
             CHECK( message[ 2 ] == std::byte{0x03} );
         }
+
+        WHEN( "read_channel_with_two_7bit_values is called on message" )
+        {
+            const auto [ read_channel, read_key, read_pressure ] =
+                read_channel_with_two_7bit_values( message );
+
+            THEN( "given channel, note and velocity are returned" )
+            {
+                CHECK( read_channel == channel );
+                CHECK( read_key == key );
+                CHECK( read_pressure == pressure );
+            }
+        }
     }
 
     GIVEN( "a control change message for channel 15 and controller 47 with value 42" )
@@ -141,6 +208,19 @@ SCENARIO( "channel voice messages", "[channel_voice_message]" )
         THEN( "the third byte is 0x2A" )
         {
             CHECK( message[ 2 ] == std::byte{0x2A} );
+        }
+
+        WHEN( "read_channel_with_two_7bit_values is called on message" )
+        {
+            const auto [ read_channel, read_controller, read_value ] =
+                read_channel_with_two_7bit_values( message );
+
+            THEN( "given channel, note and velocity are returned" )
+            {
+                CHECK( read_channel == channel );
+                CHECK( read_controller == controller );
+                CHECK( read_value == value );
+            }
         }
     }
 

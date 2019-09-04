@@ -1,0 +1,24 @@
+{
+  "comments": [
+    {
+      "robotId": "g++-8",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/psv-gcc/601/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "1c8f103b_ab8d26b1",
+        "filename": "include/sequencer/audio/double_buffer.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-09-04T20:09:30Z",
+      "side": 1,
+      "message": "include/sequencer/audio/double_buffer.hpp:31:27: error: call to non-\u0027constexpr\u0027 function \u0027bool std::atomic\u003cbool\u003e::operator\u003d(bool)\u0027\n             has_new_data_ \u003d false;\n             ~~~~~~~~~~~~~~^~~~~~~",
+      "revId": "b1611ec5d14bbe13c04c5fc6c5a27f6efe0da663",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}

@@ -10,6 +10,7 @@ add_library(sequencer
     fixed_point_type.hpp
     type_traits.hpp
     vector_view.hpp
+    audio/double_buffer.hpp
     audio/fft.hpp
     audio/sample.hpp
     midi/clock.hpp

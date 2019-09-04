@@ -43,8 +43,9 @@ int main()
         auto reader = sequencer::audio::sample_reader_t{sample};
 
         cout << " === Playing back. === " << endl;
-        stream.open_output_stream( parameters, sample_rate, frames_per_buffer,
-                                   sequencer::portaudio::play_callback, &reader );
+        stream.open_output_stream(
+            parameters, sample_rate, frames_per_buffer,
+            sequencer::portaudio::play_callback< sequencer::audio::sample_reader_t >, &reader );
         stream.start();
         cout << "Waiting for playback to finish." << endl;
         while ( stream.is_active() )

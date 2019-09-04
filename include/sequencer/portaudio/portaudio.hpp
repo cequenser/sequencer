@@ -1,5 +1,6 @@
 #pragma once
 
+#include <sequencer/audio/double_buffer.hpp>
 #include <sequencer/audio/sample.hpp>
 
 #include <exception>
@@ -173,14 +174,14 @@ namespace sequencer::portaudio
         return writer->has_frames_left() ? paContinue : paComplete;
     }
 
+    template < class Reader >
     inline int play_callback( const void*, void* output_buffer, unsigned long frames_per_buffer,
                               const PaStreamCallbackTimeInfo*, PaStreamCallbackFlags,
                               void* user_data )
     {
-        using sequencer::audio::sample_reader_t;
-        auto* reader = static_cast< sample_reader_t* >( user_data );
-        reader->read( static_cast< sample_reader_t::frame_rep* >( output_buffer ),
+        auto* reader = static_cast< Reader* >( user_data );
+        reader->read( static_cast< typename Reader::frame_rep* >( output_buffer ),
                       frames_per_buffer );
-        return reader->has_frames_left() ? paContinue : paComplete;
+        return reader->continue_reading() ? paContinue : paComplete;
     }
 } // namespace sequencer::portaudio

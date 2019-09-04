@@ -6,6 +6,7 @@ add_executable(tests
     sequencer/fixed_point_type_test.cpp
     sequencer/type_traits_test.cpp
     sequencer/vector_view_test.cpp
+    sequencer/audio/double_buffer_test.cpp
     sequencer/audio/fft_test.cpp
     sequencer/audio/sample_test.cpp
     sequencer/midi/clock_test.cpp

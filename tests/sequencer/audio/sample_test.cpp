@@ -195,6 +195,43 @@ SCENARIO( "read-write lockable sample", "[sample]" )
     }
 }
 
+SCENARIO( "swap samples", "[sample]" )
+{
+    using namespace sequencer::audio;
+
+    GIVEN( "a mono sample with content 1.f" )
+    {
+        auto mono_sample = sample_t{1, sequencer::audio::mode_t::mono};
+        mono_sample.frames = {1.f};
+
+        AND_GIVEN( "a stereo sample with content 2.f 3.f" )
+        {
+            auto stereo_sample = sample_t{1};
+            stereo_sample.frames = {2.f, 3.f};
+
+            WHEN( "samples are swapped" )
+            {
+                swap( mono_sample, stereo_sample );
+
+                THEN( "mono_sample is a stereo sample with content 2.f 3.f" )
+                {
+                    CHECK( mono_sample.mode == sequencer::audio::mode_t::stereo );
+                    REQUIRE( mono_sample.frames.size() == 2u );
+                    CHECK( mono_sample.frames[ 0 ] == 2.f );
+                    CHECK( mono_sample.frames[ 1 ] == 3.f );
+                }
+
+                THEN( "stereo_sample is a mono sample with content 1.f" )
+                {
+                    CHECK( stereo_sample.mode == sequencer::audio::mode_t::mono );
+                    REQUIRE( stereo_sample.frames.size() == 1u );
+                    CHECK( stereo_sample.frames[ 0 ] == 1.f );
+                }
+            }
+        }
+    }
+}
+
 SCENARIO( "block read or write", "[sample]" )
 {
     using namespace sequencer::audio;

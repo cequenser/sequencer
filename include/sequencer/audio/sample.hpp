@@ -48,7 +48,8 @@ namespace sequencer::audio
 
         void clear()
         {
-            frames = std::vector< frame_rep >( frames.size(), frame_rep{0} );
+            frames =
+                std::vector< frame_rep >( std::max( frames.size(), initial_size ), frame_rep{0} );
         }
 
         size_type number_of_frames() const noexcept
@@ -58,7 +59,16 @@ namespace sequencer::audio
 
         std::vector< frame_rep > frames{};
         mode_t mode{mode_t::stereo};
+        size_type initial_size{frames.size()};
     };
+
+    inline void swap( sample_t& lhs, sample_t& rhs )
+    {
+        using std::swap;
+        swap( lhs.frames, rhs.frames );
+        swap( lhs.mode, rhs.mode );
+        swap( lhs.initial_size, rhs.initial_size );
+    }
 
     template < class Type >
     struct read_write_lockable : Type
@@ -164,8 +174,8 @@ namespace sequencer::audio
             if ( data != nullptr )
             {
                 std::memcpy( current_frame(), data, size * frame_size_in_bytes() );
+                increase_frame_index( size );
             }
-            increase_frame_index( size );
         }
     };
 
@@ -184,6 +194,11 @@ namespace sequencer::audio
             const auto size = frames_to_copy( frames_per_buffer );
             std::memcpy( data, current_frame(), size * frame_size_in_bytes() );
             increase_frame_index( size );
+        }
+
+        bool continue_reading() const noexcept
+        {
+            return has_frames_left();
         }
     };
 } // namespace sequencer::audio

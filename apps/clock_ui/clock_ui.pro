@@ -8,12 +8,11 @@ SOURCES += main.cpp \
     backend.cpp
 
 INCLUDEPATH += /home/lars/Projects/sequencer/include \
-    /home/lars/Projects/sequencer/external/repo/install/rtmidi/include \
-    /home/lars/Projects/sequencer/external/repo/install/portaudio/include
+    /home/lars/Projects/sequencer/external/repo/rtmidi \
+    /home/lars/Projects/sequencer/external/repo/portaudio/include
 
 LIBS += -lrtmidi -lportaudio
-LIBS += -L"/home/lars/Projects/sequencer/external/repo/install/rtmidi/lib"
-LIBS += -L"/home/lars/Projects/sequencer/external/repo/install/portaudio/lib"
+LIBS += -L"/home/lars/Projects/sequencer/build4/lib"
 
 RESOURCES += qml.qrc
 

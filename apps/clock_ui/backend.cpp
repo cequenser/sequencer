@@ -1,5 +1,7 @@
 #include "backend.hpp"
 
+#include <sequencer/audio/fft.hpp>
+#include <sequencer/audio/transfer_function.hpp>
 #include <sequencer/midi/percussion_key.hpp>
 
 #include <cassert>
@@ -168,9 +170,13 @@ namespace qml
 
     void backend::start_recording()
     {
-        if ( !sample_.block_reading( true ) || no_device_selected() )
+        if ( sample_.writing_is_blocked() || no_device_selected() )
         {
             return;
+        }
+        else
+        {
+            sample_.block_reading( true );
         }
 
         stop_recording_ = false;
@@ -191,8 +197,8 @@ namespace qml
             }
 
             sample_.trim();
+            std::cout << "recorded frames: " << sample_.frames.size() << std::endl;
             sample_.block_reading( false );
-            stream.close();
         } );
     }
 
@@ -206,27 +212,119 @@ namespace qml
         stop_recording_ = true;
     }
 
+    namespace
+    {
+        void filter( sequencer::audio::sample_t& sample, double freq, double gain, double q,
+                     double base_frequency )
+        {
+            using namespace sequencer::audio;
+            std::vector< float > lhs_sample( sample.frames.size() / 2 );
+            std::vector< float > rhs_sample( sample.frames.size() / 2 );
+            for ( auto i = 0u; i < lhs_sample.size(); ++i )
+            {
+                lhs_sample[ i ] = sample.frames[ 2 * i ];
+                rhs_sample[ i ] = sample.frames[ 2 * i + 1 ];
+            }
+            auto spectrum_lhs = fft( lhs_sample );
+            auto spectrum_rhs = fft( rhs_sample );
+            const auto transfer_function = [gain, cutoff = freq]( auto f ) {
+                return sequencer::audio::low_shelf( f, gain, cutoff );
+            };
+            sequencer::audio::filter( spectrum_lhs, transfer_function, base_frequency );
+            sequencer::audio::filter( spectrum_rhs, transfer_function, base_frequency );
+
+            lhs_sample = inverse_fft( spectrum_lhs );
+            rhs_sample = inverse_fft( spectrum_rhs );
+
+            for ( auto i = 0u; i < lhs_sample.size(); ++i )
+            {
+                sample.frames[ 2 * i ] = lhs_sample[ i ];
+                sample.frames[ 2 * i + 1 ] = rhs_sample[ i ];
+            }
+        }
+    } // namespace
+
     void backend::playback()
     {
-        if ( !sample_.block_writing( true ) )
+        if ( sample_.reading_is_blocked() )
         {
             return;
         }
+        else
+        {
+            sample_.block_writing( true );
+        }
 
-        recording_done_.wait();
+        using namespace sequencer::audio;
+        constexpr auto N = 32 * 1024;
+        read_write_lockable< sample_t > buffer{N, sample_.mode};
+        const auto initial_size = buffer.frames.size();
+
+        sample_reader_t sample_reader{sample_};
+        auto read_buffer = [this, &buffer, &sample_reader, initial_size] {
+            buffer.frames.resize( initial_size );
+            buffer.clear();
+            sample_reader.read( buffer.frames.data(), buffer.number_of_frames() );
+            filter( buffer, double( eq_freq_1_ ), double( eq_gain_1_ ) / 100,
+                    double( eq_q_factor_1_ ), double( 2 * sample_rate_ ) / buffer.frames.size() );
+            double_buffer_.swap_write_buffer( buffer );
+        };
+
+        read_buffer();
+        double_buffer_.swap_buffers();
+        read_buffer();
         stop_recording_ = false;
-        recording_done_ = std::async( std::launch::async, [this] {
+        auto reader =
+            std::make_shared< sequencer::audio::double_buffer_reader_t >( double_buffer_ );
+
+        recording_done_ = std::async( std::launch::async, [this, reader] {
             const auto parameters = portaudio_.get_parameters( audio_device_id_ );
-            auto reader = sequencer::audio::sample_reader_t{sample_};
 
             sequencer::portaudio::stream_t stream;
-            stream.open_output_stream( parameters, sample_rate_, frames_per_buffer_,
-                                       sequencer::portaudio::play_callback, &reader );
+            stream.open_output_stream(
+                parameters, sample_rate_, frames_per_buffer_,
+                sequencer::portaudio::play_callback< std::decay_t< decltype( *reader ) > >,
+                reader.get() );
             stream.start();
             while ( stream.is_active() && !stop_recording_ )
                 std::this_thread::sleep_for( std::chrono::milliseconds( 1 ) );
-            stream.close();
             sample_.block_writing( false );
         } );
+
+        auto at_end = false;
+        while ( true )
+        {
+            if ( !double_buffer_.has_new_data() )
+            {
+                if ( at_end )
+                {
+                    reader->set_continue_reading( false );
+                    break;
+                }
+                double_buffer_.swap_buffers();
+                if ( !sample_reader.has_frames_left() )
+                {
+                    at_end = true;
+                    continue;
+                }
+
+                read_buffer();
+            }
+        }
+    }
+
+    void backend::set_eq_freq_1( int value )
+    {
+        eq_freq_1_ = value;
+    }
+
+    void backend::set_eq_gain_1( int value )
+    {
+        eq_gain_1_ = value;
+    }
+
+    void backend::set_eq_q_factor_1( int value )
+    {
+        eq_q_factor_1_ = value;
     }
 } // namespace qml

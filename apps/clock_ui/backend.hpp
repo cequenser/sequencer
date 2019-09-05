@@ -1,5 +1,6 @@
 #pragma once
 
+#include <sequencer/audio/double_buffer.hpp>
 #include <sequencer/midi/track.hpp>
 #include <sequencer/portaudio/portaudio.hpp>
 #include <sequencer/rtmidi/util.hpp>
@@ -69,6 +70,12 @@ namespace qml
 
         Q_INVOKABLE bool is_recording() const noexcept;
 
+        Q_INVOKABLE void set_eq_freq_1( int value );
+
+        Q_INVOKABLE void set_eq_gain_1( int value );
+
+        Q_INVOKABLE void set_eq_q_factor_1( int value );
+
     private:
         constexpr bool no_device_selected() const noexcept
         {
@@ -91,5 +98,9 @@ namespace qml
         std::size_t frames_per_buffer_ = 512;
         sequencer::audio::read_write_lockable< sequencer::audio::sample_t > sample_{
             static_cast< std::size_t >( max_recording_time_.count() ) * sample_rate_};
+        int eq_freq_1_{10};
+        int eq_gain_1_{0};
+        int eq_q_factor_1_{100};
+        sequencer::audio::double_buffer_t double_buffer_;
     };
 } // namespace qml

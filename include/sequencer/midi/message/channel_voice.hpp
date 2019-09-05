@@ -1,6 +1,7 @@
 #pragma once
 
 #include <sequencer/assert.hpp>
+#include <sequencer/midi/message/byte.hpp>
 #include <sequencer/midi/message/message_type.hpp>
 #include <sequencer/midi/message/util.hpp>
 
@@ -9,19 +10,6 @@
 
 namespace sequencer::midi::channel::voice
 {
-    namespace byte
-    {
-        // clang-format off
-        constexpr auto                   note_on = std::byte{0x90};
-        constexpr auto                  note_off = std::byte{0x80};
-        constexpr auto  polymorphic_key_pressure = std::byte{0xA0};
-        constexpr auto            control_change = std::byte{0xB0};
-        constexpr auto            program_change = std::byte{0xC0};
-        constexpr auto          channel_pressure = std::byte{0xD0};
-        constexpr auto         pitch_bend_change = std::byte{0xE0};
-        // clang-format on
-    } // namespace byte
-
     constexpr message_t< 3 > note_on( std::uint8_t channel, std::uint8_t note,
                                       std::uint8_t velocity ) noexcept
     {
@@ -100,45 +88,25 @@ namespace sequencer::midi::channel::voice
     }
 
     constexpr std::array< message_t< 3 >, 2 >
-    control_change_lsb_msb( std::uint8_t channel, std::byte control_function, std::uint16_t value )
+    control_change_lsb_msb( std::uint8_t channel, std::byte control_function_msb,
+                            std::byte control_function_lsb, std::uint16_t value )
     {
         const auto [ lsb, msb ] = uint16_to_lsb_msb( value );
-        return {control_change( channel,
-                                std::byte( static_cast< std::uint8_t >( control_function ) + 32 ),
-                                lsb ),
-                control_change( channel, control_function, msb )};
+        return {control_change( channel, control_function_lsb, lsb ),
+                control_change( channel, control_function_msb, msb )};
     }
 
-    namespace cc::byte
+    constexpr std::array< message_t< 3 >, 2 >
+    control_change_lsb_msb( std::uint8_t channel, std::byte control_function, std::uint16_t value )
     {
-        // clang-format off
-        constexpr auto                          bank_select = std::byte{0x00};
-        constexpr auto                     modulation_wheel = std::byte{0x01};
-        constexpr auto                    breath_controller = std::byte{0x02};
-        constexpr auto                      foot_controller = std::byte{0x04};
-        constexpr auto                      portamento_time = std::byte{0x05};
-        constexpr auto                           data_entry = std::byte{0x06};
-        constexpr auto                       channel_volume = std::byte{0x07};
-        constexpr auto                              balance = std::byte{0x08};
-        constexpr auto                                  pan = std::byte{0x0A};
-        constexpr auto                expression_controller = std::byte{0x0B};
-        constexpr auto                     effect_control_1 = std::byte{0x0C};
-        constexpr auto                     effect_control_2 = std::byte{0x0D};
-        constexpr auto         general_purpose_controller_1 = std::byte{0x10};
-        constexpr auto         general_purpose_controller_2 = std::byte{0x11};
-        constexpr auto         general_purpose_controller_3 = std::byte{0x12};
-        constexpr auto         general_purpose_controller_4 = std::byte{0x13};
-        constexpr auto  non_registered_parameter_number_lsb = std::byte{0x62};
-        constexpr auto  non_registered_parameter_number_msb = std::byte{0x63};
-        constexpr auto      registered_parameter_number_lsb = std::byte{0x64};
-        constexpr auto      registered_parameter_number_msb = std::byte{0x65};
-        // clang-format on
-    } // namespace cc::byte
+        return control_change_lsb_msb( channel, control_function, byte::cc::lsb( control_function ),
+                                       value );
+    }
 
     constexpr std::array< message_t< 3 >, 2 > bank_select( std::uint8_t channel,
                                                            std::uint16_t bank ) noexcept
     {
-        return control_change_lsb_msb( channel, cc::byte::bank_select, bank );
+        return control_change_lsb_msb( channel, byte::cc::bank_select_msb, bank );
     }
 
     constexpr std::tuple< message_t< 3 >, message_t< 3 >, message_t< 2 > >
@@ -152,55 +120,55 @@ namespace sequencer::midi::channel::voice
     constexpr std::array< message_t< 3 >, 2 > modulation_wheel( std::uint8_t channel,
                                                                 std::uint16_t value ) noexcept
     {
-        return control_change_lsb_msb( channel, cc::byte::modulation_wheel, value );
+        return control_change_lsb_msb( channel, byte::cc::modulation_wheel_msb, value );
     }
 
     constexpr std::array< message_t< 3 >, 2 > breath_controller( std::uint8_t channel,
                                                                  std::uint16_t value ) noexcept
     {
-        return control_change_lsb_msb( channel, cc::byte::breath_controller, value );
+        return control_change_lsb_msb( channel, byte::cc::breath_controller_msb, value );
     }
 
     constexpr std::array< message_t< 3 >, 2 > foot_controller( std::uint8_t channel,
                                                                std::uint16_t value ) noexcept
     {
-        return control_change_lsb_msb( channel, cc::byte::foot_controller, value );
+        return control_change_lsb_msb( channel, byte::cc::foot_controller_msb, value );
     }
 
     constexpr std::array< message_t< 3 >, 2 > portamento_time( std::uint8_t channel,
                                                                std::uint16_t value ) noexcept
     {
-        return control_change_lsb_msb( channel, cc::byte::portamento_time, value );
+        return control_change_lsb_msb( channel, byte::cc::portamento_time_msb, value );
     }
 
     constexpr std::array< message_t< 3 >, 2 > data_entry( std::uint8_t channel,
                                                           std::uint16_t value ) noexcept
     {
-        return control_change_lsb_msb( channel, cc::byte::data_entry, value );
+        return control_change_lsb_msb( channel, byte::cc::data_entry_msb, value );
     }
 
     constexpr std::array< message_t< 3 >, 2 > channel_volume( std::uint8_t channel,
                                                               std::uint16_t value ) noexcept
     {
-        return control_change_lsb_msb( channel, cc::byte::channel_volume, value );
+        return control_change_lsb_msb( channel, byte::cc::channel_volume_msb, value );
     }
 
     constexpr std::array< message_t< 3 >, 2 > balance( std::uint8_t channel,
                                                        std::uint16_t value ) noexcept
     {
-        return control_change_lsb_msb( channel, cc::byte::balance, value );
+        return control_change_lsb_msb( channel, byte::cc::balance_msb, value );
     }
 
     constexpr std::array< message_t< 3 >, 2 > pan( std::uint8_t channel,
                                                    std::uint16_t value ) noexcept
     {
-        return control_change_lsb_msb( channel, cc::byte::pan, value );
+        return control_change_lsb_msb( channel, byte::cc::pan_msb, value );
     }
 
     constexpr std::array< message_t< 3 >, 2 > expression_controller( std::uint8_t channel,
                                                                      std::uint16_t value ) noexcept
     {
-        return control_change_lsb_msb( channel, cc::byte::expression_controller, value );
+        return control_change_lsb_msb( channel, byte::cc::expression_controller_msb, value );
     }
 
     constexpr std::array< message_t< 3 >, 2 > effect_control( std::uint8_t id, std::uint8_t channel,
@@ -209,7 +177,7 @@ namespace sequencer::midi::channel::voice
         SEQUENCER_ASSERT( id >= 1 );
         SEQUENCER_ASSERT( id <= 2 );
         const auto control_function =
-            ( id == 1 ) ? cc::byte::effect_control_1 : cc::byte::effect_control_2;
+            ( id == 1 ) ? byte::cc::effect_control_1_msb : byte::cc::effect_control_2_msb;
         return control_change_lsb_msb( channel, control_function, value );
     }
 
@@ -220,27 +188,25 @@ namespace sequencer::midi::channel::voice
         SEQUENCER_ASSERT( id >= 1 );
         SEQUENCER_ASSERT( id <= 4 );
         const auto control_function =
-            ( id == 1 ) ? cc::byte::general_purpose_controller_1
-                        : ( id == 2 ) ? cc::byte::general_purpose_controller_2
-                                      : ( id == 3 ) ? cc::byte::general_purpose_controller_3
-                                                    : cc::byte::general_purpose_controller_4;
+            ( id == 1 ) ? byte::cc::general_purpose_controller_1_msb
+                        : ( id == 2 ) ? byte::cc::general_purpose_controller_2_msb
+                                      : ( id == 3 ) ? byte::cc::general_purpose_controller_3_msb
+                                                    : byte::cc::general_purpose_controller_4_msb;
         return control_change_lsb_msb( channel, control_function, value );
     }
 
     constexpr std::array< message_t< 3 >, 2 >
     non_registered_parameter_number( std::uint8_t channel, std::uint16_t value ) noexcept
     {
-        const auto [ lsb, msb ] = uint16_to_lsb_msb( value );
-        return {control_change( channel, cc::byte::non_registered_parameter_number_lsb, lsb ),
-                control_change( channel, cc::byte::non_registered_parameter_number_msb, msb )};
+        return control_change_lsb_msb( channel, byte::cc::non_registered_parameter_number_msb,
+                                       byte::cc::non_registered_parameter_number_lsb, value );
     }
 
     constexpr std::array< message_t< 3 >, 2 >
     registered_parameter_number( std::uint8_t channel, std::uint16_t value ) noexcept
     {
-        const auto [ lsb, msb ] = uint16_to_lsb_msb( value );
-        return {control_change( channel, cc::byte::registered_parameter_number_lsb, lsb ),
-                control_change( channel, cc::byte::registered_parameter_number_msb, msb )};
+        return control_change_lsb_msb( channel, byte::cc::registered_parameter_number_msb,
+                                       byte::cc::registered_parameter_number_lsb, value );
     }
 
     constexpr std::byte on_off_byte( bool on ) noexcept
@@ -250,27 +216,27 @@ namespace sequencer::midi::channel::voice
 
     constexpr message_t< 3 > damper_pedal( std::uint8_t channel, bool on ) noexcept
     {
-        return control_change( channel, std::byte{0x40}, on_off_byte( on ) );
+        return control_change( channel, byte::cc::damper_pedal, on_off_byte( on ) );
     }
 
     constexpr message_t< 3 > portamento( std::uint8_t channel, bool on ) noexcept
     {
-        return control_change( channel, std::byte{0x41}, on_off_byte( on ) );
+        return control_change( channel, byte::cc::portamento, on_off_byte( on ) );
     }
 
     constexpr message_t< 3 > sostenuto( std::uint8_t channel, bool on ) noexcept
     {
-        return control_change( channel, std::byte{0x42}, on_off_byte( on ) );
+        return control_change( channel, byte::cc::sostenuto, on_off_byte( on ) );
     }
 
     constexpr message_t< 3 > soft_pedal( std::uint8_t channel, bool on ) noexcept
     {
-        return control_change( channel, std::byte{0x43}, on_off_byte( on ) );
+        return control_change( channel, byte::cc::soft_pedal, on_off_byte( on ) );
     }
 
     constexpr message_t< 3 > hold_2( std::uint8_t channel, bool on ) noexcept
     {
-        return control_change( channel, std::byte{0x45}, on_off_byte( on ) );
+        return control_change( channel, byte::cc::hold_2, on_off_byte( on ) );
     }
 
     constexpr message_t< 3 > control_change( std::uint8_t channel,
@@ -283,78 +249,78 @@ namespace sequencer::midi::channel::voice
     constexpr message_t< 3 > all_sounds_off( std::uint8_t channel ) noexcept
     {
         SEQUENCER_ASSERT( channel < 16 );
-        return control_change( channel, std::byte{0x78} );
+        return control_change( channel, byte::cc::all_sounds_off );
     }
 
     constexpr message_t< 3 > reset_all_controllers( std::uint8_t channel ) noexcept
     {
         SEQUENCER_ASSERT( channel < 16 );
-        return control_change( channel, std::byte{0x79} );
+        return control_change( channel, byte::cc::reset_all_controllers );
     }
 
     constexpr message_t< 3 > local_control( std::uint8_t channel, bool on ) noexcept
     {
         SEQUENCER_ASSERT( channel < 16 );
         const auto data_byte = on ? std::byte{0x7F} : std::byte{0x00};
-        return control_change( channel, std::byte{0x7A}, data_byte );
+        return control_change( channel, byte::cc::local_control, data_byte );
     }
 
     constexpr message_t< 3 > all_notes_off( std::uint8_t channel ) noexcept
     {
         SEQUENCER_ASSERT( channel < 16 );
-        return control_change( channel, std::byte{0x7B} );
+        return control_change( channel, byte::cc::all_notes_off );
     }
 
     constexpr message_t< 3 > omni_mode_off( std::uint8_t channel ) noexcept
     {
         SEQUENCER_ASSERT( channel < 16 );
-        return control_change( channel, std::byte{0x7C} );
+        return control_change( channel, byte::cc::omni_mode_off );
     }
 
     constexpr message_t< 3 > omni_mode_on( std::uint8_t channel ) noexcept
     {
         SEQUENCER_ASSERT( channel < 16 );
-        return control_change( channel, std::byte{0x7D} );
+        return control_change( channel, byte::cc::omni_mode_on );
     }
 
     constexpr message_t< 3 > poly_mode_on( std::uint8_t channel ) noexcept
     {
         SEQUENCER_ASSERT( channel < 16 );
-        return control_change( channel, std::byte{0x7F} );
+        return control_change( channel, byte::cc::poly_mode_on );
     }
 
     constexpr message_t< 3 > effects_1_depth( std::uint8_t channel, std::uint8_t value ) noexcept
     {
         SEQUENCER_ASSERT( channel < 16 );
         SEQUENCER_ASSERT( value < 128 );
-        return control_change( channel, std::byte{0x5B}, std::byte{value} );
+        return control_change( channel, byte::cc::effects_1_depth, std::byte{value} );
     }
 
     constexpr message_t< 3 > effects_2_depth( std::uint8_t channel, std::uint8_t value ) noexcept
     {
         SEQUENCER_ASSERT( channel < 16 );
         SEQUENCER_ASSERT( value < 128 );
-        return control_change( channel, std::byte{0x5C}, std::byte{value} );
+        return control_change( channel, byte::cc::effects_2_depth, std::byte{value} );
     }
 
     constexpr message_t< 3 > effects_3_depth( std::uint8_t channel, std::uint8_t value ) noexcept
     {
         SEQUENCER_ASSERT( channel < 16 );
         SEQUENCER_ASSERT( value < 128 );
-        return control_change( channel, std::byte{0x5D}, std::byte{value} );
+        return control_change( channel, byte::cc::effects_3_depth, std::byte{value} );
     }
 
     constexpr message_t< 3 > effects_4_depth( std::uint8_t channel, std::uint8_t value ) noexcept
     {
         SEQUENCER_ASSERT( channel < 16 );
         SEQUENCER_ASSERT( value < 128 );
-        return control_change( channel, std::byte{0x5E}, std::byte{value} );
+        return control_change( channel, byte::cc::effects_4_depth, std::byte{value} );
     }
 
     constexpr message_t< 3 > effects_5_depth( std::uint8_t channel, std::uint8_t value ) noexcept
     {
         SEQUENCER_ASSERT( channel < 16 );
         SEQUENCER_ASSERT( value < 128 );
-        return control_change( channel, std::byte{0x5F}, std::byte{value} );
+        return control_change( channel, byte::cc::effects_5_depth, std::byte{value} );
     }
 } // namespace sequencer::midi::channel::voice

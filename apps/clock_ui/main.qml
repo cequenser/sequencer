@@ -373,7 +373,64 @@ ApplicationWindow {
                     }
                     return sb.value
                 }
+
+                onValueChanged: {
+                    backend.set_audio_device(value)
+                }
             }
+        }
+
+        RowLayout {
+            id: eq_layout
+
+            SpinBox {
+                id: eq_freq_1
+                from: 10
+                to: 20000
+                value: 100
+                editable: true
+
+                onValueChanged: {
+                    backend.set_eq_freq_1(value)
+                }
+
+                onValueModified: {
+                    backend.set_eq_freq_1(value)
+                }
+            }
+
+            SpinBox {
+                id: eq_gain_1
+                from: -100
+                to: 100
+                value: 0
+                editable: true
+
+                onValueChanged: {
+                    backend.set_eq_gain_1(value)
+                }
+
+                onValueModified: {
+                    backend.set_eq_gain_1(value)
+                }
+            }
+
+            SpinBox {
+                id: eq_q_factor_1
+                from: 0
+                to: 10000
+                value: 100
+                editable: true
+
+                onValueChanged: {
+                    backend.set_eq_q_factor_1(value)
+                }
+
+                onValueModified: {
+                    backend.set_eq_q_factor_1(value)
+                }
+            }
+
         }
     }
 }

@@ -134,18 +134,29 @@ namespace sequencer::audio
     template < class Container >
     auto inverse_radix2( Container x )
     {
+        if ( x.size() == 1 )
+        {
+            return std::vector{x[ 0 ]};
+        }
+
         for ( auto& v : x )
         {
             v = conj( v );
         }
 
-        auto y = radix2( x );
+        auto y = radix2( const_vector_view{&x, 0, 2} );
+        const auto z = radix2( const_vector_view{&x, 1, 2} );
 
+        y.resize( x.size() );
         using value_type = typename Container::value_type::value_type;
         const auto scale = value_type( 1.0 ) / y.size();
-        for ( auto& v : y )
+        for ( typename Container::size_type k = 0; k < x.size() / 2; ++k )
         {
-            v = scale * conj( v );
+            using value_type = typename Container::value_type::value_type;
+            const auto dy = compute_gauss< value_type >( k, x.size() ) * z[ k ];
+            y[ x.size() / 2 + k ] = scale * conj( y[ k ] - dy );
+            y[ k ] += dy;
+            y[ k ] = scale * conj( y[ k ] );
         }
 
         return y;

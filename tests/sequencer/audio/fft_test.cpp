@@ -8,10 +8,13 @@
 
 constexpr auto signal_size = 32 * 8;
 
-double sine_50_and_80( double t )
+namespace
 {
-    return 0.5 * std::sin( 80 * 2 * M_PI * t ) + std::sin( 50 * 2 * M_PI * t );
-}
+    double sine_50_and_80( double t )
+    {
+        return 0.5 * std::sin( 80 * 2 * M_PI * t ) + std::sin( 50 * 2 * M_PI * t );
+    }
+} // namespace
 
 SCENARIO( "sine waves of 50 and 80 Hz with double values", "[fft]" )
 {

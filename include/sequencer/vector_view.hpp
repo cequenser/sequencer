@@ -26,12 +26,12 @@ namespace sequencer
 
         const T& operator[]( size_type i ) const
         {
-            return v_ ? ( *v_ )[ idx( i ) ] : ( *view_ )[ idx( i ) ];
+            return view_ ? ( *view_ )[ idx( i ) ] : ( *v_ )[ idx( i ) ];
         }
 
         size_type size() const noexcept
         {
-            const auto full_size = v_ ? v_->size() : view_->size();
+            const auto full_size = view_ ? view_->size() : v_->size();
             return full_size / stride_ - offset_ / stride_;
         }
 
@@ -94,8 +94,8 @@ namespace sequencer
 
         T& operator[]( size_type i )
         {
-            return base_type::v_ ? ( *base_type::v_ )[ base_type::idx( i ) ]
-                                 : ( *base_type::view_ )[ base_type::idx( i ) ];
+            return base_type::view_ ? ( *base_type::view_ )[ base_type::idx( i ) ]
+                                    : ( *base_type::v_ )[ base_type::idx( i ) ];
         }
     };
 } // namespace sequencer

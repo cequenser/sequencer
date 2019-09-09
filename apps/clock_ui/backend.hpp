@@ -82,8 +82,6 @@ namespace qml
             return audio_device_id_ == 0;
         }
 
-        void update_sample();
-
         RtMidiOut midiout_;
         tracks_t tracks_;
         decltype( sequencer::rtmidi::make_clock() ) clock_;

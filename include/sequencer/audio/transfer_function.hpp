@@ -14,6 +14,16 @@ namespace sequencer::audio
         return freq < cutoff ? 1 : 0;
     }
 
+    constexpr auto low_shelf( double freq, double gain, double transition )
+    {
+        return 1 + ( gain * transition ) / ( freq + transition );
+    }
+
+    constexpr auto high_shelf( double freq, double gain, double transition )
+    {
+        return low_shelf( 1 / freq, gain, transition );
+    }
+
     template < class Container, class TransferFunction >
     void filter( Container& c, TransferFunction f, double base_frequency )
     {

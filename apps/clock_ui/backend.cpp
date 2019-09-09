@@ -1,6 +1,7 @@
 #include "backend.hpp"
 
 #include <sequencer/audio/fft.hpp>
+#include <sequencer/audio/transfer_function.hpp>
 #include <sequencer/midi/percussion_key.hpp>
 
 #include <cassert>
@@ -213,80 +214,24 @@ namespace qml
 
     namespace
     {
-        auto high_pass( double cutoff, double freq )
-        {
-            return freq > cutoff ? 1.f : 0.f;
-        }
-
-        auto low_pass( double cutoff, double freq )
-        {
-            return freq < cutoff ? 1.f : 0.f;
-        }
-
-        auto gauss( double a, double b, double c, double x )
-        {
-            return a * std::exp( -( x - b ) * ( x - b ) / ( 2 * c * c ) );
-        }
-
-        auto freq_factor( double f, double g )
-        {
-            return 1.0 + f * f / ( g * g );
-        }
-
-        auto high_shelf( double upper_freq, double lower_freq, double freq )
-        {
-            return std::sqrt( freq_factor( freq, upper_freq ) / freq_factor( freq, lower_freq ) );
-        }
-
-        //        auto high_shelf(double alpha, double freq)
-        //        {
-        //            const auto beta = std::sqrt(alpha);
-        //            const auto upper_freq = 10000.0*beta;
-        //            const auto lower_freq = 10000.0/beta;
-        //            return high_shelf(upper_freq, lower_freq, freq);
-        //        }
-
-        auto low_shelf( double upper_freq, double lower_freq, double freq )
-        {
-            return upper_freq / lower_freq * high_shelf( upper_freq, lower_freq, freq );
-        }
-
         void filter( sequencer::audio::sample_t& sample, double freq, double gain, double q,
                      double base_frequency )
         {
-            const auto beta = std::sqrt( 1.0 + gain * 200 );
-            const auto upper_freq = 1000.0 * beta;
-            const auto lower_freq = 1000.0 / beta;
-            std::cout << "beta: " << beta << ", " << upper_freq << ", " << lower_freq << std::endl;
-            std::cout << "filtering " << freq << ", " << gain << ", " << q
-                      << ", base freq: " << base_frequency << std::endl;
-            std::cout << "d: "
-                      << float( high_shelf( upper_freq, lower_freq, 200 * base_frequency ) ) << ", "
-                      << float( high_shelf( upper_freq, lower_freq,
-                                            sample.frames.size() * base_frequency / 4 ) )
-                      << std::endl;
             using namespace sequencer::audio;
             std::vector< float > lhs_sample( sample.frames.size() / 2 );
             std::vector< float > rhs_sample( sample.frames.size() / 2 );
-            for ( auto i = 0u; i < lhs_sample.size() / 2; ++i )
+            for ( auto i = 0u; i < lhs_sample.size(); ++i )
             {
                 lhs_sample[ i ] = sample.frames[ 2 * i ];
                 rhs_sample[ i ] = sample.frames[ 2 * i + 1 ];
             }
             auto spectrum_lhs = fft( lhs_sample );
             auto spectrum_rhs = fft( rhs_sample );
-            for ( auto i = 0u; i < spectrum_lhs.size(); ++i )
-            {
-                //                const auto scale = float(1.0 - gauss(gain, freq, q,
-                //                i*base_frequency));
-                //                const auto scale =
-                //                    float( high_shelf( upper_freq, lower_freq, i * base_frequency
-                //                    ) );
-                const auto scale = low_pass( freq, i * base_frequency );
-
-                spectrum_lhs[ i ] *= scale;
-                spectrum_rhs[ i ] *= scale;
-            }
+            const auto transfer_function = [gain, cutoff = freq]( auto f ) {
+                return sequencer::audio::low_shelf( f, gain, cutoff );
+            };
+            sequencer::audio::filter( spectrum_lhs, transfer_function, base_frequency );
+            sequencer::audio::filter( spectrum_rhs, transfer_function, base_frequency );
 
             lhs_sample = inverse_fft( spectrum_lhs );
             rhs_sample = inverse_fft( spectrum_rhs );
@@ -310,41 +255,28 @@ namespace qml
             sample_.block_writing( true );
         }
 
-        //        update_sample();
-
-        std::cout << "1" << std::endl;
         using namespace sequencer::audio;
         constexpr auto N = 32 * 1024;
         read_write_lockable< sample_t > buffer{N, sample_.mode};
         const auto initial_size = buffer.frames.size();
+
         sample_reader_t sample_reader{sample_};
-
-        if ( recording_done_.valid() )
-        {
-            recording_done_.wait();
-        }
-        //        filter( sample_, double( eq_freq_1_ ), double( eq_gain_1_ ) / 100,
-        //                double( eq_q_factor_1_ ), double( 2 * sample_rate_ ) /
-        //                sample_.frames.size() );
-
         auto read_buffer = [this, &buffer, &sample_reader, initial_size] {
             buffer.frames.resize( initial_size );
             buffer.clear();
             sample_reader.read( buffer.frames.data(), buffer.number_of_frames() );
-            //            filter( buffer, double( eq_freq_1_ ), double( eq_gain_1_ ) / 100,
-            //                    double( eq_q_factor_1_ ), double( 2 * sample_rate_ ) /
-            //                    buffer.frames.size() );
+            filter( buffer, double( eq_freq_1_ ), double( eq_gain_1_ ) / 100,
+                    double( eq_q_factor_1_ ), double( 2 * sample_rate_ ) / buffer.frames.size() );
             double_buffer_.swap_write_buffer( buffer );
         };
 
-        std::cout << "read data" << std::endl;
         read_buffer();
         double_buffer_.swap_buffers();
-        std::cout << "read data" << std::endl;
         read_buffer();
         stop_recording_ = false;
         auto reader =
             std::make_shared< sequencer::audio::double_buffer_reader_t >( double_buffer_ );
+
         recording_done_ = std::async( std::launch::async, [this, reader] {
             const auto parameters = portaudio_.get_parameters( audio_device_id_ );
 
@@ -356,36 +288,27 @@ namespace qml
             stream.start();
             while ( stream.is_active() && !stop_recording_ )
                 std::this_thread::sleep_for( std::chrono::milliseconds( 1 ) );
-            stream.close();
             sample_.block_writing( false );
         } );
 
+        auto at_end = false;
         while ( true )
         {
             if ( !double_buffer_.has_new_data() )
             {
-                double_buffer_.swap_buffers();
-                if ( !sample_reader.has_frames_left() )
+                if ( at_end )
                 {
-                    std::this_thread::sleep_for( std::chrono::milliseconds( 50 ) );
                     reader->set_continue_reading( false );
                     break;
                 }
+                double_buffer_.swap_buffers();
+                if ( !sample_reader.has_frames_left() )
+                {
+                    at_end = true;
+                    continue;
+                }
 
-                std::cout << "read data" << std::endl;
                 read_buffer();
-                //                using namespace sequencer::audio;
-                //                auto spectrum = fft(buffer.frames);
-                //                auto signal = inverse_fft(spectrum);
-                //                for(auto i = 0; i<signal.size(); ++i)
-                //                {
-                //                    if(std::abs(signal[i] - buffer.frames[i]) >
-                //                    std::numeric_limits<float>::epsilon()*100)
-                //                    {
-                //                        std::cout << i << ": " << signal[i] << ", " <<
-                //                        buffer.frames[i] << std::endl;
-                //                    }
-                //                }
             }
         }
     }
@@ -403,25 +326,5 @@ namespace qml
     void backend::set_eq_q_factor_1( int value )
     {
         eq_q_factor_1_ = value;
-    }
-
-    void backend::update_sample()
-    {
-        //        using namespace sequencer::audio;
-        //        sample_.block_writing(true);
-        //        auto frames = sample_.frames;
-        //        sample_.block_writing(false);
-        //        auto result = fft(sample_.frames);
-        //        const auto base_frequency_ = double(sample_rate_)/sample_.frames.size();
-        ////        for(auto i=0u; i<result.size(); ++i)
-        ////        {
-        ////            result[i] *= (1.0 - gauss(double(eq_gain_1_)/100, double(eq_freq_1_),
-        /// double(eq_q_factor_1_), i*base_frequency_)); /        }
-
-        //        sample_.block_reading(true);
-        //        sample_.block_writing(true);
-        //        sample_.frames = inverse_fft(result);
-        //        sample_.block_reading(false);
-        //        sample_.block_writing(false);
     }
 } // namespace qml

@@ -35,6 +35,156 @@ SCENARIO( "ideal high pass", "[transfer_function]" )
 {
     using namespace sequencer::audio;
 
+    GIVEN( "a cutoff frequency of 50" )
+    {
+        const auto cutoff = 50;
+
+        AND_GIVEN( "a frequency of 50" )
+        {
+            const auto f = 50;
+
+            THEN( "transfer function returns 0" )
+            {
+                CHECK( ideal_high_pass( f, cutoff ) == 0 );
+            }
+        }
+
+        AND_GIVEN( "a frequency of 51" )
+        {
+            const auto f = 51;
+
+            THEN( "transfer function returns 1" )
+            {
+                CHECK( ideal_high_pass( f, cutoff ) == 1 );
+            }
+        }
+    }
+}
+
+SCENARIO( "ideal low pass", "[transfer_function]" )
+{
+    using namespace sequencer::audio;
+
+    GIVEN( "a cutoff frequency of 50" )
+    {
+        const auto cutoff = 50;
+
+        AND_GIVEN( "a frequency of 50" )
+        {
+            const auto f = 50;
+
+            THEN( "transfer function returns 0" )
+            {
+                CHECK( ideal_low_pass( f, cutoff ) == 0 );
+            }
+        }
+
+        AND_GIVEN( "a frequency of 49" )
+        {
+            const auto f = 49;
+
+            THEN( "transfer function returns 1" )
+            {
+                CHECK( ideal_low_pass( f, cutoff ) == 1 );
+            }
+        }
+    }
+}
+
+SCENARIO( "low shelf", "[transfer_function]" )
+{
+    using namespace sequencer::audio;
+
+    GIVEN( "a transition frequency of 50" )
+    {
+        const auto transition = 50;
+
+        AND_GIVEN( "a gain of 1" )
+        {
+            const auto gain = 1;
+
+            GIVEN( "a frequency of 0" )
+            {
+                const auto f = 0;
+
+                THEN( "transfer function returns 0" )
+                {
+                    CHECK( low_shelf( f, gain, transition ) == Approx( 2 ) );
+                }
+            }
+
+            GIVEN( "a frequency of 50" )
+            {
+                const auto f = 50;
+
+                THEN( "transfer function returns 0" )
+                {
+                    CHECK( low_shelf( f, gain, transition ) == Approx( 1.5 ) );
+                }
+            }
+
+            GIVEN( "a high frequency" )
+            {
+                const auto f = std::numeric_limits< double >::max();
+
+                THEN( "transfer function returns 0" )
+                {
+                    CHECK( low_shelf( f, gain, transition ) == Approx( 1 ) );
+                }
+            }
+        }
+    }
+}
+
+SCENARIO( "high shelf", "[transfer_function]" )
+{
+    using namespace sequencer::audio;
+
+    GIVEN( "a transition frequency of 50" )
+    {
+        const auto transition = 50;
+
+        AND_GIVEN( "a gain of 1" )
+        {
+            const auto gain = 1;
+
+            GIVEN( "a frequency of 0" )
+            {
+                const auto f = 0;
+
+                THEN( "transfer function returns 0" )
+                {
+                    CHECK( high_shelf( f, gain, transition ) == Approx( 1 ) );
+                }
+            }
+
+            GIVEN( "a frequency of 1/50" )
+            {
+                const auto f = 1.0 / 50;
+
+                THEN( "transfer function returns 0" )
+                {
+                    CHECK( high_shelf( f, gain, transition ) == Approx( 1.5 ) );
+                }
+            }
+
+            GIVEN( "a high frequency" )
+            {
+                const auto f = std::numeric_limits< double >::max();
+
+                THEN( "transfer function returns 0" )
+                {
+                    CHECK( high_shelf( f, gain, transition ) == Approx( 2 ) );
+                }
+            }
+        }
+    }
+}
+
+SCENARIO( "ideal high pass on signal", "[transfer_function]" )
+{
+    using namespace sequencer::audio;
+
     GIVEN( "overlapping sine waves of 50 and 80 Hz" )
     {
         auto signal = get_signal< double >();
@@ -79,7 +229,7 @@ SCENARIO( "ideal high pass", "[transfer_function]" )
     }
 }
 
-SCENARIO( "ideal low pass", "[transfer_function]" )
+SCENARIO( "ideal low passon signal", "[transfer_function]" )
 {
     using namespace sequencer::audio;
 

@@ -28,14 +28,14 @@ QMAKE_CXX = clang++-6.0
 
 SOURCES += \
         backend.cpp \
-        dial_line_edit_sync.cpp \
         main.cpp \
-        midi_sequencer.cpp
+        midi_sequencer.cpp \
+        poti.cpp
 
 HEADERS += \
         backend.hpp \
-        dial_line_edit_sync.hpp \
         midi_sequencer.hpp \
+        poti.hpp \
         signal_blocker.hpp
 
 FORMS += \

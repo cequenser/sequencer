@@ -49,59 +49,13 @@
        <string>Clock</string>
       </property>
       <layout class="QGridLayout" name="gridLayout_2">
-       <item row="0" column="2" alignment="Qt::AlignHCenter">
-        <widget class="QDial" name="midi_clock_bpm_dial">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>40</width>
-           <height>40</height>
-          </size>
-         </property>
-         <property name="maximum">
-          <number>4800</number>
-         </property>
-         <property name="singleStep">
-          <number>1</number>
-         </property>
-         <property name="value">
-          <number>120</number>
-         </property>
-         <property name="wrapping">
-          <bool>false</bool>
-         </property>
-         <property name="notchTarget">
-          <double>40.000000000000000</double>
-         </property>
-         <property name="notchesVisible">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
        <item row="0" column="0">
         <widget class="QComboBox" name="midi_clock_port_box"/>
        </item>
-       <item row="2" column="2" alignment="Qt::AlignHCenter">
-        <widget class="QLineEdit" name="midi_clock_bpm_edit">
-         <property name="minimumSize">
-          <size>
-           <width>80</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>80</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       <item row="0" column="1">
+        <widget class="qt::poti_t" name="clock_box">
+         <property name="title">
+          <string/>
          </property>
         </widget>
        </item>
@@ -220,6 +174,17 @@
   <widget class="QStatusBar" name="status_bar"/>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>qt::poti_t</class>
+   <extends>QGroupBox</extends>
+   <header>poti.hpp</header>
+   <container>1</container>
+   <slots>
+    <signal>value_changed(double)</signal>
+   </slots>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections>
   <connection>
@@ -318,14 +283,28 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>clock_box</sender>
+   <signal>value_changed(double)</signal>
+   <receiver>midi_sequencer</receiver>
+   <slot>set_clock_bpm(double)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>141</x>
+     <y>96</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>950</x>
+     <y>180</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>select_port(int)</slot>
   <slot>start_clock()</slot>
   <slot>stop_clock()</slot>
-  <slot>set_clock_bpm(int)</slot>
-  <slot>set_clock_bpm()</slot>
-  <slot>set_clock_bpm_from_dial(int)</slot>
+  <slot>set_clock_bpm(double)</slot>
   <slot>change_track()</slot>
   <slot>change_pattern()</slot>
   <slot>change_bank()</slot>

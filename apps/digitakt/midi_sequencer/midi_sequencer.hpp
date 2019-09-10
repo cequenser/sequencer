@@ -13,11 +13,6 @@ namespace Ui
     class midi_sequencer;
 }
 
-namespace qt
-{
-    class dial_line_edit_sync;
-}
-
 class midi_sequencer : public QMainWindow
 {
     Q_OBJECT
@@ -51,5 +46,5 @@ private:
     Ui::midi_sequencer* ui;
     int old_clock_dial_value_ = 1200;
 
-    qt::dial_line_edit_sync* clock_ui_sync;
+    //    qt::dial_line_edit_sync* clock_ui_sync;
 };

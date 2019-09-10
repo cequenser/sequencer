@@ -1,12 +1,13 @@
 #include "midi_sequencer.hpp"
 
+#include "poti.hpp"
 #include "signal_blocker.hpp"
 #include "ui_midi_sequencer.h"
 
 #include <QCheckBox>
 #include <QHBoxLayout>
+#include <QLineEdit>
 #include <cassert>
-#include <dial_line_edit_sync.hpp>
 
 namespace
 {
@@ -73,11 +74,15 @@ midi_sequencer::midi_sequencer( QWidget* parent )
 
     scan_available_ports();
 
-    clock_ui_sync = new qt::dial_line_edit_sync( ui->midi_clock_bpm_dial, ui->midi_clock_bpm_edit,
-                                                 "", " bpm", 10, 400 );
-    connect( clock_ui_sync, &qt::dial_line_edit_sync::value_changed, this,
-             &midi_sequencer::set_clock_bpm );
-    clock_ui_sync->update( 1200 );
+    // init clock representation
+    ui->clock_box->set_suffix( " bpm" );
+    ui->clock_box->set_floating_factor( 10 );
+    ui->clock_box->set_threshold( 400 );
+    ui->clock_box->line_edit().setMinimumWidth( 80 );
+    ui->clock_box->line_edit().setMaximumWidth( 80 );
+    ui->clock_box->setTitle( "Clock" );
+    connect( ui->clock_box, &qt::poti_t::value_changed, this, &midi_sequencer::set_clock_bpm );
+    ui->clock_box->update( 1200 );
 }
 
 midi_sequencer::~midi_sequencer()

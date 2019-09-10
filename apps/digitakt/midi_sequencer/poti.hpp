@@ -1,28 +1,26 @@
 #pragma once
 
-#include <QString>
-#include <QWidget>
+#include <QGroupBox>
 
 class QDial;
 class QLineEdit;
+class QString;
 
 namespace qt
 {
-    class dial_line_edit_sync : public QObject
+    class poti_t : public QGroupBox
     {
         Q_OBJECT
     public:
-        dial_line_edit_sync() = default;
+        poti_t() = default;
 
-        dial_line_edit_sync( QDial* dial, QLineEdit* line_edit, QString prefix = "",
-                             QString suffix = "", int floating_factor = 1,
-                             int threshold = std::numeric_limits< int >::max() );
+        explicit poti_t( QGroupBox* box );
 
         void update( int value );
 
-        void update_from_dial( int value );
-
-        void update_from_line_edit();
+        void set_suffix( const QString& suffix );
+        void set_floating_factor( int factor );
+        void set_threshold( int threshold );
 
         QDial& dial();
 
@@ -32,9 +30,12 @@ namespace qt
         void value_changed( double );
 
     private:
+        void update_from_dial( int value );
+
+        void update_from_line_edit();
+
         QDial* dial_{nullptr};
         QLineEdit* line_edit_{nullptr};
-        QString prefix_{};
         QString suffix_{};
         int floating_factor_ = 1;
         int old_value_ = 0;

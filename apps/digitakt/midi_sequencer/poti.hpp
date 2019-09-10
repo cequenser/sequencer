@@ -12,9 +12,7 @@ namespace qt
     {
         Q_OBJECT
     public:
-        poti_t() = default;
-
-        explicit poti_t( QGroupBox* box );
+        explicit poti_t( QGroupBox* box = nullptr );
 
         void update( int value );
 

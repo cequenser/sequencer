@@ -19,8 +19,11 @@ namespace qt
         dial().setMaximum( 4800 );
         dial().setNotchTarget( 40 );
         dial().setNotchesVisible( true );
+        const auto max_width = 100;
+        dial().setMaximumWidth( max_width );
         layout->addWidget( dial_ );
         line_edit_ = new QLineEdit;
+        line_edit().setMaximumWidth( max_width );
         layout->addWidget( line_edit_ );
         setLayout( layout );
 

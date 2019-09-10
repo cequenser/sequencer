@@ -29,6 +29,8 @@ midi_sequencer::midi_sequencer( QWidget* parent )
 
     ui->sequencer_box->connect( this );
 
+    ui->control_group_box->set_number_of_potis( 8, 2 );
+
     // init clock representation
     ui->clock_box->set_suffix( " bpm" );
     ui->clock_box->set_floating_factor( 10 );

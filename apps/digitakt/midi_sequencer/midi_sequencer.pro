@@ -31,12 +31,14 @@ SOURCES += \
         main.cpp \
         midi_sequencer.cpp \
         poti.cpp \
+        poti_group.cpp \
         track.cpp
 
 HEADERS += \
         backend.hpp \
         midi_sequencer.hpp \
         poti.hpp \
+        poti_group.hpp \
         signal_blocker.hpp \
         track.hpp
 

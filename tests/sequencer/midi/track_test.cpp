@@ -23,7 +23,7 @@ using sequencer::midi::realtime::realtime_continue;
 using sequencer::midi::realtime::realtime_start;
 using sequencer::midi::realtime::realtime_stop;
 
-constexpr auto velocity = std::uint8_t{32};
+constexpr auto velocity = std::uint8_t{100};
 
 SCENARIO( "track_t", "[track]" )
 {
@@ -78,6 +78,44 @@ SCENARIO( "track_t", "[track]" )
                                note_off( track.channel(), to_uint8_t( first_note ), velocity ) );
                         CHECK( received_messages[ 2 ] ==
                                note_on( track.channel(), to_uint8_t( second_note ), velocity ) );
+                    }
+
+                    AND_WHEN( "the track is muted" )
+                    {
+                        track.mute();
+
+                        THEN( "track is muted" )
+                        {
+                            CHECK( track.is_muted() );
+                        }
+
+                        THEN( "send_messages(4,sender) returns no messages" )
+                        {
+                            track.send_messages( 4, sender );
+                            REQUIRE( received_messages.size() == 1 );
+                        }
+
+                        AND_WHEN( "track is unmuted" )
+                        {
+                            track.mute( false );
+
+                            THEN( "track is not muted" )
+                            {
+                                CHECK_FALSE( track.is_muted() );
+                            }
+
+                            THEN( "send_messages(4,sender) returns note off and note on message" )
+                            {
+                                track.send_messages( 4, sender );
+                                REQUIRE( received_messages.size() == 3 );
+                                CHECK( received_messages[ 1 ] == note_off( track.channel(),
+                                                                           to_uint8_t( first_note ),
+                                                                           velocity ) );
+                                CHECK( received_messages[ 2 ] == note_on( track.channel(),
+                                                                          to_uint8_t( second_note ),
+                                                                          velocity ) );
+                            }
+                        }
                     }
                 }
 

@@ -126,12 +126,29 @@ void midi_sequencer::select_port( int idx )
 void midi_sequencer::change_bank()
 {
     enable_all_buttons();
+    if ( use_secondary_function() )
+    {
+        if ( backend_.mode() == backend_mode::mute )
+        {
+            reset_mode();
+        }
+        else
+        {
+            backend_.set_mode( backend_mode::mute );
+            ui->bank_button->setText( "Mute" );
+        }
+        update_sequencer_steps();
+        return;
+    }
+
+    reset_mode();
     ui->bank_button->setEnabled( false );
     sequencer_ui_control->clear();
 }
 
 void midi_sequencer::change_pattern()
 {
+    reset_mode();
     enable_all_buttons();
     ui->pattern_button->setEnabled( false );
     sequencer_ui_control->clear();
@@ -139,6 +156,7 @@ void midi_sequencer::change_pattern()
 
 void midi_sequencer::change_track()
 {
+    reset_mode();
     enable_all_buttons();
     ui->track_button->setEnabled( false );
     sequencer_ui_control->clear();
@@ -146,28 +164,31 @@ void midi_sequencer::change_track()
 
 void midi_sequencer::sequencer_step_changed( int idx )
 {
-    if ( !ui->bank_button->isEnabled() )
+    if ( backend_.mode() == backend_mode::play )
     {
-        backend_.set_current_bank( idx );
-        ui->bank_button->setEnabled( true );
-        change_pattern();
-        return;
-    }
+        if ( !ui->bank_button->isEnabled() )
+        {
+            backend_.set_current_bank( idx );
+            ui->bank_button->setEnabled( true );
+            change_pattern();
+            return;
+        }
 
-    if ( !ui->pattern_button->isEnabled() )
-    {
-        backend_.set_current_pattern( idx );
-        ui->pattern_button->setEnabled( true );
-        update_sequencer_steps();
-        return;
-    }
+        if ( !ui->pattern_button->isEnabled() )
+        {
+            backend_.set_current_pattern( idx );
+            ui->pattern_button->setEnabled( true );
+            update_sequencer_steps();
+            return;
+        }
 
-    if ( !ui->track_button->isEnabled() )
-    {
-        backend_.set_current_track( idx );
-        ui->track_button->setEnabled( true );
-        update_sequencer_steps();
-        return;
+        if ( !ui->track_button->isEnabled() )
+        {
+            backend_.set_current_track( idx );
+            ui->track_button->setEnabled( true );
+            update_sequencer_steps();
+            return;
+        }
     }
 
     backend_.set_step( idx, ( *sequencer_ui_control )[ idx ].isChecked() );
@@ -193,4 +214,15 @@ void midi_sequencer::enable_all_buttons()
     ui->bank_button->setEnabled( true );
     ui->pattern_button->setEnabled( true );
     ui->track_button->setEnabled( true );
+}
+
+bool midi_sequencer::use_secondary_function()
+{
+    return QApplication::keyboardModifiers().testFlag( Qt::ControlModifier );
+}
+
+void midi_sequencer::reset_mode()
+{
+    backend_.set_mode( backend_mode::play );
+    ui->bank_button->setText( "Bank" );
 }

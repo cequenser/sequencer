@@ -106,6 +106,11 @@ namespace sequencer::midi
         template < class Sender >
         void send_messages( std::size_t step, const Sender& sender ) const
         {
+            if ( is_muted() )
+            {
+                return;
+            }
+
             const auto note = track_[ step ].load();
             if ( note != no_note() )
             {
@@ -126,11 +131,22 @@ namespace sequencer::midi
             last_note_ = no_note();
         }
 
+        constexpr void mute( bool do_mute = true ) noexcept
+        {
+            is_muted_ = do_mute;
+        }
+
+        constexpr bool is_muted() const noexcept
+        {
+            return is_muted_;
+        }
+
     private:
         track_base_t track_{};
         mutable note_t last_note_{no_note()};
         std::uint8_t channel_{0};
         std::uint8_t velocity_{100};
+        bool is_muted_{false};
     };
 
     template < class Track >

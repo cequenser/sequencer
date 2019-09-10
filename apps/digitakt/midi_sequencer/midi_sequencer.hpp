@@ -41,6 +41,8 @@ private:
     void scan_available_ports();
     void update_sequencer_steps();
     void enable_all_buttons();
+    bool use_secondary_function();
+    void reset_mode();
 
     RtMidiOut midiout_;
     backend backend_;

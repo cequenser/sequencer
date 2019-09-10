@@ -5,6 +5,13 @@
 
 #include <vector>
 
+enum class backend_mode
+{
+    play,
+    recording,
+    mute
+};
+
 class backend
 {
 public:
@@ -14,24 +21,29 @@ public:
 
     backend();
 
-    void set_current_bank( int idx );
-    void set_current_pattern( int idx );
-    void set_current_track( int idx );
-    void set_step( int step, bool value );
-    bool is_step_set( int step );
+    void set_current_bank( int idx ) noexcept;
+    void set_current_pattern( int idx ) noexcept;
+    void set_current_track( int idx ) noexcept;
+    void set_step( int step, bool value ) noexcept;
+    bool is_step_set( int step ) const noexcept;
+    void set_mode( backend_mode mode ) noexcept;
+    backend_mode mode() const noexcept;
 
     template < class Sender >
     void receive_clock_message( sequencer::midi::message_t< 1 > message, Sender sender )
     {
-        send_messages( current_tracks(), message, sender );
+        send_messages( current_pattern(), message, sender );
     }
 
 private:
-    tracks_t& current_tracks();
-    sequencer::midi::sequencer_track_t& current_track();
+    tracks_t& current_pattern() noexcept;
+    const tracks_t& current_pattern() const noexcept;
+    sequencer::midi::sequencer_track_t& current_track() noexcept;
+    const sequencer::midi::sequencer_track_t& current_track() const noexcept;
 
     banks_t banks_;
     banks_t::size_type current_bank_idx_ = 0;
     patterns_t::size_type current_pattern_idx_ = 0;
     tracks_t::size_type current_track_idx_ = 0;
+    backend_mode mode_ = backend_mode::play;
 };

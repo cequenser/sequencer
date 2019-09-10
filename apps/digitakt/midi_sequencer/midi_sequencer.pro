@@ -30,13 +30,15 @@ SOURCES += \
         backend.cpp \
         main.cpp \
         midi_sequencer.cpp \
-        poti.cpp
+        poti.cpp \
+        track.cpp
 
 HEADERS += \
         backend.hpp \
         midi_sequencer.hpp \
         poti.hpp \
-        signal_blocker.hpp
+        signal_blocker.hpp \
+        track.hpp
 
 FORMS += \
         midi_sequencer.ui

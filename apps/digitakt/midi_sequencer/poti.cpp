@@ -22,7 +22,7 @@ namespace qt
         layout->addWidget( dial_ );
         line_edit_ = new QLineEdit;
         layout->addWidget( line_edit_ );
-        this->setLayout( layout );
+        setLayout( layout );
 
         connect( dial_, &QDial::valueChanged, this, &poti_t::update_from_dial );
         connect( line_edit_, &QLineEdit::editingFinished, this, &poti_t::update_from_line_edit );

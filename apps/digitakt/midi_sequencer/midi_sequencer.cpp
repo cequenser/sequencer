@@ -2,49 +2,13 @@
 
 #include "poti.hpp"
 #include "signal_blocker.hpp"
+#include "track.hpp"
 #include "ui_midi_sequencer.h"
 
 #include <QCheckBox>
 #include <QHBoxLayout>
 #include <QLineEdit>
 #include <cassert>
-
-namespace
-{
-    class sequencer_ui_control_t
-    {
-    public:
-        explicit sequencer_ui_control_t( QGroupBox& sequencer_box ) noexcept
-            : sequencer_box_{sequencer_box}
-        {
-        }
-
-        void clear()
-        {
-            update( []( int ) { return false; } );
-        }
-
-        template < class F >
-        void update( F f )
-        {
-            for ( auto i = 0; i < sequencer_box_.layout()->count(); ++i )
-            {
-                qt::signal_blocker_t signal_blocker{( *this )[ i ]};
-                ( *this )[ i ].setChecked( f( i ) );
-            }
-        }
-
-        QCheckBox& operator[]( int i )
-        {
-            return *static_cast< QCheckBox* >( sequencer_box_.layout()->itemAt( i )->widget() );
-        }
-
-    private:
-        QGroupBox& sequencer_box_;
-    };
-
-    sequencer_ui_control_t* sequencer_ui_control;
-} // namespace
 
 midi_sequencer::midi_sequencer( QWidget* parent )
     : QMainWindow( parent ), clock_{sequencer::rtmidi::make_clock()},
@@ -61,18 +25,9 @@ midi_sequencer::midi_sequencer( QWidget* parent )
 {
     ui->setupUi( this );
 
-    auto seq_layout = new QHBoxLayout;
-    for ( auto i = 0; i < 16; ++i )
-    {
-        auto step = new QCheckBox;
-        connect( step, &QCheckBox::clicked, this,
-                 [this, i] { this->sequencer_step_changed( i ); } );
-        seq_layout->addWidget( step );
-    }
-    ui->sequencer_box->setLayout( seq_layout );
-    sequencer_ui_control = new sequencer_ui_control_t{*ui->sequencer_box};
-
     scan_available_ports();
+
+    ui->sequencer_box->connect( this );
 
     // init clock representation
     ui->clock_box->set_suffix( " bpm" );
@@ -148,7 +103,7 @@ void midi_sequencer::change_bank()
 
     reset_mode();
     ui->bank_button->setEnabled( false );
-    sequencer_ui_control->clear();
+    ui->sequencer_box->clear();
 }
 
 void midi_sequencer::change_pattern()
@@ -156,7 +111,7 @@ void midi_sequencer::change_pattern()
     reset_mode();
     enable_all_buttons();
     ui->pattern_button->setEnabled( false );
-    sequencer_ui_control->clear();
+    ui->sequencer_box->clear();
 }
 
 void midi_sequencer::change_track()
@@ -164,7 +119,7 @@ void midi_sequencer::change_track()
     reset_mode();
     enable_all_buttons();
     ui->track_button->setEnabled( false );
-    sequencer_ui_control->clear();
+    ui->sequencer_box->clear();
 }
 
 void midi_sequencer::sequencer_step_changed( int idx )
@@ -196,7 +151,7 @@ void midi_sequencer::sequencer_step_changed( int idx )
         }
     }
 
-    backend_.set_step( idx, ( *sequencer_ui_control )[ idx ].isChecked() );
+    backend_.set_step( idx, ( *ui->sequencer_box )[ idx ].isChecked() );
 }
 
 void midi_sequencer::scan_available_ports()
@@ -211,7 +166,7 @@ void midi_sequencer::scan_available_ports()
 
 void midi_sequencer::update_sequencer_steps()
 {
-    sequencer_ui_control->update( [this]( auto step ) { return backend_.is_step_set( step ); } );
+    ui->sequencer_box->update( [this]( auto step ) { return backend_.is_step_set( step ); } );
 }
 
 void midi_sequencer::enable_all_buttons()

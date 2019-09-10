@@ -1,4 +1,4 @@
-#include "poti.hpp"
+#include "dial_line_edit_sync.hpp"
 
 #include <QDial>
 #include <QLineEdit>
@@ -48,8 +48,13 @@ namespace qt
     void dial_line_edit_sync::update_from_line_edit()
     {
         auto value = line_edit().text();
-        auto x = int( value.remove( prefix_ ).remove( suffix_ ).trimmed().toDouble() *
+        bool is_double = true;
+        auto x = int( value.remove( prefix_ ).remove( suffix_ ).trimmed().toDouble( &is_double ) *
                       floating_factor_ );
+        if ( !is_double )
+        {
+            x = old_value_;
+        }
         x = std::min( std::max( x, dial().minimum() ), dial().maximum() );
         signal_blocker_t signal_blocker{dial()};
         dial().setValue( x );

@@ -130,7 +130,7 @@ namespace sequencer::midi
         track_base_t track_{};
         mutable note_t last_note_{no_note()};
         std::uint8_t channel_{0};
-        std::uint8_t velocity_{32};
+        std::uint8_t velocity_{100};
     };
 
     template < class Track >

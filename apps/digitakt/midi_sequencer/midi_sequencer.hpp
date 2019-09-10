@@ -5,6 +5,7 @@
 #include <QMainWindow>
 #include <QString>
 #include <RtMidi.h>
+#include <backend.hpp>
 #include <future>
 
 namespace Ui
@@ -31,10 +32,18 @@ public slots:
     void set_clock_bpm( double value );
     void select_port( int idx );
 
+    void change_bank();
+    void change_pattern();
+    void change_track();
+    void sequencer_step_changed( int idx );
+
 private:
     void scan_available_ports();
+    void update_sequencer_steps();
+    void enable_all_buttons();
 
     RtMidiOut midiout_;
+    backend backend_;
     decltype( sequencer::rtmidi::make_clock() ) clock_;
     std::future< void > clock_done_;
     Ui::midi_sequencer* ui;

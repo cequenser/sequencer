@@ -138,15 +138,8 @@
       </property>
      </widget>
     </item>
-    <item row="6" column="4">
-     <widget class="QPushButton" name="page_button">
-      <property name="text">
-       <string>Page</string>
-      </property>
-     </widget>
-    </item>
     <item row="0" column="2" rowspan="6" colspan="3">
-     <widget class="qt::poti_group_t" name="control_group_box">
+     <widget class="qt::poti_group_t" name="control_box">
       <property name="title">
        <string/>
       </property>
@@ -229,12 +222,12 @@
    <slot>start_clock()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>213</x>
-     <y>125</y>
+     <x>352</x>
+     <y>222</y>
     </hint>
     <hint type="destinationlabel">
-     <x>137</x>
-     <y>230</y>
+     <x>333</x>
+     <y>245</y>
     </hint>
    </hints>
   </connection>
@@ -245,12 +238,12 @@
    <slot>stop_clock()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>298</x>
-     <y>122</y>
+     <x>439</x>
+     <y>224</y>
     </hint>
     <hint type="destinationlabel">
-     <x>169</x>
-     <y>230</y>
+     <x>433</x>
+     <y>256</y>
     </hint>
    </hints>
   </connection>
@@ -261,12 +254,12 @@
    <slot>change_track()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>86</x>
-     <y>149</y>
+     <x>18</x>
+     <y>238</y>
     </hint>
     <hint type="destinationlabel">
-     <x>714</x>
-     <y>151</y>
+     <x>21</x>
+     <y>142</y>
     </hint>
    </hints>
   </connection>
@@ -277,12 +270,12 @@
    <slot>change_pattern()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>85</x>
-     <y>179</y>
+     <x>36</x>
+     <y>262</y>
     </hint>
     <hint type="destinationlabel">
-     <x>757</x>
-     <y>205</y>
+     <x>45</x>
+     <y>171</y>
     </hint>
    </hints>
   </connection>
@@ -293,12 +286,12 @@
    <slot>change_bank()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>43</x>
-     <y>219</y>
+     <x>62</x>
+     <y>313</y>
     </hint>
     <hint type="destinationlabel">
-     <x>748</x>
-     <y>243</y>
+     <x>67</x>
+     <y>209</y>
     </hint>
    </hints>
   </connection>
@@ -309,12 +302,12 @@
    <slot>set_clock_bpm(double)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>141</x>
-     <y>96</y>
+     <x>195</x>
+     <y>93</y>
     </hint>
     <hint type="destinationlabel">
-     <x>950</x>
-     <y>180</y>
+     <x>188</x>
+     <y>57</y>
     </hint>
    </hints>
   </connection>
@@ -328,5 +321,6 @@
   <slot>change_pattern()</slot>
   <slot>change_bank()</slot>
   <slot>sequencer_step_changed()</slot>
+  <slot>change_page()</slot>
  </slots>
 </ui>

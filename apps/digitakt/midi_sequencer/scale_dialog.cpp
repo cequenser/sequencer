@@ -123,11 +123,12 @@ namespace qt
 
     void advanced_mode_tab_t::loop_length_changed( int length )
     {
+        pattern_.set_loop_length( std::size_t( length ) );
     }
 
     void advanced_mode_tab_t::on_steps_changed( int steps )
     {
-        midi_track_.set_steps( steps, fixed_size() );
+        midi_track_.set_steps( std::size_t( steps ), std::size_t( fixed_size() ) );
     }
 
     void advanced_mode_tab_t::on_multiplier_changed( int idx )

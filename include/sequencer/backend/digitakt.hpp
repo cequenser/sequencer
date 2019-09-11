@@ -82,7 +82,7 @@ namespace sequencer::backend
         template < class Sender >
         void receive_clock_message( sequencer::midi::message_t< 1 > message, Sender sender )
         {
-            send_messages( current_pattern(), message, sender );
+            current_pattern().send_messages( message, sender );
         }
 
         sequencer::midi::sequencer_track_t& current_track() noexcept

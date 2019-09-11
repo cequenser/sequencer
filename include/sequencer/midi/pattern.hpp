@@ -61,16 +61,51 @@ namespace sequencer::midi
             }
         }
 
+        void set_steps_per_beat( std::size_t steps )
+        {
+            for ( auto& track : tracks_ )
+            {
+                track.set_steps_per_beat( steps );
+            }
+            clock_to_step_.set_steps_per_beat( steps );
+        }
+
         void set_pulses_per_quarter_note( std::size_t pulses_per_quarter )
         {
             for ( auto& track : tracks_ )
             {
                 track.set_pulses_per_quarter_note( pulses_per_quarter );
             }
+            clock_to_step_.set_pulses_per_quarter_note( pulses_per_quarter );
+        }
+
+        constexpr void set_loop_length( std::size_t loop_length ) noexcept
+        {
+            clock_to_step_.set_steps( loop_length ? loop_length
+                                                  : std::numeric_limits< std::size_t >::max() );
+        }
+
+        template < class Sender >
+        void send_messages( message_t< 1 > message, const Sender& sender )
+        {
+            clock_to_step_.process_message( message );
+            if ( clock_to_step_.midi_beat_counter() == 0 )
+            {
+                for ( auto& track : tracks_ )
+                {
+                    track.reset_beat_counter();
+                }
+            }
+            for ( auto& track : tracks_ )
+            {
+                track.send_messages( message, sender );
+            }
         }
 
     private:
         std::vector< value_type > tracks_;
+        std::size_t loop_length_{16};
+        clock_to_step_impl clock_to_step_;
     };
 
     template < class Track >
@@ -89,4 +124,5 @@ namespace sequencer::midi
 
         return pattern;
     }
+
 } // namespace sequencer::midi

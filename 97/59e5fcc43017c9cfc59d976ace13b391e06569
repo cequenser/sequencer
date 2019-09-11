@@ -1,0 +1,10 @@
+Linux-Clang+1: <ciquenser@gmail.com>
+ClangTidy+1: <ciquenser@gmail.com>
+ClangFormat+1: <ciquenser@gmail.com>
+Linux-GCC+1: <ciquenser@gmail.com>
+Code-Review+2: Lars Lubkoll <lars.lubkoll@posteo.de>
+Submitted-by: Lars Lubkoll <lars.lubkoll@posteo.de>
+Submitted-at: Wed, 11 Sep 2019 19:50:11 +0000
+Reviewed-on: https://review.gerrithub.io/c/cequenser/sequencer/+/468160
+Project: cequenser/sequencer
+Branch: refs/heads/master

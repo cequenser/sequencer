@@ -89,31 +89,24 @@ namespace qt
     }
 
     normal_mode_tab_t::normal_mode_tab_t( pattern_t& pattern, track_t& track, QWidget* parent )
-        : scale_dialog_base_tab_t( pattern.front().steps(), track, parent ), pattern_( pattern )
+        : scale_dialog_base_tab_t( pattern[ 0 ].steps(), track, parent ), pattern_( pattern )
     {
     }
 
     void normal_mode_tab_t::on_steps_changed( int steps )
     {
-        for ( auto& track : pattern_ )
-        {
-            track.set_steps( steps, fixed_size() );
-        }
+        pattern_.set_steps( steps, fixed_size() );
     }
 
     void normal_mode_tab_t::on_multiplier_changed( int idx )
     {
-        for ( auto& track : pattern_ )
-        {
-            track.set_pulses_per_quarter_note( std::size_t(
-                sequencer::midi::default_pulses_per_quarter_note / multiplier( idx ) + 1e-15 ) );
-        }
+        pattern_.set_pulses_per_quarter_note( std::size_t(
+            sequencer::midi::default_pulses_per_quarter_note / multiplier( idx ) + 1e-15 ) );
     }
 
-    advanced_mode_tab_t::advanced_mode_tab_t(
-        pattern_t& pattern,
-        sequencer::midi::clock_to_step_t< sequencer::midi::track_t >& midi_track, track_t& track,
-        QWidget* parent )
+    advanced_mode_tab_t::advanced_mode_tab_t( pattern_t& pattern,
+                                              sequencer::midi::sequencer_track_t& midi_track,
+                                              track_t& track, QWidget* parent )
         : scale_dialog_base_tab_t( midi_track.steps(), track, parent ), pattern_( pattern ),
           midi_track_( midi_track )
     {
@@ -139,11 +132,8 @@ namespace qt
 
     void advanced_mode_tab_t::on_multiplier_changed( int idx )
     {
-        for ( auto& track : pattern_ )
-        {
-            track.set_pulses_per_quarter_note( std::size_t(
-                sequencer::midi::default_pulses_per_quarter_note / multiplier( idx ) + 1e-15 ) );
-        }
+        pattern_.set_pulses_per_quarter_note( std::size_t(
+            sequencer::midi::default_pulses_per_quarter_note / multiplier( idx ) + 1e-15 ) );
     }
 
     scale_dialog_t::scale_dialog_t(

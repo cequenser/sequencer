@@ -2,6 +2,7 @@
 
 #include "track.hpp"
 
+#include <sequencer/midi/pattern.hpp>
 #include <sequencer/midi/track.hpp>
 
 #include <QDialog>
@@ -43,8 +44,7 @@ namespace qt
     {
         Q_OBJECT
     public:
-        using pattern_t =
-            std::vector< sequencer::midi::clock_to_step_t< sequencer::midi::track_t > >;
+        using pattern_t = sequencer::midi::pattern_t< sequencer::midi::sequencer_track_t >;
         explicit normal_mode_tab_t( pattern_t& pattern, track_t& track, QWidget* parent = nullptr );
 
     private:
@@ -59,10 +59,9 @@ namespace qt
         Q_OBJECT
     public:
         using pattern_t = normal_mode_tab_t::pattern_t;
-        explicit advanced_mode_tab_t(
-            pattern_t& pattern,
-            sequencer::midi::clock_to_step_t< sequencer::midi::track_t >& midi_track,
-            track_t& track, QWidget* parent = nullptr );
+        explicit advanced_mode_tab_t( pattern_t& pattern,
+                                      sequencer::midi::sequencer_track_t& midi_track,
+                                      track_t& track, QWidget* parent = nullptr );
 
     public slots:
         void loop_length_changed( int length );

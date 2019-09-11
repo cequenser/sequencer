@@ -1,5 +1,6 @@
 #pragma once
 
+#include <sequencer/midi/pattern.hpp>
 #include <sequencer/midi/track.hpp>
 
 #include <vector>
@@ -18,11 +19,13 @@ namespace sequencer::backend
     class digitakt
     {
     public:
-        using tracks_t = std::vector< midi::sequencer_track_t >;
-        using patterns_t = std::vector< tracks_t >;
+        using pattern_t = midi::pattern_t< midi::sequencer_track_t >;
+        using patterns_t = std::vector< pattern_t >;
         using banks_t = std::vector< patterns_t >;
 
-        digitakt() : banks_( 16, patterns_t( 16, midi::make_tracks( 16, 16 ) ) )
+        digitakt()
+            : banks_( 16,
+                      patterns_t( 16, midi::make_pattern< midi::sequencer_track_t >( 16, 16 ) ) )
         {
         }
 
@@ -92,12 +95,12 @@ namespace sequencer::backend
             return current_pattern()[ current_track_idx_ ];
         }
 
-        tracks_t& current_pattern() noexcept
+        pattern_t& current_pattern() noexcept
         {
             return banks_[ current_bank_idx_ ][ current_pattern_idx_ ];
         }
 
-        const tracks_t& current_pattern() const noexcept
+        const pattern_t& current_pattern() const noexcept
         {
             return banks_[ current_bank_idx_ ][ current_pattern_idx_ ];
         }
@@ -106,7 +109,7 @@ namespace sequencer::backend
         banks_t banks_;
         banks_t::size_type current_bank_idx_ = 0;
         patterns_t::size_type current_pattern_idx_ = 0;
-        tracks_t::size_type current_track_idx_ = 0;
+        pattern_t::size_type current_track_idx_ = 0;
         digitakt_mode mode_ = digitakt_mode::play;
     };
 } // namespace sequencer::backend

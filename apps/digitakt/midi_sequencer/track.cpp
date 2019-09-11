@@ -12,7 +12,7 @@ namespace qt
     track_t::track_t( QWidget* parent ) : QGroupBox( parent )
     {
         auto seq_layout = new QHBoxLayout;
-        for ( auto i = 0u; i < fixed_size(); ++i )
+        for ( auto i = 0; i < fixed_size(); ++i )
         {
             seq_layout->addWidget( new QCheckBox );
         }
@@ -38,31 +38,16 @@ namespace qt
 
     int track_t::size() const noexcept
     {
-        return size_;
+        return backend_->current_track().steps();
     }
 
     void track_t::update_on_scale_change( int size )
     {
         assert( size > 0 );
-        size_ = size;
-
-        for ( auto i = 0; i < fixed_size(); ++i )
-        {
-            ( *this )[ i ].setEnabled( true );
-        }
 
         page_count_ = size / fixed_size() + bool( size % fixed_size() );
         current_page_ = page_count() - 1;
-        display_page();
-        update_displayed_steps();
-
-        const auto offset = current_page_ * fixed_size();
-        const auto end = std::min( layout()->count(), int( size - offset ) );
-
-        for ( auto i = end; i < fixed_size(); ++i )
-        {
-            ( *this )[ i ].setEnabled( false );
-        }
+        update();
     }
 
     QCheckBox& track_t::operator[]( int i )
@@ -80,9 +65,15 @@ namespace qt
         return page_count_;
     }
 
-    void track_t::set_backend( backend& backend )
+    void track_t::set_backend( sequencer::backend::digitakt& backend )
     {
         backend_ = &backend;
+    }
+
+    void track_t::update()
+    {
+        display_page();
+        update_displayed_steps();
     }
 
     void track_t::step_changed( int i )
@@ -94,7 +85,8 @@ namespace qt
     {
         if ( qt::use_secondary_function() && backend_ )
         {
-            auto dialog = qt::scale_dialog_t{backend_->current_pattern(), *this};
+            auto dialog =
+                qt::scale_dialog_t{backend_->current_pattern(), backend_->current_track(), *this};
             dialog.exec();
             return;
         }
@@ -103,8 +95,7 @@ namespace qt
         {
             current_page_ = 0;
         }
-        display_page();
-        update_displayed_steps();
+        update();
     }
 
     void track_t::display_page()
@@ -115,14 +106,34 @@ namespace qt
 
     void track_t::update_displayed_steps()
     {
-        update( [this]( auto i ) {
-            const auto idx = i + fixed_size() * current_page_;
-            if ( idx < backend_->current_track().steps() )
-            {
-                return backend_->current_track()[ idx ] != sequencer::midi::no_note();
-            }
+        for ( auto i = 0; i < fixed_size(); ++i )
+        {
+            ( *this )[ i ].setEnabled( true );
+        }
 
-            return false;
-        } );
+        if ( backend_->mode() == sequencer::backend::digitakt_mode::mute )
+        {
+            update( [this]( auto i ) { return backend_->current_pattern()[ i ].is_muted(); } );
+        }
+        else
+        {
+            update( [this]( auto i ) {
+                const auto idx = std::size_t( i + fixed_size() * current_page_ );
+                if ( idx < backend_->current_track().steps() )
+                {
+                    return backend_->current_track()[ idx ] != sequencer::midi::no_note();
+                }
+
+                return false;
+            } );
+        }
+
+        const auto offset = current_page_ * fixed_size();
+        const auto end = std::min( fixed_size(), int( size() - offset ) );
+
+        for ( auto i = end; i < fixed_size(); ++i )
+        {
+            ( *this )[ i ].setEnabled( false );
+        }
     }
 } // namespace qt

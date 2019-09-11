@@ -27,7 +27,6 @@ CONFIG += c++17
 QMAKE_CXX = clang++-6.0
 
 SOURCES += \
-        backend.cpp \
         main.cpp \
         midi_sequencer.cpp \
         poti.cpp \
@@ -37,7 +36,6 @@ SOURCES += \
         util.cpp
 
 HEADERS += \
-        backend.hpp \
         midi_sequencer.hpp \
         poti.hpp \
         poti_group.hpp \

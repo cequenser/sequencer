@@ -1,11 +1,11 @@
 #pragma once
 
+#include <sequencer/backend/digitakt.hpp>
 #include <sequencer/rtmidi/util.hpp>
 
 #include <QMainWindow>
 #include <QString>
 #include <RtMidi.h>
-#include <backend.hpp>
 #include <future>
 
 namespace Ui
@@ -35,11 +35,10 @@ public slots:
 private:
     void scan_available_ports();
     void update_sequencer_steps();
-    void enable_all_buttons();
-    void reset_mode();
+    void update_buttons();
 
     RtMidiOut midiout_;
-    backend backend_;
+    sequencer::backend::digitakt backend_;
     decltype( sequencer::rtmidi::make_clock() ) clock_;
     std::future< void > clock_done_;
     Ui::midi_sequencer* ui;

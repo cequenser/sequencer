@@ -10,6 +10,7 @@ add_executable(tests
     sequencer/audio/fft_test.cpp
     sequencer/audio/sample_test.cpp
     sequencer/audio/transfer_function_test.cpp
+    sequencer/backend/digitakt_test.cpp
     sequencer/midi/clock_test.cpp
     sequencer/midi/clock_base_test.cpp
     sequencer/midi/track_test.cpp

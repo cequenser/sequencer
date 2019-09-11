@@ -12,6 +12,8 @@
 #include <QLineEdit>
 #include <cassert>
 
+using sequencer::backend::digitakt_mode;
+
 midi_sequencer::midi_sequencer( QWidget* parent )
     : QMainWindow( parent ), clock_{sequencer::rtmidi::make_clock()},
       clock_done_{start_clock_in_thread(
@@ -90,73 +92,45 @@ void midi_sequencer::select_port( int idx )
 
 void midi_sequencer::change_bank()
 {
-    enable_all_buttons();
     if ( qt::use_secondary_function() )
     {
-        if ( backend_.mode() == backend_mode::mute )
-        {
-            reset_mode();
-        }
-        else
-        {
-            backend_.set_mode( backend_mode::mute );
-            ui->bank_button->setText( "Mute" );
-        }
+        backend_.set_mode( digitakt_mode::mute );
+        update_buttons();
         update_sequencer_steps();
         return;
     }
 
-    reset_mode();
-    ui->bank_button->setEnabled( false );
+    backend_.set_mode( digitakt_mode::bank_select );
+    update_buttons();
     ui->sequencer_box->clear();
 }
 
 void midi_sequencer::change_pattern()
 {
-    reset_mode();
-    enable_all_buttons();
-    ui->pattern_button->setEnabled( false );
+    backend_.set_mode( digitakt_mode::pattern_select );
+    update_buttons();
     ui->sequencer_box->clear();
 }
 
 void midi_sequencer::change_track()
 {
-    reset_mode();
-    enable_all_buttons();
-    ui->track_button->setEnabled( false );
+    backend_.set_mode( digitakt_mode::track_select );
+    update_buttons();
     ui->sequencer_box->clear();
 }
 
 void midi_sequencer::sequencer_step_changed( int idx )
 {
-    if ( backend_.mode() == backend_mode::play )
+    if ( backend_.mode() != digitakt_mode::play )
     {
-        if ( !ui->bank_button->isEnabled() )
-        {
-            backend_.set_current_bank( idx );
-            ui->bank_button->setEnabled( true );
-            change_pattern();
-            return;
-        }
-
-        if ( !ui->pattern_button->isEnabled() )
-        {
-            backend_.set_current_pattern( idx );
-            ui->pattern_button->setEnabled( true );
-            update_sequencer_steps();
-            return;
-        }
-
-        if ( !ui->track_button->isEnabled() )
-        {
-            backend_.set_current_track( idx );
-            ui->track_button->setEnabled( true );
-            update_sequencer_steps();
-            return;
-        }
+        backend_.set_step( idx );
+        update_buttons();
+        update_sequencer_steps();
+        return;
     }
 
     ui->sequencer_box->step_changed( idx );
+    update_sequencer_steps();
 }
 
 void midi_sequencer::scan_available_ports()
@@ -171,18 +145,14 @@ void midi_sequencer::scan_available_ports()
 
 void midi_sequencer::update_sequencer_steps()
 {
-    ui->sequencer_box->update( [this]( auto step ) { return backend_.is_step_set( step ); } );
+    ui->sequencer_box->update();
 }
 
-void midi_sequencer::enable_all_buttons()
+void midi_sequencer::update_buttons()
 {
-    ui->bank_button->setEnabled( true );
-    ui->pattern_button->setEnabled( true );
-    ui->track_button->setEnabled( true );
-}
+    ui->bank_button->setEnabled( backend_.mode() != digitakt_mode::bank_select );
+    ui->pattern_button->setEnabled( backend_.mode() != digitakt_mode::pattern_select );
+    ui->track_button->setEnabled( backend_.mode() != digitakt_mode::track_select );
 
-void midi_sequencer::reset_mode()
-{
-    backend_.set_mode( backend_mode::play );
-    ui->bank_button->setText( "Bank" );
+    ui->bank_button->setText( backend_.mode() == digitakt_mode::mute ? "Mute" : "Bank" );
 }

@@ -1,7 +1,8 @@
 #pragma once
 
-#include "backend.hpp"
 #include "signal_blocker.hpp"
+
+#include <sequencer/backend/digitakt.hpp>
 
 #include <QCheckBox>
 #include <QGroupBox>
@@ -49,7 +50,9 @@ namespace qt
 
         int page_count() const noexcept;
 
-        void set_backend( backend& backend );
+        void set_backend( sequencer::backend::digitakt& backend );
+
+        void update();
 
     public slots:
         void step_changed( int i );
@@ -59,7 +62,7 @@ namespace qt
         void display_page();
         void update_displayed_steps();
 
-        backend* backend_{nullptr};
+        sequencer::backend::digitakt* backend_{nullptr};
         QLabel* label_{new QLabel};
         int current_page_{0};
         int page_count_{1};

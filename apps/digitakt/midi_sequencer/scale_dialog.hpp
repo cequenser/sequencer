@@ -10,24 +10,26 @@ class QSpinBox;
 
 namespace qt
 {
-    class normal_mode_tab_t : public QWidget
+    class scale_dialog_base_tab_t : public QWidget
     {
         Q_OBJECT
     public:
-        using pattern_t =
-            std::vector< sequencer::midi::clock_to_step_t< sequencer::midi::track_t > >;
-        explicit normal_mode_tab_t( pattern_t& pattern, track_t& track, QWidget* parent = nullptr );
+        explicit scale_dialog_base_tab_t( int steps, track_t& track, QWidget* parent = nullptr );
 
     public slots:
+        void steps_changed( int steps );
 
-        void pattern_steps_changed( int steps );
+        void length_changed( int length );
 
-        void pattern_length_changed( int length );
+        void multipler_changed( int idx );
 
-        void pattern_multipler_changed( int idx );
+    protected:
+        int fixed_size() const noexcept;
+        double multiplier( int idx ) const noexcept;
+        virtual void on_steps_changed( int steps ) = 0;
+        virtual void on_multiplier_changed( int idx ) = 0;
 
     private:
-        pattern_t& pattern_;
         track_t& track_;
         QSpinBox* step_box_;
         QSpinBox* length_box_;
@@ -37,11 +39,50 @@ namespace qt
         int last_length_ = 16;
     };
 
+    class normal_mode_tab_t : public scale_dialog_base_tab_t
+    {
+        Q_OBJECT
+    public:
+        using pattern_t =
+            std::vector< sequencer::midi::clock_to_step_t< sequencer::midi::track_t > >;
+        explicit normal_mode_tab_t( pattern_t& pattern, track_t& track, QWidget* parent = nullptr );
+
+    private:
+        void on_steps_changed( int steps ) override;
+        void on_multiplier_changed( int idx ) override;
+
+        pattern_t& pattern_;
+    };
+
+    class advanced_mode_tab_t : public scale_dialog_base_tab_t
+    {
+        Q_OBJECT
+    public:
+        using pattern_t = normal_mode_tab_t::pattern_t;
+        explicit advanced_mode_tab_t(
+            pattern_t& pattern,
+            sequencer::midi::clock_to_step_t< sequencer::midi::track_t >& midi_track,
+            track_t& track, QWidget* parent = nullptr );
+
+    public slots:
+        void loop_length_changed( int length );
+
+    private:
+        void on_steps_changed( int steps ) override;
+        void on_multiplier_changed( int idx ) override;
+
+        pattern_t& pattern_;
+        sequencer::midi::clock_to_step_t< sequencer::midi::track_t >& midi_track_;
+    };
+
     class scale_dialog_t : public QDialog
     {
         Q_OBJECT
     public:
         using pattern_t = normal_mode_tab_t::pattern_t;
-        explicit scale_dialog_t( pattern_t& pattern, track_t& track, QWidget* parent = nullptr );
+        explicit scale_dialog_t(
+            pattern_t& pattern,
+            sequencer::midi::clock_to_step_t< sequencer::midi::track_t >& current_midi_track,
+            track_t& track, QWidget* parent = nullptr );
     };
 } // namespace qt

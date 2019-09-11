@@ -14,18 +14,18 @@
 
 namespace qt
 {
-    normal_mode_tab_t::normal_mode_tab_t( pattern_t& pattern, track_t& track, QWidget* parent )
-        : QWidget{parent}, pattern_{pattern}, track_{track}
+    scale_dialog_base_tab_t::scale_dialog_base_tab_t( int steps, track_t& track, QWidget* parent )
+        : QWidget{parent}, track_{track}
     {
-        const auto steps = pattern.front().steps();
         auto layout = new QHBoxLayout;
         step_box_ = new QSpinBox;
         step_box_->setMaximum( 4 * track.fixed_size() );
         step_box_->setMinimum( 1 );
         step_box_->setValue( steps );
         step_box_->setMaximumWidth( 40 );
+        step_box_->setToolTip( "number of steps" );
         QObject::connect( step_box_, qOverload< int >( &QSpinBox::valueChanged ), this,
-                          &normal_mode_tab_t::pattern_steps_changed );
+                          &scale_dialog_base_tab_t::steps_changed );
         layout->addWidget( step_box_ );
         length_box_ = new QSpinBox;
         length_box_->setMaximum( 4 * track.fixed_size() );
@@ -36,34 +36,33 @@ namespace qt
             track_.fixed_size() );
         length_box_->setMaximumWidth( 40 );
         QObject::connect( length_box_, qOverload< int >( &QSpinBox::valueChanged ), this,
-                          &normal_mode_tab_t::pattern_length_changed );
+                          &scale_dialog_base_tab_t::length_changed );
         layout->addWidget( length_box_ );
+
         auto combo_box = new QComboBox;
         std::for_each( begin( multipliers_ ), end( multipliers_ ),
                        [&combo_box]( const auto& multiplier ) {
                            combo_box->addItem( multiplier.first.c_str() );
                        } );
         combo_box->setCurrentIndex( 2 );
+        combo_box->setToolTip( "speed multiplier" );
         QObject::connect( combo_box, qOverload< int >( &QComboBox::currentIndexChanged ), this,
-                          &normal_mode_tab_t::pattern_multipler_changed );
+                          &scale_dialog_base_tab_t::multipler_changed );
         layout->addWidget( combo_box );
 
         setLayout( layout );
     }
 
-    void normal_mode_tab_t::pattern_steps_changed( int steps )
+    void scale_dialog_base_tab_t::steps_changed( int steps )
     {
-        for ( auto& track : pattern_ )
-        {
-            track.set_steps( steps, track_.fixed_size() );
-        }
+        on_steps_changed( steps );
         track_.update_on_scale_change( steps );
         signal_blocker_t signal_blocker{*length_box_};
         length_box_->setValue( track_.page_count() * track_.fixed_size() );
         last_length_ = length_box_->value();
     }
 
-    void normal_mode_tab_t::pattern_length_changed( int length )
+    void scale_dialog_base_tab_t::length_changed( int length )
     {
         if ( length > last_length_ && track_.size() < last_length_ )
         {
@@ -74,23 +73,91 @@ namespace qt
         step_box_->setValue( length );
     }
 
-    void normal_mode_tab_t::pattern_multipler_changed( int idx )
+    void scale_dialog_base_tab_t::multipler_changed( int idx )
+    {
+        on_multiplier_changed( idx );
+    }
+
+    int scale_dialog_base_tab_t::fixed_size() const noexcept
+    {
+        return track_.fixed_size();
+    }
+
+    double scale_dialog_base_tab_t::multiplier( int idx ) const noexcept
+    {
+        return multipliers_[ std::size_t( idx ) ].second;
+    }
+
+    normal_mode_tab_t::normal_mode_tab_t( pattern_t& pattern, track_t& track, QWidget* parent )
+        : scale_dialog_base_tab_t( pattern.front().steps(), track, parent ), pattern_( pattern )
+    {
+    }
+
+    void normal_mode_tab_t::on_steps_changed( int steps )
+    {
+        for ( auto& track : pattern_ )
+        {
+            track.set_steps( steps, fixed_size() );
+        }
+    }
+
+    void normal_mode_tab_t::on_multiplier_changed( int idx )
     {
         for ( auto& track : pattern_ )
         {
             track.set_pulses_per_quarter_note( std::size_t(
-                sequencer::midi::default_pulses_per_quarter_note / multipliers_[ idx ].second +
-                1e-15 ) );
+                sequencer::midi::default_pulses_per_quarter_note / multiplier( idx ) + 1e-15 ) );
         }
     }
 
-    scale_dialog_t::scale_dialog_t( pattern_t& pattern, track_t& track, QWidget* parent )
+    advanced_mode_tab_t::advanced_mode_tab_t(
+        pattern_t& pattern,
+        sequencer::midi::clock_to_step_t< sequencer::midi::track_t >& midi_track, track_t& track,
+        QWidget* parent )
+        : scale_dialog_base_tab_t( midi_track.steps(), track, parent ), pattern_( pattern ),
+          midi_track_( midi_track )
+    {
+
+        auto length_box = new QSpinBox;
+        length_box->setMinimum( 0 );
+        length_box->setMaximum( 1024 );
+        length_box->setValue( 16 );
+        length_box->setToolTip( "number of steps until all tracks are restarted" );
+        layout()->addWidget( length_box );
+        connect( length_box, qOverload< int >( &QSpinBox::valueChanged ), this,
+                 &advanced_mode_tab_t::loop_length_changed );
+    }
+
+    void advanced_mode_tab_t::loop_length_changed( int length )
+    {
+    }
+
+    void advanced_mode_tab_t::on_steps_changed( int steps )
+    {
+        midi_track_.set_steps( steps, fixed_size() );
+    }
+
+    void advanced_mode_tab_t::on_multiplier_changed( int idx )
+    {
+        for ( auto& track : pattern_ )
+        {
+            track.set_pulses_per_quarter_note( std::size_t(
+                sequencer::midi::default_pulses_per_quarter_note / multiplier( idx ) + 1e-15 ) );
+        }
+    }
+
+    scale_dialog_t::scale_dialog_t(
+        pattern_t& pattern,
+        sequencer::midi::clock_to_step_t< sequencer::midi::track_t >& current_midi_track,
+        track_t& track, QWidget* parent )
         : QDialog( parent )
     {
         auto layout = new QHBoxLayout;
 
         auto tabs = new QTabWidget;
         tabs->addTab( new normal_mode_tab_t( pattern, track ), tr( "Normal" ) );
+        tabs->addTab( new advanced_mode_tab_t( pattern, current_midi_track, track ),
+                      tr( "Advanced" ) );
         layout->addWidget( tabs );
 
         setLayout( layout );

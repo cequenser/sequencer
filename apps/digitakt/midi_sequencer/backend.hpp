@@ -35,12 +35,13 @@ public:
         send_messages( current_pattern(), message, sender );
     }
 
-private:
-    tracks_t& current_pattern() noexcept;
-    const tracks_t& current_pattern() const noexcept;
     sequencer::midi::sequencer_track_t& current_track() noexcept;
     const sequencer::midi::sequencer_track_t& current_track() const noexcept;
 
+    tracks_t& current_pattern() noexcept;
+    const tracks_t& current_pattern() const noexcept;
+
+private:
     banks_t banks_;
     banks_t::size_type current_bank_idx_ = 0;
     patterns_t::size_type current_pattern_idx_ = 0;

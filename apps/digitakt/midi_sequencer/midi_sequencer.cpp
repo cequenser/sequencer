@@ -1,9 +1,11 @@
 #include "midi_sequencer.hpp"
 
 #include "poti.hpp"
+#include "scale_dialog.hpp"
 #include "signal_blocker.hpp"
 #include "track.hpp"
 #include "ui_midi_sequencer.h"
+#include "util.hpp"
 
 #include <QCheckBox>
 #include <QHBoxLayout>
@@ -27,9 +29,10 @@ midi_sequencer::midi_sequencer( QWidget* parent )
 
     scan_available_ports();
 
-    ui->sequencer_box->connect( this );
+    ui->sequencer_box->connect( this, [this]( auto i ) { sequencer_step_changed( i ); } );
+    ui->sequencer_box->set_backend( backend_ );
 
-    ui->control_group_box->set_number_of_potis( 8, 2 );
+    ui->control_box->set_number_of_potis( 8, 2 );
 
     // init clock representation
     ui->clock_box->set_suffix( " bpm" );
@@ -88,7 +91,7 @@ void midi_sequencer::select_port( int idx )
 void midi_sequencer::change_bank()
 {
     enable_all_buttons();
-    if ( use_secondary_function() )
+    if ( qt::use_secondary_function() )
     {
         if ( backend_.mode() == backend_mode::mute )
         {
@@ -153,7 +156,7 @@ void midi_sequencer::sequencer_step_changed( int idx )
         }
     }
 
-    backend_.set_step( idx, ( *ui->sequencer_box )[ idx ].isChecked() );
+    ui->sequencer_box->step_changed( idx );
 }
 
 void midi_sequencer::scan_available_ports()
@@ -176,11 +179,6 @@ void midi_sequencer::enable_all_buttons()
     ui->bank_button->setEnabled( true );
     ui->pattern_button->setEnabled( true );
     ui->track_button->setEnabled( true );
-}
-
-bool midi_sequencer::use_secondary_function()
-{
-    return QApplication::keyboardModifiers().testFlag( Qt::ControlModifier );
 }
 
 void midi_sequencer::reset_mode()

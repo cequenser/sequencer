@@ -36,7 +36,6 @@ private:
     void scan_available_ports();
     void update_sequencer_steps();
     void enable_all_buttons();
-    bool use_secondary_function();
     void reset_mode();
 
     RtMidiOut midiout_;
@@ -45,6 +44,5 @@ private:
     std::future< void > clock_done_;
     Ui::midi_sequencer* ui;
     int old_clock_dial_value_ = 1200;
-
-    //    qt::dial_line_edit_sync* clock_ui_sync;
+    int page_ = 0;
 };

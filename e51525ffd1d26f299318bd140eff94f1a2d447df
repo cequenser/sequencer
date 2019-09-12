@@ -1,0 +1,24 @@
+{
+  "comments": [
+    {
+      "robotId": "g++-8",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/psv-gcc/636/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "c89f7b2b_f0c5c5c8",
+        "filename": "include/sequencer/midi/track.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-09-12T20:10:32Z",
+      "side": 1,
+      "message": "include/sequencer/midi/track.hpp:158:26: error: call to non-\u0027constexpr\u0027 function \u0027std::__atomic_base\u003c_IntTp\u003e::__int_type std::__atomic_base\u003c_IntTp\u003e::operator\u003d(std::__atomic_base\u003c_IntTp\u003e::__int_type) [with _ITp \u003d unsigned char; std::__atomic_base\u003c_IntTp\u003e::__int_type \u003d unsigned char]\u0027\n             note_offset_ \u003d offset;\n             ~~~~~~~~~~~~~^~~~~~~~",
+      "revId": "e51525ffd1d26f299318bd140eff94f1a2d447df",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}

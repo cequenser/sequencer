@@ -13,6 +13,7 @@ add_executable(tests
     sequencer/backend/digitakt_test.cpp
     sequencer/midi/clock_test.cpp
     sequencer/midi/clock_base_test.cpp
+    sequencer/midi/lfo_test.cpp
     sequencer/midi/pattern_test.cpp
     sequencer/midi/track_test.cpp
     sequencer/midi/message/channel_voice_test.cpp

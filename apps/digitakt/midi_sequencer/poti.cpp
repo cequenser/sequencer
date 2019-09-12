@@ -33,13 +33,18 @@ namespace qt
 
     void poti_t::update( int value )
     {
-        const auto bpm = double( value ) / floating_factor_;
+        const auto real_value = double( value ) / floating_factor_;
         std::stringstream stream;
-        stream << std::setprecision( 1 ) << std::fixed << bpm;
+        stream << std::setprecision( 1 ) << std::fixed << real_value;
         line_edit().setText( QString( stream.str().c_str() ) + suffix_ );
+        {
+            signal_blocker_t signal_blocker( dial() );
+            dial().setValue( value );
+        }
+
         old_value_ = value;
 
-        emit value_changed( bpm );
+        emit value_changed( real_value );
     }
 
     void poti_t::set_suffix( const QString& suffix )

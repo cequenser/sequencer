@@ -70,7 +70,8 @@ namespace sequencer::backend
                 return;
             }
             case digitakt_mode::step_select:
-                if ( current_step_ == idx )
+                if ( current_step_ == idx ||
+                     !current_track()[ midi::sequencer_track_t::size_type( idx ) ].is_active() )
                 {
                     set_mode( digitakt_mode::step_select );
                     current_step_ = -1;
@@ -174,7 +175,9 @@ namespace sequencer::backend
                 switch ( id )
                 {
                 case 0:
-                    current_track().set_pitch( value );
+                    current_track()[ current_step_ ].set_note(
+                        sequencer::midi::note_t( to_uint8_t( current_track().base_note() ) +
+                                                 std::uint8_t( value * 1.001 ) ) );
                     return;
                 case 1:
                     assert( current_step_ != -1 );
@@ -185,7 +188,7 @@ namespace sequencer::backend
             switch ( id )
             {
             case 0:
-                current_track().set_pitch( value );
+                current_track().set_note_offset( value * 1.001 );
                 return;
             case 1:
                 current_track().set_velocity( std::uint8_t( value + 1e-3 ) );

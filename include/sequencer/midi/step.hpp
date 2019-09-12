@@ -1,6 +1,7 @@
 #pragma once
 
 #include <atomic>
+#include <cassert>
 #include <cstdint>
 #include <limits>
 #include <optional>
@@ -21,6 +22,17 @@ namespace sequencer::midi
     constexpr std::uint8_t to_uint8_t( note_t note ) noexcept
     {
         return static_cast< std::uint8_t >( note );
+    }
+
+    constexpr note_t operator+( note_t note, std::int16_t offset )
+    {
+        assert( to_uint8_t( note ) + offset < 128 );
+        return note_t{std::uint8_t( to_uint8_t( note ) + offset )};
+    }
+
+    constexpr std::int16_t get_note_distance( note_t lhs, note_t rhs ) noexcept
+    {
+        return to_uint8_t( rhs ) - to_uint8_t( lhs );
     }
 
     class step_t
@@ -51,12 +63,12 @@ namespace sequencer::midi
             is_active_ = active;
         }
 
-        constexpr bool is_active() const noexcept
+        bool is_active() const noexcept
         {
             return is_active_;
         }
 
-        constexpr void set_note( note_t note ) noexcept
+        void set_note( note_t note ) noexcept
         {
             note_ = note;
         }
@@ -66,7 +78,7 @@ namespace sequencer::midi
             return note_;
         }
 
-        constexpr void set_velocity( std::uint8_t velocity ) noexcept
+        void set_velocity( std::uint8_t velocity ) noexcept
         {
             velocity_ = velocity;
         }
@@ -114,13 +126,13 @@ namespace sequencer::midi
                   << ")";
     }
 
-    constexpr bool operator==( const step_t& lhs, const step_t& rhs ) noexcept
+    inline bool operator==( const step_t& lhs, const step_t& rhs ) noexcept
     {
         return lhs.is_active() == rhs.is_active() && lhs.note() == rhs.note() &&
                lhs.velocity() == rhs.velocity();
     }
 
-    constexpr bool operator!=( const step_t& lhs, const step_t& rhs ) noexcept
+    inline bool operator!=( const step_t& lhs, const step_t& rhs ) noexcept
     {
         return !( lhs == rhs );
     }

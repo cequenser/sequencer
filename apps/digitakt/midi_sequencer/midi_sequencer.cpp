@@ -1,6 +1,7 @@
 #include "midi_sequencer.hpp"
 
 #include "poti.hpp"
+#include "poti_backend_connector.hpp"
 #include "scale_dialog.hpp"
 #include "signal_blocker.hpp"
 #include "track.hpp"
@@ -13,11 +14,9 @@
 #include <QLineEdit>
 #include <cassert>
 #include <iostream>
+
 using sequencer::backend::digitakt_control_mode;
 using sequencer::backend::digitakt_mode;
-
-constexpr auto note_index = 0u;
-constexpr auto velocity_index = 1u;
 
 midi_sequencer::midi_sequencer( QWidget* parent )
     : QMainWindow( parent ), clock_{sequencer::rtmidi::make_clock()},
@@ -40,30 +39,16 @@ midi_sequencer::midi_sequencer( QWidget* parent )
     ui->sequencer_box->set_backend( backend_ );
 
     ui->control_box->set_number_of_potis( 8, 2 );
-    auto& note_box = ( *ui->control_box )[ note_index ];
-    note_box.dial().setMinimum( -24 );
-    note_box.dial().setMaximum( 24 );
-    note_box.dial().setNotchTarget( 49 / 16 );
-    note_box.dial().setValue( 0 );
-    note_box.setTitle( "Note" );
-    note_box.line_edit().setAlignment( Qt::AlignRight );
-    note_box.line_edit().setText( "0.0" );
+    auto& note_box = ( *ui->control_box )[ qt::note_control::index ];
+    qt::note_control::init( note_box );
     connect( &note_box, &qt::poti_t::value_changed, this,
              [this]( double value ) { control_poti_changed( 0, value ); } );
 
-    {
-        auto& velocity_box = ( *ui->control_box )[ velocity_index ];
-        qt::signal_blocker_t signal_blocker{velocity_box.dial()};
-        velocity_box.dial().setNotchTarget( 128 / 16 );
-        velocity_box.dial().setMinimum( 1 );
-        velocity_box.dial().setMaximum( 127 );
-        velocity_box.dial().setValue( 100 );
-        velocity_box.setTitle( "Velocity" );
-        velocity_box.line_edit().setAlignment( Qt::AlignRight );
-        velocity_box.line_edit().setText( "100.0" );
-        connect( &velocity_box, &qt::poti_t::value_changed, this,
-                 [this]( double value ) { control_poti_changed( 1, value ); } );
-    }
+    auto& velocity_box = ( *ui->control_box )[ qt::velocity_control::index ];
+    qt::velocity_control::init( velocity_box );
+    connect( &velocity_box, &qt::poti_t::value_changed, this,
+             [this]( double value ) { control_poti_changed( 1, value ); } );
+
     // init clock representation
     ui->clock_box->set_suffix( " bpm" );
     ui->clock_box->set_floating_factor( 10 );
@@ -265,31 +250,9 @@ void midi_sequencer::update_potis()
     {
     case digitakt_control_mode::trig:
     {
-        const auto& current_track = backend_.current_track();
-        if ( backend_.mode() == digitakt_mode::step_select )
-        {
-            const auto& step_note = current_track[ backend_.current_step() ].note();
-            auto half_note_difference =
-                step_note ? get_note_distance( current_track.base_note(), step_note->load() )
-                          : current_track.note_offset();
-            ( *ui->control_box )[ note_index ].update( half_note_difference );
-            //            ( *ui->control_box )[ note_index ].line_edit().setText(
-            //                QString::number( half_note_difference ) + ".0" );
-
-            const auto& step_velocity = current_track[ backend_.current_step() ].velocity();
-            const auto velocity = step_velocity ? step_velocity->load() : current_track.velocity();
-            ( *ui->control_box )[ velocity_index ].update( velocity );
-            //            ( *ui->control_box )[ velocity_index ].line_edit().setText(
-            //                QString::number( velocity ) + ".0" );
-            return;
-        }
-
-        ( *ui->control_box )[ note_index ].update( current_track.note_offset() );
-        ( *ui->control_box )[ velocity_index ].update( current_track.velocity() );
-        //        ( *ui->control_box )[ note_index ].line_edit().setText(
-        //            QString::number( current_track.note_offset() ) + ".0" );
-        //        ( *ui->control_box )[ velocity_index ].line_edit().setText(
-        //            QString::number( current_track.velocity() ) + ".0" );
+        qt::note_control::update( backend_, ( *ui->control_box )[ qt::note_control::index ] );
+        qt::velocity_control::update( backend_,
+                                      ( *ui->control_box )[ qt::velocity_control::index ] );
         return;
     }
     }

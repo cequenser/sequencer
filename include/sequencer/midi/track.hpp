@@ -38,11 +38,10 @@ namespace sequencer::midi
             clear();
         }
 
-        track_t( const track_t& other )
-            : track_{other.track_.size()}, channel_( other.channel_ ), velocity_( other.velocity_ )
+        track_t( const track_t& other ) : track_{other.track_.size()}
         {
             std::lock_guard lock( other.mutex_ );
-            copy_track( other.track_, track_ );
+            copy( other, *this );
         }
 
         track_t& operator=( const track_t& other )
@@ -54,9 +53,7 @@ namespace sequencer::midi
                 std::lock_guard lock_other{other.mutex_, std::adopt_lock};
 
                 track_ = track_base_t{other.track_.size()};
-                copy_track( other.track_, track_ );
-                channel_ = other.channel_;
-                velocity_ = other.velocity_;
+                copy( other, *this );
             }
             return *this;
         }
@@ -197,14 +194,24 @@ namespace sequencer::midi
             return step.velocity() ? step.velocity()->load() : velocity();
         }
 
+        void copy( const track_t& from, track_t& to )
+        {
+            to.channel_ = from.channel();
+            to.base_note_ = from.base_note();
+            to.note_offset_ = from.note_offset();
+            to.velocity_ = from.velocity();
+            to.is_muted_ = from.is_muted();
+            copy_track( from.track_, to.track_ );
+        }
+
         track_base_t track_{};
         mutable step_t last_step_{};
         mutable std::mutex mutex_;
         std::uint8_t channel_{0};
         note_t base_note_{64};
-        std::uint8_t note_offset_{0};
-        std::uint8_t velocity_{100};
-        bool is_muted_{false};
+        std::atomic< std::uint8_t > note_offset_{0};
+        std::atomic< std::uint8_t > velocity_{100};
+        std::atomic_bool is_muted_{false};
     };
 
     class clock_to_step_impl

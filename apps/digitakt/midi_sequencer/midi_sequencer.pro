@@ -30,6 +30,7 @@ SOURCES += \
         main.cpp \
         midi_sequencer.cpp \
         poti.cpp \
+        poti_backend_connector.cpp \
         poti_group.cpp \
         scale_dialog.cpp \
         track.cpp \
@@ -38,6 +39,7 @@ SOURCES += \
 HEADERS += \
         midi_sequencer.hpp \
         poti.hpp \
+        poti_backend_connector.hpp \
         poti_group.hpp \
         scale_dialog.hpp \
         signal_blocker.hpp \

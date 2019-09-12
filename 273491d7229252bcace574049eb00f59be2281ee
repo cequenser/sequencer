@@ -1,0 +1,24 @@
+{
+  "comments": [
+    {
+      "robotId": "g++-8",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/psv-gcc/630/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "64c457d0_35b3273f",
+        "filename": "include/sequencer/midi/step.hpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-09-12T15:39:28Z",
+      "side": 1,
+      "message": "include/sequencer/midi/step.hpp:131:29: error: call to non-\u0027constexpr\u0027 function \u0027bool sequencer::midi::step_t::is_active() const\u0027\n         return lhs.is_active() \u003d\u003d rhs.is_active() \u0026\u0026 lhs.note() \u003d\u003d rhs.note() \u0026\u0026\n                ~~~~~~~~~~~~~^~",
+      "revId": "273491d7229252bcace574049eb00f59be2281ee",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}

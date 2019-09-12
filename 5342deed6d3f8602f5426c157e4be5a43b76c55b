@@ -1,0 +1,24 @@
+{
+  "comments": [
+    {
+      "robotId": "g++-8",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/psv-gcc/629/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "5a438746_6874bc24",
+        "filename": "include/sequencer/midi/step.hpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-09-12T15:34:03Z",
+      "side": 1,
+      "message": "include/sequencer/midi/step.hpp:73:21: error: call to non-\u0027constexpr\u0027 function \u0027std::enable_if_t\u003cstd::__and_\u003cstd::__not_\u003cstd::is_same\u003cstd::optional\u003c_Tp\u003e, typename std::decay\u003c_U1\u003e::type\u003e \u003e, std::is_constructible\u003c_Tp, _Up\u003e, std::__not_\u003cstd::__and_\u003cstd::is_scalar\u003c_Tp\u003e, std::is_same\u003c_Tp, typename std::decay\u003c_U1\u003e::type\u003e \u003e \u003e, std::is_assignable\u003c_Tp\u0026, _Up\u003e \u003e::value, std::optional\u003c_Tp\u003e\u0026\u003e std::optional\u003c_Tp\u003e::operator\u003d(_Up\u0026\u0026) [with _Up \u003d sequencer::midi::note_t\u0026; _Tp \u003d std::atomic\u003csequencer::midi::note_t\u003e; std::enable_if_t\u003cstd::__and_\u003cstd::__not_\u003cstd::is_same\u003cstd::optional\u003c_Tp\u003e, typename std::decay\u003c_U1\u003e::type\u003e \u003e, std::is_constructible\u003c_Tp, _Up\u003e, std::__not_\u003cstd::__and_\u003cstd::is_scalar\u003c_Tp\u003e, std::is_same\u003c_Tp, typename std::decay\u003c_U1\u003e::type\u003e \u003e \u003e, std::is_assignable\u003c_Tp\u0026, _Up\u003e \u003e::value, std::optional\u003c_Tp\u003e\u0026\u003e \u003d std::optional\u003cstd::atomic\u003csequencer::midi::note_t\u003e \u003e\u0026]\u0027\n             note_ \u003d note;\n                     ^~~~",
+      "revId": "5342deed6d3f8602f5426c157e4be5a43b76c55b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "comments": [
+    {
+      "robotId": "g++-8",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/psv-gcc/626/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "93cfc5d3_fdb9cc8d",
+        "filename": "include/sequencer/midi/step.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-09-12T14:22:07Z",
+      "side": 1,
+      "message": "include/sequencer/midi/step.hpp:51:24: error: call to non-\u0027constexpr\u0027 function \u0027bool std::atomic\u003cbool\u003e::operator\u003d(bool)\u0027\n             is_active_ \u003d active;\n             ~~~~~~~~~~~^~~~~~~~",
+      "revId": "7a8a675f01e375a72ddcbd562be7675b02555eeb",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}

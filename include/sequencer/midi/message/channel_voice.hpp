@@ -242,8 +242,7 @@ namespace sequencer::midi::channel::voice
     constexpr message_t< 3 > control_change( std::uint8_t channel,
                                              std::byte control_function ) noexcept
     {
-        return {status_byte_for( byte::control_change, channel ), control_function,
-                std::byte{0x00}};
+        return control_change( channel, control_function, std::byte{0x00} );
     }
 
     constexpr message_t< 3 > all_sounds_off( std::uint8_t channel ) noexcept

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <sequencer/assert.hpp>
+#include <sequencer/midi/constants.hpp>
 #include <sequencer/midi/message/channel_voice.hpp>
 #include <sequencer/midi/message/message_type.hpp>
 #include <sequencer/midi/message/realtime.hpp>
@@ -14,7 +15,6 @@
 
 namespace sequencer::midi
 {
-    constexpr std::size_t default_pulses_per_quarter_note = 24;
     using track_base_t = std::vector< step_t >;
 
     inline void copy_track( const track_base_t& from, track_base_t& to ) noexcept
@@ -104,7 +104,7 @@ namespace sequencer::midi
 
         constexpr void set_channel( std::uint8_t channel ) noexcept
         {
-            SEQUENCER_ASSERT( channel < 16 );
+            SEQUENCER_ASSERT( channel < max_number_of_midi_channels );
             channel_ = channel;
         }
 

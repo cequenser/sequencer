@@ -1,13 +1,16 @@
 #include <sequencer/chrono/sequencer_clock.hpp>
 #include <sequencer/chrono/testing_clock.hpp>
 #include <sequencer/midi/clock.hpp>
+#include <sequencer/midi/lfo.hpp>
 #include <sequencer/midi/track.hpp>
 #include <sequencer/midi/util.hpp>
 
 #include <catch2/catch.hpp>
 
 #include <condition_variable>
-#include <iostream>
+
+using sequencer::midi::lfo;
+using sequencer::midi::lfo_mode;
 using sequencer::midi::make_midi_clock_raii_shutdown;
 using sequencer::midi::make_tracks;
 using sequencer::midi::message_t;
@@ -380,6 +383,62 @@ SCENARIO( "track_t copy", "[track]" )
                 REQUIRE( track[ 1 ] == step );
                 REQUIRE( track[ 2 ] == step_t{} );
                 REQUIRE( track[ 3 ] == step_t{} );
+            }
+        }
+    }
+}
+
+SCENARIO( "sequencer_track_t lfo on velocity", "[track]" )
+{
+    constexpr auto number_of_steps = 16u;
+
+    GIVEN( "sequencer_track_t with 16 steps" )
+    {
+        auto track = sequencer_track_t{number_of_steps};
+        const auto first_note = note_t{1};
+        const auto first_velocity = std::uint8_t{80};
+        const auto first_step = step_t{first_note, first_velocity};
+        track[ 0 ] = first_step;
+        track[ 4 ] = first_step;
+        track[ 8 ] = first_step;
+        track[ 12 ] = first_step;
+
+        WHEN( "squared lfo-filter with speed 128 for velocity is set" )
+        {
+            track.set_lfo( []( std::size_t step, message_t< 3 > msg ) {
+                msg[ 2 ] = std::byte{lfo< std::uint8_t >( step, 128, 0, 0, 127, lfo_mode::square )};
+                return msg;
+            } );
+
+            AND_WHEN( "a start and 96 clock messages are send" )
+            {
+                std::vector< message_t< 3 > > received_messages;
+                const auto sender = [&received_messages]( const auto& msg ) {
+                    received_messages.push_back( msg );
+                };
+
+                track.send_messages( realtime_start(), sender );
+                for ( auto i = 0; i < 96; ++i )
+                {
+                    track.send_messages( realtime_clock(), sender );
+                }
+
+                THEN( "7 messages are received" )
+                {
+                    REQUIRE( received_messages.size() == 7 );
+                }
+
+                THEN( "the first two notes have velocity 127" )
+                {
+                    CHECK( static_cast< std::uint8_t >( received_messages[ 0 ][ 2 ] ) == 127 );
+                    CHECK( static_cast< std::uint8_t >( received_messages[ 2 ][ 2 ] ) == 127 );
+                }
+
+                THEN( "the last two notes have velocity 0" )
+                {
+                    CHECK( static_cast< std::uint8_t >( received_messages[ 4 ][ 2 ] ) == 0 );
+                    CHECK( static_cast< std::uint8_t >( received_messages[ 6 ][ 2 ] ) == 0 );
+                }
             }
         }
     }

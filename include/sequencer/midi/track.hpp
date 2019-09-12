@@ -8,6 +8,7 @@
 
 #include <algorithm>
 #include <atomic>
+#include <functional>
 #include <mutex>
 #include <vector>
 
@@ -31,7 +32,7 @@ namespace sequencer::midi
         using value_type = track_base_t::value_type;
         using size_type = track_base_t::size_type;
 
-        constexpr track_t() noexcept = default;
+        track_t() = default;
 
         explicit track_t( size_type size ) : track_( size )
         {
@@ -126,11 +127,11 @@ namespace sequencer::midi
             {
                 if ( last_step_.is_active() )
                 {
-                    sender( channel::voice::note_off( channel(), get_note( last_step_ ),
-                                                      get_velocity( last_step_ ) ) );
+                    sender( lfo_( idx, channel::voice::note_off( channel(), get_note( last_step_ ),
+                                                                 get_velocity( last_step_ ) ) ) );
                 }
-                sender(
-                    channel::voice::note_on( channel(), get_note( step ), get_velocity( step ) ) );
+                sender( lfo_( idx, channel::voice::note_on( channel(), get_note( step ),
+                                                            get_velocity( step ) ) ) );
                 last_step_ = step;
             }
         }
@@ -142,27 +143,27 @@ namespace sequencer::midi
             last_step_ = step_t{};
         }
 
-        constexpr void mute( bool do_mute = true ) noexcept
+        void mute( bool do_mute = true ) noexcept
         {
             is_muted_ = do_mute;
         }
 
-        constexpr bool is_muted() const noexcept
+        bool is_muted() const noexcept
         {
             return is_muted_;
         }
 
-        constexpr void set_note_offset( std::uint8_t offset ) noexcept
+        void set_note_offset( std::uint8_t offset ) noexcept
         {
             note_offset_ = offset;
         }
 
-        constexpr std::uint8_t note_offset() const noexcept
+        std::uint8_t note_offset() const noexcept
         {
             return note_offset_;
         }
 
-        constexpr void set_velocity( std::uint8_t velocity ) noexcept
+        void set_velocity( std::uint8_t velocity ) noexcept
         {
             velocity_ = velocity;
         }
@@ -177,9 +178,15 @@ namespace sequencer::midi
             return base_note() + note_offset();
         }
 
-        constexpr std::uint8_t velocity() const noexcept
+        std::uint8_t velocity() const noexcept
         {
             return velocity_;
+        }
+
+        template < class F >
+        void set_lfo( F f )
+        {
+            lfo_ = f;
         }
 
     private:
@@ -207,6 +214,8 @@ namespace sequencer::midi
         track_base_t track_{};
         mutable step_t last_step_{};
         mutable std::mutex mutex_;
+        std::function< message_t< 3 >( std::size_t, message_t< 3 > ) > lfo_ =
+            []( std::size_t, message_t< 3 > msg ) { return msg; };
         std::uint8_t channel_{0};
         note_t base_note_{64};
         std::atomic< std::uint8_t > note_offset_{0};
@@ -251,7 +260,7 @@ namespace sequencer::midi
             midi_beat_counter_ = counter;
         }
 
-        std::size_t midi_beat_counter() const
+        constexpr std::size_t midi_beat_counter() const noexcept
         {
             return midi_beat_counter_;
         }

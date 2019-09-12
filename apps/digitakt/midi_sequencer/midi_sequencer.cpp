@@ -8,11 +8,16 @@
 #include "util.hpp"
 
 #include <QCheckBox>
+#include <QDial>
 #include <QHBoxLayout>
 #include <QLineEdit>
 #include <cassert>
 
+using sequencer::backend::digitakt_control_mode;
 using sequencer::backend::digitakt_mode;
+
+constexpr auto note_index = 0u;
+constexpr auto velocity_index = 1u;
 
 midi_sequencer::midi_sequencer( QWidget* parent )
     : QMainWindow( parent ), clock_{sequencer::rtmidi::make_clock()},
@@ -35,7 +40,30 @@ midi_sequencer::midi_sequencer( QWidget* parent )
     ui->sequencer_box->set_backend( backend_ );
 
     ui->control_box->set_number_of_potis( 8, 2 );
+    auto& note_box = ( *ui->control_box )[ note_index ];
+    note_box.dial().setMinimum( -24 );
+    note_box.dial().setMaximum( 24 );
+    note_box.dial().setNotchTarget( 49 / 16 );
+    note_box.dial().setValue( 0 );
+    note_box.setTitle( "Note" );
+    note_box.line_edit().setAlignment( Qt::AlignRight );
+    note_box.line_edit().setText( "0.0" );
+    connect( &note_box, &qt::poti_t::value_changed, this,
+             [this]( double value ) { control_poti_changed( 0, value ); } );
 
+    {
+        auto& velocity_box = ( *ui->control_box )[ velocity_index ];
+        qt::signal_blocker_t signal_blocker{velocity_box.dial()};
+        velocity_box.dial().setNotchTarget( 128 / 16 );
+        velocity_box.dial().setMinimum( 1 );
+        velocity_box.dial().setMaximum( 127 );
+        velocity_box.dial().setValue( 100 );
+        velocity_box.setTitle( "Velocity" );
+        velocity_box.line_edit().setAlignment( Qt::AlignRight );
+        velocity_box.line_edit().setText( "100.0" );
+        connect( &velocity_box, &qt::poti_t::value_changed, this,
+                 [this]( double value ) { control_poti_changed( 1, value ); } );
+    }
     // init clock representation
     ui->clock_box->set_suffix( " bpm" );
     ui->clock_box->set_floating_factor( 10 );
@@ -102,21 +130,33 @@ void midi_sequencer::change_bank()
 
     backend_.set_mode( digitakt_mode::bank_select );
     update_buttons();
-    ui->sequencer_box->clear();
+    const auto track_mode = backend_.mode() == digitakt_mode::bank_select
+                                ? qt::track_mode::select
+                                : qt::track_mode::sequencer;
+    ui->sequencer_box->set_mode( track_mode );
+    update_sequencer_steps();
 }
 
 void midi_sequencer::change_pattern()
 {
     backend_.set_mode( digitakt_mode::pattern_select );
     update_buttons();
-    ui->sequencer_box->clear();
+    const auto track_mode = backend_.mode() == digitakt_mode::pattern_select
+                                ? qt::track_mode::select
+                                : qt::track_mode::sequencer;
+    ui->sequencer_box->set_mode( track_mode );
+    update_sequencer_steps();
 }
 
 void midi_sequencer::change_track()
 {
     backend_.set_mode( digitakt_mode::track_select );
     update_buttons();
-    ui->sequencer_box->clear();
+    const auto track_mode = backend_.mode() == digitakt_mode::track_select
+                                ? qt::track_mode::select
+                                : qt::track_mode::sequencer;
+    ui->sequencer_box->set_mode( track_mode );
+    update_sequencer_steps();
 }
 
 void midi_sequencer::sequencer_step_changed( int idx )
@@ -124,13 +164,75 @@ void midi_sequencer::sequencer_step_changed( int idx )
     if ( backend_.mode() != digitakt_mode::play )
     {
         backend_.set_step( idx );
+        ui->sequencer_box->set_mode( qt::track_mode::sequencer );
         update_buttons();
         update_sequencer_steps();
+        update_potis();
         return;
     }
 
     ui->sequencer_box->step_changed( idx );
-    update_sequencer_steps();
+    update_potis();
+}
+
+void midi_sequencer::trig_selected()
+{
+    if ( qt::use_secondary_function() )
+    {
+        backend_.set_control_mode( digitakt_control_mode::quantize );
+        return;
+    }
+
+    backend_.set_control_mode( digitakt_control_mode::quantize );
+}
+
+void midi_sequencer::source_selected()
+{
+    if ( qt::use_secondary_function() )
+    {
+        backend_.set_control_mode( digitakt_control_mode::assign );
+        return;
+    }
+
+    backend_.set_control_mode( digitakt_control_mode::source );
+}
+
+void midi_sequencer::filter_selected()
+{
+    if ( qt::use_secondary_function() )
+    {
+        backend_.set_control_mode( digitakt_control_mode::delay );
+        return;
+    }
+
+    backend_.set_control_mode( digitakt_control_mode::filter );
+}
+
+void midi_sequencer::amp_selected()
+{
+    if ( qt::use_secondary_function() )
+    {
+        backend_.set_control_mode( digitakt_control_mode::reverb );
+        return;
+    }
+
+    backend_.set_control_mode( digitakt_control_mode::amp );
+}
+
+void midi_sequencer::lfo_selected()
+{
+    if ( qt::use_secondary_function() )
+    {
+        backend_.set_control_mode( digitakt_control_mode::master );
+        return;
+    }
+
+    backend_.set_control_mode( digitakt_control_mode::lfo );
+}
+
+void midi_sequencer::control_poti_changed( int id, double value )
+{
+    backend_.set_control( id, value );
 }
 
 void midi_sequencer::scan_available_ports()
@@ -155,4 +257,28 @@ void midi_sequencer::update_buttons()
     ui->track_button->setEnabled( backend_.mode() != digitakt_mode::track_select );
 
     ui->bank_button->setText( backend_.mode() == digitakt_mode::mute ? "Mute" : "Bank" );
+}
+
+void midi_sequencer::update_potis()
+{
+    switch ( backend_.control_mode() )
+    {
+    case digitakt_control_mode::trig:
+    {
+        if ( backend_.mode() == digitakt_mode::step_select )
+        {
+            const auto& step_velocity =
+                backend_.current_track()[ backend_.current_step() ].velocity();
+            const auto velocity =
+                step_velocity ? step_velocity->load() : backend_.current_track().velocity();
+            ( *ui->control_box )[ velocity_index ].line_edit().setText(
+                QString::number( velocity ) + ".0" );
+            return;
+        }
+
+        ( *ui->control_box )[ velocity_index ].line_edit().setText(
+            QString::number( backend_.current_track().velocity() ) + ".0" );
+        return;
+    }
+    }
 }

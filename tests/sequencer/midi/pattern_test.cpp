@@ -4,6 +4,8 @@
 
 #include <catch2/catch.hpp>
 
+constexpr auto active_step = sequencer::midi::step_t{true};
+
 SCENARIO( "loop length", "[pattern]" )
 {
     using namespace sequencer::midi;
@@ -17,8 +19,8 @@ SCENARIO( "loop length", "[pattern]" )
 
         AND_GIVEN( "a note on the 3rd step of each track" )
         {
-            pattern[ 0 ][ 2 ] = note_t{42};
-            pattern[ 1 ][ 2 ] = note_t{73};
+            pattern[ 0 ][ 2 ] = active_step;
+            pattern[ 1 ][ 2 ] = active_step;
 
             WHEN( "4*24 clock messages are sent" )
             {

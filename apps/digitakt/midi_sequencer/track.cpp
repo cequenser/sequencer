@@ -3,6 +3,7 @@
 #include "scale_dialog.hpp"
 #include "util.hpp"
 
+#include <QGridLayout>
 #include <QPushButton>
 #include <algorithm>
 #include <cassert>
@@ -11,17 +12,18 @@ namespace qt
 {
     track_t::track_t( QWidget* parent ) : QGroupBox( parent )
     {
-        auto seq_layout = new QHBoxLayout;
+        auto seq_layout = new QGridLayout;
         for ( auto i = 0; i < fixed_size(); ++i )
         {
-            seq_layout->addWidget( new QCheckBox );
+            seq_layout->addWidget( new QCheckBox, i / ( fixed_size() / 2 ),
+                                   i % ( fixed_size() / 2 ) );
         }
         auto button = new QPushButton;
         button->setText( "Page" );
         QObject::connect( button, &QPushButton::clicked, this, &track_t::page_changed );
-        seq_layout->addWidget( button );
+        seq_layout->addWidget( button, 1, fixed_size() / 2 );
         label_->setAlignment( Qt::AlignRight );
-        seq_layout->addWidget( label_ );
+        seq_layout->addWidget( label_, 0, fixed_size() / 2 );
         setLayout( seq_layout );
         display_page();
     }
@@ -76,9 +78,29 @@ namespace qt
         update_displayed_steps();
     }
 
-    void track_t::step_changed( int i )
+    void track_t::set_mode( track_mode mode ) noexcept
     {
-        backend_->set_step( i + fixed_size() * current_page_, ( *this )[ i ].isChecked() );
+        mode_ = mode;
+    }
+
+    void track_t::step_changed( int idx )
+    {
+        set_mode( track_mode::sequencer );
+        if ( qt::use_secondary_function() )
+        {
+            {
+                qt::signal_blocker_t signal_blocker{( *this )[ idx ]};
+                ( *this )[ idx ].setChecked( !( *this )[ idx ].isChecked() );
+            }
+            backend_->set_mode( sequencer::backend::digitakt_mode::step_select );
+            if ( backend_->mode() == sequencer::backend::digitakt_mode::step_select )
+            {
+                enable( [idx]( auto i ) { return i == idx; } );
+            }
+        }
+
+        backend_->set_step( idx + fixed_size() * current_page_, ( *this )[ idx ].isChecked() );
+        update();
     }
 
     void track_t::page_changed()
@@ -91,6 +113,10 @@ namespace qt
             return;
         }
 
+        if ( backend_->mode() == sequencer::backend::digitakt_mode::step_select )
+        {
+            backend_->set_mode( sequencer::backend::digitakt_mode::step_select );
+        }
         if ( ++current_page_ == page_count() )
         {
             current_page_ = 0;
@@ -106,9 +132,15 @@ namespace qt
 
     void track_t::update_displayed_steps()
     {
-        for ( auto i = 0; i < fixed_size(); ++i )
+        if ( mode_ == track_mode::select )
         {
-            ( *this )[ i ].setEnabled( true );
+            clear();
+            return;
+        }
+
+        if ( backend_->mode() != sequencer::backend::digitakt_mode::step_select )
+        {
+            enable( []( auto ) { return true; } );
         }
 
         if ( backend_->mode() == sequencer::backend::digitakt_mode::mute )
@@ -121,7 +153,7 @@ namespace qt
                 const auto idx = std::size_t( i + fixed_size() * current_page_ );
                 if ( idx < backend_->current_track().steps() )
                 {
-                    return backend_->current_track()[ idx ] != sequencer::midi::no_note();
+                    return backend_->current_track()[ idx ].is_active();
                 }
 
                 return false;

@@ -7,13 +7,14 @@
 #include <catch2/catch.hpp>
 
 #include <condition_variable>
-
+#include <iostream>
 using sequencer::midi::make_midi_clock_raii_shutdown;
 using sequencer::midi::make_tracks;
 using sequencer::midi::message_t;
 using sequencer::midi::no_note;
 using sequencer::midi::note_t;
 using sequencer::midi::sequencer_track_t;
+using sequencer::midi::step_t;
 using sequencer::midi::track_t;
 using sequencer::midi::channel::voice::all_notes_off;
 using sequencer::midi::channel::voice::note_off;
@@ -34,16 +35,17 @@ SCENARIO( "track_t", "[track]" )
         auto track = track_t{number_of_steps};
         REQUIRE( track.steps() == number_of_steps );
         REQUIRE( track.channel() == 0u );
-        REQUIRE( track[ 0 ] == no_note() );
+        REQUIRE( track[ 0 ] == step_t{} );
 
-        WHEN( "the 3rd step is set to note 1" )
+        WHEN( "the 3rd step is activated" )
         {
             const auto first_note = note_t{1};
-            track[ 2 ] = first_note;
+            const auto first_velocity = std::uint8_t{80};
+            track[ 2 ] = step_t{first_note, first_velocity};
 
-            THEN( "the first step equals note 1" )
+            THEN( "the first step is active" )
             {
-                CHECK( track[ 2 ] == first_note );
+                CHECK( track[ 2 ].is_active() );
             }
 
             THEN( "send_messages(1, sender) returns no message" )
@@ -63,21 +65,24 @@ SCENARIO( "track_t", "[track]" )
                 track.send_messages( 2, sender );
 
                 CHECK( received_messages.front() ==
-                       note_on( track.channel(), to_uint8_t( first_note ), velocity ) );
+                       note_on( track.channel(), to_uint8_t( first_note ), first_velocity ) );
 
                 WHEN( "the 5th step is set to note 2" )
                 {
                     const auto second_note = note_t{2};
-                    track[ 4 ] = second_note;
+                    const auto second_velocity = std::uint8_t{42};
+                    track[ 4 ] = step_t{second_note, second_velocity};
 
                     THEN( "send_messages(4,sender) returns note off and note on message" )
                     {
                         track.send_messages( 4, sender );
                         REQUIRE( received_messages.size() == 3 );
-                        CHECK( received_messages[ 1 ] ==
-                               note_off( track.channel(), to_uint8_t( first_note ), velocity ) );
-                        CHECK( received_messages[ 2 ] ==
-                               note_on( track.channel(), to_uint8_t( second_note ), velocity ) );
+                        CHECK( received_messages[ 1 ] == note_off( track.channel(),
+                                                                   to_uint8_t( first_note ),
+                                                                   first_velocity ) );
+                        CHECK( received_messages[ 2 ] == note_on( track.channel(),
+                                                                  to_uint8_t( second_note ),
+                                                                  second_velocity ) );
                     }
 
                     AND_WHEN( "the track is muted" )
@@ -110,10 +115,10 @@ SCENARIO( "track_t", "[track]" )
                                 REQUIRE( received_messages.size() == 3 );
                                 CHECK( received_messages[ 1 ] == note_off( track.channel(),
                                                                            to_uint8_t( first_note ),
-                                                                           velocity ) );
+                                                                           first_velocity ) );
                                 CHECK( received_messages[ 2 ] == note_on( track.channel(),
                                                                           to_uint8_t( second_note ),
-                                                                          velocity ) );
+                                                                          second_velocity ) );
                             }
                         }
                     }
@@ -126,7 +131,8 @@ SCENARIO( "track_t", "[track]" )
                     WHEN( "the 5th step is set to note 2" )
                     {
                         const auto second_note = note_t{2};
-                        track[ 4 ] = second_note;
+                        const auto second_velocity = std::uint8_t{42};
+                        track[ 4 ] = step_t{second_note, second_velocity};
 
                         THEN( "send_messages(4,sender) returns note on message" )
                         {
@@ -134,7 +140,7 @@ SCENARIO( "track_t", "[track]" )
                             REQUIRE( received_messages.size() == 2 );
                             CHECK( received_messages[ 1 ] == note_on( track.channel(),
                                                                       to_uint8_t( second_note ),
-                                                                      velocity ) );
+                                                                      second_velocity ) );
                         }
                     }
                 }
@@ -144,9 +150,9 @@ SCENARIO( "track_t", "[track]" )
             {
                 track.clear();
 
-                THEN( "the 3rd step equals no note" )
+                THEN( "the 3rd step is empty" )
                 {
-                    CHECK( track[ 2 ] == no_note() );
+                    CHECK( track[ 2 ] == step_t{} );
                 }
             }
         }
@@ -202,9 +208,9 @@ SCENARIO( "track_t set_steps", "[track]" )
             THEN( "track has 3 steps with no note" )
             {
                 REQUIRE( track.steps() == 3 );
-                REQUIRE( track[ 0 ] == no_note() );
-                REQUIRE( track[ 1 ] == no_note() );
-                REQUIRE( track[ 2 ] == no_note() );
+                REQUIRE( track[ 0 ] == step_t{} );
+                REQUIRE( track[ 1 ] == step_t{} );
+                REQUIRE( track[ 2 ] == step_t{} );
             }
         }
     }
@@ -212,8 +218,10 @@ SCENARIO( "track_t set_steps", "[track]" )
     GIVEN( "a track with 4 steps and second step set to note 42" )
     {
         auto track = track_t{4};
-        const auto note = note_t{42};
-        track[ 1 ] = note;
+        const auto first_note = note_t{42};
+        const auto first_velocity = std::uint8_t{80};
+        const auto step = step_t{first_note, first_velocity};
+        track[ 1 ] = step;
 
         WHEN( "number of steps is changed to 3" )
         {
@@ -222,9 +230,9 @@ SCENARIO( "track_t set_steps", "[track]" )
             THEN( "track has 3 steps with note 42 on second step" )
             {
                 REQUIRE( track.steps() == 3 );
-                REQUIRE( track[ 0 ] == no_note() );
-                REQUIRE( track[ 1 ] == note );
-                REQUIRE( track[ 2 ] == no_note() );
+                REQUIRE( track[ 0 ] == step_t{} );
+                REQUIRE( track[ 1 ] == step );
+                REQUIRE( track[ 2 ] == step_t{} );
             }
         }
 
@@ -245,12 +253,12 @@ SCENARIO( "track_t set_steps", "[track]" )
             THEN( "track has 6 steps with note 42 on second step" )
             {
                 REQUIRE( track.steps() == 6 );
-                REQUIRE( track[ 0 ] == no_note() );
-                REQUIRE( track[ 1 ] == note );
-                REQUIRE( track[ 2 ] == no_note() );
-                REQUIRE( track[ 3 ] == no_note() );
-                REQUIRE( track[ 4 ] == no_note() );
-                REQUIRE( track[ 5 ] == no_note() );
+                REQUIRE( track[ 0 ] == step_t{} );
+                REQUIRE( track[ 1 ] == step );
+                REQUIRE( track[ 2 ] == step_t{} );
+                REQUIRE( track[ 3 ] == step_t{} );
+                REQUIRE( track[ 4 ] == step_t{} );
+                REQUIRE( track[ 5 ] == step_t{} );
             }
         }
     }
@@ -300,8 +308,10 @@ SCENARIO( "track_t copy", "[track]" )
     GIVEN( "a track_t with 4 steps and note on step 1" )
     {
         auto track = track_t{4};
-        const auto note = note_t{42};
-        track[ 1 ] = note;
+        const auto first_note = note_t{42};
+        const auto first_velocity = std::uint8_t{80};
+        const auto step = step_t{first_note, first_velocity};
+        track[ 1 ] = step;
 
         WHEN( "track is copy-constructed" )
         {
@@ -309,10 +319,10 @@ SCENARIO( "track_t copy", "[track]" )
 
             THEN( "other track has also one note on step 1" )
             {
-                REQUIRE( other[ 0 ] == no_note() );
-                REQUIRE( other[ 1 ] == note );
-                REQUIRE( other[ 2 ] == no_note() );
-                REQUIRE( other[ 3 ] == no_note() );
+                REQUIRE( other[ 0 ] == step_t{} );
+                REQUIRE( other[ 1 ] == step );
+                REQUIRE( other[ 2 ] == step_t{} );
+                REQUIRE( other[ 3 ] == step_t{} );
             }
         }
 
@@ -328,10 +338,10 @@ SCENARIO( "track_t copy", "[track]" )
 
             THEN( "other track has also one note on step 1" )
             {
-                REQUIRE( other[ 0 ] == no_note() );
-                REQUIRE( other[ 1 ] == note );
-                REQUIRE( other[ 2 ] == no_note() );
-                REQUIRE( other[ 3 ] == no_note() );
+                REQUIRE( other[ 0 ] == step_t{} );
+                REQUIRE( other[ 1 ] == step );
+                REQUIRE( other[ 2 ] == step_t{} );
+                REQUIRE( other[ 3 ] == step_t{} );
             }
         }
 
@@ -347,10 +357,10 @@ SCENARIO( "track_t copy", "[track]" )
 
             THEN( "other track has also one note on step 1" )
             {
-                REQUIRE( other[ 0 ] == no_note() );
-                REQUIRE( other[ 1 ] == note );
-                REQUIRE( other[ 2 ] == no_note() );
-                REQUIRE( other[ 3 ] == no_note() );
+                REQUIRE( other[ 0 ] == step_t{} );
+                REQUIRE( other[ 1 ] == step );
+                REQUIRE( other[ 2 ] == step_t{} );
+                REQUIRE( other[ 3 ] == step_t{} );
             }
         }
 
@@ -366,10 +376,10 @@ SCENARIO( "track_t copy", "[track]" )
 
             THEN( "track has still one note on step 1" )
             {
-                REQUIRE( track[ 0 ] == no_note() );
-                REQUIRE( track[ 1 ] == note );
-                REQUIRE( track[ 2 ] == no_note() );
-                REQUIRE( track[ 3 ] == no_note() );
+                REQUIRE( track[ 0 ] == step_t{} );
+                REQUIRE( track[ 1 ] == step );
+                REQUIRE( track[ 2 ] == step_t{} );
+                REQUIRE( track[ 3 ] == step_t{} );
             }
         }
     }
@@ -382,8 +392,14 @@ SCENARIO( "sequencer_track_t", "[track]" )
     GIVEN( "sequencer_track_t with 16 steps" )
     {
         auto track = sequencer_track_t{number_of_steps};
-        track[ 0 ] = note_t{1};
-        track[ 2 ] = note_t{2};
+        const auto first_note = note_t{1};
+        const auto first_velocity = std::uint8_t{80};
+        const auto first_step = step_t{first_note, first_velocity};
+        const auto second_note = note_t{2};
+        const auto second_velocity = std::uint8_t{50};
+        const auto second_step = step_t{second_note, second_velocity};
+        track[ 0 ] = first_step;
+        track[ 2 ] = second_step;
 
         WHEN( "pulses per quarter note are 24 and steps per beat are 4" )
         {
@@ -404,7 +420,8 @@ SCENARIO( "sequencer_track_t", "[track]" )
                 {
 
                     REQUIRE( received_messages.size() == 1 );
-                    REQUIRE( received_messages.front() == note_on( 0, 1, velocity ) );
+                    REQUIRE( received_messages.front() ==
+                             note_on( 0, to_uint8_t( first_note ), first_velocity ) );
 
                     WHEN( "another clock message is send" )
                     {
@@ -413,9 +430,12 @@ SCENARIO( "sequencer_track_t", "[track]" )
                         THEN( "a note off and note on message are send" )
                         {
                             REQUIRE( received_messages.size() == 3 );
-                            REQUIRE( received_messages[ 0 ] == note_on( 0, 1, velocity ) );
-                            REQUIRE( received_messages[ 1 ] == note_off( 0, 1, velocity ) );
-                            REQUIRE( received_messages[ 2 ] == note_on( 0, 2, velocity ) );
+                            REQUIRE( received_messages[ 0 ] ==
+                                     note_on( 0, to_uint8_t( first_note ), first_velocity ) );
+                            REQUIRE( received_messages[ 1 ] ==
+                                     note_off( 0, to_uint8_t( first_note ), first_velocity ) );
+                            REQUIRE( received_messages[ 2 ] ==
+                                     note_on( 0, to_uint8_t( second_note ), second_velocity ) );
                         }
                     }
                 }
@@ -443,7 +463,8 @@ SCENARIO( "sequencer_track_t", "[track]" )
                 {
 
                     REQUIRE( received_messages.size() == 1 );
-                    REQUIRE( received_messages.front() == note_on( 0, 1, velocity ) );
+                    REQUIRE( received_messages.front() ==
+                             note_on( 0, to_uint8_t( first_note ), first_velocity ) );
 
                     WHEN( "another clock message is send" )
                     {
@@ -452,9 +473,12 @@ SCENARIO( "sequencer_track_t", "[track]" )
                         THEN( "a note off and note on message are send" )
                         {
                             REQUIRE( received_messages.size() == 3 );
-                            REQUIRE( received_messages[ 0 ] == note_on( 0, 1, velocity ) );
-                            REQUIRE( received_messages[ 1 ] == note_off( 0, 1, velocity ) );
-                            REQUIRE( received_messages[ 2 ] == note_on( 0, 2, velocity ) );
+                            REQUIRE( received_messages[ 0 ] ==
+                                     note_on( 0, to_uint8_t( first_note ), first_velocity ) );
+                            REQUIRE( received_messages[ 1 ] ==
+                                     note_off( 0, to_uint8_t( first_note ), first_velocity ) );
+                            REQUIRE( received_messages[ 2 ] ==
+                                     note_on( 0, to_uint8_t( second_note ), second_velocity ) );
                         }
                     }
                 }
@@ -483,7 +507,8 @@ SCENARIO( "sequencer_track_t", "[track]" )
                 {
 
                     REQUIRE( received_messages.size() == 1 );
-                    REQUIRE( received_messages.front() == note_on( 0, 1, velocity ) );
+                    REQUIRE( received_messages.front() ==
+                             note_on( 0, to_uint8_t( first_note ), first_velocity ) );
 
                     WHEN( "another clock message is send" )
                     {
@@ -492,9 +517,12 @@ SCENARIO( "sequencer_track_t", "[track]" )
                         THEN( "a note off and note on message are send" )
                         {
                             REQUIRE( received_messages.size() == 3 );
-                            REQUIRE( received_messages[ 0 ] == note_on( 0, 1, velocity ) );
-                            REQUIRE( received_messages[ 1 ] == note_off( 0, 1, velocity ) );
-                            REQUIRE( received_messages[ 2 ] == note_on( 0, 2, velocity ) );
+                            REQUIRE( received_messages[ 0 ] ==
+                                     note_on( 0, to_uint8_t( first_note ), first_velocity ) );
+                            REQUIRE( received_messages[ 1 ] ==
+                                     note_off( 0, to_uint8_t( first_note ), first_velocity ) );
+                            REQUIRE( received_messages[ 2 ] ==
+                                     note_on( 0, to_uint8_t( second_note ), second_velocity ) );
                         }
                     }
                 }
@@ -597,10 +625,14 @@ SCENARIO( "tracks_t, that is triggered by a midi clock, plays 4 beats", "[track]
 
         constexpr auto steps = 16u;
         auto midi_track = make_tracks( 1, steps );
-        const auto note_1 = note_t{1};
-        const auto note_2 = note_t{42};
-        midi_track[ 0 ][ 0 ] = note_1;
-        midi_track[ 0 ][ 4 ] = note_2;
+        const auto first_note = note_t{1};
+        const auto first_velocity = std::uint8_t{80};
+        const auto first_step = step_t{first_note, first_velocity};
+        const auto second_note = note_t{2};
+        const auto second_velocity = std::uint8_t{50};
+        const auto second_step = step_t{second_note, second_velocity};
+        midi_track[ 0 ][ 0 ] = first_step;
+        midi_track[ 0 ][ 4 ] = second_step;
         underlying_clock_type testing_clock;
         sequencer_clock_type sequencer_clock{testing_clock};
 
@@ -635,7 +667,8 @@ SCENARIO( "tracks_t, that is triggered by a midi clock, plays 4 beats", "[track]
             THEN( "one note on message is send" )
             {
                 REQUIRE( received_messages.size() == 1 );
-                CHECK( received_messages.front() == note_on( 0, to_uint8_t( note_1 ), velocity ) );
+                CHECK( received_messages.front() ==
+                       note_on( 0, to_uint8_t( first_note ), first_velocity ) );
             }
         }
 
@@ -647,17 +680,18 @@ SCENARIO( "tracks_t, that is triggered by a midi clock, plays 4 beats", "[track]
             THEN( "one note on message is send" )
             {
                 REQUIRE( received_messages.size() == 3 );
-                CHECK( received_messages[ 0 ] == note_on( 0, to_uint8_t( note_1 ), velocity ) );
+                CHECK( received_messages[ 0 ] ==
+                       note_on( 0, to_uint8_t( first_note ), first_velocity ) );
 
                 AND_THEN( "one note off message is send" )
                 {
                     CHECK( received_messages[ 1 ] ==
-                           note_off( 0, to_uint8_t( note_1 ), velocity ) );
+                           note_off( 0, to_uint8_t( first_note ), first_velocity ) );
 
                     AND_THEN( "one note on message is send" )
                     {
                         CHECK( received_messages[ 2 ] ==
-                               note_on( 0, to_uint8_t( note_2 ), velocity ) );
+                               note_on( 0, to_uint8_t( second_note ), second_velocity ) );
                     }
                 }
             }
@@ -671,7 +705,8 @@ SCENARIO( "tracks_t, that is triggered by a midi clock, plays 4 beats", "[track]
             THEN( "one note on message is send" )
             {
                 REQUIRE( received_messages.size() == 1 );
-                CHECK( received_messages.front() == note_on( 0, to_uint8_t( note_1 ), velocity ) );
+                CHECK( received_messages.front() ==
+                       note_on( 0, to_uint8_t( first_note ), first_velocity ) );
             }
 
             WHEN( "midi clock is stopped" )
@@ -695,7 +730,7 @@ SCENARIO( "tracks_t, that is triggered by a midi clock, plays 4 beats", "[track]
                     {
                         REQUIRE( received_messages.size() == 3 );
                         CHECK( received_messages[ 2 ] ==
-                               note_on( 0, to_uint8_t( note_2 ), velocity ) );
+                               note_on( 0, to_uint8_t( second_note ), second_velocity ) );
                     }
                 }
 
@@ -713,17 +748,17 @@ SCENARIO( "tracks_t, that is triggered by a midi clock, plays 4 beats", "[track]
                     {
                         REQUIRE( received_messages.size() == 5 );
                         CHECK( received_messages[ 2 ] ==
-                               note_on( 0, to_uint8_t( note_1 ), velocity ) );
+                               note_on( 0, to_uint8_t( first_note ), first_velocity ) );
 
                         AND_THEN( "one note off message is send" )
                         {
                             CHECK( received_messages[ 3 ] ==
-                                   note_off( 0, to_uint8_t( note_1 ), velocity ) );
+                                   note_off( 0, to_uint8_t( first_note ), first_velocity ) );
 
                             AND_THEN( "one note on message is send" )
                             {
                                 CHECK( received_messages[ 4 ] ==
-                                       note_on( 0, to_uint8_t( note_2 ), velocity ) );
+                                       note_on( 0, to_uint8_t( second_note ), second_velocity ) );
                             }
                         }
                     }

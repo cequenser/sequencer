@@ -12,7 +12,7 @@ namespace qt
     {
         Q_OBJECT
     public:
-        explicit poti_t( QGroupBox* box = nullptr );
+        explicit poti_t( QWidget* parent = nullptr );
 
         void update( int value );
 

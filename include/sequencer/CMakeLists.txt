@@ -17,9 +17,9 @@ add_library(sequencer
     backend/digitakt.hpp
     midi/clock.hpp
     midi/clock_base.hpp
-    midi/note.hpp
     midi/pattern.hpp
     midi/percussion_key.hpp
+    midi/step.hpp
     midi/track.hpp
     midi/message/channel_voice.hpp
     midi/message/message_type.hpp

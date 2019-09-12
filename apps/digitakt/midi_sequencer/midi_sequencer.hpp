@@ -32,10 +32,19 @@ public slots:
     void change_track();
     void sequencer_step_changed( int idx );
 
+    void trig_selected();
+    void source_selected();
+    void filter_selected();
+    void amp_selected();
+    void lfo_selected();
+
+    void control_poti_changed( int id, double value );
+
 private:
     void scan_available_ports();
     void update_sequencer_steps();
     void update_buttons();
+    void update_potis();
 
     RtMidiOut midiout_;
     sequencer::backend::digitakt backend_;

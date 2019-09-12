@@ -11,7 +11,7 @@
 
 namespace qt
 {
-    poti_t::poti_t( QGroupBox* box ) : QGroupBox( box )
+    poti_t::poti_t( QWidget* parent ) : QGroupBox( parent )
     {
         auto layout = new QVBoxLayout;
         dial_ = new QDial;

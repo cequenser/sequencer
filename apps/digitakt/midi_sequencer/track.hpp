@@ -7,10 +7,15 @@
 #include <QCheckBox>
 #include <QGroupBox>
 #include <QLabel>
-#include <QLayout>
 
 namespace qt
 {
+    enum class track_mode
+    {
+        sequencer,
+        select
+    };
+
     class track_t : public QGroupBox
     {
         Q_OBJECT
@@ -30,6 +35,15 @@ namespace qt
             {
                 signal_blocker_t signal_blocker{( *this )[ i ]};
                 ( *this )[ i ].setChecked( f( i ) );
+            }
+        }
+
+        template < class F >
+        void enable( F f )
+        {
+            for ( auto i = 0; i < fixed_size(); ++i )
+            {
+                ( *this )[ i ].setEnabled( f( i ) );
             }
         }
 
@@ -54,6 +68,8 @@ namespace qt
 
         void update();
 
+        void set_mode( track_mode mode ) noexcept;
+
     public slots:
         void step_changed( int i );
         void page_changed();
@@ -67,5 +83,6 @@ namespace qt
         int current_page_{0};
         int page_count_{1};
         int size_{16};
+        track_mode mode_ = track_mode::sequencer;
     };
 } // namespace qt

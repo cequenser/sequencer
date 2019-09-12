@@ -4,7 +4,7 @@
 #include <sequencer/midi/message/channel_voice.hpp>
 #include <sequencer/midi/message/message_type.hpp>
 #include <sequencer/midi/message/realtime.hpp>
-#include <sequencer/midi/note.hpp>
+#include <sequencer/midi/step.hpp>
 
 #include <algorithm>
 #include <atomic>
@@ -14,21 +14,22 @@
 namespace sequencer::midi
 {
     constexpr std::size_t default_pulses_per_quarter_note = 24;
-    using track_base_t = std::vector< std::atomic< note_t > >;
+    using track_base_t = std::vector< step_t >;
 
     inline void copy_track( const track_base_t& from, track_base_t& to ) noexcept
     {
         const auto size = std::min( from.size(), to.size() );
         for ( auto step = std::size_t{0}; step < size; ++step )
         {
-            to[ step ] = from[ step ].load();
+            to[ step ] = from[ step ];
         }
     }
 
     class track_t
     {
     public:
-        using size_type = typename track_base_t::size_type;
+        using value_type = track_base_t::value_type;
+        using size_type = track_base_t::size_type;
 
         constexpr track_t() noexcept = default;
 
@@ -76,20 +77,20 @@ namespace sequencer::midi
                 for ( size_type new_step = track_.size(); new_step < new_steps; ++new_step )
                 {
                     new_track[ new_step ] = ( copy_offset && new_step >= copy_offset )
-                                                ? new_track[ new_step - copy_offset ].load()
-                                                : no_note();
+                                                ? new_track[ new_step - copy_offset ]
+                                                : step_t{};
                 }
             }
 
             track_ = std::move( new_track );
         }
 
-        std::atomic< note_t >& operator[]( size_type i ) noexcept
+        value_type& operator[]( size_type i ) noexcept
         {
             return track_[ i ];
         }
 
-        const std::atomic< note_t >& operator[]( size_type i ) const noexcept
+        const value_type& operator[]( size_type i ) const noexcept
         {
             return track_[ i ];
         }
@@ -97,9 +98,9 @@ namespace sequencer::midi
         void clear() noexcept
         {
             std::lock_guard lock( mutex_ );
-            for ( auto& note : track_ )
+            for ( auto& step : track_ )
             {
-                note = no_note();
+                step = step_t{};
             }
         }
 
@@ -115,7 +116,7 @@ namespace sequencer::midi
         }
 
         template < class Sender >
-        void send_messages( std::size_t step, const Sender& sender ) const
+        void send_messages( std::size_t idx, const Sender& sender ) const
         {
             if ( is_muted() )
             {
@@ -123,17 +124,17 @@ namespace sequencer::midi
             }
 
             std::lock_guard lock( mutex_ );
-            const auto note = track_[ step ].load();
-            if ( note != no_note() )
+            const auto& step = track_[ idx ];
+            if ( step.is_active() )
             {
-                if ( last_note_ != no_note() )
+                if ( last_step_.is_active() )
                 {
-                    sender( channel::voice::note_off( channel(), to_uint8_t( last_note_ ),
-                                                      velocity_ ) );
+                    sender( channel::voice::note_off( channel(), get_note( last_step_ ),
+                                                      get_velocity( last_step_ ) ) );
                 }
-
-                sender( channel::voice::note_on( channel(), to_uint8_t( note ), velocity_ ) );
-                last_note_ = note;
+                sender(
+                    channel::voice::note_on( channel(), get_note( step ), get_velocity( step ) ) );
+                last_step_ = step;
             }
         }
 
@@ -141,7 +142,7 @@ namespace sequencer::midi
         void send_all_notes_off_message( const Sender& sender ) const
         {
             sender( channel::voice::all_notes_off( channel() ) );
-            last_note_ = no_note();
+            last_step_ = step_t{};
         }
 
         constexpr void mute( bool do_mute = true ) noexcept
@@ -154,11 +155,39 @@ namespace sequencer::midi
             return is_muted_;
         }
 
+        constexpr void set_pitch( std::uint8_t pitch ) noexcept
+        {
+            pitch_ = pitch;
+        }
+
+        constexpr void set_velocity( std::uint8_t velocity ) noexcept
+        {
+            velocity_ = velocity;
+        }
+
+        constexpr std::uint8_t velocity() const noexcept
+        {
+            return velocity_;
+        }
+
     private:
+        std::uint8_t get_note( const step_t& step ) const noexcept
+        {
+            return step.note() ? to_uint8_t( step.note()->load() )
+                               : ( to_uint8_t( base_note_ ) + pitch_ );
+        }
+
+        std::uint8_t get_velocity( const step_t& step ) const noexcept
+        {
+            return step.velocity() ? step.velocity()->load() : velocity();
+        }
+
         track_base_t track_{};
-        mutable note_t last_note_{no_note()};
+        mutable step_t last_step_{};
         mutable std::mutex mutex_;
         std::uint8_t channel_{0};
+        note_t base_note_{64};
+        std::uint8_t pitch_{0};
         std::uint8_t velocity_{100};
         bool is_muted_{false};
     };

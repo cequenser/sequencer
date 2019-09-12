@@ -1,6 +1,7 @@
 #pragma once
 
 #include <atomic>
+#include <cassert>
 #include <cstdint>
 #include <limits>
 #include <optional>
@@ -21,6 +22,17 @@ namespace sequencer::midi
     constexpr std::uint8_t to_uint8_t( note_t note ) noexcept
     {
         return static_cast< std::uint8_t >( note );
+    }
+
+    constexpr note_t operator+( note_t note, std::int16_t offset )
+    {
+        assert( to_uint8_t( note ) + offset < 128 );
+        return note_t{std::uint8_t( to_uint8_t( note ) + offset )};
+    }
+
+    constexpr std::int16_t get_note_distance( note_t lhs, note_t rhs ) noexcept
+    {
+        return to_uint8_t( rhs ) - to_uint8_t( lhs );
     }
 
     class step_t

@@ -12,7 +12,7 @@
 #include <QHBoxLayout>
 #include <QLineEdit>
 #include <cassert>
-
+#include <iostream>
 using sequencer::backend::digitakt_control_mode;
 using sequencer::backend::digitakt_mode;
 
@@ -265,19 +265,31 @@ void midi_sequencer::update_potis()
     {
     case digitakt_control_mode::trig:
     {
+        const auto& current_track = backend_.current_track();
         if ( backend_.mode() == digitakt_mode::step_select )
         {
-            const auto& step_velocity =
-                backend_.current_track()[ backend_.current_step() ].velocity();
-            const auto velocity =
-                step_velocity ? step_velocity->load() : backend_.current_track().velocity();
-            ( *ui->control_box )[ velocity_index ].line_edit().setText(
-                QString::number( velocity ) + ".0" );
+            const auto& step_note = current_track[ backend_.current_step() ].note();
+            auto half_note_difference =
+                step_note ? get_note_distance( current_track.base_note(), step_note->load() )
+                          : current_track.note_offset();
+            ( *ui->control_box )[ note_index ].update( half_note_difference );
+            //            ( *ui->control_box )[ note_index ].line_edit().setText(
+            //                QString::number( half_note_difference ) + ".0" );
+
+            const auto& step_velocity = current_track[ backend_.current_step() ].velocity();
+            const auto velocity = step_velocity ? step_velocity->load() : current_track.velocity();
+            ( *ui->control_box )[ velocity_index ].update( velocity );
+            //            ( *ui->control_box )[ velocity_index ].line_edit().setText(
+            //                QString::number( velocity ) + ".0" );
             return;
         }
 
-        ( *ui->control_box )[ velocity_index ].line_edit().setText(
-            QString::number( backend_.current_track().velocity() ) + ".0" );
+        ( *ui->control_box )[ note_index ].update( current_track.note_offset() );
+        ( *ui->control_box )[ velocity_index ].update( current_track.velocity() );
+        //        ( *ui->control_box )[ note_index ].line_edit().setText(
+        //            QString::number( current_track.note_offset() ) + ".0" );
+        //        ( *ui->control_box )[ velocity_index ].line_edit().setText(
+        //            QString::number( current_track.velocity() ) + ".0" );
         return;
     }
     }

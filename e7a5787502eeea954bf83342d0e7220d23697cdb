@@ -1,0 +1,24 @@
+{
+  "comments": [
+    {
+      "robotId": "g++-8",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/psv-gcc/637/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "1bbc2c0b_87a2d257",
+        "filename": "include/sequencer/midi/track.hpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-09-12T20:31:20Z",
+      "side": 1,
+      "message": "include/sequencer/midi/track.hpp:178:45: error: call to non-\u0027constexpr\u0027 function \u0027uint8_t sequencer::midi::track_t::note_offset() const\u0027\n             return base_note() + note_offset();\n                                  ~~~~~~~~~~~^~",
+      "revId": "e7a5787502eeea954bf83342d0e7220d23697cdb",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}

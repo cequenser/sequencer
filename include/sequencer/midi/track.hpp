@@ -155,14 +155,29 @@ namespace sequencer::midi
             return is_muted_;
         }
 
-        constexpr void set_pitch( std::uint8_t pitch ) noexcept
+        constexpr void set_note_offset( std::uint8_t offset ) noexcept
         {
-            pitch_ = pitch;
+            note_offset_ = offset;
+        }
+
+        constexpr std::uint8_t note_offset() const noexcept
+        {
+            return note_offset_;
         }
 
         constexpr void set_velocity( std::uint8_t velocity ) noexcept
         {
             velocity_ = velocity;
+        }
+
+        constexpr note_t base_note() const noexcept
+        {
+            return base_note_;
+        }
+
+        constexpr note_t note() const noexcept
+        {
+            return base_note() + note_offset();
         }
 
         constexpr std::uint8_t velocity() const noexcept
@@ -174,7 +189,7 @@ namespace sequencer::midi
         std::uint8_t get_note( const step_t& step ) const noexcept
         {
             return step.note() ? to_uint8_t( step.note()->load() )
-                               : ( to_uint8_t( base_note_ ) + pitch_ );
+                               : ( to_uint8_t( base_note_ ) + note_offset_ );
         }
 
         std::uint8_t get_velocity( const step_t& step ) const noexcept
@@ -187,7 +202,7 @@ namespace sequencer::midi
         mutable std::mutex mutex_;
         std::uint8_t channel_{0};
         note_t base_note_{64};
-        std::uint8_t pitch_{0};
+        std::uint8_t note_offset_{0};
         std::uint8_t velocity_{100};
         bool is_muted_{false};
     };

@@ -13,6 +13,7 @@ add_executable(tests
     sequencer/backend/digitakt_test.cpp
     sequencer/midi/clock_test.cpp
     sequencer/midi/clock_base_test.cpp
+    sequencer/midi/device_spec_test.cpp
     sequencer/midi/lfo_test.cpp
     sequencer/midi/pattern_test.cpp
     sequencer/midi/track_test.cpp
@@ -31,6 +32,14 @@ target_include_directories(tests PRIVATE
   ${PROJECT_SOURCE_DIR}/external/include)
 target_link_libraries(tests PRIVATE Sequencer::Sequencer)
 target_compile_definitions(tests PRIVATE CATCH_CONFIG_ENABLE_ALL_STRINGMAKERS)
-add_test(NAME tests COMMAND tests)
-add_test(NAME tests-random COMMAND tests --order rand)
-add_test(NAME tests-lex COMMAND tests --order lex)
+add_test(NAME tests COMMAND tests WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+add_test(NAME tests-random COMMAND tests --order rand WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+add_test(NAME tests-lex COMMAND tests --order lex WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+
+file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/device_spec)
+add_custom_command(
+        TARGET tests POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+                ${CMAKE_SOURCE_DIR}/device_spec/
+                ${CMAKE_BINARY_DIR}/device_spec/
+)

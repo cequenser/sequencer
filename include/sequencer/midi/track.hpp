@@ -26,7 +26,18 @@ namespace sequencer::midi
         }
     }
 
-    class track_t
+    struct track_parameter_t
+    {
+        std::array< std::uint8_t, 8 > trig_parameter{0, 100, 0, 0, 1, 1, 1, 0};
+        std::array< std::uint8_t, 8 > source_parameter{0, 0, 0, 0, 0, 120, 0, 100};
+        std::array< std::uint8_t, 8 > filter_parameter{0, 0, 0, 0, 127, 0, 0, 0};
+        std::array< std::uint8_t, 8 > amp_parameter{0, 0, 0, 0, 0, 0, 0, 100};
+        std::array< std::uint8_t, 8 > lfo_parameter{0, 0, 0, 0, 0, 0, 0, 0};
+        std::array< std::uint8_t, 8 > delay_parameter{0, 0, 0, 0, 0, 0, 0, 100};
+        std::array< std::uint8_t, 8 > reverb_parameter{0, 0, 0, 0, 0, 0, 0, 100};
+    };
+
+    class track_t : public track_parameter_t
     {
     public:
         using value_type = track_base_t::value_type;

@@ -6,6 +6,7 @@
 #include <QLineEdit>
 #include <QString>
 #include <QVBoxLayout>
+#include <cmath>
 #include <iomanip>
 #include <sstream>
 
@@ -33,9 +34,9 @@ namespace qt
 
     void poti_t::update( int value )
     {
-        const auto real_value = double( value ) / floating_factor_;
+        const auto real_value = double( value ) / std::pow( 10, decimals_ );
         std::stringstream stream;
-        stream << std::setprecision( 1 ) << std::fixed << real_value;
+        stream << std::setprecision( decimals_ ) << std::fixed << real_value;
         line_edit().setText( QString( stream.str().c_str() ) + suffix_ );
         {
             signal_blocker_t signal_blocker( dial() );
@@ -44,7 +45,7 @@ namespace qt
 
         old_value_ = value;
 
-        emit value_changed( real_value );
+        emit value_changed( value );
     }
 
     void poti_t::set_suffix( const QString& suffix )
@@ -52,16 +53,10 @@ namespace qt
         suffix_ = suffix;
     }
 
-    void poti_t::set_floating_factor( int factor )
+    void poti_t::set_decimals( int decimals )
     {
-        floating_factor_ = factor;
+        decimals_ = decimals;
     }
-
-    void poti_t::set_threshold( int threshold )
-    {
-        threshold_ = threshold;
-    }
-
     QDial& poti_t::dial()
     {
         return *dial_;
@@ -74,7 +69,8 @@ namespace qt
 
     void poti_t::update_from_dial( int value )
     {
-        if ( std::abs( value - old_value_ ) > threshold_ )
+        const auto threshold = std::max( ( dial().maximum() - dial().minimum() ) / 6, 6 );
+        if ( std::abs( value - old_value_ ) > threshold )
         {
             if ( old_value_ == dial().minimum() || old_value_ == dial().maximum() )
             {
@@ -90,7 +86,8 @@ namespace qt
     {
         auto value = line_edit().text();
         bool is_double = true;
-        auto x = int( value.remove( suffix_ ).trimmed().toDouble( &is_double ) * floating_factor_ );
+        auto x = int( value.remove( suffix_ ).trimmed().toDouble( &is_double ) *
+                      std::pow( 10, decimals_ ) );
         if ( !is_double )
         {
             x = old_value_;

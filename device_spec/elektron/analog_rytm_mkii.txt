@@ -1,0 +1,88 @@
+trig
+note:3:-24:24:0
+velocity:4:0:127:100
+length:5:0:127:0
+synth:11:0:1:1
+sample:12:0:1:1
+env:13:0:1:1
+lfo:14:0:1:0
+source
+param 1:16:0:127:0
+param 2:17:0:127:0
+param 3:18:0:127:0
+param 4:19:0:127:0
+param 5:20:0:127:0
+param 6:21:0:127:0
+param 7:22:0:127:0
+param 8:23:0:127:100
+filter
+attack:70:0:127:0
+decay:71:0:127:0
+sustain:72:0:127:0
+release:73:0:127:0
+freq:74:0:127:127
+res:75:0:127:0
+mode:76:0:6:0
+env depth:77:-64:63:0
+amp
+attack:78:0:127:0
+hold:79:0:127:0
+decay:80:0:127:0
+over:81:0:127:0
+delay:82:0:127:0
+reverb:83:0:127:0
+pan:10:-64:63:0
+volume:7:0:127:100
+lfo
+speed:102:-64:63:0
+mult:103:0:23:0
+fade:104:-64:63:0
+dest:105:0:127:0
+wave:106:0:6:0
+start:107:0:127:64
+trig:108:0:4:0
+depth:109,118:-12800:12799:0:2
+delay
+time:16:1:128:16
+pingpong:17:0:1:0
+stereo:18:-64:63:0
+feedback:19:1:198:1
+highpass:20:0:127:0
+lowpass:21:0:127:127
+reverb:22:0:127:0
+volume:23:0:127:0
+reverb
+predelay:24:0:127:0
+decay:25:0:127:0
+freq:26:0:127:0
+gain:27:0:127:0
+hpf:28:0:127:0
+lpf:29:0:127:127
+volume:31:0:127:0
+fx dist
+amount:70:0:127:0
+symmetry:71:-64:63:0
+over:72:0:127:0
+delay:76:0:1:0
+reverb:77:0:1:0
+fx comp
+threshold:78:0:127:0
+attack:79:0:6:0
+release:80:0:7:0
+makeup:81:0:127:0
+ratio:82:0:3:0
+seq:83:0:3:0
+mix:84:0:127:0
+volume:85:0:127:0
+fx lfo
+speed:102:-64:63:0
+mult:103:0:23:0
+fade:104:-64:63:0
+dest:105:0:127:0
+wave:106:0:6:0
+start:107:0:127:64
+trig:108:0:4:0
+depth:109,118:-12800:12799:0:2
+
+
+

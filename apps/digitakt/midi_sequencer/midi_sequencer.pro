@@ -30,7 +30,6 @@ SOURCES += \
         main.cpp \
         midi_sequencer.cpp \
         poti.cpp \
-        poti_backend_connector.cpp \
         poti_group.cpp \
         scale_dialog.cpp \
         track.cpp \
@@ -39,7 +38,6 @@ SOURCES += \
 HEADERS += \
         midi_sequencer.hpp \
         poti.hpp \
-        poti_backend_connector.hpp \
         poti_group.hpp \
         scale_dialog.hpp \
         signal_blocker.hpp \
@@ -49,12 +47,18 @@ HEADERS += \
 FORMS += \
         midi_sequencer.ui
 
-INCLUDEPATH += /home/lars/Projects/sequencer/include \
-    /home/lars/Projects/sequencer/external/repo/rtmidi \
-    /home/lars/Projects/sequencer/external/repo/portaudio/include
+INCLUDEPATH += $$PWD/../../../include \
+    $$PWD/../../../external/repo/rtmidi \
+    $$PWD/../../../external/repo/portaudio/include
 
 LIBS += -lrtmidi -lportaudio
-LIBS += -L"/home/lars/Projects/sequencer/build4/lib"
+LIBS += -L"$$PWD/../../../build4/lib"
+
+device_specs.commands = $(COPY_DIR) $$PWD/../../../device_spec $$OUT_PWD
+midi_sequencer.depends = $(midi_sequencer) device_specs
+export(midi_sequencer.depends)
+export(device_specs.commands)
+QMAKE_EXTRA_TARGETS += midi_sequencer device_specs
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

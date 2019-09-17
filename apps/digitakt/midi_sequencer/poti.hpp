@@ -17,15 +17,14 @@ namespace qt
         void update( int value );
 
         void set_suffix( const QString& suffix );
-        void set_floating_factor( int factor );
-        void set_threshold( int threshold );
+        void set_decimals( int decimals );
 
         QDial& dial();
 
         QLineEdit& line_edit();
 
     signals:
-        void value_changed( double );
+        void value_changed( int );
 
     private:
         void update_from_dial( int value );
@@ -35,8 +34,7 @@ namespace qt
         QDial* dial_{nullptr};
         QLineEdit* line_edit_{nullptr};
         QString suffix_{};
-        int floating_factor_ = 1;
+        int decimals_ = 0;
         int old_value_ = 0;
-        int threshold_ = std::numeric_limits< int >::max();
     };
 } // namespace qt

@@ -1,9 +1,12 @@
 #pragma once
 
 #include <sequencer/midi/device_spec.hpp>
+#include <sequencer/midi/message/message_type.hpp>
 #include <sequencer/midi/pattern.hpp>
 #include <sequencer/midi/track.hpp>
+#include <sequencer/rtmidi/util.hpp>
 
+#include <cassert>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -34,6 +37,37 @@ namespace sequencer::backend
         master
     };
 
+    inline midi::device_spec_cc_t get_spec( const std::string& spec_filename )
+    {
+        auto spec_file = std::ifstream( spec_filename );
+        if ( !spec_file.is_open() )
+        {
+            std::cerr << "Error: Could not open device specification file.\n";
+            return {};
+        }
+        return midi::read_device_spec_cc( spec_file );
+    }
+
+    template < class Clock, class Backend, class Sender >
+    class backend_t : public Sender, public Backend, public Clock
+    {
+    public:
+        backend_t()
+            : Sender{}, Backend{get_spec( "device_spec/elektron/digitakt.txt" )},
+              Clock( [this]( midi::message_t< 1 > message ) {
+                  using rtmidi::message_sender;
+                  Sender::sender()( message );
+                  Backend::receive_clock_message( message, Sender::sender() );
+              } )
+        {
+        }
+
+        void set_control( int id, int value ) noexcept
+        {
+            Backend::set_control( id, value, Sender::sender() );
+        }
+    };
+
     class digitakt
     {
     public:
@@ -41,16 +75,11 @@ namespace sequencer::backend
         using patterns_t = std::vector< pattern_t >;
         using banks_t = std::vector< patterns_t >;
 
-        explicit digitakt( const std::string& spec_filename = "device_spec/elektron/digitakt.txt" )
+        explicit digitakt( const midi::device_spec_cc_t& device_spec = midi::device_spec_cc_t{} )
             : banks_( 16,
-                      patterns_t( 16, midi::make_pattern< midi::sequencer_track_t >( 16, 16 ) ) )
+                      patterns_t( 16, midi::make_pattern< midi::sequencer_track_t >( 16, 16 ) ) ),
+              device_spec_{device_spec}
         {
-            auto spec_file = std::ifstream( spec_filename );
-            if ( !spec_file.is_open() )
-            {
-                std::cerr << "Error: Could not open device specification file.\n";
-            }
-            device_spec_ = sequencer::midi::read_device_spec_cc( spec_file );
         }
 
         void set_step( int idx, bool value = true ) noexcept

@@ -66,13 +66,4 @@ namespace sequencer::rtmidi
     private:
         RtMidiOut& rtmidiout_;
     };
-
-    inline auto make_clock()
-    {
-        using underlying_clock_type =
-            sequencer::chrono::clock_object_adapter< std::chrono::steady_clock >;
-        using sequencer_clock_type = sequencer::chrono::sequencer_clock< underlying_clock_type >;
-
-        return sequencer::midi::clock{sequencer_clock_type{underlying_clock_type{}}};
-    }
 } // namespace sequencer::rtmidi

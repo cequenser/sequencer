@@ -1,6 +1,8 @@
 #pragma once
 
+#include <sequencer/backend/clock.hpp>
 #include <sequencer/backend/digitakt.hpp>
+#include <sequencer/backend/rtmidi.hpp>
 #include <sequencer/rtmidi/util.hpp>
 
 #include <QMainWindow>
@@ -48,10 +50,9 @@ private:
     void update_buttons();
     void update_potis();
 
-    RtMidiOut midiout_;
-    sequencer::backend::digitakt backend_;
-    decltype( sequencer::rtmidi::make_clock() ) clock_;
-    std::future< void > clock_done_;
+    sequencer::backend::backend_t< sequencer::backend::clock_t, sequencer::backend::digitakt,
+                                   sequencer::backend::rtmidi_t >
+        backend_{};
     Ui::midi_sequencer* ui;
     int old_clock_dial_value_ = 1200;
     int page_ = 0;

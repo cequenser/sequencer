@@ -2,6 +2,8 @@
 
 #include <sequencer/beat_duration.hpp>
 #include <sequencer/beats_per_minute.hpp>
+#include <sequencer/chrono/chrono_adapter.hpp>
+#include <sequencer/chrono/sequencer_clock.hpp>
 #include <sequencer/midi/clock_base.hpp>
 
 #include <future>
@@ -108,6 +110,14 @@ namespace sequencer::midi
         beats_per_minute tempo_{120.0_bpm};
         bool shut_down_{false};
     };
+
+    inline auto make_clock()
+    {
+        using underlying_clock_type = chrono::clock_object_adapter< std::chrono::steady_clock >;
+        using sequencer_clock_type = chrono::sequencer_clock< underlying_clock_type >;
+
+        return clock{sequencer_clock_type{underlying_clock_type{}}};
+    }
 
     template < class MidiClock, class Sender >
     auto start_clock_in_thread( MidiClock& midi_clock, const Sender& sender )

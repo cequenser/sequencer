@@ -14,7 +14,9 @@ add_library(sequencer
     audio/fft.hpp
     audio/sample.hpp
     audio/transfer_function.hpp
+    backend/clock.hpp
     backend/digitakt.hpp
+    backend/rtmidi.hpp
     midi/clock.hpp
     midi/clock_base.hpp
     midi/constants.hpp

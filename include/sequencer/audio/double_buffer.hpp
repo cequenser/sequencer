@@ -63,7 +63,7 @@ namespace sequencer::audio
         using size_type = sample_t::size_type;
 
         explicit double_buffer_reader_t( double_buffer_t& buffer ) noexcept
-            : current_buffer_t{}, sample_read_write_base_t{current_buffer_}, buffer_{buffer}
+            : sample_read_write_base_t{current_buffer_}, buffer_{buffer}
         {
         }
 

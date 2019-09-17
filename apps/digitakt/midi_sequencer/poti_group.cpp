@@ -21,7 +21,6 @@ namespace qt
             poti->dial().setMaximum( 127 );
             poti->dial().setNotchTarget( 8 );
             poti->dial().setNotchesVisible( true );
-            poti->set_threshold( 10 );
             layout->addWidget( poti, i / row_size, i % row_size );
         }
 

@@ -17,6 +17,8 @@ class midi_sequencer : public QMainWindow
 {
     Q_OBJECT
 
+    static constexpr auto number_of_control_potis = 8u;
+
 public:
     explicit midi_sequencer( QWidget* parent = nullptr );
     ~midi_sequencer();
@@ -24,7 +26,7 @@ public:
 public slots:
     void start_clock();
     void stop_clock();
-    void set_clock_bpm( double value );
+    void set_clock_bpm( int value );
     void select_port( int idx );
 
     void change_bank();
@@ -38,7 +40,7 @@ public slots:
     void amp_selected();
     void lfo_selected();
 
-    void control_poti_changed( int id, double value );
+    void control_poti_changed( int id, int value );
 
 private:
     void scan_available_ports();

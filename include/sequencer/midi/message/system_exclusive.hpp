@@ -29,6 +29,26 @@ namespace sequencer::midi::system::exclusive
         return system_exclusive( std::byte{manufacturer_id}, std::forward< Data >( data )... );
     }
 
+    template < class... Data >
+    constexpr message_t< sizeof...( Data ) + 5u > system_exclusive( message_t< 3 > manufacturer_id,
+                                                                    Data&&... data ) noexcept
+    {
+        return {byte::sysex_start,
+                manufacturer_id[ 0 ],
+                manufacturer_id[ 1 ],
+                manufacturer_id[ 2 ],
+                std::byte( std::forward< Data >( data ) )...,
+                byte::sysex_end};
+    }
+
+    template < class... Data >
+    constexpr message_t< sizeof...( Data ) + 5u >
+        system_exclusive( std::array< std::uint8_t, 3 > manufacturer_id, Data&&... data ) noexcept
+    {
+        return system_exclusive( std::byte{manufacturer_id[ 0 ]}, std::byte{manufacturer_id[ 1 ]},
+                                 std::byte{manufacturer_id[ 2 ]}, std::forward< Data >( data )... );
+    }
+
     namespace realtime
     {
         constexpr auto id_byte = std::byte{0x7F};

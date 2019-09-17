@@ -17,6 +17,8 @@ add_library(sequencer
     backend/digitakt.hpp
     midi/clock.hpp
     midi/clock_base.hpp
+    midi/constants.hpp
+    midi/device_spec.hpp
     midi/lfo.hpp
     midi/pattern.hpp
     midi/percussion_key.hpp

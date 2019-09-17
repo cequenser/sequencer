@@ -314,7 +314,7 @@ SCENARIO( "set step in play mode with different track notes", "[digitakt]" )
                         static_cast< std::uint8_t >( received_messages.front()[ 1 ] );
                     AND_WHEN( "first control is changed to +3" )
                     {
-                        backend.set_control( 0, 3 );
+                        backend.set_control( 0, 3, []( auto ) {} );
 
                         AND_WHEN( "13 clock messages are sent" )
                         {
@@ -338,7 +338,7 @@ SCENARIO( "set step in play mode with different track notes", "[digitakt]" )
 
                             AND_WHEN( "first control is changed back to 0" )
                             {
-                                backend.set_control( 0, 0 );
+                                backend.set_control( 0, 0, []( auto ) {} );
 
                                 AND_WHEN( "13 clock messages are sent" )
                                 {
@@ -412,7 +412,7 @@ SCENARIO( "set step in play mode with different track velocities", "[digitakt]" 
 
                     AND_WHEN( "second control is changed to +3" )
                     {
-                        backend.set_control( 1, 3 );
+                        backend.set_control( 1, 3, []( auto ) {} );
 
                         AND_WHEN( "13 clock messages are sent" )
                         {
@@ -436,7 +436,7 @@ SCENARIO( "set step in play mode with different track velocities", "[digitakt]" 
 
                             AND_WHEN( "first control is changed back to 100" )
                             {
-                                backend.set_control( 1, 100 );
+                                backend.set_control( 1, 100, []( auto ) {} );
 
                                 AND_WHEN( "13 clock messages are sent" )
                                 {
@@ -519,7 +519,7 @@ SCENARIO( "set step in play mode with different note velocities", "[digitakt]" )
 
                             AND_WHEN( "the velocity of the fourth step is changed to 80" )
                             {
-                                backend.set_control( 1, 80 );
+                                backend.set_control( 1, 80, []( auto ) {} );
 
                                 AND_WHEN( "19 clock messages are sent" )
                                 {
@@ -584,7 +584,7 @@ SCENARIO( "set step in play mode with different note velocities", "[digitakt]" )
                                         {
                                             CHECK_FALSE( backend.current_track()[ 2 ].velocity() );
                                             CHECK( *backend.current_track()[ 3 ].velocity() == 80 );
-                                            backend.set_control( 1, 90 );
+                                            backend.set_control( 1, 90, []( auto ) {} );
                                             CHECK_FALSE( backend.current_track()[ 2 ].velocity() );
                                             CHECK( *backend.current_track()[ 3 ].velocity() == 80 );
 

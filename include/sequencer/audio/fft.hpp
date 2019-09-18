@@ -21,10 +21,10 @@ namespace sequencer::audio
         std::array< std::vector< std::complex< T > >, 16 > table;
 
         auto size = 2u;
-        for ( auto size_exp = 0u; size_exp < table.size(); ++size_exp )
+        for ( decltype( table.size() ) size_exp = 0; size_exp < table.size(); ++size_exp )
         {
             table[ size_exp ].resize( size );
-            for ( auto k = 0u; k < table[ size_exp ].size(); ++k )
+            for ( decltype( table[ size_exp ].size() ) k = 0; k < table[ size_exp ].size(); ++k )
             {
                 table[ size_exp ][ k ] =
                     std::exp( minus_two_pi< T > * imag< T > * ( T( k ) / size ) );

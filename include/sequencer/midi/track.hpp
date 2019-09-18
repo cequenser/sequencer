@@ -50,6 +50,7 @@ namespace sequencer::midi
             clear();
         }
 
+        // NOLINTNEXTLINE(bugprone-copy-constructor-init)
         track_t( const track_t& other ) : track_{other.track_.size()}
         {
             std::lock_guard lock( other.mutex_ );

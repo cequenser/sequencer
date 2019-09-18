@@ -81,8 +81,8 @@ namespace sequencer::midi
 
         constexpr void set_loop_length( std::size_t loop_length ) noexcept
         {
-            clock_to_step_.set_steps( loop_length ? loop_length
-                                                  : std::numeric_limits< std::size_t >::max() );
+            clock_to_step_.set_steps( loop_length > 0 ? loop_length
+                                                      : std::numeric_limits< std::size_t >::max() );
         }
 
         template < class Sender >

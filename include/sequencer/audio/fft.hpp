@@ -168,8 +168,8 @@ namespace sequencer::audio
         using size_type = typename std::vector< std::complex< T > >::size_type;
 
         assert( x.size() % 2 == 0 );
-        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
         const auto half_result =
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             radix2( reinterpret_cast< const std::vector< std::complex< T > >& >( x ) );
 
         std::vector< std::complex< T > > result( half_result.size() );
@@ -211,8 +211,8 @@ namespace sequencer::audio
         using size_type = typename std::vector< std::complex< T > >::size_type;
 
         assert( x.size() % 2 == 0 );
-        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
         const auto half_result =
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             radix2( reinterpret_cast< const std::vector< std::complex< T > >& >( x ) );
 
         std::vector< T > result( half_result.size() );

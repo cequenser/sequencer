@@ -85,7 +85,7 @@ namespace sequencer::midi
             {
                 for ( size_type new_step = track_.size(); new_step < new_steps; ++new_step )
                 {
-                    new_track[ new_step ] = ( copy_offset && new_step >= copy_offset )
+                    new_track[ new_step ] = ( copy_offset > 0 && new_step >= copy_offset )
                                                 ? new_track[ new_step - copy_offset ]
                                                 : step_t{};
                 }

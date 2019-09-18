@@ -41,6 +41,17 @@ namespace sequencer
             return offset_ + stride_ * i;
         }
 
+        Vector* vector() noexcept
+        {
+            return v_;
+        }
+
+        View* view() noexcept
+        {
+            return view_;
+        }
+
+    private:
         Vector* v_{nullptr};
         View* view_{nullptr};
         const size_type offset_;
@@ -94,8 +105,8 @@ namespace sequencer
 
         T& operator[]( size_type i )
         {
-            return base_type::view_ ? ( *base_type::view_ )[ base_type::idx( i ) ]
-                                    : ( *base_type::v_ )[ base_type::idx( i ) ];
+            return base_type::view() ? ( *base_type::view() )[ base_type::idx( i ) ]
+                                     : ( *base_type::vector() )[ base_type::idx( i ) ];
         }
     };
 } // namespace sequencer

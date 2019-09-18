@@ -282,7 +282,7 @@ namespace sequencer::backend
                                                                       int max ) const noexcept
         {
             const auto spread = max - min;
-            const auto a = ( spread % midi::number_of_values_per_byte )
+            const auto a = ( spread % midi::number_of_values_per_byte > 0 )
                                ? 1 + spread / midi::number_of_values_per_byte
                                : spread / midi::number_of_values_per_byte;
             const auto msb = value / a;

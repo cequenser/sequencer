@@ -16,6 +16,7 @@ add_library(sequencer
     audio/transfer_function.hpp
     backend/clock.hpp
     backend/digitakt.hpp
+    backend/digitakt_parameter.hpp
     backend/rtmidi.hpp
     midi/clock.hpp
     midi/clock_base.hpp
@@ -26,6 +27,7 @@ add_library(sequencer
     midi/percussion_key.hpp
     midi/step.hpp
     midi/track.hpp
+    midi/track_parameter.hpp
     midi/message/channel_voice.hpp
     midi/message/message_type.hpp
     midi/message/realtime.hpp

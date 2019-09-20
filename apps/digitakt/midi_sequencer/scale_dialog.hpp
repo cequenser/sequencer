@@ -44,7 +44,10 @@ namespace qt
     {
         Q_OBJECT
     public:
-        using pattern_t = sequencer::midi::pattern_t< sequencer::midi::sequencer_track_t >;
+        using midi_track_t =
+            sequencer::midi::track_t< sequencer::backend::digitakt_track_parameter_t >;
+        using pattern_t = sequencer::midi::pattern_t< midi_track_t >;
+
         explicit normal_mode_tab_t( pattern_t& pattern, track_t& track, QWidget* parent = nullptr );
 
     private:
@@ -59,9 +62,10 @@ namespace qt
         Q_OBJECT
     public:
         using pattern_t = normal_mode_tab_t::pattern_t;
+
         explicit advanced_mode_tab_t( pattern_t& pattern,
-                                      sequencer::midi::sequencer_track_t& midi_track,
-                                      track_t& track, QWidget* parent = nullptr );
+                                      normal_mode_tab_t::midi_track_t& midi_track, track_t& track,
+                                      QWidget* parent = nullptr );
 
     public slots:
         void loop_length_changed( int length );
@@ -71,7 +75,7 @@ namespace qt
         void on_multiplier_changed( int idx ) override;
 
         pattern_t& pattern_;
-        sequencer::midi::clock_to_step_t< sequencer::midi::track_t >& midi_track_;
+        normal_mode_tab_t::midi_track_t& midi_track_;
     };
 
     class scale_dialog_t : public QDialog
@@ -79,9 +83,9 @@ namespace qt
         Q_OBJECT
     public:
         using pattern_t = normal_mode_tab_t::pattern_t;
-        explicit scale_dialog_t(
-            pattern_t& pattern,
-            sequencer::midi::clock_to_step_t< sequencer::midi::track_t >& current_midi_track,
-            track_t& track, QWidget* parent = nullptr );
+
+        explicit scale_dialog_t( pattern_t& pattern,
+                                 normal_mode_tab_t::midi_track_t& current_midi_track,
+                                 track_t& track, QWidget* parent = nullptr );
     };
 } // namespace qt

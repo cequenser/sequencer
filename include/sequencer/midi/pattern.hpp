@@ -105,7 +105,7 @@ namespace sequencer::midi
     private:
         std::vector< value_type > tracks_;
         std::size_t loop_length_{16};
-        clock_to_step_impl clock_to_step_;
+        clock_to_step_t clock_to_step_;
     };
 
     template < class Track >

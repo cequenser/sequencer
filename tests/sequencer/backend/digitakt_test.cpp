@@ -11,7 +11,7 @@ SCENARIO( "set step in play mode", "[digitakt]" )
 
     GIVEN( "a digitakt backend" )
     {
-        auto backend = digitakt{};
+        auto backend = digitakt{get_spec( "device_spec/elektron/digitakt.txt" )};
         REQUIRE( backend.mode() == digitakt_mode::play );
 
         WHEN( "set_step(2, true) is called" )
@@ -43,7 +43,7 @@ SCENARIO( "set step in mute mode", "[digitakt]" )
 
     GIVEN( "a digitakt backend" )
     {
-        auto backend = digitakt{};
+        auto backend = digitakt{get_spec( "device_spec/elektron/digitakt.txt" )};
         backend.set_mode( digitakt_mode::track_select );
         backend.set_step( 2 );
 
@@ -95,7 +95,7 @@ SCENARIO( "track select", "[digitakt]" )
 
     GIVEN( "a digitakt backend" )
     {
-        auto backend = digitakt{};
+        auto backend = digitakt{get_spec( "device_spec/elektron/digitakt.txt" )};
 
         WHEN( "set_step(2, true) is called" )
         {
@@ -148,7 +148,7 @@ SCENARIO( "pattern select", "[digitakt]" )
 
     GIVEN( "a digitakt backend" )
     {
-        auto backend = digitakt{};
+        auto backend = digitakt{get_spec( "device_spec/elektron/digitakt.txt" )};
 
         WHEN( "set_step(2, true) is called" )
         {
@@ -201,7 +201,7 @@ SCENARIO( "bank select", "[digitakt]" )
 
     GIVEN( "a digitakt backend" )
     {
-        auto backend = digitakt{};
+        auto backend = digitakt{get_spec( "device_spec/elektron/digitakt.txt" )};
         backend.set_mode( digitakt_mode::pattern_select );
         backend.set_step( 2 );
         backend.set_mode( digitakt_mode::track_select );
@@ -280,7 +280,7 @@ SCENARIO( "set step in play mode with different track notes", "[digitakt]" )
 
     GIVEN( "a digitakt backend" )
     {
-        auto backend = digitakt{};
+        auto backend = digitakt{get_spec( "device_spec/elektron/digitakt.txt" )};
         REQUIRE( backend.mode() == digitakt_mode::play );
 
         AND_GIVEN( "with control mode trig" )
@@ -378,7 +378,7 @@ SCENARIO( "set step in play mode with different track velocities", "[digitakt]" 
 
     GIVEN( "a digitakt backend" )
     {
-        auto backend = digitakt{};
+        auto backend = digitakt{get_spec( "device_spec/elektron/digitakt.txt" )};
         REQUIRE( backend.mode() == digitakt_mode::play );
 
         AND_GIVEN( "with control mode trig" )
@@ -406,6 +406,7 @@ SCENARIO( "set step in play mode with different track velocities", "[digitakt]" 
                     THEN( "one message is received with velocity 100" )
                     {
                         REQUIRE( received_messages.size() == 1 );
+                        CHECK( received_messages.front()[ 0 ] == midi::byte::note_on );
                         CHECK( static_cast< std::uint8_t >( received_messages.front()[ 2 ] ) ==
                                100 );
                     }
@@ -476,7 +477,7 @@ SCENARIO( "set step in play mode with different note velocities", "[digitakt]" )
 
     GIVEN( "a digitakt backend" )
     {
-        auto backend = digitakt{};
+        auto backend = digitakt{get_spec( "device_spec/elektron/digitakt.txt" )};
         REQUIRE( backend.mode() == digitakt_mode::play );
 
         AND_GIVEN( "with control mode trig" )
@@ -538,11 +539,7 @@ SCENARIO( "set step in play mode with different note velocities", "[digitakt]" )
                                     THEN( "the velocities are 100 and 80" )
                                     {
                                         CHECK( static_cast< std::uint8_t >(
-                                                   received_messages[ 0 ][ 2 ] ) == 100 );
-                                        CHECK( static_cast< std::uint8_t >(
                                                    received_messages[ 1 ][ 2 ] ) == 100 );
-                                        CHECK( static_cast< std::uint8_t >(
-                                                   received_messages[ 2 ][ 2 ] ) == 100 );
                                         CHECK( static_cast< std::uint8_t >(
                                                    received_messages[ 3 ][ 2 ] ) == 80 );
                                     }
@@ -565,11 +562,7 @@ SCENARIO( "set step in play mode with different note velocities", "[digitakt]" )
                                         THEN( "the velocities are 100 and 80" )
                                         {
                                             CHECK( static_cast< std::uint8_t >(
-                                                       received_messages[ 0 ][ 2 ] ) == 80 );
-                                            CHECK( static_cast< std::uint8_t >(
                                                        received_messages[ 1 ][ 2 ] ) == 100 );
-                                            CHECK( static_cast< std::uint8_t >(
-                                                       received_messages[ 2 ][ 2 ] ) == 100 );
                                             CHECK( static_cast< std::uint8_t >(
                                                        received_messages[ 3 ][ 2 ] ) == 80 );
                                         }
@@ -607,13 +600,7 @@ SCENARIO( "set step in play mode with different note velocities", "[digitakt]" )
                                                 THEN( "the velocities are 80 and 90" )
                                                 {
                                                     CHECK( static_cast< std::uint8_t >(
-                                                               received_messages[ 0 ][ 2 ] ) ==
-                                                           80 );
-                                                    CHECK( static_cast< std::uint8_t >(
                                                                received_messages[ 1 ][ 2 ] ) ==
-                                                           90 );
-                                                    CHECK( static_cast< std::uint8_t >(
-                                                               received_messages[ 2 ][ 2 ] ) ==
                                                            90 );
                                                     CHECK( static_cast< std::uint8_t >(
                                                                received_messages[ 3 ][ 2 ] ) ==
@@ -623,6 +610,99 @@ SCENARIO( "set step in play mode with different note velocities", "[digitakt]" )
                                         }
                                     }
                                 }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+SCENARIO( "set step in play mode with different note lengths", "[digitakt]" )
+{
+    using namespace sequencer;
+    using namespace sequencer::backend;
+    using namespace sequencer::midi::realtime;
+    using namespace sequencer::midi::channel::voice;
+
+    GIVEN( "a digitakt backend" )
+    {
+        auto backend = digitakt{get_spec( "device_spec/elektron/digitakt.txt" )};
+        REQUIRE( backend.mode() == digitakt_mode::play );
+
+        AND_GIVEN( "with control mode trig" )
+        {
+            backend.set_control_mode( digitakt_control_mode::trig );
+            CHECK( backend.control_mode() == digitakt_control_mode::trig );
+
+            WHEN( "the first step is set" )
+            {
+                backend.set_step( 0 );
+
+                AND_WHEN( "six clock messages are send" )
+                {
+                    std::vector< midi::message_t< 3 > > received_messages;
+                    const auto sender = [&received_messages]( const auto& msg ) {
+                        received_messages.push_back( msg );
+                    };
+
+                    backend.receive_clock_message( realtime_start(), sender );
+                    for ( auto i = 0u; i < 6; ++i )
+                    {
+                        backend.receive_clock_message( realtime_clock(), sender );
+                    }
+
+                    THEN( "one note on message is received" )
+                    {
+                        REQUIRE( received_messages.size() == 1 );
+                        CHECK( received_messages[ 0 ][ 0 ] == midi::byte::note_on );
+                    }
+
+                    AND_WHEN( "another clock message is send" )
+                    {
+                        backend.receive_clock_message( realtime_clock(), sender );
+
+                        THEN( "one note off message is received" )
+                        {
+                            REQUIRE( received_messages.size() == 2 );
+                            CHECK( received_messages[ 1 ][ 0 ] == midi::byte::note_off );
+                        }
+                    }
+                }
+
+                AND_WHEN( "step length is set to 1/8 note" )
+                {
+                    backend.set_control( digitakt_track_parameter_t::length_idx, 30,
+                                         []( auto ) {} );
+
+                    AND_WHEN( "12 clock messages are send" )
+                    {
+                        std::vector< midi::message_t< 3 > > received_messages;
+                        const auto sender = [&received_messages]( const auto& msg ) {
+                            received_messages.push_back( msg );
+                        };
+
+                        backend.receive_clock_message( realtime_start(), sender );
+                        for ( auto i = 0u; i < 12; ++i )
+                        {
+                            backend.receive_clock_message( realtime_clock(), sender );
+                        }
+
+                        THEN( "one note on message is received" )
+                        {
+                            REQUIRE( received_messages.size() == 1 );
+                            CHECK( received_messages[ 0 ][ 0 ] == midi::byte::note_on );
+                        }
+
+                        AND_WHEN( "another clock message is send" )
+                        {
+                            backend.receive_clock_message( realtime_clock(), sender );
+
+                            THEN( "one note off message is received" )
+                            {
+                                REQUIRE( received_messages.size() == 2 );
+                                CHECK( received_messages[ 1 ][ 0 ] == midi::byte::note_off );
                             }
                         }
                     }

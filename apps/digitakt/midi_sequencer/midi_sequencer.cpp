@@ -215,37 +215,10 @@ void midi_sequencer::update_buttons()
 
 void midi_sequencer::update_potis()
 {
-    std::array< std::uint8_t, number_of_control_potis >* parameter = nullptr;
-    switch ( backend_.control_mode() )
-    {
-    case digitakt_control_mode::trig:
-        parameter = &backend_.current_track().trig_parameter;
-        break;
-    case digitakt_control_mode::source:
-        parameter = &backend_.current_track().source_parameter;
-        break;
-    case digitakt_control_mode::filter:
-        parameter = &backend_.current_track().filter_parameter;
-        break;
-    case digitakt_control_mode::amp:
-        parameter = &backend_.current_track().amp_parameter;
-        break;
-    case digitakt_control_mode::lfo:
-        parameter = &backend_.current_track().lfo_parameter;
-        break;
-    case digitakt_control_mode::delay:
-        parameter = &backend_.current_track().delay_parameter;
-        break;
-    case digitakt_control_mode::reverb:
-        parameter = &backend_.current_track().reverb_parameter;
-        break;
-    }
-
-    assert( parameter );
     const auto& spec = backend_.spec();
     for ( auto index = 0u; index < number_of_control_potis; ++index )
     {
         init( ( *ui->control_box )[ index ], spec[ index ].min, spec[ index ].max,
-              ( *parameter )[ index ], spec[ index ].name, spec[ index ].decimals );
+              backend_.get_control_value( index ), spec[ index ].name, spec[ index ].decimals );
     }
 }

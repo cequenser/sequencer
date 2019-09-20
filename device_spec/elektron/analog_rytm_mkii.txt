@@ -1,7 +1,7 @@
 trig
 note:3:-24:24:0
 velocity:4:0:127:100
-length:5:0:127:0
+length:5:0:127:14
 synth:11:0:1:1
 sample:12:0:1:1
 env:13:0:1:1

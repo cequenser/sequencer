@@ -113,6 +113,7 @@ namespace sequencer::midi
         std::atomic_bool is_active_{false};
         std::optional< std::atomic< note_t > > note_{};
         std::optional< std::atomic< std::uint8_t > > velocity_{};
+        //        std::optional< std::atomic<double> > length_{};
     };
 
     inline std::ostream& operator<<( std::ostream& os, const step_t& step )

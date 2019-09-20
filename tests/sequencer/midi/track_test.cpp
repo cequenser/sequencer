@@ -1,3 +1,4 @@
+#include <sequencer/backend/digitakt_parameter.hpp>
 #include <sequencer/chrono/sequencer_clock.hpp>
 #include <sequencer/chrono/testing_clock.hpp>
 #include <sequencer/midi/clock.hpp>
@@ -9,14 +10,13 @@
 
 #include <condition_variable>
 
+using sequencer::backend::digitakt_track_parameter_t;
 using sequencer::midi::lfo;
 using sequencer::midi::lfo_mode;
 using sequencer::midi::make_midi_clock_raii_shutdown;
-using sequencer::midi::make_tracks;
 using sequencer::midi::message_t;
 using sequencer::midi::no_note;
 using sequencer::midi::note_t;
-using sequencer::midi::sequencer_track_t;
 using sequencer::midi::step_t;
 using sequencer::midi::track_t;
 using sequencer::midi::channel::voice::all_notes_off;
@@ -35,7 +35,7 @@ SCENARIO( "track_t", "[track]" )
 
     GIVEN( "track_t with 16 steps" )
     {
-        auto track = track_t{number_of_steps};
+        auto track = track_t< digitakt_track_parameter_t >{number_of_steps};
         REQUIRE( track.steps() == number_of_steps );
         REQUIRE( track.channel() == 0u );
         REQUIRE( track[ 0 ] == step_t{} );
@@ -79,11 +79,8 @@ SCENARIO( "track_t", "[track]" )
                     THEN( "send_messages(4,sender) returns note off and note on message" )
                     {
                         track.send_messages( 4, sender );
-                        REQUIRE( received_messages.size() == 3 );
-                        CHECK( received_messages[ 1 ] == note_off( track.channel(),
-                                                                   to_uint8_t( first_note ),
-                                                                   first_velocity ) );
-                        CHECK( received_messages[ 2 ] == note_on( track.channel(),
+                        REQUIRE( received_messages.size() == 2 );
+                        CHECK( received_messages[ 1 ] == note_on( track.channel(),
                                                                   to_uint8_t( second_note ),
                                                                   second_velocity ) );
                     }
@@ -115,11 +112,8 @@ SCENARIO( "track_t", "[track]" )
                             THEN( "send_messages(4,sender) returns note off and note on message" )
                             {
                                 track.send_messages( 4, sender );
-                                REQUIRE( received_messages.size() == 3 );
-                                CHECK( received_messages[ 1 ] == note_off( track.channel(),
-                                                                           to_uint8_t( first_note ),
-                                                                           first_velocity ) );
-                                CHECK( received_messages[ 2 ] == note_on( track.channel(),
+                                REQUIRE( received_messages.size() == 2 );
+                                CHECK( received_messages[ 1 ] == note_on( track.channel(),
                                                                           to_uint8_t( second_note ),
                                                                           second_velocity ) );
                             }
@@ -202,7 +196,7 @@ SCENARIO( "track_t set_steps", "[track]" )
 {
     GIVEN( "an empty track" )
     {
-        auto track = track_t{};
+        auto track = track_t< digitakt_track_parameter_t >{};
 
         WHEN( "number of steps is changed to 3" )
         {
@@ -220,7 +214,7 @@ SCENARIO( "track_t set_steps", "[track]" )
 
     GIVEN( "a track with 4 steps and second step set to note 42" )
     {
-        auto track = track_t{4};
+        auto track = track_t< digitakt_track_parameter_t >{4};
         const auto first_note = note_t{42};
         const auto first_velocity = std::uint8_t{80};
         const auto step = step_t{first_note, first_velocity};
@@ -236,16 +230,6 @@ SCENARIO( "track_t set_steps", "[track]" )
                 REQUIRE( track[ 0 ] == step_t{} );
                 REQUIRE( track[ 1 ] == step );
                 REQUIRE( track[ 2 ] == step_t{} );
-            }
-        }
-
-        WHEN( "number of steps is changed to 3" )
-        {
-            track.set_steps( 0 );
-
-            THEN( "track has 0 steps" )
-            {
-                REQUIRE( track.steps() == 0 );
             }
         }
 
@@ -271,7 +255,7 @@ SCENARIO( "track_t copy", "[track]" )
 {
     GIVEN( "an empty track" )
     {
-        auto track = track_t{};
+        auto track = track_t< digitakt_track_parameter_t >{};
 
         WHEN( "track is copy-constructed" )
         {
@@ -285,7 +269,7 @@ SCENARIO( "track_t copy", "[track]" )
 
         WHEN( "track is copy-assigned to empty track" )
         {
-            auto other = track_t{};
+            auto other = track_t< digitakt_track_parameter_t >{};
             other = track;
 
             THEN( "other track has 0 steps" )
@@ -297,7 +281,7 @@ SCENARIO( "track_t copy", "[track]" )
 
         WHEN( "track is copy-assigned to track with 4 steps" )
         {
-            auto other = track_t{4};
+            auto other = track_t< digitakt_track_parameter_t >{4};
             other = track;
 
             THEN( "other track has 0 steps" )
@@ -310,7 +294,7 @@ SCENARIO( "track_t copy", "[track]" )
 
     GIVEN( "a track_t with 4 steps and note on step 1" )
     {
-        auto track = track_t{4};
+        auto track = track_t< digitakt_track_parameter_t >{4};
         const auto first_note = note_t{42};
         const auto first_velocity = std::uint8_t{80};
         const auto step = step_t{first_note, first_velocity};
@@ -331,7 +315,7 @@ SCENARIO( "track_t copy", "[track]" )
 
         WHEN( "track is copy-assigned to empty track" )
         {
-            auto other = track_t{};
+            auto other = track_t< digitakt_track_parameter_t >{};
             other = track;
 
             THEN( "other track has 4 steps" )
@@ -350,7 +334,7 @@ SCENARIO( "track_t copy", "[track]" )
 
         WHEN( "track is copy-assigned to track with 5 steps" )
         {
-            auto other = track_t{5};
+            auto other = track_t< digitakt_track_parameter_t >{5};
             other = track;
 
             THEN( "other track has 4 steps" )
@@ -388,13 +372,13 @@ SCENARIO( "track_t copy", "[track]" )
     }
 }
 
-SCENARIO( "sequencer_track_t lfo on velocity", "[track]" )
+SCENARIO( "track_t lfo on velocity", "[track]" )
 {
     constexpr auto number_of_steps = 16u;
 
-    GIVEN( "sequencer_track_t with 16 steps" )
+    GIVEN( "track_t with 16 steps" )
     {
-        auto track = sequencer_track_t{number_of_steps};
+        auto track = track_t< digitakt_track_parameter_t >{number_of_steps};
         const auto first_note = note_t{1};
         const auto first_velocity = std::uint8_t{80};
         const auto first_step = step_t{first_note, first_velocity};
@@ -425,7 +409,7 @@ SCENARIO( "sequencer_track_t lfo on velocity", "[track]" )
 
                 THEN( "7 messages are received" )
                 {
-                    REQUIRE( received_messages.size() == 7 );
+                    REQUIRE( received_messages.size() == 8 );
                 }
 
                 THEN( "the first two notes have velocity 127" )
@@ -444,13 +428,13 @@ SCENARIO( "sequencer_track_t lfo on velocity", "[track]" )
     }
 }
 
-SCENARIO( "sequencer_track_t", "[track]" )
+SCENARIO( "track_t triggered by clock", "[track]" )
 {
     constexpr auto number_of_steps = 16u;
 
-    GIVEN( "sequencer_track_t with 16 steps" )
+    GIVEN( "track_t with 16 steps" )
     {
-        auto track = sequencer_track_t{number_of_steps};
+        auto track = track_t< digitakt_track_parameter_t >{number_of_steps};
         const auto first_note = note_t{1};
         const auto first_velocity = std::uint8_t{80};
         const auto first_step = step_t{first_note, first_velocity};
@@ -462,7 +446,7 @@ SCENARIO( "sequencer_track_t", "[track]" )
 
         WHEN( "pulses per quarter note are 24 and steps per beat are 4" )
         {
-            AND_WHEN( "a start and 12 clock messages are send" )
+            AND_WHEN( "a start and 6 clock messages are send" )
             {
                 std::vector< message_t< 3 > > received_messages;
                 const auto sender = [&received_messages]( const auto& msg ) {
@@ -470,7 +454,7 @@ SCENARIO( "sequencer_track_t", "[track]" )
                 };
 
                 track.send_messages( realtime_start(), sender );
-                for ( auto i = 0; i < 12; ++i )
+                for ( auto i = 0; i < 6; ++i )
                 {
                     track.send_messages( realtime_clock(), sender );
                 }
@@ -486,15 +470,26 @@ SCENARIO( "sequencer_track_t", "[track]" )
                     {
                         track.send_messages( realtime_clock(), sender );
 
-                        THEN( "a note off and note on message are send" )
+                        THEN( "a note off message is send" )
                         {
-                            REQUIRE( received_messages.size() == 3 );
-                            REQUIRE( received_messages[ 0 ] ==
-                                     note_on( 0, to_uint8_t( first_note ), first_velocity ) );
+                            REQUIRE( received_messages.size() == 2 );
                             REQUIRE( received_messages[ 1 ] ==
-                                     note_off( 0, to_uint8_t( first_note ), first_velocity ) );
-                            REQUIRE( received_messages[ 2 ] ==
-                                     note_on( 0, to_uint8_t( second_note ), second_velocity ) );
+                                     note_off( 0, to_uint8_t( first_note ), 0 ) );
+                        }
+
+                        WHEN( "another 6 clock messages are send" )
+                        {
+                            for ( auto i = 0; i < 6; ++i )
+                            {
+                                track.send_messages( realtime_clock(), sender );
+                            }
+
+                            THEN( "a note on message is send" )
+                            {
+                                REQUIRE( received_messages.size() == 3 );
+                                REQUIRE( received_messages[ 2 ] ==
+                                         note_on( 0, to_uint8_t( second_note ), second_velocity ) );
+                            }
                         }
                     }
                 }
@@ -505,7 +500,58 @@ SCENARIO( "sequencer_track_t", "[track]" )
         {
             track.set_pulses_per_quarter_note( 8 );
 
-            AND_WHEN( "a start and 4 clock messages are send" )
+            AND_WHEN( "a start and one clock messages are send" )
+            {
+                std::vector< message_t< 3 > > received_messages;
+                const auto sender = [&received_messages]( const auto& msg ) {
+                    received_messages.push_back( msg );
+                };
+
+                track.send_messages( realtime_start(), sender );
+                track.send_messages( realtime_clock(), sender );
+                track.send_messages( realtime_clock(), sender );
+
+                THEN( "a note on message is send" )
+                {
+                    REQUIRE( received_messages.size() == 1 );
+                    REQUIRE( received_messages.front() ==
+                             note_on( 0, to_uint8_t( first_note ), first_velocity ) );
+
+                    WHEN( "another clock message is send" )
+                    {
+                        track.send_messages( realtime_clock(), sender );
+
+                        THEN( "a note off and note on message are send" )
+                        {
+                            REQUIRE( received_messages.size() == 2 );
+                            REQUIRE( received_messages[ 1 ] ==
+                                     note_off( 0, to_uint8_t( first_note ), 0 ) );
+                        }
+
+                        WHEN( "another 3 clock messages are send" )
+                        {
+                            track.send_messages( realtime_clock(), sender );
+                            track.send_messages( realtime_clock(), sender );
+                            track.send_messages( realtime_clock(), sender );
+
+                            THEN( "a note off and note on message are send" )
+                            {
+                                REQUIRE( received_messages.size() == 3 );
+                                REQUIRE( received_messages[ 2 ] ==
+                                         note_on( 0, to_uint8_t( second_note ), second_velocity ) );
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        WHEN( "pulses per quarter note are 8 and steps per beat are 2" )
+        {
+            track.set_pulses_per_quarter_note( 8 );
+            track.set_steps_per_beat( 2 );
+
+            AND_WHEN( "a start and four clock messages are send" )
             {
                 std::vector< message_t< 3 > > received_messages;
                 const auto sender = [&received_messages]( const auto& msg ) {
@@ -520,7 +566,6 @@ SCENARIO( "sequencer_track_t", "[track]" )
 
                 THEN( "a note on message is send" )
                 {
-
                     REQUIRE( received_messages.size() == 1 );
                     REQUIRE( received_messages.front() ==
                              note_on( 0, to_uint8_t( first_note ), first_velocity ) );
@@ -531,57 +576,24 @@ SCENARIO( "sequencer_track_t", "[track]" )
 
                         THEN( "a note off and note on message are send" )
                         {
-                            REQUIRE( received_messages.size() == 3 );
-                            REQUIRE( received_messages[ 0 ] ==
-                                     note_on( 0, to_uint8_t( first_note ), first_velocity ) );
+                            REQUIRE( received_messages.size() == 2 );
                             REQUIRE( received_messages[ 1 ] ==
-                                     note_off( 0, to_uint8_t( first_note ), first_velocity ) );
-                            REQUIRE( received_messages[ 2 ] ==
-                                     note_on( 0, to_uint8_t( second_note ), second_velocity ) );
+                                     note_off( 0, to_uint8_t( first_note ), 0 ) );
                         }
-                    }
-                }
-            }
-        }
 
-        WHEN( "pulses per quarter note are 8 and steps per beat are 2" )
-        {
-            track.set_pulses_per_quarter_note( 8 );
-            track.set_steps_per_beat( 2 );
-
-            AND_WHEN( "a start and 4 clock messages are send" )
-            {
-                std::vector< message_t< 3 > > received_messages;
-                const auto sender = [&received_messages]( const auto& msg ) {
-                    received_messages.push_back( msg );
-                };
-
-                track.send_messages( realtime_start(), sender );
-                for ( auto i = 0; i < 8; ++i )
-                {
-                    track.send_messages( realtime_clock(), sender );
-                }
-
-                THEN( "a note on message is send" )
-                {
-
-                    REQUIRE( received_messages.size() == 1 );
-                    REQUIRE( received_messages.front() ==
-                             note_on( 0, to_uint8_t( first_note ), first_velocity ) );
-
-                    WHEN( "another clock message is send" )
-                    {
-                        track.send_messages( realtime_clock(), sender );
-
-                        THEN( "a note off and note on message are send" )
+                        WHEN( "another 4 clock messages are send" )
                         {
-                            REQUIRE( received_messages.size() == 3 );
-                            REQUIRE( received_messages[ 0 ] ==
-                                     note_on( 0, to_uint8_t( first_note ), first_velocity ) );
-                            REQUIRE( received_messages[ 1 ] ==
-                                     note_off( 0, to_uint8_t( first_note ), first_velocity ) );
-                            REQUIRE( received_messages[ 2 ] ==
-                                     note_on( 0, to_uint8_t( second_note ), second_velocity ) );
+                            for ( auto i = 0; i < 4; ++i )
+                            {
+                                track.send_messages( realtime_clock(), sender );
+                            }
+
+                            THEN( "a note off and note on message are send" )
+                            {
+                                REQUIRE( received_messages.size() == 3 );
+                                REQUIRE( received_messages[ 2 ] ==
+                                         note_on( 0, to_uint8_t( second_note ), second_velocity ) );
+                            }
                         }
                     }
                 }
@@ -635,7 +647,7 @@ SCENARIO( "tracks_t, that is triggered by a midi clock, plays 4 beats", "[track]
         };
 
         constexpr auto steps = 4u;
-        auto midi_track = make_tracks( 1, steps );
+        auto midi_track = std::vector( 1, track_t< digitakt_track_parameter_t >{steps} );
         underlying_clock_type testing_clock;
         sequencer_clock_type sequencer_clock{testing_clock};
 
@@ -683,7 +695,7 @@ SCENARIO( "tracks_t, that is triggered by a midi clock, plays 4 beats", "[track]
         };
 
         constexpr auto steps = 16u;
-        auto midi_track = make_tracks( 1, steps );
+        auto midi_track = std::vector( 1, track_t< digitakt_track_parameter_t >{steps} );
         const auto first_note = note_t{1};
         const auto first_velocity = std::uint8_t{80};
         const auto first_step = step_t{first_note, first_velocity};
@@ -744,8 +756,7 @@ SCENARIO( "tracks_t, that is triggered by a midi clock, plays 4 beats", "[track]
 
                 AND_THEN( "one note off message is send" )
                 {
-                    CHECK( received_messages[ 1 ] ==
-                           note_off( 0, to_uint8_t( first_note ), first_velocity ) );
+                    CHECK( received_messages[ 1 ] == note_off( 0, to_uint8_t( first_note ), 0 ) );
 
                     AND_THEN( "one note on message is send" )
                     {
@@ -761,11 +772,12 @@ SCENARIO( "tracks_t, that is triggered by a midi clock, plays 4 beats", "[track]
             testing_clock.set( testing_clock.now() + 499ms );
             clock_message_count.wait_for_count( 25 );
 
-            THEN( "one note on message is send" )
+            THEN( "one note on and one note off message are send" )
             {
-                REQUIRE( received_messages.size() == 1 );
-                CHECK( received_messages.front() ==
+                REQUIRE( received_messages.size() == 2 );
+                CHECK( received_messages[ 0 ] ==
                        note_on( 0, to_uint8_t( first_note ), first_velocity ) );
+                CHECK( received_messages[ 1 ] == note_off( 0, to_uint8_t( first_note ), 0 ) );
             }
 
             WHEN( "midi clock is stopped" )
@@ -775,8 +787,8 @@ SCENARIO( "tracks_t, that is triggered by a midi clock, plays 4 beats", "[track]
 
                 THEN( "all notes off message is send" )
                 {
-                    REQUIRE( received_messages.size() == 2 );
-                    CHECK( received_messages[ 1 ] == all_notes_off( 0 ) );
+                    REQUIRE( received_messages.size() == 3 );
+                    CHECK( received_messages[ 2 ] == all_notes_off( 0 ) );
                 }
 
                 AND_WHEN( "midi clock is started again and testing clock runs for 499 ms" )
@@ -785,11 +797,13 @@ SCENARIO( "tracks_t, that is triggered by a midi clock, plays 4 beats", "[track]
                     testing_clock.set( testing_clock.now() + 499ms );
                     clock_message_count.wait_for_count( 51 );
 
-                    THEN( "one note on message is send" )
+                    THEN( "one note on and one note off message are send" )
                     {
-                        REQUIRE( received_messages.size() == 3 );
-                        CHECK( received_messages[ 2 ] ==
+                        REQUIRE( received_messages.size() == 5 );
+                        CHECK( received_messages[ 3 ] ==
                                note_on( 0, to_uint8_t( second_note ), second_velocity ) );
+                        CHECK( received_messages[ 4 ] ==
+                               note_off( 0, to_uint8_t( second_note ), 0 ) );
                     }
                 }
 
@@ -803,20 +817,20 @@ SCENARIO( "tracks_t, that is triggered by a midi clock, plays 4 beats", "[track]
                     testing_clock.set( testing_clock.now() + 491ms );
                     clock_message_count.wait_for_count( 52 );
 
-                    THEN( "one note on message is send" )
+                    THEN( "one note on and one note off message is send" )
                     {
-                        REQUIRE( received_messages.size() == 5 );
-                        CHECK( received_messages[ 2 ] ==
+                        REQUIRE( received_messages.size() == 6 );
+                        CHECK( received_messages[ 3 ] ==
                                note_on( 0, to_uint8_t( first_note ), first_velocity ) );
 
                         AND_THEN( "one note off message is send" )
                         {
-                            CHECK( received_messages[ 3 ] ==
-                                   note_off( 0, to_uint8_t( first_note ), first_velocity ) );
+                            CHECK( received_messages[ 4 ] ==
+                                   note_off( 0, to_uint8_t( first_note ), 0 ) );
 
                             AND_THEN( "one note on message is send" )
                             {
-                                CHECK( received_messages[ 4 ] ==
+                                CHECK( received_messages[ 5 ] ==
                                        note_on( 0, to_uint8_t( second_note ), second_velocity ) );
                             }
                         }

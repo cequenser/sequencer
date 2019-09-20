@@ -1,5 +1,6 @@
 #pragma once
 
+#include <sequencer/backend/digitakt_parameter.hpp>
 #include <sequencer/midi/device_spec.hpp>
 #include <sequencer/midi/message/message_type.hpp>
 #include <sequencer/midi/pattern.hpp>
@@ -71,15 +72,38 @@ namespace sequencer::backend
     class digitakt
     {
     public:
-        using pattern_t = midi::pattern_t< midi::sequencer_track_t >;
+        using track_t = midi::track_t< digitakt_track_parameter_t >;
+        using pattern_t = midi::pattern_t< track_t >;
         using patterns_t = std::vector< pattern_t >;
         using banks_t = std::vector< patterns_t >;
 
         explicit digitakt( const midi::device_spec_cc_t& device_spec = midi::device_spec_cc_t{} )
-            : banks_( 16,
-                      patterns_t( 16, midi::make_pattern< midi::sequencer_track_t >( 16, 16 ) ) ),
+            : banks_( 16, patterns_t( 16, midi::make_pattern< track_t >( 16, 16 ) ) ),
               device_spec_{device_spec}
         {
+            bool print = true;
+            for ( auto& patterns : banks_ )
+            {
+                for ( auto& pattern : patterns )
+                {
+                    for ( auto& track : pattern )
+                    {
+                        for ( auto i = 0u; i < 8; ++i )
+                        {
+                            track.parameter().trig_parameter[ i ] = device_spec_.trig[ i ].value;
+                            track.parameter().source_parameter[ i ] =
+                                device_spec_.source[ i ].value;
+                            track.parameter().filter_parameter[ i ] =
+                                device_spec_.filter[ i ].value;
+                            track.parameter().amp_parameter[ i ] = device_spec_.amp[ i ].value;
+                            track.parameter().lfo_parameter[ i ] = device_spec_.lfo[ i ].value;
+                            track.parameter().delay_parameter[ i ] = device_spec_.delay[ i ].value;
+                            track.parameter().reverb_parameter[ i ] =
+                                device_spec_.reverb[ i ].value;
+                        }
+                    }
+                }
+            }
         }
 
         void set_step( int idx, bool value = true ) noexcept
@@ -104,12 +128,12 @@ namespace sequencer::backend
             case digitakt_mode::play:
             {
                 const auto step = value ? midi::step_t{value} : midi::step_t{};
-                current_track()[ midi::sequencer_track_t::size_type( idx ) ] = step;
+                current_track()[ track_t::size_type( idx ) ] = step;
                 return;
             }
             case digitakt_mode::step_select:
                 if ( current_step_ == idx ||
-                     !current_track()[ midi::sequencer_track_t::size_type( idx ) ].is_active() )
+                     !current_track()[ track_t::size_type( idx ) ].is_active() )
                 {
                     set_mode( digitakt_mode::step_select );
                     current_step_ = -1;
@@ -128,32 +152,52 @@ namespace sequencer::backend
             switch ( control_mode() )
             {
             case digitakt_control_mode::trig:
-                process_trig( id, value, sender );
+            {
+                if ( mode() == digitakt_mode::step_select )
+                {
+                    switch ( id )
+                    {
+                    case 0:
+                        current_track()[ current_step_ ].set_note( sequencer::midi::note_t(
+                            to_uint8_t( current_track().base_note() ) + std::uint8_t( value ) ) );
+                        return;
+                    case 1:
+                        assert( current_step_ != -1 );
+                        current_track()[ current_step_ ].set_velocity( std::uint8_t( value ) );
+                    }
+                    return;
+                }
+
+                current_track().parameter().trig_parameter[ id ] = value;
+                adjust_value_for_midi();
+                sender( midi::channel::voice::control_change(
+                    current_track().channel(), device_spec_.trig[ id ].cc_key, value ) );
+            }
                 return;
 
             case digitakt_control_mode::source:
-                current_track().source_parameter[ id ] = value;
+                current_track().parameter().source_parameter[ id ] = value;
                 adjust_value_for_midi();
                 sender( midi::channel::voice::control_change(
                     current_track().channel(), device_spec_.source[ id ].cc_key, value ) );
                 return;
 
             case digitakt_control_mode::filter:
-                current_track().filter_parameter[ id ] = value;
+                current_track().parameter().filter_parameter[ id ] = value;
                 adjust_value_for_midi();
                 sender( midi::channel::voice::control_change(
                     current_track().channel(), device_spec_.filter[ id ].cc_key, value ) );
                 return;
 
             case digitakt_control_mode::amp:
-                current_track().amp_parameter[ id ] = value;
+                current_track().parameter().amp_parameter[ id ] = value;
                 adjust_value_for_midi();
                 sender( midi::channel::voice::control_change(
                     current_track().channel(), device_spec_.amp[ id ].cc_key, value ) );
                 return;
 
             case digitakt_control_mode::lfo:
-                current_track().lfo_parameter[ id ] = value;
+                current_track().parameter().lfo_parameter[ id ] = value;
                 adjust_value_for_midi();
                 if ( device_spec_.lfo[ id ].cc_key_lsb > 0 )
                 {
@@ -170,18 +214,41 @@ namespace sequencer::backend
                 return;
 
             case digitakt_control_mode::delay:
-                current_track().delay_parameter[ id ] = value;
+                current_track().parameter().delay_parameter[ id ] = value;
                 adjust_value_for_midi();
                 sender( midi::channel::voice::control_change(
                     current_track().channel(), device_spec_.delay[ id ].cc_key, value ) );
                 return;
 
             case digitakt_control_mode::reverb:
-                current_track().reverb_parameter[ id ] = value;
+                current_track().parameter().reverb_parameter[ id ] = value;
                 adjust_value_for_midi();
                 sender( midi::channel::voice::control_change(
                     current_track().channel(), device_spec_.reverb[ id ].cc_key, value ) );
                 return;
+            }
+        }
+
+        int get_control_value( int id ) const noexcept
+        {
+            switch ( control_mode() )
+            {
+            case digitakt_control_mode::trig:
+                return current_track().parameter().trig_parameter[ id ].load();
+            case digitakt_control_mode::source:
+                return current_track().parameter().source_parameter[ id ];
+            case digitakt_control_mode::filter:
+                return current_track().parameter().filter_parameter[ id ];
+            case digitakt_control_mode::amp:
+                return current_track().parameter().amp_parameter[ id ];
+            case digitakt_control_mode::lfo:
+                return current_track().parameter().lfo_parameter[ id ];
+            case digitakt_control_mode::delay:
+                return current_track().parameter().delay_parameter[ id ];
+            case digitakt_control_mode::reverb:
+                return current_track().parameter().reverb_parameter[ id ];
+            default:
+                return 0;
             }
         }
 
@@ -192,7 +259,7 @@ namespace sequencer::backend
                 return current_pattern()[ step ].is_muted();
             }
 
-            return current_track()[ midi::sequencer_track_t::size_type( step ) ].is_active();
+            return current_track()[ track_t::size_type( step ) ].is_active();
         }
 
         constexpr void set_mode( digitakt_mode mode ) noexcept
@@ -235,12 +302,12 @@ namespace sequencer::backend
             current_pattern().send_messages( message, sender );
         }
 
-        sequencer::midi::sequencer_track_t& current_track() noexcept
+        track_t& current_track() noexcept
         {
             return current_pattern()[ current_track_idx_ ];
         }
 
-        const sequencer::midi::sequencer_track_t& current_track() const noexcept
+        const track_t& current_track() const noexcept
         {
             return current_pattern()[ current_track_idx_ ];
         }
@@ -289,34 +356,6 @@ namespace sequencer::backend
             const auto lsb =
                 int( ( ( value % a ) / double( a ) ) * midi::number_of_values_per_byte );
             return {msb, lsb};
-        }
-
-        template < class Sender >
-        void process_trig( int id, double value, Sender )
-        {
-            if ( mode() == digitakt_mode::step_select )
-            {
-                switch ( id )
-                {
-                case 0:
-                    current_track()[ current_step_ ].set_note(
-                        sequencer::midi::note_t( to_uint8_t( current_track().base_note() ) +
-                                                 std::uint8_t( value * 1.001 ) ) );
-                    return;
-                case 1:
-                    assert( current_step_ != -1 );
-                    current_track()[ current_step_ ].set_velocity( std::uint8_t( value * 1.001 ) );
-                }
-                return;
-            }
-            switch ( id )
-            {
-            case 0:
-                current_track().set_note_offset( value * 1.001 );
-                return;
-            case 1:
-                current_track().set_velocity( std::uint8_t( value * 1.001 ) );
-            }
         }
 
         banks_t banks_;

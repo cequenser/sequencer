@@ -105,7 +105,7 @@ namespace qt
     }
 
     advanced_mode_tab_t::advanced_mode_tab_t( pattern_t& pattern,
-                                              sequencer::midi::sequencer_track_t& midi_track,
+                                              normal_mode_tab_t::midi_track_t& midi_track,
                                               track_t& track, QWidget* parent )
         : scale_dialog_base_tab_t( midi_track.steps(), track, parent ), pattern_( pattern ),
           midi_track_( midi_track )
@@ -137,10 +137,9 @@ namespace qt
             sequencer::midi::default_pulses_per_quarter_note / multiplier( idx ) + 1e-15 ) );
     }
 
-    scale_dialog_t::scale_dialog_t(
-        pattern_t& pattern,
-        sequencer::midi::clock_to_step_t< sequencer::midi::track_t >& current_midi_track,
-        track_t& track, QWidget* parent )
+    scale_dialog_t::scale_dialog_t( pattern_t& pattern,
+                                    normal_mode_tab_t::midi_track_t& current_midi_track,
+                                    track_t& track, QWidget* parent )
         : QDialog( parent )
     {
         auto layout = new QHBoxLayout;

@@ -1,3 +1,4 @@
+#include <sequencer/backend/digitakt_parameter.hpp>
 #include <sequencer/midi/message/realtime.hpp>
 #include <sequencer/midi/pattern.hpp>
 #include <sequencer/midi/track.hpp>
@@ -9,12 +10,13 @@ constexpr auto active_step = sequencer::midi::step_t{true};
 SCENARIO( "loop length", "[pattern]" )
 {
     using namespace sequencer::midi;
+    using sequencer::backend::digitakt_track_parameter_t;
 
     GIVEN( "a pattern with 2 tracks and 4 steps each" )
     {
         const auto tracks = 2;
         const auto steps = 4;
-        auto pattern = pattern_t< sequencer_track_t >{tracks, steps};
+        auto pattern = pattern_t< track_t< digitakt_track_parameter_t > >{tracks, steps};
         pattern.set_steps_per_beat( 1 );
 
         AND_GIVEN( "a note on the 3rd step of each track" )
@@ -35,9 +37,9 @@ SCENARIO( "loop length", "[pattern]" )
                     pattern.send_messages( realtime::realtime_clock(), sender );
                 }
 
-                THEN( "2 messages are received" )
+                THEN( "4 messages are received" )
                 {
-                    REQUIRE( received_messages.size() == 2 );
+                    REQUIRE( received_messages.size() == 4 );
                 }
             }
 
@@ -58,9 +60,9 @@ SCENARIO( "loop length", "[pattern]" )
                         pattern.send_messages( realtime::realtime_clock(), sender );
                     }
 
-                    THEN( "12 messages are received" )
+                    THEN( "14 messages are received" )
                     {
-                        REQUIRE( received_messages.size() == 12 );
+                        REQUIRE( received_messages.size() == 13 );
                     }
                 }
 
@@ -81,9 +83,9 @@ SCENARIO( "loop length", "[pattern]" )
                             pattern.send_messages( realtime::realtime_clock(), sender );
                         }
 
-                        THEN( "10 messages are received" )
+                        THEN( "12 messages are received" )
                         {
-                            REQUIRE( received_messages.size() == 10 );
+                            REQUIRE( received_messages.size() == 12 );
                         }
                     }
                 }
@@ -105,9 +107,9 @@ SCENARIO( "loop length", "[pattern]" )
                             pattern.send_messages( realtime::realtime_clock(), sender );
                         }
 
-                        THEN( "12 messages are received" )
+                        THEN( "14 messages are received" )
                         {
-                            REQUIRE( received_messages.size() == 12 );
+                            REQUIRE( received_messages.size() == 13 );
                         }
                     }
                 }

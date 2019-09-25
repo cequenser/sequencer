@@ -1,6 +1,8 @@
 #pragma once
 
 #include <QGroupBox>
+#include <string>
+#include <vector>
 
 class QDial;
 class QLineEdit;
@@ -23,6 +25,10 @@ namespace qt
 
         QLineEdit& line_edit();
 
+        void set_str_map( const std::vector< std::string >& str_map );
+
+        void set_map( const std::vector< int >& map );
+
     signals:
         void value_changed( int );
 
@@ -36,5 +42,7 @@ namespace qt
         QString suffix_{};
         int decimals_ = 0;
         int old_value_ = 0;
+        std::vector< std::string > str_map_;
+        std::vector< int > map_;
     };
 } // namespace qt

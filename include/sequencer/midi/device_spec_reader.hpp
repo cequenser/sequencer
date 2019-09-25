@@ -11,7 +11,7 @@
 namespace sequencer::midi
 {
     const auto key_sep = std::string( ":" );
-    const auto string_identifier_regex_str = std::string{"([a-zA-Z]+[\\sa-zA-Z_\\-\\.]*)"};
+    const auto string_identifier_regex_str = std::string{"([a-zA-Z]+[\\sa-zA-Z0-9_]*)"};
 
     inline std::regex get_key_int_regex( const std::string& key )
     {
@@ -46,6 +46,50 @@ namespace sequencer::midi
         }
 
         SEQUENCER_DEVICE_CC_VALUES
+
+        const auto sub_sep = ",";
+        const auto str_map_regex = std::regex( "str_map\\s*" + key_sep + "\\s*\\{.*\\}" );
+        if ( std::regex_search( buffer, str_map_regex ) )
+        {
+            entry.str_map.resize( entry.max - entry.min + 1 );
+            auto pos = buffer.find( "str_map" );
+            pos = 1 + buffer.find( key_sep, pos + 1 );
+            const auto entry_regex =
+                std::regex( "([\\-0-9]+)\\s*" + key_sep + "\\s*" + string_identifier_regex_str );
+            auto sub = buffer.substr( pos );
+            while ( std::regex_search( sub, match, entry_regex ) )
+            {
+                entry.str_map[ std::size_t( std::stoi( match[ 1 ] ) - entry.min ) ] = match[ 2 ];
+                pos = sub.find( sub_sep );
+                if ( pos == std::string::npos )
+                {
+                    break;
+                }
+                sub = sub.substr( pos + 1 );
+            }
+            return;
+        }
+
+        const auto map_regex = std::regex( "map\\s*" + key_sep + "\\s*\\{.*\\}" );
+        if ( std::regex_search( buffer, map_regex ) )
+        {
+            entry.map.resize( entry.max - entry.min + 1 );
+            auto pos = buffer.find( "map" );
+            pos = 1 + buffer.find( key_sep, pos + 1 );
+            const auto entry_regex = std::regex( "([\\-0-9]+)\\s*" + key_sep + "\\s*([\\-0-9]+)" );
+            auto sub = buffer.substr( pos );
+            while ( std::regex_search( sub, match, entry_regex ) )
+            {
+                entry.map[ std::size_t( std::stoi( match[ 1 ] ) - entry.min ) ] =
+                    std::stoi( match[ 2 ] );
+                pos = sub.find( sub_sep );
+                if ( pos == std::string::npos )
+                {
+                    break;
+                }
+                sub = sub.substr( pos + 1 );
+            }
+        }
     }
 #undef X
 

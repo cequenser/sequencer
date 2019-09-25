@@ -1,5 +1,6 @@
 #pragma once
 
+#include <any>
 #include <cstdint>
 #include <ostream>
 #include <string>
@@ -13,16 +14,11 @@
     X( std::uint8_t, cc_lsb, true )                                                                \
     X( std::uint8_t, decimals, true )
 
-struct value_map
-{
-    std::int16_t value;
-    std::string name;
-};
-
 #define SEQUENCER_DEVICE_CC_ENTRIES                                                                \
     X( std::string, name, false )                                                                  \
     SEQUENCER_DEVICE_CC_VALUES                                                                     \
-    X( std::vector< value_map >, map, true )
+    X( std::vector< std::string >, str_map, true )                                                 \
+    X( std::vector< int >, map, true )
 
 namespace sequencer::midi
 {
@@ -41,6 +37,22 @@ namespace sequencer::midi
         constexpr auto sub_sep = ",";
         os << "name: " << entry.name;
         SEQUENCER_DEVICE_CC_VALUES
+        if ( !entry.str_map.empty() )
+        {
+            os << sep << "str_map: " << entry.str_map.front();
+            for ( auto i = 1u; i < entry.str_map.size(); ++i )
+            {
+                os << sub_sep << " " << entry.str_map[ i ];
+            }
+        }
+        if ( !entry.map.empty() )
+        {
+            os << sep << "map: " << int( entry.map.front() );
+            for ( auto i = 1u; i < entry.map.size(); ++i )
+            {
+                os << sub_sep << " " << int( entry.map[ i ] );
+            }
+        }
         return os;
     }
 #undef X

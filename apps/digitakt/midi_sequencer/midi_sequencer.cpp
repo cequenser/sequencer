@@ -22,7 +22,8 @@ using digitakt::mode_t;
 namespace
 {
     void init( qt::poti_t& poti, int min, int max, int value, const std::string& title,
-               int decimals )
+               int decimals, const std::vector< std::string >& str_map,
+               const std::vector< int >& map )
     {
         qt::signal_blocker_t signal_blocker{poti.dial()};
         poti.dial().setNotchTarget( ( 1 + max - min ) / 16.0 );
@@ -31,7 +32,15 @@ namespace
         poti.setTitle( title.c_str() );
         poti.line_edit().setAlignment( Qt::AlignRight );
         poti.set_decimals( decimals );
+        poti.set_str_map( str_map );
+        poti.set_map( map );
         poti.update( value );
+    }
+
+    void init( qt::poti_t& poti, int value, const sequencer::midi::device_entry_t& entry )
+    {
+        init( poti, entry.min, entry.max, value, entry.name, entry.decimals, entry.str_map,
+              entry.map );
     }
 } // namespace
 
@@ -62,8 +71,7 @@ midi_sequencer::midi_sequencer( QWidget* parent )
           index < std::min( spec.size(), decltype( spec.size() )( number_of_control_potis ) );
           ++index )
     {
-        init( ( *ui->control_box )[ index ], spec[ index ].min, spec[ index ].max,
-              spec[ index ].value, spec[ index ].name, spec[ index ].decimals );
+        init( ( *ui->control_box )[ index ], spec[ index ].value, spec[ index ] );
     }
     for ( auto index = 0u; index < number_of_control_potis; ++index )
     {
@@ -231,8 +239,8 @@ void midi_sequencer::update_potis()
         ( *ui->control_box )[ index ].setEnabled( true );
         if ( index < spec.size() )
         {
-            init( ( *ui->control_box )[ index ], spec[ index ].min, spec[ index ].max,
-                  backend_.get_control_value( index ), spec[ index ].name, spec[ index ].decimals );
+            init( ( *ui->control_box )[ index ], backend_.get_control_value( index ),
+                  spec[ index ] );
         }
         else
         {

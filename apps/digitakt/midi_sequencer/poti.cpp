@@ -37,7 +37,23 @@ namespace qt
         const auto real_value = double( value ) / std::pow( 10, decimals_ );
         std::stringstream stream;
         stream << std::setprecision( decimals_ ) << std::fixed << real_value;
-        line_edit().setText( QString( stream.str().c_str() ) + suffix_ );
+        if ( str_map_.empty() )
+        {
+            if ( map_.empty() )
+            {
+                line_edit().setText( QString( stream.str().c_str() ) + suffix_ );
+            }
+            else
+            {
+                line_edit().setText(
+                    QString::number( map_[ std::size_t( value - dial().minimum() ) ] ) );
+            }
+        }
+        else
+        {
+            line_edit().setText(
+                QString( str_map_[ std::size_t( value - dial().minimum() ) ].c_str() ) );
+        }
         {
             signal_blocker_t signal_blocker( dial() );
             dial().setValue( value );
@@ -67,6 +83,16 @@ namespace qt
         return *line_edit_;
     }
 
+    void poti_t::set_str_map( const std::vector< std::string >& str_map )
+    {
+        str_map_ = str_map;
+    }
+
+    void poti_t::set_map( const std::vector< int >& map )
+    {
+        map_ = map;
+    }
+
     void poti_t::update_from_dial( int value )
     {
         const auto threshold = std::max( ( dial().maximum() - dial().minimum() ) / 6, 6 );
@@ -86,8 +112,28 @@ namespace qt
     {
         auto value = line_edit().text();
         bool is_double = true;
-        auto x = int( value.remove( suffix_ ).trimmed().toDouble( &is_double ) *
-                      std::pow( 10, decimals_ ) );
+        int x{0};
+        if ( str_map_.empty() )
+        {
+            if ( map_.empty() )
+            {
+                x = int( value.remove( suffix_ ).trimmed().toDouble( &is_double ) *
+                         std::pow( 10, decimals_ ) );
+            }
+            else
+            {
+                x = int( std::distance( begin( map_ ),
+                                        std::find( begin( map_ ), end( map_ ), value.toInt() ) ) ) +
+                    dial().minimum();
+            }
+        }
+        else
+        {
+            x = int(
+                    std::distance( begin( str_map_ ), std::find( begin( str_map_ ), end( str_map_ ),
+                                                                 value.toStdString() ) ) ) +
+                dial().minimum();
+        }
         if ( !is_double )
         {
             x = old_value_;

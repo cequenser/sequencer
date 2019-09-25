@@ -3,6 +3,8 @@
 #include <sequencer/beat_duration.hpp>
 #include <sequencer/midi/device_spec.hpp>
 #include <sequencer/midi/device_spec_reader.hpp>
+#include <sequencer/midi/lfo.hpp>
+#include <sequencer/midi/message/channel_voice.hpp>
 #include <sequencer/midi/track_parameter.hpp>
 
 #include <algorithm>
@@ -48,6 +50,11 @@ namespace sequencer::backend::digitakt
         return length_map;
     }
 
+    struct device_spec_cc_t
+    {
+        std::vector< std::vector< midi::device_entry_t > > control_parameter;
+    };
+
     struct track_parameter_t : midi::track_parameter_t
     {
         enum idx
@@ -61,9 +68,21 @@ namespace sequencer::backend::digitakt
             reverb,
             count
         };
+
         static constexpr auto note_offset_idx = 0u;
         static constexpr auto velocity_idx = 1u;
         static constexpr auto length_idx = 2u;
+        enum lfo_idx
+        {
+            speed = 0,
+            multiplier,
+            fade,
+            destination,
+            wave_form,
+            phase,
+            mod,
+            depth
+        };
 
         track_parameter_t() : midi::track_parameter_t{idx::count, length_idx + 1}
         {
@@ -93,11 +112,34 @@ namespace sequencer::backend::digitakt
         {
             values[ idx::trig ][ length_idx ] = idx;
         }
-    };
 
-    struct device_spec_cc_t
-    {
-        std::vector< std::vector< midi::device_entry_t > > control_parameter;
+        std::uint16_t lfo_destination() const noexcept
+        {
+            return values[ idx::lfo ][ lfo_idx::destination ].load();
+        }
+
+        std::uint16_t lfo_speed() const noexcept
+        {
+            return values[ idx::lfo ][ lfo_idx::speed ].load();
+        }
+
+        bool lfo_enabled() const noexcept
+        {
+            return lfo_destination() > 0 && lfo_speed() > 0;
+        }
+
+        auto lfo_func( const midi::device_entry_t& entry ) const noexcept
+        {
+            return [this, &entry]( std::size_t pulse_count, std::size_t steps_per_quarter_note,
+                                   std::size_t pulses_per_quarter_note ) {
+                const auto speed = lfo_speed() * 2; // values[idx::lfo][lfo_idx::multiplier].load();
+                const auto phase = values[ idx::lfo ][ lfo_idx::phase ].load();
+                const auto lfo_value = midi::lfo< std::uint8_t >(
+                    pulse_count, steps_per_quarter_note, pulses_per_quarter_note, speed, phase,
+                    entry.min, entry.max, midi::lfo_mode::square );
+                return midi::channel::voice::control_change( 0, entry.cc_msb, lfo_value );
+            };
+        }
     };
 
 #define READ_SECTION( section_name )                                                               \

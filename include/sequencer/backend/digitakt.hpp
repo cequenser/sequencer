@@ -203,6 +203,8 @@ namespace sequencer::backend::digitakt
 
             case control_mode_t::lfo:
                 current_track().parameter()[ track_parameter_t::idx::lfo ][ id ] = value;
+                current_track().set_lfo( current_track().parameter().lfo_func(
+                    spec( control_mode_t::trig )[ track_parameter_t::velocity_idx ] ) );
                 adjust_value_for_midi();
                 if ( device_spec_.control_parameter[ track_parameter_t::idx::lfo ][ id ].cc_lsb >
                      0 )
@@ -343,26 +345,31 @@ namespace sequencer::backend::digitakt
             return current_step_;
         }
 
-        const std::vector< midi::device_entry_t >& spec() const
+        const std::vector< midi::device_entry_t >& spec( control_mode_t mode ) const
         {
-            return control_mode() == control_mode_t::trig
+            return mode == control_mode_t::trig
                        ? device_spec_.control_parameter[ track_parameter_t::idx::trig ]
-                       : control_mode() == control_mode_t::source
+                       : mode == control_mode_t::source
                              ? device_spec_.control_parameter[ track_parameter_t::idx::source ]
-                             : control_mode() == control_mode_t::filter
+                             : mode == control_mode_t::filter
                                    ? device_spec_
                                          .control_parameter[ track_parameter_t::idx::filter ]
-                                   : control_mode() == control_mode_t::amp
+                                   : mode == control_mode_t::amp
                                          ? device_spec_
                                                .control_parameter[ track_parameter_t::idx::amp ]
-                                         : control_mode() == control_mode_t::lfo
+                                         : mode == control_mode_t::lfo
                                                ? device_spec_.control_parameter
                                                      [ track_parameter_t::idx::lfo ]
-                                               : control_mode() == control_mode_t::delay
+                                               : mode == control_mode_t::delay
                                                      ? device_spec_.control_parameter
                                                            [ track_parameter_t::idx::delay ]
                                                      : device_spec_.control_parameter
                                                            [ track_parameter_t::idx::reverb ];
+        }
+
+        const std::vector< midi::device_entry_t >& spec() const
+        {
+            return spec( control_mode() );
         }
 
     private:

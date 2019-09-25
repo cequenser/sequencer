@@ -627,7 +627,7 @@ SCENARIO( "set step in play mode with different note velocities", "[digitakt]" )
     }
 }
 
-SCENARIO( "set step in play mode with different note lengths", "[digitakt]" )
+SCENARIO( "set step in play mode with different note lengths", "[digitakt2]" )
 {
     using namespace sequencer;
     using namespace sequencer::backend;

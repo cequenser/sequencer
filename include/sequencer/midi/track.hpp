@@ -239,8 +239,8 @@ namespace sequencer::midi
             if ( step.is_active() )
             {
                 const auto note = get_note( step );
-                sender( lfo_( idx, channel::voice::note_on( channel(), to_uint8_t( note ),
-                                                            get_velocity( step ) ) ) );
+                sender( channel::voice::note_on( channel(), to_uint8_t( note ),
+                                                 get_velocity( step ) ) );
                 current_notes_.emplace_back( note, get_length() );
             }
         }
@@ -248,6 +248,13 @@ namespace sequencer::midi
         template < class Sender >
         void send_messages( message_t< 1 > message, const Sender& sender ) const
         {
+            if ( clock_to_step_.started() && message == realtime::realtime_clock() &&
+                 parameter().lfo_enabled() )
+            {
+                sender( lfo_( clock_to_step_.midi_beat_counter(), clock_to_step_.steps_per_beat(),
+                              clock_to_step_.pulses_per_step() ) );
+            }
+
             const auto step = clock_to_step_.process_message( message );
             if ( process_control_message( message, sender ) || !clock_to_step_.started() )
             {
@@ -258,10 +265,13 @@ namespace sequencer::midi
             {
                 if ( --entry.second == 0 )
                 {
-                    sender( lfo_( step, channel::voice::note_off(
-                                            channel(), to_uint8_t( entry.first ), 0 ) ) );
+                    sender( channel::voice::note_off( channel(), to_uint8_t( entry.first ), 0 ) );
                 }
             }
+            current_notes_.erase(
+                std::remove_if( begin( current_notes_ ), end( current_notes_ ),
+                                []( const auto& entry ) { return entry.second == 0; } ),
+                end( current_notes_ ) );
             if ( step != clock_to_step_t::do_not_send )
             {
                 send_messages( step, sender );
@@ -371,8 +381,7 @@ namespace sequencer::midi
         track_base_t track_;
         Parameter parameter_{};
         mutable clock_to_step_t clock_to_step_;
-        std::function< message_t< 3 >( std::size_t, message_t< 3 > ) > lfo_ =
-            []( std::size_t, message_t< 3 > msg ) { return msg; };
+        std::function< message_t< 3 >( std::size_t, std::size_t, std::size_t ) > lfo_;
         std::uint8_t channel_{0};
         note_t base_note_{36};
         std::atomic_bool is_muted_{false};

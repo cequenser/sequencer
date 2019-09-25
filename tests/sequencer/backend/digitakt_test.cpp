@@ -11,8 +11,9 @@ SCENARIO( "set step in play mode", "[digitakt]" )
 
     GIVEN( "a digitakt backend" )
     {
-        auto backend = digitakt{get_spec( "device_spec/elektron/digitakt.txt" )};
-        REQUIRE( backend.mode() == digitakt_mode::play );
+        auto backend =
+            digitakt::backend_impl{digitakt::get_spec( "device_spec/elektron/digitakt.txt" )};
+        REQUIRE( backend.mode() == digitakt::mode_t::play );
 
         WHEN( "set_step(2, true) is called" )
         {
@@ -43,21 +44,22 @@ SCENARIO( "set step in mute mode", "[digitakt]" )
 
     GIVEN( "a digitakt backend" )
     {
-        auto backend = digitakt{get_spec( "device_spec/elektron/digitakt.txt" )};
-        backend.set_mode( digitakt_mode::track_select );
+        auto backend =
+            digitakt::backend_impl{digitakt::get_spec( "device_spec/elektron/digitakt.txt" )};
+        backend.set_mode( digitakt::mode_t::track_select );
         backend.set_step( 2 );
 
         WHEN( "mode is set to mute" )
         {
-            backend.set_mode( digitakt_mode::mute );
-            CHECK( backend.mode() == digitakt_mode::mute );
+            backend.set_mode( digitakt::mode_t::mute );
+            CHECK( backend.mode() == digitakt::mode_t::mute );
 
             AND_WHEN( "mode is set to mute again" )
             {
-                backend.set_mode( digitakt_mode::mute );
+                backend.set_mode( digitakt::mode_t::mute );
 
                 THEN( "mode is back to play" )
-                CHECK( backend.mode() == digitakt_mode::play );
+                CHECK( backend.mode() == digitakt::mode_t::play );
             }
 
             AND_WHEN( "set_step(2, true) is called" )
@@ -95,7 +97,8 @@ SCENARIO( "track select", "[digitakt]" )
 
     GIVEN( "a digitakt backend" )
     {
-        auto backend = digitakt{get_spec( "device_spec/elektron/digitakt.txt" )};
+        auto backend =
+            digitakt::backend_impl{digitakt::get_spec( "device_spec/elektron/digitakt.txt" )};
 
         WHEN( "set_step(2, true) is called" )
         {
@@ -103,8 +106,8 @@ SCENARIO( "track select", "[digitakt]" )
 
             AND_WHEN( "mode is set to track_select" )
             {
-                backend.set_mode( digitakt_mode::track_select );
-                CHECK( backend.mode() == digitakt_mode::track_select );
+                backend.set_mode( digitakt::mode_t::track_select );
+                CHECK( backend.mode() == digitakt::mode_t::track_select );
 
                 AND_WHEN( "set_step(2) is called" )
                 {
@@ -117,13 +120,13 @@ SCENARIO( "track select", "[digitakt]" )
 
                     THEN( "mode is play" )
                     {
-                        CHECK( backend.mode() == digitakt_mode::play );
+                        CHECK( backend.mode() == digitakt::mode_t::play );
                     }
 
                     AND_WHEN( "mode is set to track_select" )
                     {
-                        backend.set_mode( digitakt_mode::track_select );
-                        CHECK( backend.mode() == digitakt_mode::track_select );
+                        backend.set_mode( digitakt::mode_t::track_select );
+                        CHECK( backend.mode() == digitakt::mode_t::track_select );
 
                         AND_WHEN( "set_step(0) is called" )
                         {
@@ -148,7 +151,8 @@ SCENARIO( "pattern select", "[digitakt]" )
 
     GIVEN( "a digitakt backend" )
     {
-        auto backend = digitakt{get_spec( "device_spec/elektron/digitakt.txt" )};
+        auto backend =
+            digitakt::backend_impl{digitakt::get_spec( "device_spec/elektron/digitakt.txt" )};
 
         WHEN( "set_step(2, true) is called" )
         {
@@ -156,8 +160,8 @@ SCENARIO( "pattern select", "[digitakt]" )
 
             AND_WHEN( "mode is set to pattern_select" )
             {
-                backend.set_mode( digitakt_mode::pattern_select );
-                CHECK( backend.mode() == digitakt_mode::pattern_select );
+                backend.set_mode( digitakt::mode_t::pattern_select );
+                CHECK( backend.mode() == digitakt::mode_t::pattern_select );
 
                 AND_WHEN( "set_step(2) is called" )
                 {
@@ -170,13 +174,13 @@ SCENARIO( "pattern select", "[digitakt]" )
 
                     THEN( "mode is play" )
                     {
-                        CHECK( backend.mode() == digitakt_mode::play );
+                        CHECK( backend.mode() == digitakt::mode_t::play );
                     }
 
                     AND_WHEN( "mode is set to pattern_select" )
                     {
-                        backend.set_mode( digitakt_mode::pattern_select );
-                        CHECK( backend.mode() == digitakt_mode::pattern_select );
+                        backend.set_mode( digitakt::mode_t::pattern_select );
+                        CHECK( backend.mode() == digitakt::mode_t::pattern_select );
 
                         AND_WHEN( "set_step(0) is called" )
                         {
@@ -201,10 +205,11 @@ SCENARIO( "bank select", "[digitakt]" )
 
     GIVEN( "a digitakt backend" )
     {
-        auto backend = digitakt{get_spec( "device_spec/elektron/digitakt.txt" )};
-        backend.set_mode( digitakt_mode::pattern_select );
+        auto backend =
+            digitakt::backend_impl{digitakt::get_spec( "device_spec/elektron/digitakt.txt" )};
+        backend.set_mode( digitakt::mode_t::pattern_select );
         backend.set_step( 2 );
-        backend.set_mode( digitakt_mode::track_select );
+        backend.set_mode( digitakt::mode_t::track_select );
         backend.set_step( 1 );
 
         WHEN( "set_step(2, true) is called" )
@@ -213,8 +218,8 @@ SCENARIO( "bank select", "[digitakt]" )
 
             AND_WHEN( "mode is set to bank_select" )
             {
-                backend.set_mode( digitakt_mode::bank_select );
-                CHECK( backend.mode() == digitakt_mode::bank_select );
+                backend.set_mode( digitakt::mode_t::bank_select );
+                CHECK( backend.mode() == digitakt::mode_t::bank_select );
 
                 AND_WHEN( "set_step(3) is called" )
                 {
@@ -222,7 +227,7 @@ SCENARIO( "bank select", "[digitakt]" )
 
                     THEN( "mode is pattern_select" )
                     {
-                        CHECK( backend.mode() == digitakt_mode::pattern_select );
+                        CHECK( backend.mode() == digitakt::mode_t::pattern_select );
                     }
 
                     AND_WHEN( "set_step(2) is called" )
@@ -236,13 +241,13 @@ SCENARIO( "bank select", "[digitakt]" )
 
                         THEN( "mode is play" )
                         {
-                            CHECK( backend.mode() == digitakt_mode::play );
+                            CHECK( backend.mode() == digitakt::mode_t::play );
                         }
 
                         AND_WHEN( "mode is set to bank_select" )
                         {
-                            backend.set_mode( digitakt_mode::bank_select );
-                            CHECK( backend.mode() == digitakt_mode::bank_select );
+                            backend.set_mode( digitakt::mode_t::bank_select );
+                            CHECK( backend.mode() == digitakt::mode_t::bank_select );
 
                             AND_WHEN( "set_step(0) is called" )
                             {
@@ -250,7 +255,7 @@ SCENARIO( "bank select", "[digitakt]" )
 
                                 THEN( "mode is pattern_select" )
                                 {
-                                    CHECK( backend.mode() == digitakt_mode::pattern_select );
+                                    CHECK( backend.mode() == digitakt::mode_t::pattern_select );
                                 }
 
                                 AND_WHEN( "set_step(2) is called" )
@@ -280,13 +285,14 @@ SCENARIO( "set step in play mode with different track notes", "[digitakt]" )
 
     GIVEN( "a digitakt backend" )
     {
-        auto backend = digitakt{get_spec( "device_spec/elektron/digitakt.txt" )};
-        REQUIRE( backend.mode() == digitakt_mode::play );
+        auto backend =
+            digitakt::backend_impl{digitakt::get_spec( "device_spec/elektron/digitakt.txt" )};
+        REQUIRE( backend.mode() == digitakt::mode_t::play );
 
         AND_GIVEN( "with control mode trig" )
         {
-            backend.set_control_mode( digitakt_control_mode::trig );
-            CHECK( backend.control_mode() == digitakt_control_mode::trig );
+            backend.set_control_mode( digitakt::control_mode_t::trig );
+            CHECK( backend.control_mode() == digitakt::control_mode_t::trig );
 
             WHEN( "set_step(2, true) is called" )
             {
@@ -378,13 +384,14 @@ SCENARIO( "set step in play mode with different track velocities", "[digitakt]" 
 
     GIVEN( "a digitakt backend" )
     {
-        auto backend = digitakt{get_spec( "device_spec/elektron/digitakt.txt" )};
-        REQUIRE( backend.mode() == digitakt_mode::play );
+        auto backend =
+            digitakt::backend_impl{digitakt::get_spec( "device_spec/elektron/digitakt.txt" )};
+        REQUIRE( backend.mode() == digitakt::mode_t::play );
 
         AND_GIVEN( "with control mode trig" )
         {
-            backend.set_control_mode( digitakt_control_mode::trig );
-            CHECK( backend.control_mode() == digitakt_control_mode::trig );
+            backend.set_control_mode( digitakt::control_mode_t::trig );
+            CHECK( backend.control_mode() == digitakt::control_mode_t::trig );
 
             WHEN( "set_step(2, true) is called" )
             {
@@ -477,13 +484,14 @@ SCENARIO( "set step in play mode with different note velocities", "[digitakt]" )
 
     GIVEN( "a digitakt backend" )
     {
-        auto backend = digitakt{get_spec( "device_spec/elektron/digitakt.txt" )};
-        REQUIRE( backend.mode() == digitakt_mode::play );
+        auto backend =
+            digitakt::backend_impl{digitakt::get_spec( "device_spec/elektron/digitakt.txt" )};
+        REQUIRE( backend.mode() == digitakt::mode_t::play );
 
         AND_GIVEN( "with control mode trig" )
         {
-            backend.set_control_mode( digitakt_control_mode::trig );
-            CHECK( backend.control_mode() == digitakt_control_mode::trig );
+            backend.set_control_mode( digitakt::control_mode_t::trig );
+            CHECK( backend.control_mode() == digitakt::control_mode_t::trig );
 
             WHEN( "the 3rd step is set" )
             {
@@ -515,7 +523,7 @@ SCENARIO( "set step in play mode with different note velocities", "[digitakt]" )
 
                         AND_WHEN( "the fourth step is selected" )
                         {
-                            backend.set_mode( digitakt_mode::step_select );
+                            backend.set_mode( digitakt::mode_t::step_select );
                             backend.set_step( 3 );
 
                             AND_WHEN( "the velocity of the fourth step is changed to 80" )
@@ -571,7 +579,7 @@ SCENARIO( "set step in play mode with different note velocities", "[digitakt]" )
                                     AND_WHEN( "the fourth step is deselected" )
                                     {
                                         backend.set_step( 3 );
-                                        CHECK( backend.mode() == digitakt_mode::play );
+                                        CHECK( backend.mode() == digitakt::mode_t::play );
 
                                         AND_WHEN( "the velocity is changed to 90" )
                                         {
@@ -628,13 +636,14 @@ SCENARIO( "set step in play mode with different note lengths", "[digitakt]" )
 
     GIVEN( "a digitakt backend" )
     {
-        auto backend = digitakt{get_spec( "device_spec/elektron/digitakt.txt" )};
-        REQUIRE( backend.mode() == digitakt_mode::play );
+        auto backend =
+            digitakt::backend_impl{digitakt::get_spec( "device_spec/elektron/digitakt.txt" )};
+        REQUIRE( backend.mode() == digitakt::mode_t::play );
 
         AND_GIVEN( "with control mode trig" )
         {
-            backend.set_control_mode( digitakt_control_mode::trig );
-            CHECK( backend.control_mode() == digitakt_control_mode::trig );
+            backend.set_control_mode( digitakt::control_mode_t::trig );
+            CHECK( backend.control_mode() == digitakt::control_mode_t::trig );
 
             WHEN( "the first step is set" )
             {
@@ -673,7 +682,7 @@ SCENARIO( "set step in play mode with different note lengths", "[digitakt]" )
 
                 AND_WHEN( "step length is set to 1/8 note" )
                 {
-                    backend.set_control( digitakt_track_parameter_t::length_idx, 30,
+                    backend.set_control( digitakt::track_parameter_t::length_idx, 30,
                                          []( auto ) {} );
 
                     AND_WHEN( "12 clock messages are send" )

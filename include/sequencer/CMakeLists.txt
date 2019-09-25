@@ -7,8 +7,10 @@ add_library(sequencer
     beat_duration.hpp
     beat_time_point.hpp
     beats_per_minute.hpp
+    copyable_atomic.hpp
     fixed_point_type.hpp
     type_traits.hpp
+    vector.hpp
     vector_view.hpp
     audio/double_buffer.hpp
     audio/fft.hpp
@@ -22,6 +24,7 @@ add_library(sequencer
     midi/clock_base.hpp
     midi/constants.hpp
     midi/device_spec.hpp
+    midi/device_spec_reader.hpp
     midi/lfo.hpp
     midi/pattern.hpp
     midi/percussion_key.hpp

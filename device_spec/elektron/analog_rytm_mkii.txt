@@ -1,88 +1,95 @@
-trig
-note:3:-24:24:0
-velocity:4:0:127:100
-length:5:0:127:14
-synth:11:0:1:1
-sample:12:0:1:1
-env:13:0:1:1
-lfo:14:0:1:0
-source
-param 1:16:0:127:0
-param 2:17:0:127:0
-param 3:18:0:127:0
-param 4:19:0:127:0
-param 5:20:0:127:0
-param 6:21:0:127:0
-param 7:22:0:127:0
-param 8:23:0:127:100
-filter
-attack:70:0:127:0
-decay:71:0:127:0
-sustain:72:0:127:0
-release:73:0:127:0
-freq:74:0:127:127
-res:75:0:127:0
-mode:76:0:6:0
-env depth:77:-64:63:0
-amp
-attack:78:0:127:0
-hold:79:0:127:0
-decay:80:0:127:0
-over:81:0:127:0
-delay:82:0:127:0
-reverb:83:0:127:0
-pan:10:-64:63:0
-volume:7:0:127:100
-lfo
-speed:102:-64:63:0
-mult:103:0:23:0
-fade:104:-64:63:0
-dest:105:0:127:0
-wave:106:0:6:0
-start:107:0:127:64
-trig:108:0:4:0
-depth:109,118:-12800:12799:0:2
-delay
-time:16:1:128:16
-pingpong:17:0:1:0
-stereo:18:-64:63:0
-feedback:19:1:198:1
-highpass:20:0:127:0
-lowpass:21:0:127:127
-reverb:22:0:127:0
-volume:23:0:127:0
-reverb
-predelay:24:0:127:0
-decay:25:0:127:0
-freq:26:0:127:0
-gain:27:0:127:0
-hpf:28:0:127:0
-lpf:29:0:127:127
-volume:31:0:127:0
-fx dist
-amount:70:0:127:0
-symmetry:71:-64:63:0
-over:72:0:127:0
-delay:76:0:1:0
-reverb:77:0:1:0
-fx comp
-threshold:78:0:127:0
-attack:79:0:6:0
-release:80:0:7:0
-makeup:81:0:127:0
-ratio:82:0:3:0
-seq:83:0:3:0
-mix:84:0:127:0
-volume:85:0:127:0
-fx lfo
-speed:102:-64:63:0
-mult:103:0:23:0
-fade:104:-64:63:0
-dest:105:0:127:0
-wave:106:0:6:0
-start:107:0:127:64
-trig:108:0:4:0
-depth:109,118:-12800:12799:0:2
+section: trig
+name: note; min: -24; max: 24; value: 0; cc_msb: 3, cc_lsb: 0, decimals: 0
+name: velocity; min: 0; max: 127; value: 100; cc_msb: 4, cc_lsb: 0, decimals: 0
+name: length; min: 0; max: 127; value: 14; cc_msb: 5, cc_lsb: 0, decimals: 0
+name: synth; min: 0; max: 1; value: 1; cc_msb: 11, cc_lsb: 0, decimals: 0
+name: sample; min: 0; max: 1; value: 1; cc_msb: 12, cc_lsb: 0, decimals: 0
+name: env; min: 0; max: 1; value: 1; cc_msb: 13, cc_lsb: 0, decimals: 0
+name: lfo; min: 0; max: 1; value: 0; cc_msb: 14, cc_lsb: 0, decimals: 0
 
+section: source
+name: param 1; min: 0; max: 127; value: 0; cc_msb: 16, cc_lsb: 0, decimals: 0
+name: param 2; min: 0; max: 127; value: 0; cc_msb: 17, cc_lsb: 0, decimals: 0
+name: param 3; min: 0; max: 127; value: 0; cc_msb: 18, cc_lsb: 0, decimals: 0
+name: param 4; min: 0; max: 127; value: 0; cc_msb: 19, cc_lsb: 0, decimals: 0
+name: param 5; min: 0; max: 127; value: 0; cc_msb: 20, cc_lsb: 0, decimals: 0
+name: param 6; min: 0; max: 127; value: 0; cc_msb: 21, cc_lsb: 0, decimals: 0
+name: param 7; min: 0; max: 127; value: 0; cc_msb: 22, cc_lsb: 0, decimals: 0
+name: param 8; min: 0; max: 127; value: 100; cc_msb: 23, cc_lsb: 0, decimals: 0
 
+section: filter
+name: attack; min: 0; max: 127; value: 0; cc_msb: 70, cc_lsb: 0, decimals: 0
+name: decay; min: 0; max: 127; value: 0; cc_msb: 71, cc_lsb: 0, decimals: 0
+name: sustain; min: 0; max: 127; value: 0; cc_msb: 72, cc_lsb: 0, decimals: 0
+name: release; min: 0; max: 127; value: 0; cc_msb: 73, cc_lsb: 0, decimals: 0
+name: freq; min: 0; max: 127; value: 127; cc_msb: 74, cc_lsb: 0, decimals: 0
+name: res; min: 0; max: 127; value: 0; cc_msb: 75, cc_lsb: 0, decimals: 0
+name: mode; min: 0; max: 6; value: 0; cc_msb: 76, cc_lsb: 0, decimals: 0
+name: env depth; min: -64; max: 63; value: 0; cc_msb: 77, cc_lsb: 0, decimals: 0
+
+section: amp
+name: attack; min: 0; max: 127; value: 0; cc_msb: 78, cc_lsb: 0, decimals: 0
+name: hold; min: 0; max: 127; value: 0; cc_msb: 79, cc_lsb: 0, decimals: 0
+name: decay; min: 0; max: 127; value: 0; cc_msb: 80, cc_lsb: 0, decimals: 0
+name: over; min: 0; max: 127; value: 0; cc_msb: 81, cc_lsb: 0, decimals: 0
+name: delay; min: 0; max: 127; value: 0; cc_msb: 82, cc_lsb: 0, decimals: 0
+name: reverb; min: 0; max: 127; value: 0; cc_msb: 83, cc_lsb: 0, decimals: 0
+name: pan; min: -64; max: 63; value: 0; cc_msb: 10, cc_lsb: 0, decimals: 0
+name: volume; min: 0; max: 127; value: 100; cc_msb: 7, cc_lsb: 0, decimals: 0
+
+section: lfo
+name: speed; min: -64; max: 63; value: 0; cc_msb: 102, cc_lsb: 0, decimals: 0
+name: mult; min: 0; max: 23; value: 0; cc_msb: 103, cc_lsb: 0, decimals: 0
+name: fade; min: -64; max: 63; value: 0; cc_msb: 104, cc_lsb: 0, decimals: 0
+name: dest; min: 0; max: 127; value: 0; cc_msb: 105, cc_lsb: 0, decimals: 0
+name: wave; min: 0; max: 6; value: 0; cc_msb: 106, cc_lsb: 0, decimals: 0
+name: start; min: 0; max: 127; value: 64; cc_msb: 107, cc_lsb: 0, decimals: 0
+name: trig; min: 0; max: 4; value: 0; cc_msb: 108, cc_lsb: 0, decimals: 0
+name: depth; min: -12800; max: 12799; value: 0; cc_msb: 109, cc_lsb: 118, decimals: 2
+
+section: delay
+name: time; min: 1; max: 128; value: 16; cc_msb: 16, cc_lsb: 0, decimals: 0
+name: pingpong; min: 0; max: 1; value: 0; cc_msb: 17, cc_lsb: 0, decimals: 0
+name: stereo; min: -64; max: 63; value: 0; cc_msb: 18, cc_lsb: 0, decimals: 0
+name: feedback; min: 1; max: 198; value: 1; cc_msb: 19, cc_lsb: 0, decimals: 0
+name: highpass; min: 0; max: 127; value: 0; cc_msb: 20, cc_lsb: 0, decimals: 0
+name: lowpass; min: 0; max: 127; value: 127; cc_msb: 21, cc_lsb: 0, decimals: 0
+name: reverb; min: 0; max: 127; value: 0; cc_msb: 22, cc_lsb: 0, decimals: 0
+name: volume; min: 0; max: 127; value: 0; cc_msb: 23, cc_lsb: 0, decimals: 0
+
+section: reverb
+name: predelay; min: 0; max: 127; value: 0; cc_msb: 24, cc_lsb: 0, decimals: 0
+name: decay; min: 0; max: 127; value: 0; cc_msb: 25, cc_lsb: 0, decimals: 0
+name: freq; min: 0; max: 127; value: 0; cc_msb: 26, cc_lsb: 0, decimals: 0
+name: gain; min: 0; max: 127; value: 0; cc_msb: 27, cc_lsb: 0, decimals: 0
+name: hpf; min: 0; max: 127; value: 0; cc_msb: 28, cc_lsb: 0, decimals: 0
+name: lpf; min: 0; max: 127; value: 127; cc_msb: 29, cc_lsb: 0, decimals: 0
+name: volume; min: 0; max: 127; value: 0; cc_msb: 31, cc_lsb: 0, decimals: 0
+
+section: fx dist
+name: amount; min: 0; max: 127; value: 0; cc_msb: 70, cc_lsb: 0, decimals: 0
+name: symmetry; min: -64; max: 63; value: 0; cc_msb: 71, cc_lsb: 0, decimals: 0
+name: over; min: 0; max: 127; value: 0; cc_msb: 72, cc_lsb: 0, decimals: 0
+name: delay; min: 0; max: 1; value: 0; cc_msb: 76, cc_lsb: 0, decimals: 0
+name: reverb; min: 0; max: 1; value: 0; cc_msb: 77, cc_lsb: 0, decimals: 0
+
+section: fx comp
+name: threshold; min: 0; max: 127; value: 0; cc_msb: 78, cc_lsb: 0, decimals: 0
+name: attack; min: 0; max: 6; value: 0; cc_msb: 79, cc_lsb: 0, decimals: 0
+name: release; min: 0; max: 7; value: 0; cc_msb: 80, cc_lsb: 0, decimals: 0
+name: makeup; min: 0; max: 127; value: 0; cc_msb: 81, cc_lsb: 0, decimals: 0
+name: ratio; min: 0; max: 3; value: 0; cc_msb: 82, cc_lsb: 0, decimals: 0
+name: seq; min: 0; max: 3; value: 0; cc_msb: 83, cc_lsb: 0, decimals: 0
+name: mix; min: 0; max: 127; value: 0; cc_msb: 84, cc_lsb: 0, decimals: 0
+name: volume; min: 0; max: 127; value: 0; cc_msb: 85, cc_lsb: 0, decimals: 0
+
+section: fx lfo
+name: speed; min: -64; max: 63; value: 0; cc_msb: 102, cc_lsb: 0, decimals: 0
+name: mult; min: 0; max: 23; value: 0; cc_msb: 103, cc_lsb: 0, decimals: 0
+name: fade; min: -64; max: 63; value: 0; cc_msb: 104, cc_lsb: 0, decimals: 0
+name: dest; min: 0; max: 127; value: 0; cc_msb: 105, cc_lsb: 0, decimals: 0
+name: wave; min: 0; max: 6; value: 0; cc_msb: 106, cc_lsb: 0, decimals: 0
+name: start; min: 0; max: 127; value: 64; cc_msb: 107, cc_lsb: 0, decimals: 0
+name: trig; min: 0; max: 4; value: 0; cc_msb: 108, cc_lsb: 0, decimals: 0
+name: depth; min: -12800; max: 12799; value: 0; cc_msb: 109, cc_lsb: 118, decimals: 2
 

@@ -67,7 +67,7 @@ namespace qt
         return page_count_;
     }
 
-    void track_t::set_backend( sequencer::backend::digitakt& backend )
+    void track_t::set_backend( sequencer::backend::digitakt::backend_impl& backend )
     {
         backend_ = &backend;
     }
@@ -92,8 +92,8 @@ namespace qt
                 qt::signal_blocker_t signal_blocker{( *this )[ idx ]};
                 ( *this )[ idx ].setChecked( !( *this )[ idx ].isChecked() );
             }
-            backend_->set_mode( sequencer::backend::digitakt_mode::step_select );
-            if ( backend_->mode() == sequencer::backend::digitakt_mode::step_select )
+            backend_->set_mode( sequencer::backend::digitakt::mode_t::step_select );
+            if ( backend_->mode() == sequencer::backend::digitakt::mode_t::step_select )
             {
                 enable( [idx]( auto i ) { return i == idx; } );
             }
@@ -113,9 +113,9 @@ namespace qt
             return;
         }
 
-        if ( backend_->mode() == sequencer::backend::digitakt_mode::step_select )
+        if ( backend_->mode() == sequencer::backend::digitakt::mode_t::step_select )
         {
-            backend_->set_mode( sequencer::backend::digitakt_mode::step_select );
+            backend_->set_mode( sequencer::backend::digitakt::mode_t::step_select );
         }
         if ( ++current_page_ == page_count() )
         {
@@ -138,12 +138,12 @@ namespace qt
             return;
         }
 
-        if ( backend_->mode() != sequencer::backend::digitakt_mode::step_select )
+        if ( backend_->mode() != sequencer::backend::digitakt::mode_t::step_select )
         {
             enable( []( auto ) { return true; } );
         }
 
-        if ( backend_->mode() == sequencer::backend::digitakt_mode::mute )
+        if ( backend_->mode() == sequencer::backend::digitakt::mode_t::mute )
         {
             update( [this]( auto i ) { return backend_->current_pattern()[ i ].is_muted(); } );
         }

@@ -10,13 +10,15 @@ constexpr auto active_step = sequencer::midi::step_t{true};
 SCENARIO( "loop length", "[pattern]" )
 {
     using namespace sequencer::midi;
-    using sequencer::backend::digitakt_track_parameter_t;
+    using sequencer::backend::digitakt::track_parameter_t;
 
     GIVEN( "a pattern with 2 tracks and 4 steps each" )
     {
         const auto tracks = 2;
         const auto steps = 4;
-        auto pattern = pattern_t< track_t< digitakt_track_parameter_t > >{tracks, steps};
+        auto pattern = pattern_t< track_t< track_parameter_t > >{tracks, steps};
+        pattern[ 0 ].parameter().set_note_length_idx( 14 );
+        pattern[ 1 ].parameter().set_note_length_idx( 14 );
         pattern.set_steps_per_beat( 1 );
 
         AND_GIVEN( "a note on the 3rd step of each track" )

@@ -15,8 +15,9 @@
 #include <cmath>
 #include <iostream>
 
-using sequencer::backend::digitakt_control_mode;
-using sequencer::backend::digitakt_mode;
+namespace digitakt = sequencer::backend::digitakt;
+using digitakt::control_mode_t;
+using digitakt::mode_t;
 
 namespace
 {
@@ -55,12 +56,17 @@ midi_sequencer::midi_sequencer( QWidget* parent )
 
     const auto rows = 2;
     ui->control_box->set_number_of_potis( number_of_control_potis, rows );
-    backend_.set_control_mode( digitakt_control_mode::trig );
+    backend_.set_control_mode( control_mode_t::trig );
     const auto& spec = backend_.spec();
-    for ( auto index = 0u; index < number_of_control_potis; ++index )
+    for ( auto index = 0u;
+          index < std::min( spec.size(), decltype( spec.size() )( number_of_control_potis ) );
+          ++index )
     {
         init( ( *ui->control_box )[ index ], spec[ index ].min, spec[ index ].max,
               spec[ index ].value, spec[ index ].name, spec[ index ].decimals );
+    }
+    for ( auto index = 0u; index < number_of_control_potis; ++index )
+    {
         connect( &( *ui->control_box )[ index ], &qt::poti_t::value_changed, this,
                  [this, index]( int value ) { control_poti_changed( int( index ), value ); } );
     }
@@ -95,15 +101,15 @@ void midi_sequencer::change_bank()
 {
     if ( qt::use_secondary_function() )
     {
-        backend_.set_mode( digitakt_mode::mute );
+        backend_.set_mode( digitakt::mode_t::mute );
         update_buttons();
         update_sequencer_steps();
         return;
     }
 
-    backend_.set_mode( digitakt_mode::bank_select );
+    backend_.set_mode( digitakt::mode_t::bank_select );
     update_buttons();
-    const auto track_mode = backend_.mode() == digitakt_mode::bank_select
+    const auto track_mode = backend_.mode() == digitakt::mode_t::bank_select
                                 ? qt::track_mode::select
                                 : qt::track_mode::sequencer;
     ui->sequencer_box->set_mode( track_mode );
@@ -112,9 +118,9 @@ void midi_sequencer::change_bank()
 
 void midi_sequencer::change_pattern()
 {
-    backend_.set_mode( digitakt_mode::pattern_select );
+    backend_.set_mode( digitakt::mode_t::pattern_select );
     update_buttons();
-    const auto track_mode = backend_.mode() == digitakt_mode::pattern_select
+    const auto track_mode = backend_.mode() == digitakt::mode_t::pattern_select
                                 ? qt::track_mode::select
                                 : qt::track_mode::sequencer;
     ui->sequencer_box->set_mode( track_mode );
@@ -123,9 +129,9 @@ void midi_sequencer::change_pattern()
 
 void midi_sequencer::change_track()
 {
-    backend_.set_mode( digitakt_mode::track_select );
+    backend_.set_mode( digitakt::mode_t::track_select );
     update_buttons();
-    const auto track_mode = backend_.mode() == digitakt_mode::track_select
+    const auto track_mode = backend_.mode() == digitakt::mode_t::track_select
                                 ? qt::track_mode::select
                                 : qt::track_mode::sequencer;
     ui->sequencer_box->set_mode( track_mode );
@@ -134,7 +140,7 @@ void midi_sequencer::change_track()
 
 void midi_sequencer::sequencer_step_changed( int idx )
 {
-    if ( backend_.mode() != digitakt_mode::play )
+    if ( backend_.mode() != digitakt::mode_t::play )
     {
         backend_.set_step( idx );
         ui->sequencer_box->set_mode( qt::track_mode::sequencer );
@@ -148,40 +154,44 @@ void midi_sequencer::sequencer_step_changed( int idx )
     update_potis();
 }
 
+#define SEQUENCER_SELECT_CONTROL_MODE( primary, secondary )                                        \
+    if ( qt::use_secondary_function() )                                                            \
+    {                                                                                              \
+        backend_.set_control_mode( control_mode_t::secondary );                                    \
+        ui->control_box->setTitle( #secondary );                                                   \
+    }                                                                                              \
+    else                                                                                           \
+    {                                                                                              \
+        backend_.set_control_mode( control_mode_t::primary );                                      \
+        ui->control_box->setTitle( #primary );                                                     \
+    }                                                                                              \
+    update_potis();
+
 void midi_sequencer::trig_selected()
 {
-    qt::use_secondary_function() ? backend_.set_control_mode( digitakt_control_mode::quantize )
-                                 : backend_.set_control_mode( digitakt_control_mode::trig );
-    update_potis();
+    SEQUENCER_SELECT_CONTROL_MODE( trig, quantize )
 }
 
 void midi_sequencer::source_selected()
 {
-    qt::use_secondary_function() ? backend_.set_control_mode( digitakt_control_mode::assign )
-                                 : backend_.set_control_mode( digitakt_control_mode::source );
-    update_potis();
+    SEQUENCER_SELECT_CONTROL_MODE( source, assign )
 }
 
 void midi_sequencer::filter_selected()
 {
-    qt::use_secondary_function() ? backend_.set_control_mode( digitakt_control_mode::delay )
-                                 : backend_.set_control_mode( digitakt_control_mode::filter );
-    update_potis();
+    SEQUENCER_SELECT_CONTROL_MODE( filter, delay )
 }
 
 void midi_sequencer::amp_selected()
 {
-    qt::use_secondary_function() ? backend_.set_control_mode( digitakt_control_mode::reverb )
-                                 : backend_.set_control_mode( digitakt_control_mode::amp );
-    update_potis();
+    SEQUENCER_SELECT_CONTROL_MODE( amp, reverb )
 }
 
 void midi_sequencer::lfo_selected()
 {
-    qt::use_secondary_function() ? backend_.set_control_mode( digitakt_control_mode::master )
-                                 : backend_.set_control_mode( digitakt_control_mode::lfo );
-    update_potis();
+    SEQUENCER_SELECT_CONTROL_MODE( lfo, master )
 }
+#undef SEQUENCER_SELECT_CONTROL_MODE
 
 void midi_sequencer::control_poti_changed( int id, int value )
 {
@@ -206,11 +216,11 @@ void midi_sequencer::update_sequencer_steps()
 
 void midi_sequencer::update_buttons()
 {
-    ui->bank_button->setEnabled( backend_.mode() != digitakt_mode::bank_select );
-    ui->pattern_button->setEnabled( backend_.mode() != digitakt_mode::pattern_select );
-    ui->track_button->setEnabled( backend_.mode() != digitakt_mode::track_select );
+    ui->bank_button->setEnabled( backend_.mode() != digitakt::mode_t::bank_select );
+    ui->pattern_button->setEnabled( backend_.mode() != digitakt::mode_t::pattern_select );
+    ui->track_button->setEnabled( backend_.mode() != digitakt::mode_t::track_select );
 
-    ui->bank_button->setText( backend_.mode() == digitakt_mode::mute ? "Mute" : "Bank" );
+    ui->bank_button->setText( backend_.mode() == digitakt::mode_t::mute ? "Mute" : "Bank" );
 }
 
 void midi_sequencer::update_potis()
@@ -218,7 +228,15 @@ void midi_sequencer::update_potis()
     const auto& spec = backend_.spec();
     for ( auto index = 0u; index < number_of_control_potis; ++index )
     {
-        init( ( *ui->control_box )[ index ], spec[ index ].min, spec[ index ].max,
-              backend_.get_control_value( index ), spec[ index ].name, spec[ index ].decimals );
+        ( *ui->control_box )[ index ].setEnabled( true );
+        if ( index < spec.size() )
+        {
+            init( ( *ui->control_box )[ index ], spec[ index ].min, spec[ index ].max,
+                  backend_.get_control_value( index ), spec[ index ].name, spec[ index ].decimals );
+        }
+        else
+        {
+            ( *ui->control_box )[ index ].setEnabled( false );
+        }
     }
 }

@@ -10,7 +10,7 @@
 
 #include <condition_variable>
 
-using sequencer::backend::digitakt_track_parameter_t;
+using sequencer::backend::digitakt::track_parameter_t;
 using sequencer::midi::lfo;
 using sequencer::midi::lfo_mode;
 using sequencer::midi::make_midi_clock_raii_shutdown;
@@ -35,7 +35,7 @@ SCENARIO( "track_t", "[track]" )
 
     GIVEN( "track_t with 16 steps" )
     {
-        auto track = track_t< digitakt_track_parameter_t >{number_of_steps};
+        auto track = track_t< track_parameter_t >{number_of_steps};
         REQUIRE( track.steps() == number_of_steps );
         REQUIRE( track.channel() == 0u );
         REQUIRE( track[ 0 ] == step_t{} );
@@ -196,7 +196,7 @@ SCENARIO( "track_t set_steps", "[track]" )
 {
     GIVEN( "an empty track" )
     {
-        auto track = track_t< digitakt_track_parameter_t >{};
+        auto track = track_t< track_parameter_t >{};
 
         WHEN( "number of steps is changed to 3" )
         {
@@ -214,7 +214,7 @@ SCENARIO( "track_t set_steps", "[track]" )
 
     GIVEN( "a track with 4 steps and second step set to note 42" )
     {
-        auto track = track_t< digitakt_track_parameter_t >{4};
+        auto track = track_t< track_parameter_t >{4};
         const auto first_note = note_t{42};
         const auto first_velocity = std::uint8_t{80};
         const auto step = step_t{first_note, first_velocity};
@@ -255,7 +255,7 @@ SCENARIO( "track_t copy", "[track]" )
 {
     GIVEN( "an empty track" )
     {
-        auto track = track_t< digitakt_track_parameter_t >{};
+        auto track = track_t< track_parameter_t >{64, 0};
 
         WHEN( "track is copy-constructed" )
         {
@@ -269,7 +269,7 @@ SCENARIO( "track_t copy", "[track]" )
 
         WHEN( "track is copy-assigned to empty track" )
         {
-            auto other = track_t< digitakt_track_parameter_t >{};
+            auto other = track_t< track_parameter_t >{64, 0};
             other = track;
 
             THEN( "other track has 0 steps" )
@@ -281,7 +281,7 @@ SCENARIO( "track_t copy", "[track]" )
 
         WHEN( "track is copy-assigned to track with 4 steps" )
         {
-            auto other = track_t< digitakt_track_parameter_t >{4};
+            auto other = track_t< track_parameter_t >{4};
             other = track;
 
             THEN( "other track has 0 steps" )
@@ -294,7 +294,7 @@ SCENARIO( "track_t copy", "[track]" )
 
     GIVEN( "a track_t with 4 steps and note on step 1" )
     {
-        auto track = track_t< digitakt_track_parameter_t >{4};
+        auto track = track_t< track_parameter_t >{4};
         const auto first_note = note_t{42};
         const auto first_velocity = std::uint8_t{80};
         const auto step = step_t{first_note, first_velocity};
@@ -315,7 +315,7 @@ SCENARIO( "track_t copy", "[track]" )
 
         WHEN( "track is copy-assigned to empty track" )
         {
-            auto other = track_t< digitakt_track_parameter_t >{};
+            auto other = track_t< track_parameter_t >{};
             other = track;
 
             THEN( "other track has 4 steps" )
@@ -334,7 +334,7 @@ SCENARIO( "track_t copy", "[track]" )
 
         WHEN( "track is copy-assigned to track with 5 steps" )
         {
-            auto other = track_t< digitakt_track_parameter_t >{5};
+            auto other = track_t< track_parameter_t >{5};
             other = track;
 
             THEN( "other track has 4 steps" )
@@ -378,7 +378,9 @@ SCENARIO( "track_t lfo on velocity", "[track]" )
 
     GIVEN( "track_t with 16 steps" )
     {
-        auto track = track_t< digitakt_track_parameter_t >{number_of_steps};
+        auto track = track_t< track_parameter_t >{number_of_steps};
+        track.parameter().set_velocity( 100 );
+        track.parameter().set_note_length_idx( 14 );
         const auto first_note = note_t{1};
         const auto first_velocity = std::uint8_t{80};
         const auto first_step = step_t{first_note, first_velocity};
@@ -407,7 +409,7 @@ SCENARIO( "track_t lfo on velocity", "[track]" )
                     track.send_messages( realtime_clock(), sender );
                 }
 
-                THEN( "7 messages are received" )
+                THEN( "8 messages are received" )
                 {
                     REQUIRE( received_messages.size() == 8 );
                 }
@@ -434,7 +436,9 @@ SCENARIO( "track_t triggered by clock", "[track]" )
 
     GIVEN( "track_t with 16 steps" )
     {
-        auto track = track_t< digitakt_track_parameter_t >{number_of_steps};
+        auto track = track_t< track_parameter_t >{number_of_steps};
+        track.parameter().set_velocity( 100 );
+        track.parameter().set_note_length_idx( 14 );
         const auto first_note = note_t{1};
         const auto first_velocity = std::uint8_t{80};
         const auto first_step = step_t{first_note, first_velocity};
@@ -647,7 +651,9 @@ SCENARIO( "tracks_t, that is triggered by a midi clock, plays 4 beats", "[track]
         };
 
         constexpr auto steps = 4u;
-        auto midi_track = std::vector( 1, track_t< digitakt_track_parameter_t >{steps} );
+        auto midi_track = std::vector( 1, track_t< track_parameter_t >{steps} );
+        midi_track.front().parameter().set_velocity( 100 );
+        midi_track.front().parameter().set_note_length_idx( 14 );
         underlying_clock_type testing_clock;
         sequencer_clock_type sequencer_clock{testing_clock};
 
@@ -695,7 +701,9 @@ SCENARIO( "tracks_t, that is triggered by a midi clock, plays 4 beats", "[track]
         };
 
         constexpr auto steps = 16u;
-        auto midi_track = std::vector( 1, track_t< digitakt_track_parameter_t >{steps} );
+        auto midi_track = std::vector( 1, track_t< track_parameter_t >{steps} );
+        midi_track.front().parameter().set_velocity( 100 );
+        midi_track.front().parameter().set_note_length_idx( 14 );
         const auto first_note = note_t{1};
         const auto first_velocity = std::uint8_t{80};
         const auto first_step = step_t{first_note, first_velocity};

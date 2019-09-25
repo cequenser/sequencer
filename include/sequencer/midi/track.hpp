@@ -7,16 +7,16 @@
 #include <sequencer/midi/message/message_type.hpp>
 #include <sequencer/midi/message/realtime.hpp>
 #include <sequencer/midi/step.hpp>
+#include <sequencer/vector.hpp>
 
 #include <algorithm>
 #include <atomic>
 #include <functional>
-#include <mutex>
 #include <vector>
 
 namespace sequencer::midi
 {
-    using track_base_t = std::vector< step_t >;
+    using track_base_t = vector< step_t >;
 
     inline void copy_track( const track_base_t& from, track_base_t& to ) noexcept
     {
@@ -149,9 +149,8 @@ namespace sequencer::midi
         using value_type = track_base_t::value_type;
         using size_type = track_base_t::size_type;
 
-        track_t() = default;
-
-        explicit track_t( size_type size ) : track_{size}, clock_to_step_{size}
+        explicit track_t( size_type size = 64, size_type initial_size = 16 )
+            : track_{size, std::min( size, initial_size )}, clock_to_step_{size}
         {
             clear();
         }
@@ -160,7 +159,6 @@ namespace sequencer::midi
         track_t( const track_t& other )
             : track_{other.track_.size()}, clock_to_step_{other.clock_to_step_}
         {
-            std::lock_guard lock( other.mutex_ );
             copy( other, *this );
         }
 
@@ -168,10 +166,6 @@ namespace sequencer::midi
         {
             if ( this != &other )
             {
-                std::lock( mutex_, other.mutex_ );
-                std::lock_guard lock{mutex_, std::adopt_lock};
-                std::lock_guard lock_other{other.mutex_, std::adopt_lock};
-
                 track_ = track_base_t{other.track_.size()};
                 clock_to_step_ = other.clock_to_step_;
                 copy( other, *this );
@@ -188,7 +182,6 @@ namespace sequencer::midi
         {
             clock_to_step_.set_steps( new_steps );
 
-            std::lock_guard lock( mutex_ );
             auto new_track = track_base_t( new_steps );
             copy_track( track_, new_track );
 
@@ -217,7 +210,6 @@ namespace sequencer::midi
 
         void clear() noexcept
         {
-            std::lock_guard lock( mutex_ );
             for ( auto& step : track_ )
             {
                 step = step_t{};
@@ -243,7 +235,6 @@ namespace sequencer::midi
                 return;
             }
 
-            std::lock_guard lock( mutex_ );
             const auto& step = track_[ idx ];
             if ( step.is_active() )
             {
@@ -377,10 +368,9 @@ namespace sequencer::midi
             return false;
         }
 
-        track_base_t track_{};
+        track_base_t track_;
         Parameter parameter_{};
         mutable clock_to_step_t clock_to_step_;
-        mutable std::mutex mutex_;
         std::function< message_t< 3 >( std::size_t, message_t< 3 > ) > lfo_ =
             []( std::size_t, message_t< 3 > msg ) { return msg; };
         std::uint8_t channel_{0};

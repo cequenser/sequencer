@@ -64,7 +64,7 @@ namespace qt
 
         int page_count() const noexcept;
 
-        void set_backend( sequencer::backend::digitakt& backend );
+        void set_backend( sequencer::backend::digitakt::backend_impl& backend );
 
         void update();
 
@@ -78,7 +78,7 @@ namespace qt
         void display_page();
         void update_displayed_steps();
 
-        sequencer::backend::digitakt* backend_{nullptr};
+        sequencer::backend::digitakt::backend_impl* backend_{nullptr};
         QLabel* label_{new QLabel};
         int current_page_{0};
         int page_count_{1};

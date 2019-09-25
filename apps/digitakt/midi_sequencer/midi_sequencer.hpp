@@ -50,8 +50,9 @@ private:
     void update_buttons();
     void update_potis();
 
-    sequencer::backend::backend_t< sequencer::backend::clock_t, sequencer::backend::digitakt,
-                                   sequencer::backend::rtmidi_t >
+    sequencer::backend::digitakt::backend_t< sequencer::backend::clock_t,
+                                             sequencer::backend::digitakt::backend_impl,
+                                             sequencer::backend::rtmidi_t >
         backend_{};
     Ui::midi_sequencer* ui;
     int old_clock_dial_value_ = 1200;

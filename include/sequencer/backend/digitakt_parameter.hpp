@@ -165,7 +165,7 @@ namespace sequencer::backend::digitakt
         {
             if ( restart || ( lfo_trig_mode() && note_send ) )
             {
-                pulse_count = 0;
+                pulse_count_ = 0;
                 if ( restart )
                 {
                     return {};
@@ -174,25 +174,25 @@ namespace sequencer::backend::digitakt
 
             if ( lfo_hold_mode() && !note_send )
             {
-                ++pulse_count;
+                ++pulse_count_;
                 return {};
             }
 
             const auto period_length = 4 * pulses_per_quarter_note * 128 / lfo_speed();
-            if ( ( lfo_one_mode() && pulse_count > period_length ) ||
-                 ( lfo_half_mode() && pulse_count > period_length / 2 ) )
+            if ( ( lfo_one_mode() && pulse_count_ > period_length ) ||
+                 ( lfo_half_mode() && pulse_count_ > period_length / 2 ) )
             {
                 return {};
             }
-            if ( ( lfo_one_mode() && pulse_count == period_length ) ||
-                 ( lfo_half_mode() && pulse_count == period_length / 2 ) )
+            if ( ( lfo_one_mode() && pulse_count_ == period_length ) ||
+                 ( lfo_half_mode() && pulse_count_ == period_length / 2 ) )
             {
-                ++pulse_count;
+                ++pulse_count_;
                 return f_( ( min_ + max_ ) / 2 + ( min_ + max_ ) % 2 );
             }
 
             const auto lfo_value = midi::lfo< std::uint8_t >(
-                pulse_count++, pulses_per_quarter_note, lfo_speed(), lfo_phase(), min_, max_,
+                pulse_count_++, pulses_per_quarter_note, lfo_speed(), lfo_phase(), min_, max_,
                 static_cast< midi::lfo_mode >(
                     parameters_[ track_parameter_t::lfo_idx::wave_form ].load() ) );
             return f_( lfo_value );
@@ -234,7 +234,7 @@ namespace sequencer::backend::digitakt
         std::uint8_t max_;
         F f_;
         const midi::track_parameter_t::parameters_type& parameters_;
-        mutable std::size_t pulse_count{0};
+        mutable std::size_t pulse_count_{0};
     };
 
 #define READ_SECTION( section_name )                                                               \

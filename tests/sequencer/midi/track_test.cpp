@@ -2,7 +2,6 @@
 #include <sequencer/chrono/sequencer_clock.hpp>
 #include <sequencer/chrono/testing_clock.hpp>
 #include <sequencer/midi/clock.hpp>
-#include <sequencer/midi/lfo.hpp>
 #include <sequencer/midi/track.hpp>
 #include <sequencer/midi/util.hpp>
 
@@ -11,8 +10,6 @@
 #include <condition_variable>
 
 using sequencer::backend::digitakt::track_parameter_t;
-using sequencer::midi::lfo;
-using sequencer::midi::lfo_mode;
 using sequencer::midi::make_midi_clock_raii_shutdown;
 using sequencer::midi::message_t;
 using sequencer::midi::no_note;
@@ -20,7 +17,6 @@ using sequencer::midi::note_t;
 using sequencer::midi::step_t;
 using sequencer::midi::track_t;
 using sequencer::midi::channel::voice::all_notes_off;
-using sequencer::midi::channel::voice::control_change;
 using sequencer::midi::channel::voice::note_off;
 using sequencer::midi::channel::voice::note_on;
 using sequencer::midi::realtime::realtime_clock;
@@ -368,67 +364,6 @@ SCENARIO( "track_t copy", "[track]" )
                 REQUIRE( track[ 1 ] == step );
                 REQUIRE( track[ 2 ] == step_t{} );
                 REQUIRE( track[ 3 ] == step_t{} );
-            }
-        }
-    }
-}
-
-SCENARIO( "track_t lfo", "[track]" )
-{
-    constexpr auto number_of_steps = 16u;
-    constexpr auto lfo_control_byte = 0x14;
-
-    GIVEN( "track_t with 16 steps" )
-    {
-        auto track = track_t< track_parameter_t >{number_of_steps};
-        track.parameter().set_velocity( 100 );
-        track.parameter().set_note_length_idx( 14 );
-        const auto first_note = note_t{1};
-        const auto first_velocity = std::uint8_t{80};
-        const auto first_step = step_t{first_note, first_velocity};
-
-        WHEN( "squared lfo-filter with speed 128 for velocity is set" )
-        {
-            track.set_lfo( []( std::size_t pulse_count, std::size_t pulses_per_quarter_note ) {
-                const auto lfo_value = lfo< std::uint8_t >( pulse_count, pulses_per_quarter_note,
-                                                            128, 0, 0, 127, lfo_mode::square );
-                return control_change( 0, lfo_control_byte, lfo_value );
-            } );
-            track.parameter()
-                .values[ track_parameter_t::idx::lfo ][ track_parameter_t::lfo_idx::speed ] = 128;
-            track.parameter()
-                .values[ track_parameter_t::idx::lfo ][ track_parameter_t::lfo_idx::destination ] =
-                1;
-
-            AND_WHEN( "a start and 96 clock messages are send" )
-            {
-                std::vector< message_t< 3 > > received_messages;
-                const auto sender = [&received_messages]( const auto& msg ) {
-                    received_messages.push_back( msg );
-                };
-
-                track.send_messages( realtime_start(), sender );
-                for ( auto i = 0; i < 96; ++i )
-                {
-                    track.send_messages( realtime_clock(), sender );
-                }
-
-                THEN( "96 messages are received" )
-                {
-                    REQUIRE( received_messages.size() == 96 );
-
-                    AND_THEN( "the first half has velocity 127" )
-                    {
-                        CHECK( static_cast< std::uint8_t >( received_messages[ 0 ][ 2 ] ) == 127 );
-                        CHECK( static_cast< std::uint8_t >( received_messages[ 47 ][ 2 ] ) == 127 );
-                    }
-
-                    AND_THEN( "the second half has velocity 0" )
-                    {
-                        CHECK( static_cast< std::uint8_t >( received_messages[ 48 ][ 2 ] ) == 0 );
-                        CHECK( static_cast< std::uint8_t >( received_messages[ 95 ][ 2 ] ) == 0 );
-                    }
-                }
             }
         }
     }

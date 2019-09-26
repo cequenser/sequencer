@@ -72,7 +72,7 @@ namespace sequencer::backend::digitakt
 #define ADD_LFO_DESTINATION( section_name )                                                        \
     {                                                                                              \
         auto& entry = device_spec_.control_parameter[ track_parameter_t::idx::section_name ];      \
-        for ( auto i = 0u; i < entry.size(); ++i )                                                 \
+        for ( decltype( entry.size() ) i = 0; i < entry.size(); ++i )                              \
         {                                                                                          \
             device_spec_                                                                           \
                 .control_parameter[ track_parameter_t::idx::lfo ]                                  \
@@ -101,11 +101,13 @@ namespace sequencer::backend::digitakt
                     for ( auto& track : pattern )
                     {
                         track.parameter().resize( device_spec.control_parameter.size() );
-                        for ( auto i = 0u; i < track.parameter().size(); ++i )
+                        for ( decltype( track.parameter().size() ) i = 0;
+                              i < track.parameter().size(); ++i )
                         {
                             track.parameter()[ i ].resize(
                                 device_spec.control_parameter[ i ].size() );
-                            for ( auto j = 0u; j < track.parameter()[ i ].size(); ++j )
+                            for ( decltype( track.parameter()[ i ].size() ) j = 0;
+                                  j < track.parameter()[ i ].size(); ++j )
                             {
                                 const auto value = device_spec.control_parameter[ i ][ j ].value;
                                 track.parameter()[ i ][ j ] =
@@ -255,8 +257,13 @@ namespace sequencer::backend::digitakt
                 if ( dest > 0 )
                 {
                     const auto target = lfo_map_[ std::size_t( dest - 1 ) ];
-                    current_track().set_lfo( current_track().parameter().lfo_func(
-                        spec( target.first )[ target.second ] ) );
+                    const auto& entry = spec( target.first )[ target.second ];
+                    current_track().set_lfo(
+                        entry.min, entry.max,
+                        [cc_msb = entry.cc_msb,
+                         channel = current_track().channel()]( std::uint8_t value ) {
+                            return midi::channel::voice::control_change( channel, cc_msb, value );
+                        } );
                 }
                 adjust_value_for_midi();
                 if ( device_spec_.control_parameter[ track_parameter_t::idx::lfo ][ id ].cc_lsb >

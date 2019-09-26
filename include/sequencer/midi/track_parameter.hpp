@@ -9,7 +9,8 @@ namespace sequencer::midi
 {
     struct track_parameter_t
     {
-        using container_type = std::vector< std::vector< copyable_atomic< std::int16_t > > >;
+        using parameters_type = std::vector< copyable_atomic< std::int16_t > >;
+        using container_type = std::vector< parameters_type >;
         using size_type = container_type::size_type;
 
         track_parameter_t() = default;

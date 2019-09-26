@@ -242,7 +242,7 @@ namespace sequencer::midi
         }
 
         template < class Sender >
-        void send_note_on_messages( int idx, const Sender& sender ) const
+        bool send_note_on_messages( int idx, const Sender& sender ) const
         {
             const auto& step = track_[ idx ];
             if ( step.is_active() )
@@ -251,7 +251,9 @@ namespace sequencer::midi
                 sender( channel::voice::note_on( channel(), to_uint8_t( note ),
                                                  get_velocity( step ) ) );
                 current_notes_.emplace_back( note, get_length() );
+                return true;
             }
+            return false;
         }
 
         template < class Sender >
@@ -348,33 +350,38 @@ namespace sequencer::midi
         }
 
         template < class Sender >
-        void send_messages( std::size_t idx, const Sender& sender ) const
+        bool send_messages( std::size_t idx, const Sender& sender ) const
         {
             if ( is_muted() )
             {
-                return;
+                return false;
             }
 
-            impl_.send_note_on_messages( idx, sender );
+            return impl_.send_note_on_messages( idx, sender );
         }
 
         template < class Sender >
         void send_messages( message_t< 1 > message, const Sender& sender ) const
         {
             const auto step = clock_to_step_.process_message( message );
+            auto note_on_send = false;
             if ( !impl_.process_control_message( message, sender ) && clock_to_step_.started() )
             {
                 impl_.send_note_off_messages( sender );
                 if ( step != clock_to_step_t::do_not_send )
                 {
-                    send_messages( step, sender );
+                    note_on_send = send_messages( step, sender );
                 }
             }
 
-            if ( clock_to_step_.started() && message == realtime::realtime_clock() &&
-                 parameter().lfo_enabled() )
+            if ( parameter().lfo_enabled() )
             {
-                sender( lfo_( lfo_pulse_count_++, clock_to_step_.pulses_per_quarter_note() ) );
+                const auto msg = lfo_( clock_to_step_.pulses_per_quarter_note(),
+                                       message == realtime::realtime_start(), note_on_send );
+                if ( msg )
+                {
+                    sender( *msg );
+                }
             }
         }
 
@@ -433,6 +440,12 @@ namespace sequencer::midi
             lfo_ = f;
         }
 
+        template < class F >
+        void set_lfo( std::uint8_t min, std::uint8_t max, F f )
+        {
+            set_lfo( parameter().lfo_func( min, max, f ) );
+        }
+
         Parameter& parameter() noexcept
         {
             return impl_.parameter();
@@ -477,8 +490,7 @@ namespace sequencer::midi
 
         track_impl_t< Parameter > impl_;
         copyable_atomic< bool > is_muted_{false};
-        std::function< message_t< 3 >( std::size_t, std::size_t ) > lfo_;
-        mutable std::size_t lfo_pulse_count_{0};
+        std::function< std::optional< message_t< 3 > >( std::size_t, bool, bool ) > lfo_;
         mutable clock_to_step_t clock_to_step_;
     };
 

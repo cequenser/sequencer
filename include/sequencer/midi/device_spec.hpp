@@ -40,7 +40,7 @@ namespace sequencer::midi
         if ( !entry.str_map.empty() )
         {
             os << sep << "str_map: " << entry.str_map.front();
-            for ( auto i = 1u; i < entry.str_map.size(); ++i )
+            for ( decltype( entry.str_map.size() ) i = 1; i < entry.str_map.size(); ++i )
             {
                 os << sub_sep << " " << entry.str_map[ i ];
             }
@@ -48,7 +48,7 @@ namespace sequencer::midi
         if ( !entry.map.empty() )
         {
             os << sep << "map: " << int( entry.map.front() );
-            for ( auto i = 1u; i < entry.map.size(); ++i )
+            for ( decltype( entry.map.size() ) i = 1; i < entry.map.size(); ++i )
             {
                 os << sub_sep << " " << int( entry.map[ i ] );
             }

@@ -44,7 +44,7 @@ namespace sequencer::midi
         }
 
         constexpr step_t( note_t note, std::uint8_t velocity ) noexcept
-            : is_active_{true}, note_{note}, velocity_{velocity}
+            : is_active_{note != no_note()}, note_{note}, velocity_{velocity}
         {
         }
 
@@ -60,6 +60,7 @@ namespace sequencer::midi
 
         void set_note( note_t note ) noexcept
         {
+            set_active( note != no_note() );
             note_ = note;
         }
 

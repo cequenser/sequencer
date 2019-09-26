@@ -194,6 +194,7 @@ namespace sequencer::backend::digitakt
                     switch ( id )
                     {
                     case 0:
+                        assert( current_step_ != -1 );
                         current_track()[ current_step_ ].set_note( sequencer::midi::note_t(
                             to_uint8_t( current_track().base_note() ) + std::uint8_t( value ) ) );
                         return;

@@ -18,6 +18,7 @@ add_executable(tests
     sequencer/midi/device_spec_test.cpp
     sequencer/midi/lfo_test.cpp
     sequencer/midi/pattern_test.cpp
+    sequencer/midi/step_test.cpp
     sequencer/midi/track_test.cpp
     sequencer/midi/message/channel_voice_test.cpp
     sequencer/midi/message/realtime_test.cpp

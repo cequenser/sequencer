@@ -12,6 +12,7 @@ add_executable(tests
     sequencer/audio/transfer_function_test.cpp
     sequencer/backend/digitakt_test.cpp
     sequencer/backend/digitakt_lfo_test.cpp
+    sequencer/backend/digitakt_parameter_test.cpp
     sequencer/midi/clock_test.cpp
     sequencer/midi/clock_base_test.cpp
     sequencer/midi/device_spec_test.cpp

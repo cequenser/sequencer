@@ -55,6 +55,9 @@ namespace sequencer::backend::digitakt
         std::vector< std::vector< midi::device_entry_t > > control_parameter;
     };
 
+    template < class >
+    class lfo_t;
+
     struct track_parameter_t : midi::track_parameter_t
     {
         enum idx
@@ -82,6 +85,17 @@ namespace sequencer::backend::digitakt
             phase,
             mod,
             depth
+        };
+
+        enum wave_from_idx
+        {
+            triangular = 0,
+            sine,
+            square,
+            saw,
+            exp,
+            ramp,
+            random
         };
 
         track_parameter_t() : midi::track_parameter_t{idx::count, length_idx + 1}
@@ -115,12 +129,12 @@ namespace sequencer::backend::digitakt
 
         std::uint16_t lfo_destination() const noexcept
         {
-            return values[ idx::lfo ][ lfo_idx::destination ].load();
+            return values[ idx::lfo ][ lfo_idx::destination ];
         }
 
         std::uint16_t lfo_speed() const noexcept
         {
-            return values[ idx::lfo ][ lfo_idx::speed ].load();
+            return values[ idx::lfo ][ lfo_idx::speed ] * values[ idx::lfo ][ lfo_idx::multiplier ];
         }
 
         bool lfo_enabled() const noexcept
@@ -128,18 +142,99 @@ namespace sequencer::backend::digitakt
             return lfo_destination() > 0 && lfo_speed() > 0;
         }
 
-        auto lfo_func( const midi::device_entry_t& entry ) const noexcept
+        template < class F >
+        auto lfo_func( std::uint8_t min, std::uint8_t max, F f ) const noexcept
         {
-            return [this, &entry]( std::size_t pulse_count, std::size_t pulses_per_quarter_note ) {
-                const auto speed = lfo_speed() * values[ idx::lfo ][ lfo_idx::multiplier ].load();
-                const auto phase = values[ idx::lfo ][ lfo_idx::phase ].load();
-                const auto lfo_value = midi::lfo< std::uint8_t >(
-                    pulse_count, pulses_per_quarter_note, speed, phase, entry.min, entry.max,
-                    static_cast< midi::lfo_mode >(
-                        values[ idx::lfo ][ lfo_idx::wave_form ].load() ) );
-                return midi::channel::voice::control_change( 0, entry.cc_msb, lfo_value );
-            };
+            return lfo_t< F >{min, max, f, values[ idx::lfo ]};
         }
+    };
+
+    template < class F >
+    class lfo_t
+    {
+    public:
+        explicit lfo_t( std::uint8_t min, std::uint8_t max, F f,
+                        const midi::track_parameter_t::parameters_type& parameters ) noexcept
+            : min_{min}, max_{max}, f_{f}, parameters_{parameters}
+        {
+        }
+
+        std::optional< midi::message_t< 3 > > operator()( std::size_t pulses_per_quarter_note,
+                                                          bool restart, bool note_send ) const
+            noexcept
+        {
+            if ( restart || ( lfo_trig_mode() && note_send ) )
+            {
+                pulse_count = 0;
+                if ( restart )
+                {
+                    return {};
+                }
+            }
+
+            if ( lfo_hold_mode() && !note_send )
+            {
+                ++pulse_count;
+                return {};
+            }
+
+            const auto period_length = 4 * pulses_per_quarter_note * 128 / lfo_speed();
+            if ( ( lfo_one_mode() && pulse_count > period_length ) ||
+                 ( lfo_half_mode() && pulse_count > period_length / 2 ) )
+            {
+                return {};
+            }
+            if ( ( lfo_one_mode() && pulse_count == period_length ) ||
+                 ( lfo_half_mode() && pulse_count == period_length / 2 ) )
+            {
+                ++pulse_count;
+                return f_( ( min_ + max_ ) / 2 + ( min_ + max_ ) % 2 );
+            }
+
+            const auto lfo_value = midi::lfo< std::uint8_t >(
+                pulse_count++, pulses_per_quarter_note, lfo_speed(), lfo_phase(), min_, max_,
+                static_cast< midi::lfo_mode >(
+                    parameters_[ track_parameter_t::lfo_idx::wave_form ].load() ) );
+            return f_( lfo_value );
+        }
+
+    private:
+        bool lfo_trig_mode() const noexcept
+        {
+            return parameters_[ track_parameter_t::lfo_idx::mod ] == 1;
+        }
+
+        bool lfo_hold_mode() const noexcept
+        {
+            return parameters_[ track_parameter_t::lfo_idx::mod ] == 2;
+        }
+
+        bool lfo_one_mode() const noexcept
+        {
+            return parameters_[ track_parameter_t::lfo_idx::mod ] == 3;
+        }
+
+        bool lfo_half_mode() const noexcept
+        {
+            return parameters_[ track_parameter_t::lfo_idx::mod ] == 4;
+        }
+
+        std::uint16_t lfo_phase() const noexcept
+        {
+            return parameters_[ track_parameter_t::lfo_idx::phase ];
+        }
+
+        std::uint16_t lfo_speed() const noexcept
+        {
+            return parameters_[ track_parameter_t::lfo_idx::speed ] *
+                   parameters_[ track_parameter_t::lfo_idx::multiplier ];
+        }
+
+        std::uint8_t min_;
+        std::uint8_t max_;
+        F f_;
+        const midi::track_parameter_t::parameters_type& parameters_;
+        mutable std::size_t pulse_count{0};
     };
 
 #define READ_SECTION( section_name )                                                               \

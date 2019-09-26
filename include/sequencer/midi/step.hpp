@@ -1,6 +1,7 @@
 #pragma once
 
-#include <atomic>
+#include <sequencer/copyable_atomic.hpp>
+
 #include <cassert>
 #include <cstdint>
 #include <limits>
@@ -47,17 +48,6 @@ namespace sequencer::midi
         {
         }
 
-        step_t( const step_t& other ) noexcept
-        {
-            copy_from( other );
-        }
-
-        step_t& operator=( const step_t& other ) noexcept
-        {
-            copy_from( other );
-            return *this;
-        }
-
         void set_active( bool active ) noexcept
         {
             is_active_ = active;
@@ -73,7 +63,7 @@ namespace sequencer::midi
             note_ = note;
         }
 
-        constexpr const std::optional< std::atomic< note_t > >& note() const noexcept
+        constexpr const std::optional< copyable_atomic< note_t > >& note() const noexcept
         {
             return note_;
         }
@@ -83,37 +73,16 @@ namespace sequencer::midi
             velocity_ = velocity;
         }
 
-        constexpr const std::optional< std::atomic< std::uint8_t > >& velocity() const noexcept
+        constexpr const std::optional< copyable_atomic< std::uint8_t > >& velocity() const noexcept
         {
             return velocity_;
         }
 
     private:
-        void copy_from( const step_t& other )
-        {
-            is_active_ = other.is_active();
-            if ( other.note_ )
-            {
-                note_ = other.note_->load();
-            }
-            else
-            {
-                note_.reset();
-            }
-            if ( other.velocity_ )
-            {
-                velocity_ = other.velocity_->load();
-            }
-            else
-            {
-                velocity_.reset();
-            }
-        }
-
-        std::atomic_bool is_active_{false};
-        std::optional< std::atomic< note_t > > note_{};
-        std::optional< std::atomic< std::uint8_t > > velocity_{};
-        //        std::optional< std::atomic<double> > length_{};
+        copyable_atomic< bool > is_active_{false};
+        std::optional< copyable_atomic< note_t > > note_{};
+        std::optional< copyable_atomic< std::uint8_t > > velocity_{};
+        //        std::optional< copyable_atomic<double> > length_{};
     };
 
     inline std::ostream& operator<<( std::ostream& os, const step_t& step )

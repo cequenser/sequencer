@@ -16,7 +16,7 @@ namespace qt
     public:
         explicit poti_t( QWidget* parent = nullptr );
 
-        void update( int value );
+        void update( int value, bool send_signals = true );
 
         void set_suffix( const QString& suffix );
         void set_decimals( int decimals );

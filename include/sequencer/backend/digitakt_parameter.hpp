@@ -130,13 +130,13 @@ namespace sequencer::backend::digitakt
 
         auto lfo_func( const midi::device_entry_t& entry ) const noexcept
         {
-            return [this, &entry]( std::size_t pulse_count, std::size_t steps_per_quarter_note,
-                                   std::size_t pulses_per_quarter_note ) {
-                const auto speed = lfo_speed() * 2; // values[idx::lfo][lfo_idx::multiplier].load();
+            return [this, &entry]( std::size_t pulse_count, std::size_t pulses_per_quarter_note ) {
+                const auto speed = lfo_speed() * values[ idx::lfo ][ lfo_idx::multiplier ].load();
                 const auto phase = values[ idx::lfo ][ lfo_idx::phase ].load();
                 const auto lfo_value = midi::lfo< std::uint8_t >(
-                    pulse_count, steps_per_quarter_note, pulses_per_quarter_note, speed, phase,
-                    entry.min, entry.max, midi::lfo_mode::square );
+                    pulse_count, pulses_per_quarter_note, speed, phase, entry.min, entry.max,
+                    static_cast< midi::lfo_mode >(
+                        values[ idx::lfo ][ lfo_idx::wave_form ].load() ) );
                 return midi::channel::voice::control_change( 0, entry.cc_msb, lfo_value );
             };
         }

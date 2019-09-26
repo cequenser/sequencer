@@ -389,11 +389,9 @@ SCENARIO( "track_t lfo", "[track]" )
 
         WHEN( "squared lfo-filter with speed 128 for velocity is set" )
         {
-            track.set_lfo( []( std::size_t pulse_count, std::size_t steps_per_quarter_note,
-                               std::size_t pulses_per_quarter_note ) {
-                const auto lfo_value = lfo< std::uint8_t >( pulse_count, steps_per_quarter_note,
-                                                            pulses_per_quarter_note, 128, 0, 0, 127,
-                                                            lfo_mode::square );
+            track.set_lfo( []( std::size_t pulse_count, std::size_t pulses_per_quarter_note ) {
+                const auto lfo_value = lfo< std::uint8_t >( pulse_count, pulses_per_quarter_note,
+                                                            128, 0, 0, 127, lfo_mode::square );
                 return control_change( 0, lfo_control_byte, lfo_value );
             } );
             track.parameter()
@@ -418,18 +416,18 @@ SCENARIO( "track_t lfo", "[track]" )
                 THEN( "96 messages are received" )
                 {
                     REQUIRE( received_messages.size() == 96 );
-                }
 
-                THEN( "the first half has velocity 127" )
-                {
-                    CHECK( static_cast< std::uint8_t >( received_messages[ 0 ][ 2 ] ) == 127 );
-                    CHECK( static_cast< std::uint8_t >( received_messages[ 47 ][ 2 ] ) == 127 );
-                }
+                    AND_THEN( "the first half has velocity 127" )
+                    {
+                        CHECK( static_cast< std::uint8_t >( received_messages[ 0 ][ 2 ] ) == 127 );
+                        CHECK( static_cast< std::uint8_t >( received_messages[ 47 ][ 2 ] ) == 127 );
+                    }
 
-                THEN( "the second half has velocity 0" )
-                {
-                    CHECK( static_cast< std::uint8_t >( received_messages[ 48 ][ 2 ] ) == 0 );
-                    CHECK( static_cast< std::uint8_t >( received_messages[ 95 ][ 2 ] ) == 0 );
+                    AND_THEN( "the second half has velocity 0" )
+                    {
+                        CHECK( static_cast< std::uint8_t >( received_messages[ 48 ][ 2 ] ) == 0 );
+                        CHECK( static_cast< std::uint8_t >( received_messages[ 95 ][ 2 ] ) == 0 );
+                    }
                 }
             }
         }

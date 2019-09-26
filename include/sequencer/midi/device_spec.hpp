@@ -30,7 +30,7 @@ namespace sequencer::midi
 #undef X
 
 #define X( type, name, is_optional )                                                               \
-    os << ( is_optional ? sub_sep : sep ) << " " << #name ": " << int( entry.name );
+    os << ( ( is_optional ) ? sub_sep : sep ) << " " << #name ": " << int( entry.name );
     inline std::ostream& operator<<( std::ostream& os, const device_entry_t& entry )
     {
         constexpr auto sep = ";";

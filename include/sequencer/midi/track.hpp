@@ -2,6 +2,7 @@
 
 #include <sequencer/assert.hpp>
 #include <sequencer/beat_duration.hpp>
+#include <sequencer/copyable_atomic.hpp>
 #include <sequencer/midi/constants.hpp>
 #include <sequencer/midi/message/channel_voice.hpp>
 #include <sequencer/midi/message/message_type.hpp>
@@ -143,31 +144,29 @@ namespace sequencer::midi
     };
 
     template < class Parameter >
-    class track_t
+    class track_impl_t
     {
     public:
         using value_type = track_base_t::value_type;
         using size_type = track_base_t::size_type;
 
-        explicit track_t( size_type size = 64, size_type initial_size = 16 )
-            : track_{size, std::min( size, initial_size )}, clock_to_step_{size}
+        explicit track_impl_t( size_type size = 64, size_type initial_size = 16 )
+            : track_{size, std::min( size, initial_size )}
         {
             clear();
         }
 
         // NOLINTNEXTLINE(bugprone-copy-constructor-init)
-        track_t( const track_t& other )
-            : track_{other.track_.size()}, clock_to_step_{other.clock_to_step_}
+        track_impl_t( const track_impl_t& other ) : track_{other.track_.size()}
         {
             copy( other, *this );
         }
 
-        track_t& operator=( const track_t& other )
+        track_impl_t& operator=( const track_impl_t& other )
         {
             if ( this != &other )
             {
                 track_ = track_base_t{other.track_.size()};
-                clock_to_step_ = other.clock_to_step_;
                 copy( other, *this );
             }
             return *this;
@@ -180,8 +179,6 @@ namespace sequencer::midi
 
         void set_steps( std::size_t new_steps, std::size_t copy_offset = 0 )
         {
-            clock_to_step_.set_steps( new_steps );
-
             auto new_track = track_base_t( new_steps );
             copy_track( track_, new_track );
 
@@ -228,13 +225,25 @@ namespace sequencer::midi
         }
 
         template < class Sender >
-        void send_messages( std::size_t idx, const Sender& sender ) const
+        void send_note_off_messages( const Sender& sender ) const
         {
-            if ( is_muted() )
+            for ( auto& entry : current_notes_ )
             {
-                return;
+                if ( --entry.second == 0 )
+                {
+                    sender( channel::voice::note_off( channel(), to_uint8_t( entry.first ), 0 ) );
+                }
             }
 
+            current_notes_.erase(
+                std::remove_if( begin( current_notes_ ), end( current_notes_ ),
+                                []( const auto& entry ) { return entry.second == 0; } ),
+                end( current_notes_ ) );
+        }
+
+        template < class Sender >
+        void send_note_on_messages( int idx, const Sender& sender ) const
+        {
             const auto& step = track_[ idx ];
             if ( step.is_active() )
             {
@@ -246,79 +255,15 @@ namespace sequencer::midi
         }
 
         template < class Sender >
-        void send_messages( message_t< 1 > message, const Sender& sender ) const
-        {
-            if ( clock_to_step_.started() && message == realtime::realtime_clock() &&
-                 parameter().lfo_enabled() )
-            {
-                sender( lfo_( clock_to_step_.midi_beat_counter(), clock_to_step_.steps_per_beat(),
-                              clock_to_step_.pulses_per_step() ) );
-            }
-
-            const auto step = clock_to_step_.process_message( message );
-            if ( process_control_message( message, sender ) || !clock_to_step_.started() )
-            {
-                return;
-            }
-
-            for ( auto& entry : current_notes_ )
-            {
-                if ( --entry.second == 0 )
-                {
-                    sender( channel::voice::note_off( channel(), to_uint8_t( entry.first ), 0 ) );
-                }
-            }
-            current_notes_.erase(
-                std::remove_if( begin( current_notes_ ), end( current_notes_ ),
-                                []( const auto& entry ) { return entry.second == 0; } ),
-                end( current_notes_ ) );
-            if ( step != clock_to_step_t::do_not_send )
-            {
-                send_messages( step, sender );
-            }
-        }
-
-        template < class Sender >
         void send_all_notes_off_message( const Sender& sender ) const
         {
             sender( channel::voice::all_notes_off( channel() ) );
             current_notes_.clear();
         }
 
-        void mute( bool do_mute = true ) noexcept
-        {
-            is_muted_ = do_mute;
-        }
-
-        bool is_muted() const noexcept
-        {
-            return is_muted_;
-        }
-
         constexpr note_t base_note() const noexcept
         {
             return base_note_;
-        }
-
-        template < class F >
-        void set_lfo( F f )
-        {
-            lfo_ = f;
-        }
-
-        constexpr void set_steps_per_beat( std::size_t steps ) noexcept
-        {
-            clock_to_step_.set_steps_per_beat( steps );
-        }
-
-        constexpr void set_pulses_per_quarter_note( std::size_t pulses_per_quarter_note ) noexcept
-        {
-            clock_to_step_.set_pulses_per_quarter_note( pulses_per_quarter_note );
-        }
-
-        constexpr void reset_beat_counter() noexcept
-        {
-            clock_to_step_.reset_beat_counter();
         }
 
         Parameter& parameter() noexcept
@@ -329,33 +274,6 @@ namespace sequencer::midi
         const Parameter& parameter() const noexcept
         {
             return parameter_;
-        }
-
-    private:
-        note_t get_note( const step_t& step ) const noexcept
-        {
-            return step.note() ? step.note()->load() : base_note() + parameter().note_offset();
-        }
-
-        std::uint8_t get_velocity( const step_t& step ) const noexcept
-        {
-            return step.velocity() ? step.velocity()->load() : parameter().velocity();
-        }
-
-        std::size_t get_length() const noexcept
-        {
-            return std::size_t(
-                ( parameter().note_length().to_double() / clock_to_step_.steps_per_beat() ) *
-                    clock_to_step_.pulses_per_quarter_note() +
-                1e-6 );
-        }
-
-        void copy( const track_t& from, track_t& to )
-        {
-            to.channel_ = from.channel();
-            to.base_note_ = from.base_note();
-            to.is_muted_ = from.is_muted();
-            copy_track( from.track_, to.track_ );
         }
 
         template < class Sender >
@@ -378,14 +296,190 @@ namespace sequencer::midi
             return false;
         }
 
+        constexpr void set_pulses_per_step( std::size_t pulses ) noexcept
+        {
+            pulses_per_step_ = pulses;
+        }
+
+    private:
+        note_t get_note( const step_t& step ) const noexcept
+        {
+            return step.note() ? step.note()->load() : base_note() + parameter().note_offset();
+        }
+
+        std::uint8_t get_velocity( const step_t& step ) const noexcept
+        {
+            return step.velocity() ? step.velocity()->load() : parameter().velocity();
+        }
+
+        std::size_t get_length() const noexcept
+        {
+            return parameter().note_length().to_double() * pulses_per_step_;
+        }
+
+        void copy( const track_impl_t& from, track_impl_t& to )
+        {
+            to.parameter_ = from.parameter_;
+            to.channel_ = from.channel();
+            to.base_note_ = from.base_note();
+            to.pulses_per_step_ = from.pulses_per_step_;
+            copy_track( from.track_, to.track_ );
+        }
+
         track_base_t track_;
         Parameter parameter_{};
-        mutable clock_to_step_t clock_to_step_;
-        std::function< message_t< 3 >( std::size_t, std::size_t, std::size_t ) > lfo_;
         std::uint8_t channel_{0};
         note_t base_note_{36};
-        std::atomic_bool is_muted_{false};
+        std::size_t pulses_per_step_{6};
         mutable std::vector< std::pair< note_t, std::size_t /*remaining_pulses*/ > > current_notes_;
+    };
+
+    template < class Parameter >
+    class track_t
+    {
+    public:
+        using size_type = typename track_impl_t< Parameter >::size_type;
+        using value_type = typename track_impl_t< Parameter >::value_type;
+
+        explicit track_t( size_type size = 64, size_type initial_size = 16 )
+            : impl_{size, std::min( size, initial_size )}, clock_to_step_{size}
+        {
+            set_pulses_per_step();
+        }
+
+        template < class Sender >
+        void send_messages( std::size_t idx, const Sender& sender ) const
+        {
+            if ( is_muted() )
+            {
+                return;
+            }
+
+            impl_.send_note_on_messages( idx, sender );
+        }
+
+        template < class Sender >
+        void send_messages( message_t< 1 > message, const Sender& sender ) const
+        {
+            const auto step = clock_to_step_.process_message( message );
+            if ( !impl_.process_control_message( message, sender ) && clock_to_step_.started() )
+            {
+                impl_.send_note_off_messages( sender );
+                if ( step != clock_to_step_t::do_not_send )
+                {
+                    send_messages( step, sender );
+                }
+            }
+
+            if ( clock_to_step_.started() && message == realtime::realtime_clock() &&
+                 parameter().lfo_enabled() )
+            {
+                sender( lfo_( lfo_pulse_count_++, clock_to_step_.pulses_per_quarter_note() ) );
+            }
+        }
+
+        template < class Sender >
+        void send_all_notes_off_message( const Sender& sender ) const
+        {
+            impl_.send_all_notes_off_message( sender );
+        }
+
+        std::size_t steps() const noexcept
+        {
+            return impl_.steps();
+        }
+
+        void set_steps( std::size_t new_steps, std::size_t copy_offset = 0 )
+        {
+            clock_to_step_.set_steps( new_steps );
+            impl_.set_steps( new_steps, copy_offset );
+        }
+
+        value_type& operator[]( size_type i ) noexcept
+        {
+            return impl_[ i ];
+        }
+
+        const value_type& operator[]( size_type i ) const noexcept
+        {
+            return impl_[ i ];
+        }
+
+        constexpr void set_steps_per_beat( std::size_t steps ) noexcept
+        {
+            clock_to_step_.set_steps_per_beat( steps );
+            set_pulses_per_step();
+        }
+
+        constexpr void set_pulses_per_quarter_note( std::size_t pulses_per_quarter_note ) noexcept
+        {
+            clock_to_step_.set_pulses_per_quarter_note( pulses_per_quarter_note );
+            set_pulses_per_step();
+        }
+
+        constexpr void reset_beat_counter() noexcept
+        {
+            clock_to_step_.reset_beat_counter();
+        }
+
+        void clear() noexcept
+        {
+            impl_.clear();
+        }
+
+        template < class F >
+        void set_lfo( F f )
+        {
+            lfo_ = f;
+        }
+
+        Parameter& parameter() noexcept
+        {
+            return impl_.parameter();
+        }
+
+        const Parameter& parameter() const noexcept
+        {
+            return impl_.parameter();
+        }
+
+        constexpr void set_channel( std::uint8_t channel ) noexcept
+        {
+            impl_.set_channel( channel );
+        }
+
+        constexpr std::uint8_t channel() const noexcept
+        {
+            return impl_.channel();
+        }
+
+        void mute( bool do_mute = true ) noexcept
+        {
+            is_muted_ = do_mute;
+        }
+
+        bool is_muted() const noexcept
+        {
+            return is_muted_;
+        }
+
+        constexpr note_t base_note() const noexcept
+        {
+            return impl_.base_note();
+        }
+
+    private:
+        void set_pulses_per_step() noexcept
+        {
+            impl_.set_pulses_per_step( clock_to_step_.pulses_per_quarter_note() /
+                                       clock_to_step_.steps_per_beat() );
+        }
+
+        track_impl_t< Parameter > impl_;
+        copyable_atomic< bool > is_muted_{false};
+        std::function< message_t< 3 >( std::size_t, std::size_t ) > lfo_;
+        mutable std::size_t lfo_pulse_count_{0};
+        mutable clock_to_step_t clock_to_step_;
     };
 
     template < class Track, class Sender >

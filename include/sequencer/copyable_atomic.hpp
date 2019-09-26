@@ -42,7 +42,7 @@ namespace sequencer
             value_.store( value, order );
         }
 
-        explicit operator T() const noexcept
+        operator T() const noexcept
         {
             return load();
         }

@@ -69,6 +69,19 @@ namespace sequencer::backend::digitakt
         }
     };
 
+#define ADD_LFO_DESTINATION( section_name )                                                        \
+    {                                                                                              \
+        auto& entry = device_spec_.control_parameter[ track_parameter_t::idx::section_name ];      \
+        for ( auto i = 0u; i < entry.size(); ++i )                                                 \
+        {                                                                                          \
+            device_spec_                                                                           \
+                .control_parameter[ track_parameter_t::idx::lfo ]                                  \
+                                  [ track_parameter_t::lfo_idx::destination ]                      \
+                .str_map.push_back( #section_name + std::string( ":" ) + entry[ i ].name );        \
+            lfo_map_.emplace_back( control_mode_t::section_name, i );                              \
+        }                                                                                          \
+    }
+
     class backend_impl
     {
     public:
@@ -94,14 +107,37 @@ namespace sequencer::backend::digitakt
                                 device_spec.control_parameter[ i ].size() );
                             for ( auto j = 0u; j < track.parameter()[ i ].size(); ++j )
                             {
+                                const auto value = device_spec.control_parameter[ i ][ j ].value;
                                 track.parameter()[ i ][ j ] =
-                                    device_spec.control_parameter[ i ][ j ].value;
+                                    device_spec.control_parameter[ i ][ j ].map.empty()
+                                        ? value
+                                        : device_spec.control_parameter[ i ][ j ].map[ value ];
                             }
                         }
                     }
                 }
             }
+
+            device_spec_
+                .control_parameter[ track_parameter_t::idx::lfo ]
+                                  [ track_parameter_t::lfo_idx::destination ]
+                .str_map.emplace_back( "none" );
+            ADD_LFO_DESTINATION( trig )
+            ADD_LFO_DESTINATION( source )
+            ADD_LFO_DESTINATION( filter )
+            ADD_LFO_DESTINATION( amp )
+            ADD_LFO_DESTINATION( delay )
+            ADD_LFO_DESTINATION( reverb )
+            device_spec_
+                .control_parameter[ track_parameter_t::idx::lfo ]
+                                  [ track_parameter_t::lfo_idx::destination ]
+                .max = device_spec_
+                           .control_parameter[ track_parameter_t::idx::lfo ]
+                                             [ track_parameter_t::lfo_idx::destination ]
+                           .str_map.size() -
+                       1;
         }
+#undef ADD_LFO_DESTINATION
 
         void set_step( int idx, bool value = true ) noexcept
         {
@@ -202,9 +238,26 @@ namespace sequencer::backend::digitakt
                 return;
 
             case control_mode_t::lfo:
-                current_track().parameter()[ track_parameter_t::idx::lfo ][ id ] = value;
-                current_track().set_lfo( current_track().parameter().lfo_func(
-                    spec( control_mode_t::trig )[ track_parameter_t::velocity_idx ] ) );
+            {
+                if ( spec()[ id ].map.empty() )
+                {
+                    current_track().parameter()[ track_parameter_t::idx::lfo ][ id ] = value;
+                }
+                else
+                {
+                    current_track().parameter()[ track_parameter_t::idx::lfo ][ id ] =
+                        spec()[ id ].map[ value ];
+                }
+                const auto dest = current_track()
+                                      .parameter()[ track_parameter_t::idx::lfo ]
+                                                  [ track_parameter_t::lfo_idx::destination ]
+                                      .load();
+                if ( dest > 0 )
+                {
+                    const auto target = lfo_map_[ std::size_t( dest - 1 ) ];
+                    current_track().set_lfo( current_track().parameter().lfo_func(
+                        spec( target.first )[ target.second ] ) );
+                }
                 adjust_value_for_midi();
                 if ( device_spec_.control_parameter[ track_parameter_t::idx::lfo ][ id ].cc_lsb >
                      0 )
@@ -226,6 +279,7 @@ namespace sequencer::backend::digitakt
                     device_spec_.control_parameter[ track_parameter_t::idx::lfo ][ id ].cc_msb,
                     value ) );
                 return;
+            }
 
             case control_mode_t::delay:
                 current_track().parameter()[ track_parameter_t::idx::delay ][ id ] = value;
@@ -260,7 +314,17 @@ namespace sequencer::backend::digitakt
             case control_mode_t::amp:
                 return current_track().parameter()[ track_parameter_t::idx::amp ][ id ].load();
             case control_mode_t::lfo:
-                return current_track().parameter()[ track_parameter_t::idx::lfo ][ id ].load();
+
+                if ( spec()[ id ].map.empty() )
+                {
+                    return current_track().parameter()[ track_parameter_t::idx::lfo ][ id ].load();
+                }
+                return int(
+                    std::distance( begin( spec()[ id ].map ),
+                                   std::find( begin( spec()[ id ].map ), end( spec()[ id ].map ),
+                                              current_track()
+                                                  .parameter()[ track_parameter_t::idx::lfo ][ id ]
+                                                  .load() ) ) );
             case control_mode_t::delay:
                 return current_track().parameter()[ track_parameter_t::idx::delay ][ id ].load();
             case control_mode_t::reverb:
@@ -394,5 +458,6 @@ namespace sequencer::backend::digitakt
         control_mode_t control_mode_ = control_mode_t::trig;
         int current_step_{-1};
         device_spec_cc_t device_spec_;
+        std::vector< std::pair< control_mode_t, std::size_t > > lfo_map_;
     };
 } // namespace sequencer::backend::digitakt

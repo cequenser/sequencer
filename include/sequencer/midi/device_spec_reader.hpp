@@ -25,7 +25,7 @@ namespace sequencer::midi
     }                                                                                              \
     else                                                                                           \
     {                                                                                              \
-        if constexpr ( !is_optional )                                                              \
+        if constexpr ( !( is_optional ) )                                                          \
         {                                                                                          \
             throw std::runtime_error( "Could not parse '" #name "' in line: " + buffer );          \
         }                                                                                          \

@@ -26,6 +26,7 @@ namespace
                const std::vector< int >& map )
     {
         qt::signal_blocker_t signal_blocker{poti.dial()};
+        qt::signal_blocker_t line_signal_blocker{poti.line_edit()};
         poti.dial().setNotchTarget( ( 1 + max - min ) / 16.0 );
         poti.dial().setMinimum( min );
         poti.dial().setMaximum( max );
@@ -34,7 +35,7 @@ namespace
         poti.set_decimals( decimals );
         poti.set_str_map( str_map );
         poti.set_map( map );
-        poti.update( value );
+        poti.update( value, false );
     }
 
     void init( qt::poti_t& poti, int value, const sequencer::midi::device_entry_t& entry )

@@ -20,10 +20,13 @@ namespace qt
         dial().setMaximum( 4800 );
         dial().setNotchTarget( 40 );
         dial().setNotchesVisible( true );
-        const auto max_width = 100;
-        dial().setMaximumWidth( max_width );
+        const auto min_width = 100;
+        const auto max_width = 200;
+        dial().setMinimumWidth( min_width );
+        dial().setMaximumWidth( min_width );
         layout->addWidget( dial_ );
         line_edit_ = new QLineEdit;
+        line_edit().setMinimumWidth( min_width );
         line_edit().setMaximumWidth( max_width );
         layout->addWidget( line_edit_ );
         setLayout( layout );
@@ -32,34 +35,37 @@ namespace qt
         connect( line_edit_, &QLineEdit::editingFinished, this, &poti_t::update_from_line_edit );
     }
 
-    void poti_t::update( int value )
+    void poti_t::update( int value, bool send_signals )
     {
-        const auto real_value = double( value ) / std::pow( 10, decimals_ );
+        {
+            signal_blocker_t signal_blocker( dial() );
+            dial().setValue( value );
+        }
+
+        auto text_value = double( value );
+        if ( !map_.empty() )
+        {
+            text_value = map_[ value ];
+        }
+        auto real_value = text_value / std::pow( 10, decimals_ );
         std::stringstream stream;
         stream << std::setprecision( decimals_ ) << std::fixed << real_value;
         if ( str_map_.empty() )
         {
-            if ( map_.empty() )
-            {
-                line_edit().setText( QString( stream.str().c_str() ) + suffix_ );
-            }
-            else
-            {
-                line_edit().setText(
-                    QString::number( map_[ std::size_t( value - dial().minimum() ) ] ) );
-            }
+            line_edit().setText( QString( stream.str().c_str() ) + suffix_ );
         }
         else
         {
             line_edit().setText(
                 QString( str_map_[ std::size_t( value - dial().minimum() ) ].c_str() ) );
         }
-        {
-            signal_blocker_t signal_blocker( dial() );
-            dial().setValue( value );
-        }
 
         old_value_ = value;
+
+        if ( !send_signals )
+        {
+            return;
+        }
 
         emit value_changed( value );
     }
@@ -115,16 +121,12 @@ namespace qt
         int x{0};
         if ( str_map_.empty() )
         {
-            if ( map_.empty() )
-            {
-                x = int( value.remove( suffix_ ).trimmed().toDouble( &is_double ) *
-                         std::pow( 10, decimals_ ) );
-            }
-            else
+            x = int( value.remove( suffix_ ).trimmed().toDouble( &is_double ) *
+                     std::pow( 10, decimals_ ) );
+            if ( !map_.empty() )
             {
                 x = int( std::distance( begin( map_ ),
-                                        std::find( begin( map_ ), end( map_ ), value.toInt() ) ) ) +
-                    dial().minimum();
+                                        std::find( begin( map_ ), end( map_ ), value ) ) );
             }
         }
         else
@@ -138,9 +140,6 @@ namespace qt
         {
             x = old_value_;
         }
-        x = std::min( std::max( x, dial().minimum() ), dial().maximum() );
-        signal_blocker_t signal_blocker{*dial_};
-        dial().setValue( x );
         update( x );
     }
 } // namespace qt

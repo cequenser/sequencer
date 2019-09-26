@@ -418,9 +418,9 @@ SCENARIO( "lfo with triangular wave form", "[lfo]" )
         {
             const auto value = lfo( 0, pulses_per_quarter_note, speed, phase, min, max, mode );
 
-            THEN( "value is 64" )
+            THEN( "value is 63" )
             {
-                CHECK( value == 64 );
+                CHECK( value == 63 );
             }
         }
 
@@ -428,9 +428,9 @@ SCENARIO( "lfo with triangular wave form", "[lfo]" )
         {
             const auto value = lfo( 2, pulses_per_quarter_note, speed, phase, min, max, mode );
 
-            THEN( "value is 96" )
+            THEN( "value is 95" )
             {
-                CHECK( value == 96 );
+                CHECK( value == 95 );
             }
         }
 
@@ -468,9 +468,9 @@ SCENARIO( "lfo with triangular wave form", "[lfo]" )
         {
             const auto value = lfo( 16, pulses_per_quarter_note, speed, phase, min, max, mode );
 
-            THEN( "value is 64" )
+            THEN( "value is 63" )
             {
-                CHECK( value == 64 );
+                CHECK( value == 63 );
             }
         }
     }
@@ -516,9 +516,9 @@ SCENARIO( "lfo with triangular wave form", "[lfo]" )
         {
             const auto value = lfo( 12, pulses_per_quarter_note, speed, phase, min, max, mode );
 
-            THEN( "value is 64" )
+            THEN( "value is 63" )
             {
-                CHECK( value == 64 );
+                CHECK( value == 63 );
             }
         }
     }

@@ -19,7 +19,8 @@ SCENARIO( "lfo for velocity with rectangular wave form", "[digitakt]" )
         WHEN( "lfo with square wave is set" )
         {
             backend.set_control_mode( digitakt::control_mode_t::lfo );
-            backend.set_control( digitakt::track_parameter_t::lfo_idx::wave_form, 2,
+            backend.set_control( digitakt::track_parameter_t::lfo_idx::wave_form,
+                                 digitakt::track_parameter_t::wave_from_idx::square,
                                  []( auto ) {} );
 
             AND_WHEN( "speed is set to 32" )
@@ -271,13 +272,13 @@ SCENARIO( "lfo for velocity with triangular wave form", "[digitakt]" )
                                         AND_THEN( "the first messages has velocity 64" )
                                         {
                                             CHECK( static_cast< std::uint8_t >(
-                                                       received_messages[ 0 ][ 2 ] ) == 64 );
+                                                       received_messages[ 0 ][ 2 ] ) == 63 );
                                         }
 
                                         AND_THEN( "the 24th messages has velocity 96" )
                                         {
                                             CHECK( static_cast< std::uint8_t >(
-                                                       received_messages[ 24 ][ 2 ] ) == 96 );
+                                                       received_messages[ 24 ][ 2 ] ) == 95 );
                                         }
 
                                         AND_THEN( "the 48th messages has velocity 127" )
@@ -313,7 +314,7 @@ SCENARIO( "lfo for velocity with triangular wave form", "[digitakt]" )
                                         AND_THEN( "the 168th messages has velocity 32" )
                                         {
                                             CHECK( static_cast< std::uint8_t >(
-                                                       received_messages[ 168 ][ 2 ] ) == 32 );
+                                                       received_messages[ 168 ][ 2 ] ) == 31 );
                                         }
                                     }
                                 }

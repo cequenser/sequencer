@@ -13,35 +13,47 @@ namespace sequencer::midi
         square
     };
 
+    namespace func
+    {
+        inline double sine( double t )
+        {
+            return std::sin( 2 * M_PI * t );
+        }
+
+        inline double square( double t ) noexcept
+        {
+            return t < 0.5 ? 1 : -1;
+        }
+
+        inline double triangular( double t ) noexcept
+        {
+            t = std::fmod( t + 0.25, 1.0 );
+            const auto value = -1 + 4 * std::fmod( t, 0.5 );
+            return t < 0.5 ? value : -value;
+        }
+    } // namespace func
+
     template < class T >
     T lfo_impl( double pos, double period_length, double speed, double phase, T min, T max,
                 lfo_mode mode )
     {
         period_length /= speed;
         pos += phase * period_length;
+        pos = std::fmod( pos, period_length ) / period_length;
+        auto value = 0.0;
         switch ( mode )
         {
         case lfo_mode::triangular:
-        {
-            pos += period_length / 4;
-            pos = std::fmod( pos, period_length );
-            const auto value = min + ( std::fmod( pos, ( period_length / 2 ) ) ) /
-                                         double( period_length / 2 ) * ( max - min + 1 );
-            return ( pos < period_length / 2 ) ? value : max - value;
-        }
+            value = func::triangular( pos );
+            break;
         case lfo_mode::sine:
-        {
-            pos = std::fmod( pos, period_length );
-            return 0.5 *
-                   ( max + min + ( max - min ) * std::sin( 2 * M_PI * ( pos / period_length ) ) );
-        }
+            value = func::sine( pos );
+            break;
         case lfo_mode::square:
-        {
-            pos = std::fmod( pos, period_length );
-            return ( pos < period_length / 2 ) ? max : min;
+            value = func::square( pos );
+            break;
         }
-        }
-        return T{0};
+        return 0.5 * ( max + min + ( max - min ) * value );
     }
 
     template < class T >

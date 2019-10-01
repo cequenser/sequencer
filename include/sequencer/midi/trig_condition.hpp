@@ -28,6 +28,7 @@ namespace sequencer::midi
 
         template < class T, std::enable_if_t< !std::is_base_of<
                                 type_erased_storage_t, std::decay_t< T > >::value >* = nullptr >
+        // NOLINTNEXTLINE(bugprone-forwarding-reference-overload)
         explicit type_erased_storage_t( T&& value )
             : del_( &delete_data< std::decay_t< T > > ),
               copy_data_( &copy_data< std::decay_t< T > > ),
@@ -100,7 +101,7 @@ namespace sequencer::midi
     private:
         void reset() noexcept
         {
-            if ( data_ )
+            if ( data_ != nullptr )
             {
                 del_( data_ );
             }
@@ -132,6 +133,7 @@ namespace sequencer::midi
 
         template < class T, std::enable_if_t<
                                 !std::is_constructible< trig_condition_t, T >::value >* = nullptr >
+        // NOLINTNEXTLINE(bugprone-forwarding-reference-overload)
         trig_condition_t( T&& value )
             : call_( &call< std::decay_t< T > > ), impl_( std::forward< T >( value ) )
         {
@@ -167,10 +169,13 @@ namespace sequencer::midi
         template < int trig, int size >
         class deterministic
         {
+            static_assert( trig > 0 );
+            static_assert( trig <= size );
+
         public:
             bool operator()() const noexcept
             {
-                const auto result = ( current_++ == trig );
+                const auto result = ( current_++ == ( trig - 1 ) );
                 current_ %= size;
                 return result;
             }

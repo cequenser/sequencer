@@ -267,7 +267,7 @@ SCENARIO( "track_t with different speed multipliers", "[track]" )
 
             THEN( "no messages are received" )
             {
-                REQUIRE( received_messages.size() == 0 );
+                REQUIRE( received_messages.empty() );
             }
         }
 
@@ -297,7 +297,7 @@ SCENARIO( "track_t with different speed multipliers", "[track]" )
     }
 }
 
-SCENARIO( "track_t with trig_condition::deterministic<0,2>", "[track]" )
+SCENARIO( "track_t with trig_condition::deterministic<1,2>", "[track]" )
 {
     namespace trig_condition = sequencer::midi::trig_condition;
     constexpr auto number_of_steps = 16u;
@@ -309,7 +309,7 @@ SCENARIO( "track_t with trig_condition::deterministic<0,2>", "[track]" )
         const auto first_velocity = std::uint8_t{80};
         const auto first_step = step_t{first_note, first_velocity};
         track[ 4 ] = first_step;
-        track[ 4 ].set_trig_condition( trig_condition::deterministic< 0, 2 >{} );
+        track[ 4 ].set_trig_condition( trig_condition::deterministic< 1, 2 >{} );
 
         AND_WHEN( "a start and 4*24 clock messages are send" )
         {
@@ -339,14 +339,14 @@ SCENARIO( "track_t with trig_condition::deterministic<0,2>", "[track]" )
 
                 THEN( "no messages are received" )
                 {
-                    REQUIRE( received_messages.size() == 0 );
+                    REQUIRE( received_messages.empty() );
                 }
             }
         }
     }
 }
 
-SCENARIO( "track_t with trig_condition::deterministic<1,2>", "[track2]" )
+SCENARIO( "track_t with trig_condition::deterministic<2,2>", "[track2]" )
 {
     namespace trig_condition = sequencer::midi::trig_condition;
     constexpr auto number_of_steps = 16u;
@@ -358,7 +358,7 @@ SCENARIO( "track_t with trig_condition::deterministic<1,2>", "[track2]" )
         const auto first_velocity = std::uint8_t{80};
         const auto first_step = step_t{first_note, first_velocity};
         track[ 4 ] = first_step;
-        track[ 4 ].set_trig_condition( trig_condition::deterministic< 1, 2 >{} );
+        track[ 4 ].set_trig_condition( trig_condition::deterministic< 2, 2 >{} );
 
         AND_WHEN( "a start and 4*24 clock messages are send" )
         {
@@ -375,7 +375,7 @@ SCENARIO( "track_t with trig_condition::deterministic<1,2>", "[track2]" )
 
             THEN( "no messages are received" )
             {
-                REQUIRE( received_messages.size() == 0 );
+                REQUIRE( received_messages.empty() );
             }
 
             AND_WHEN( "another 4*24 clock messages are send" )

@@ -2,6 +2,7 @@ section: trig
 name: note; min: -24; max: 24; value: 0; cc_msb: 3, cc_lsb: 0; decimals: 0
 name: velocity; min: 0; max: 127; value: 100; cc_msb: 4, cc_lsb: 0; decimals: 0
 name: length; min: 0; max: 127; value: 14; cc_msb: 5, cc_lsb: 0; decimals: 0
+name: trc: min: 0; max: 64; value: 0; cc_msb: 0; cc_lsb: 0; decimals: 0
 name: filter; min: 0; max: 1; value: 1; cc_msb: 13, cc_lsb: 0; decimals: 0
 name: lfo; min: 0; max: 1; value: 0; cc_msb: 14, cc_lsb: 0; decimals: 0; str_map: {1:on, 0:off}
 

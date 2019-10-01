@@ -82,6 +82,204 @@ namespace sequencer::backend::digitakt
         }                                                                                          \
     }
 
+    inline midi::trig_condition_t get_trig_condition( int value )
+    {
+        if ( value == 0 )
+        {
+            return {};
+        }
+        switch ( value - 1 )
+        {
+        // fill
+        case 0:
+        // not fill
+        case 1:
+        // pre
+        case 2:
+        // not pre
+        case 3:
+        // neighbor
+        case 4:
+        // not neighbor
+        case 5:
+        // first
+        case 6:
+        // not first
+        case 7:
+            return {};
+        // percentage
+        case 8:
+            return midi::trig_condition::random{1};
+
+        case 9:
+            return midi::trig_condition::random{2};
+
+        case 10:
+            return midi::trig_condition::random{4};
+
+        case 11:
+            return midi::trig_condition::random{6};
+
+        case 12:
+            return midi::trig_condition::random{9};
+
+        case 13:
+            return midi::trig_condition::random{13};
+
+        case 14:
+            return midi::trig_condition::random{19};
+
+        case 15:
+            return midi::trig_condition::random{25};
+
+        case 16:
+            return midi::trig_condition::random{33};
+
+        case 17:
+            return midi::trig_condition::random{41};
+
+        case 18:
+            return midi::trig_condition::random{50};
+
+        case 19:
+            return midi::trig_condition::random{59};
+
+        case 20:
+            return midi::trig_condition::random{67};
+
+        case 21:
+            return midi::trig_condition::random{75};
+
+        case 22:
+            return midi::trig_condition::random{81};
+
+        case 23:
+            return midi::trig_condition::random{87};
+
+        case 24:
+            return midi::trig_condition::random{91};
+
+        case 25:
+            return midi::trig_condition::random{94};
+
+        case 26:
+            return midi::trig_condition::random{96};
+
+        case 27:
+            return midi::trig_condition::random{98};
+
+        case 28:
+            return midi::trig_condition::random{99};
+
+        case 29:
+            return midi::trig_condition::deterministic< 1, 2 >{};
+
+        case 30:
+            return midi::trig_condition::deterministic< 2, 2 >{};
+
+        case 31:
+            return midi::trig_condition::deterministic< 1, 3 >{};
+
+        case 32:
+            return midi::trig_condition::deterministic< 2, 3 >{};
+
+        case 33:
+            return midi::trig_condition::deterministic< 3, 3 >{};
+
+        case 34:
+            return midi::trig_condition::deterministic< 1, 4 >{};
+
+        case 35:
+            return midi::trig_condition::deterministic< 2, 4 >{};
+
+        case 36:
+            return midi::trig_condition::deterministic< 3, 4 >{};
+
+        case 37:
+            return midi::trig_condition::deterministic< 4, 4 >{};
+
+        case 38:
+            return midi::trig_condition::deterministic< 1, 5 >{};
+
+        case 39:
+            return midi::trig_condition::deterministic< 2, 5 >{};
+
+        case 40:
+            return midi::trig_condition::deterministic< 3, 5 >{};
+
+        case 41:
+            return midi::trig_condition::deterministic< 4, 5 >{};
+
+        case 42:
+            return midi::trig_condition::deterministic< 5, 5 >{};
+
+        case 43:
+            return midi::trig_condition::deterministic< 1, 6 >{};
+
+        case 44:
+            return midi::trig_condition::deterministic< 2, 6 >{};
+
+        case 45:
+            return midi::trig_condition::deterministic< 3, 6 >{};
+
+        case 46:
+            return midi::trig_condition::deterministic< 4, 6 >{};
+
+        case 47:
+            return midi::trig_condition::deterministic< 5, 6 >{};
+
+        case 48:
+            return midi::trig_condition::deterministic< 6, 6 >{};
+
+        case 49:
+            return midi::trig_condition::deterministic< 1, 7 >{};
+
+        case 50:
+            return midi::trig_condition::deterministic< 2, 7 >{};
+
+        case 51:
+            return midi::trig_condition::deterministic< 3, 7 >{};
+
+        case 52:
+            return midi::trig_condition::deterministic< 4, 7 >{};
+
+        case 53:
+            return midi::trig_condition::deterministic< 5, 7 >{};
+
+        case 54:
+            return midi::trig_condition::deterministic< 6, 7 >{};
+
+        case 55:
+            return midi::trig_condition::deterministic< 7, 7 >{};
+
+        case 56:
+            return midi::trig_condition::deterministic< 1, 8 >{};
+
+        case 57:
+            return midi::trig_condition::deterministic< 2, 8 >{};
+
+        case 58:
+            return midi::trig_condition::deterministic< 3, 8 >{};
+
+        case 59:
+            return midi::trig_condition::deterministic< 4, 8 >{};
+
+        case 60:
+            return midi::trig_condition::deterministic< 5, 8 >{};
+
+        case 61:
+            return midi::trig_condition::deterministic< 6, 8 >{};
+
+        case 62:
+            return midi::trig_condition::deterministic< 7, 8 >{};
+
+        case 63:
+            return midi::trig_condition::deterministic< 8, 8 >{};
+        }
+
+        return {};
+    }
+
     class backend_impl
     {
     public:
@@ -183,6 +381,8 @@ namespace sequencer::backend::digitakt
         template < class Sender >
         void set_control( int id, int value, Sender sender ) noexcept
         {
+            namespace trig_condition = sequencer::midi::trig_condition;
+
             const auto adjust_value_for_midi = [id, &value, this] { value -= spec()[ id ].min; };
 
             switch ( control_mode() )
@@ -201,6 +401,12 @@ namespace sequencer::backend::digitakt
                     case 1:
                         assert( current_step_ != -1 );
                         current_track()[ current_step_ ].set_velocity( std::uint8_t( value ) );
+                        return;
+                    case 3:
+                        assert( current_step_ != -1 );
+                        current_track()[ current_step() ].set_trig_condition(
+                            get_trig_condition( value ) );
+                        return;
                     }
                     return;
                 }

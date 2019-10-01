@@ -102,12 +102,12 @@ namespace sequencer::backend::digitakt
         {
         }
 
-        std::uint16_t note_offset() const noexcept
+        auto note_offset() const noexcept
         {
             return values[ idx::trig ][ note_offset_idx ].load();
         }
 
-        std::uint16_t velocity() const noexcept
+        auto velocity() const noexcept
         {
             return values[ idx::trig ][ velocity_idx ].load();
         }
@@ -127,19 +127,19 @@ namespace sequencer::backend::digitakt
             values[ idx::trig ][ length_idx ] = idx;
         }
 
-        std::uint16_t lfo_destination() const noexcept
+        auto lfo_destination() const noexcept
         {
             return values[ idx::lfo ][ lfo_idx::destination ];
         }
 
-        std::uint16_t lfo_speed() const noexcept
+        auto lfo_speed() const noexcept
         {
             return values[ idx::lfo ][ lfo_idx::speed ] * values[ idx::lfo ][ lfo_idx::multiplier ];
         }
 
         bool lfo_enabled() const noexcept
         {
-            return lfo_destination() > 0 && lfo_speed() > 0;
+            return lfo_destination() > 0 && lfo_speed() != 0;
         }
 
         template < class F >
@@ -219,12 +219,12 @@ namespace sequencer::backend::digitakt
             return parameters_[ track_parameter_t::lfo_idx::mod ] == 4;
         }
 
-        std::uint16_t lfo_phase() const noexcept
+        auto lfo_phase() const noexcept
         {
             return parameters_[ track_parameter_t::lfo_idx::phase ];
         }
 
-        std::uint16_t lfo_speed() const noexcept
+        auto lfo_speed() const noexcept
         {
             return parameters_[ track_parameter_t::lfo_idx::speed ] *
                    parameters_[ track_parameter_t::lfo_idx::multiplier ];

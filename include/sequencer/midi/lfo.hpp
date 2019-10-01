@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <iostream>
+#include <limits>
 #include <utility>
 
 namespace sequencer::midi
@@ -10,7 +11,9 @@ namespace sequencer::midi
     {
         triangular = 0,
         sine,
-        square
+        square,
+        saw,
+        exp
     };
 
     namespace func
@@ -31,15 +34,29 @@ namespace sequencer::midi
             const auto value = -1 + 4 * std::fmod( t, 0.5 );
             return t < 0.5 ? value : -value;
         }
+
+        inline double saw( double t ) noexcept
+        {
+            return 1 - 2 * t;
+        }
+
+        inline double exp( double t ) noexcept
+        {
+            return std::exp( -8 * t );
+        }
     } // namespace func
 
     template < class T >
     T lfo_impl( double pos, double period_length, double speed, double phase, T min, T max,
                 lfo_mode mode )
     {
-        period_length /= speed;
+        period_length /= std::abs( speed );
         pos += phase * period_length;
         pos = std::fmod( pos, period_length ) / period_length;
+        if ( speed < 0 )
+        {
+            pos = std::fmod( 1 - pos, period_length ) - std::numeric_limits< double >::epsilon();
+        }
         auto value = 0.0;
         switch ( mode )
         {
@@ -51,6 +68,12 @@ namespace sequencer::midi
             break;
         case lfo_mode::square:
             value = func::square( pos );
+            break;
+        case lfo_mode::saw:
+            value = func::saw( pos );
+            break;
+        case lfo_mode::exp:
+            value = func::exp( pos );
             break;
         }
         return 0.5 * ( max + min + ( max - min ) * value );

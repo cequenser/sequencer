@@ -646,3 +646,259 @@ SCENARIO( "lfo with sine wave form", "[lfo]" )
         }
     }
 }
+
+SCENARIO( "lfo with saw wave form", "[lfo]" )
+{
+    using namespace sequencer::midi;
+    constexpr auto pulses_per_quarter_note = 4;
+    constexpr auto mode = lfo_mode::saw;
+
+    GIVEN( "speed of 128, min of 0 and max of 127" )
+    {
+        const auto speed = 128;
+        const auto phase = 0;
+        const auto min = std::uint8_t{0};
+        const auto max = std::uint8_t{127};
+
+        WHEN( "lfo is computed for step 0" )
+        {
+            const auto value = lfo( 0, pulses_per_quarter_note, speed, phase, min, max, mode );
+
+            THEN( "value is 127" )
+            {
+                CHECK( value == 127 );
+            }
+        }
+
+        WHEN( "lfo is computed for step 2" )
+        {
+            const auto value = lfo( 2, pulses_per_quarter_note, speed, phase, min, max, mode );
+
+            THEN( "value is 111" )
+            {
+                CHECK( value == 111 );
+            }
+        }
+
+        WHEN( "lfo is computed for step 4" )
+        {
+            const auto value = lfo( 4, pulses_per_quarter_note, speed, phase, min, max, mode );
+
+            THEN( "value is 95" )
+            {
+                CHECK( value == 95 );
+            }
+        }
+
+        WHEN( "lfo is computed for step 8" )
+        {
+            const auto value = lfo( 8, pulses_per_quarter_note, speed, phase, min, max, mode );
+
+            THEN( "value is 63" )
+            {
+                CHECK( value == 63 );
+            }
+        }
+
+        WHEN( "lfo is computed for step 12" )
+        {
+            const auto value = lfo( 12, pulses_per_quarter_note, speed, phase, min, max, mode );
+
+            THEN( "value is 31" )
+            {
+                CHECK( value == 31 );
+            }
+        }
+
+        WHEN( "lfo is computed for step 16" )
+        {
+            const auto value = lfo( 16, pulses_per_quarter_note, speed, phase, min, max, mode );
+
+            THEN( "value is 127" )
+            {
+                CHECK( value == 127 );
+            }
+        }
+    }
+
+    GIVEN( "speed of 128, phase of 32, min of 0 and max of 127" )
+    {
+        const auto speed = 128;
+        const auto phase = 32;
+        const auto min = std::uint8_t{0};
+        const auto max = std::uint8_t{127};
+
+        WHEN( "lfo is computed for step 0" )
+        {
+            const auto value = lfo( 0, pulses_per_quarter_note, speed, phase, min, max, mode );
+
+            THEN( "value is 95" )
+            {
+                CHECK( value == 95 );
+            }
+        }
+
+        WHEN( "lfo is computed for step 4" )
+        {
+            const auto value = lfo( 4, pulses_per_quarter_note, speed, phase, min, max, mode );
+
+            THEN( "value is 63" )
+            {
+                CHECK( value == 63 );
+            }
+        }
+
+        WHEN( "lfo is computed for step 8" )
+        {
+            const auto value = lfo( 8, pulses_per_quarter_note, speed, phase, min, max, mode );
+
+            THEN( "value is 31" )
+            {
+                CHECK( value == 31 );
+            }
+        }
+
+        WHEN( "lfo is computed for step 12" )
+        {
+            const auto value = lfo( 12, pulses_per_quarter_note, speed, phase, min, max, mode );
+
+            THEN( "value is 127" )
+            {
+                CHECK( value == 127 );
+            }
+        }
+    }
+}
+
+SCENARIO( "lfo with exponential wave form", "[lfo]" )
+{
+    using namespace sequencer::midi;
+    constexpr auto pulses_per_quarter_note = 4;
+    constexpr auto mode = lfo_mode::exp;
+
+    GIVEN( "speed of 128, min of 0 and max of 127" )
+    {
+        const auto speed = 128;
+        const auto phase = 0;
+        const auto min = std::uint8_t{0};
+        const auto max = std::uint8_t{127};
+
+        WHEN( "lfo is computed for step 0" )
+        {
+            const auto value = lfo( 0, pulses_per_quarter_note, speed, phase, min, max, mode );
+
+            THEN( "value is 127" )
+            {
+                CHECK( value == 127 );
+            }
+        }
+
+        WHEN( "lfo is computed for step 2" )
+        {
+            const auto value = lfo( 2, pulses_per_quarter_note, speed, phase, min, max, mode );
+
+            THEN( "value is 86" )
+            {
+                CHECK( value == 86 );
+            }
+        }
+
+        WHEN( "lfo is computed for step 4" )
+        {
+            const auto value = lfo( 4, pulses_per_quarter_note, speed, phase, min, max, mode );
+
+            THEN( "value is 72" )
+            {
+                CHECK( value == 72 );
+            }
+        }
+
+        WHEN( "lfo is computed for step 8" )
+        {
+            const auto value = lfo( 8, pulses_per_quarter_note, speed, phase, min, max, mode );
+
+            THEN( "value is 64" )
+            {
+                CHECK( value == 64 );
+            }
+        }
+
+        WHEN( "lfo is computed for step 12" )
+        {
+            const auto value = lfo( 12, pulses_per_quarter_note, speed, phase, min, max, mode );
+
+            THEN( "value is 63" )
+            {
+                CHECK( value == 63 );
+            }
+        }
+
+        WHEN( "lfo is computed for step 15" )
+        {
+            const auto value = lfo( 15, pulses_per_quarter_note, speed, phase, min, max, mode );
+
+            THEN( "value is 63" )
+            {
+                CHECK( value == 63 );
+            }
+        }
+
+        WHEN( "lfo is computed for step 16" )
+        {
+            const auto value = lfo( 16, pulses_per_quarter_note, speed, phase, min, max, mode );
+
+            THEN( "value is 127" )
+            {
+                CHECK( value == 127 );
+            }
+        }
+    }
+
+    GIVEN( "speed of 128, phase of 32, min of 0 and max of 127" )
+    {
+        const auto speed = 128;
+        const auto phase = 32;
+        const auto min = std::uint8_t{0};
+        const auto max = std::uint8_t{127};
+
+        WHEN( "lfo is computed for step 0" )
+        {
+            const auto value = lfo( 0, pulses_per_quarter_note, speed, phase, min, max, mode );
+
+            THEN( "value is 72" )
+            {
+                CHECK( value == 72 );
+            }
+        }
+
+        WHEN( "lfo is computed for step 4" )
+        {
+            const auto value = lfo( 4, pulses_per_quarter_note, speed, phase, min, max, mode );
+
+            THEN( "value is 64" )
+            {
+                CHECK( value == 64 );
+            }
+        }
+
+        WHEN( "lfo is computed for step 8" )
+        {
+            const auto value = lfo( 8, pulses_per_quarter_note, speed, phase, min, max, mode );
+
+            THEN( "value is 63" )
+            {
+                CHECK( value == 63 );
+            }
+        }
+
+        WHEN( "lfo is computed for step 12" )
+        {
+            const auto value = lfo( 12, pulses_per_quarter_note, speed, phase, min, max, mode );
+
+            THEN( "value is 127" )
+            {
+                CHECK( value == 127 );
+            }
+        }
+    }
+}

@@ -75,6 +75,48 @@ SCENARIO( "track_t lfo", "[track]" )
                     }
                 }
             }
+
+            AND_WHEN( "speed is changed to -128" )
+            {
+                track.parameter()
+                    .values[ track_parameter_t::idx::lfo ][ track_parameter_t::lfo_idx::speed ] =
+                    -128;
+
+                AND_WHEN( "a start and 96 clock messages are send" )
+                {
+                    std::vector< message_t< 3 > > received_messages;
+                    const auto sender = [&received_messages]( const auto& msg ) {
+                        received_messages.push_back( msg );
+                    };
+
+                    track.send_messages( realtime_start(), sender );
+                    for ( auto i = 0; i < 96; ++i )
+                    {
+                        track.send_messages( realtime_clock(), sender );
+                    }
+
+                    THEN( "96 messages are received" )
+                    {
+                        REQUIRE( received_messages.size() == 96 );
+
+                        AND_THEN( "the first half has velocity 0" )
+                        {
+                            CHECK( static_cast< std::uint8_t >( received_messages[ 0 ][ 2 ] ) ==
+                                   0 );
+                            CHECK( static_cast< std::uint8_t >( received_messages[ 47 ][ 2 ] ) ==
+                                   0 );
+                        }
+
+                        AND_THEN( "the second half has velocity 127" )
+                        {
+                            CHECK( static_cast< std::uint8_t >( received_messages[ 48 ][ 2 ] ) ==
+                                   127 );
+                            CHECK( static_cast< std::uint8_t >( received_messages[ 95 ][ 2 ] ) ==
+                                   127 );
+                        }
+                    }
+                }
+            }
         }
     }
 }

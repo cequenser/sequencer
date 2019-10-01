@@ -100,8 +100,7 @@ namespace qt
 
     void normal_mode_tab_t::on_multiplier_changed( int idx )
     {
-        pattern_.set_pulses_per_quarter_note( std::size_t(
-            sequencer::midi::default_pulses_per_quarter_note / multiplier( idx ) + 1e-15 ) );
+        pattern_.set_speed_multiplier( multiplier( idx ) );
     }
 
     advanced_mode_tab_t::advanced_mode_tab_t( pattern_t& pattern,

@@ -31,6 +31,7 @@ add_library(sequencer
     midi/step.hpp
     midi/track.hpp
     midi/track_parameter.hpp
+    midi/trig_condition.hpp
     midi/message/channel_voice.hpp
     midi/message/message_type.hpp
     midi/message/realtime.hpp

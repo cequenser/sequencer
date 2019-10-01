@@ -1,6 +1,7 @@
 #pragma once
 
 #include <sequencer/copyable_atomic.hpp>
+#include <sequencer/midi/trig_condition.hpp>
 
 #include <cassert>
 #include <cstdint>
@@ -79,10 +80,22 @@ namespace sequencer::midi
             return velocity_;
         }
 
+        template < class F >
+        void set_trig_condition( F f ) noexcept
+        {
+            trig_condition_ = f;
+        }
+
+        bool evaluate_trig_condition() const noexcept
+        {
+            return !trig_condition_ || trig_condition_();
+        }
+
     private:
         copyable_atomic< bool > is_active_{false};
         std::optional< copyable_atomic< note_t > > note_{};
         std::optional< copyable_atomic< std::uint8_t > > velocity_{};
+        trig_condition_t trig_condition_{};
         //        std::optional< copyable_atomic<double> > length_{};
     };
 

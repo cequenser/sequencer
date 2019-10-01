@@ -5,7 +5,7 @@
 
 #include <catch2/catch.hpp>
 
-constexpr auto active_step = sequencer::midi::step_t{true};
+const auto active_step = sequencer::midi::step_t{true};
 
 SCENARIO( "loop length", "[pattern]" )
 {
@@ -26,7 +26,7 @@ SCENARIO( "loop length", "[pattern]" )
             pattern[ 0 ][ 2 ] = active_step;
             pattern[ 1 ][ 2 ] = active_step;
 
-            WHEN( "4*24 clock messages are sent" )
+            WHEN( "4*24 clock messages are send" )
             {
                 std::vector< message_t< 3 > > received_messages;
                 const auto sender = [&received_messages]( const auto& msg ) {

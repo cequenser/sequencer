@@ -67,7 +67,6 @@ namespace sequencer::midi
             {
                 track.set_steps_per_beat( steps );
             }
-            clock_to_step_.set_steps_per_beat( steps );
         }
 
         void set_pulses_per_quarter_note( std::size_t pulses_per_quarter )
@@ -76,26 +75,27 @@ namespace sequencer::midi
             {
                 track.set_pulses_per_quarter_note( pulses_per_quarter );
             }
-            clock_to_step_.set_pulses_per_quarter_note( pulses_per_quarter );
         }
 
         constexpr void set_loop_length( std::size_t loop_length ) noexcept
         {
-            clock_to_step_.set_steps( loop_length > 0 ? loop_length
-                                                      : std::numeric_limits< std::size_t >::max() );
+            for ( auto& track : tracks_ )
+            {
+                track.set_loop_length( loop_length );
+            }
+        }
+
+        constexpr void set_speed_multiplier( double speed ) noexcept
+        {
+            for ( auto& track : tracks_ )
+            {
+                track.set_speed_multiplier( speed );
+            }
         }
 
         template < class Sender >
         void send_messages( message_t< 1 > message, const Sender& sender )
         {
-            clock_to_step_.process_message( message );
-            if ( clock_to_step_.midi_beat_counter() == 0 )
-            {
-                for ( auto& track : tracks_ )
-                {
-                    track.reset_beat_counter();
-                }
-            }
             for ( auto& track : tracks_ )
             {
                 track.send_messages( message, sender );
@@ -104,8 +104,6 @@ namespace sequencer::midi
 
     private:
         std::vector< value_type > tracks_;
-        std::size_t loop_length_{16};
-        clock_to_step_t clock_to_step_;
     };
 
     template < class Track >

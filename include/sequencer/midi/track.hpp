@@ -13,6 +13,7 @@
 #include <algorithm>
 #include <atomic>
 #include <functional>
+#include <memory>
 #include <vector>
 
 namespace sequencer::midi
@@ -80,7 +81,7 @@ namespace sequencer::midi
 
         constexpr std::size_t pulses_per_quarter_note() const noexcept
         {
-            return pulses_per_quarter_note_;
+            return std::size_t( pulses_per_quarter_note_ / speed_ + 0.1 );
         }
 
         constexpr std::size_t pulses_per_step() const noexcept
@@ -104,6 +105,10 @@ namespace sequencer::midi
             {
                 midi_beat_counter_ = 0;
             }
+            if ( ++loop_length_midi_beat_counter_ == loop_length_ * pulses_per_step() )
+            {
+                reset_counters();
+            }
 
             return result;
         }
@@ -113,13 +118,23 @@ namespace sequencer::midi
             return started_;
         }
 
+        constexpr void set_speed_multiplier( double speed ) noexcept
+        {
+            speed_ = speed;
+        }
+
+        constexpr void set_loop_length( std::size_t length ) noexcept
+        {
+            loop_length_ = length;
+        }
+
     private:
         bool process_control_message( message_t< 1 > message ) const
         {
             if ( message == realtime::realtime_start() )
             {
                 started_ = true;
-                midi_beat_counter_ = 0;
+                reset_counters();
                 return true;
             }
             if ( message == realtime::realtime_continue() )
@@ -136,10 +151,19 @@ namespace sequencer::midi
             return false;
         }
 
+        void reset_counters() const
+        {
+            midi_beat_counter_ = 0;
+            loop_length_midi_beat_counter_ = 0;
+        }
+
         mutable std::size_t midi_beat_counter_{0};
+        mutable std::size_t loop_length_midi_beat_counter_{0};
         std::size_t steps_per_beat_{4};
         std::size_t pulses_per_quarter_note_{default_pulses_per_quarter_note};
+        double speed_{1};
         std::size_t steps_{16};
+        std::size_t loop_length_{16};
         mutable bool started_{false};
     };
 
@@ -245,7 +269,9 @@ namespace sequencer::midi
         bool send_note_on_messages( int idx, const Sender& sender ) const
         {
             const auto& step = track_[ idx ];
-            if ( step.is_active() )
+            const auto is_active = step.is_active();
+            const auto trig_active = step.evaluate_trig_condition();
+            if ( is_active && trig_active )
             {
                 const auto note = get_note( step );
                 sender( channel::voice::note_on( channel(), to_uint8_t( note ),
@@ -429,6 +455,11 @@ namespace sequencer::midi
             clock_to_step_.reset_beat_counter();
         }
 
+        auto midi_beat_counter() const noexcept
+        {
+            return clock_to_step_.midi_beat_counter();
+        }
+
         void clear() noexcept
         {
             impl_.clear();
@@ -479,6 +510,16 @@ namespace sequencer::midi
         constexpr note_t base_note() const noexcept
         {
             return impl_.base_note();
+        }
+
+        constexpr void set_speed_multiplier( double speed ) noexcept
+        {
+            clock_to_step_.set_speed_multiplier( speed );
+        }
+
+        constexpr void set_loop_length( std::size_t loop_length ) noexcept
+        {
+            clock_to_step_.set_loop_length( loop_length );
         }
 
     private:

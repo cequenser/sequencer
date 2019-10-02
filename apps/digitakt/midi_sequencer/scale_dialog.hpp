@@ -45,7 +45,8 @@ namespace qt
         Q_OBJECT
     public:
         using midi_track_t =
-            sequencer::midi::track_t< sequencer::backend::digitakt::track_parameter_t >;
+            sequencer::midi::track_t< sequencer::midi::step_t,
+                                      sequencer::backend::digitakt::track_parameter_t >;
         using pattern_t = sequencer::midi::pattern_t< midi_track_t >;
 
         explicit normal_mode_tab_t( pattern_t& pattern, track_t& track, QWidget* parent = nullptr );

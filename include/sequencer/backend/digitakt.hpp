@@ -457,6 +457,11 @@ namespace sequencer::backend::digitakt
                         assert( current_step_ != -1 );
                         current_track()[ current_step_ ].set_velocity( std::uint8_t( value ) );
                         return;
+                    case 2:
+                        assert( current_step_ != -1 );
+                        current_track()[ current_step_ ].set_length(
+                            beat_duration{length_map()[ std::size_t( value ) ]} );
+                        return;
                     case 3:
                         assert( current_step_ != -1 );
                         current_track()[ current_step() ].set_trig_condition(

@@ -1,7 +1,8 @@
 #pragma once
 
+#include <sequencer/wave_form.hpp>
+
 #include <cmath>
-#include <iostream>
 #include <limits>
 #include <utility>
 
@@ -13,38 +14,10 @@ namespace sequencer::midi
         sine,
         square,
         saw,
-        exp
+        exp,
+        ramp,
+        random
     };
-
-    namespace func
-    {
-        inline double sine( double t )
-        {
-            return std::sin( 2 * M_PI * t );
-        }
-
-        inline double square( double t ) noexcept
-        {
-            return t < 0.5 ? 1 : -1;
-        }
-
-        inline double triangular( double t ) noexcept
-        {
-            t = std::fmod( t + 0.25, 1.0 );
-            const auto value = -1 + 4 * std::fmod( t, 0.5 );
-            return t < 0.5 ? value : -value;
-        }
-
-        inline double saw( double t ) noexcept
-        {
-            return 1 - 2 * t;
-        }
-
-        inline double exp( double t ) noexcept
-        {
-            return std::exp( -8 * t );
-        }
-    } // namespace func
 
     template < class T >
     T lfo_impl( double pos, double period_length, double speed, double phase, T min, T max,
@@ -61,19 +34,25 @@ namespace sequencer::midi
         switch ( mode )
         {
         case lfo_mode::triangular:
-            value = func::triangular( pos );
+            value = wave_form::triangular( pos );
             break;
         case lfo_mode::sine:
-            value = func::sine( pos );
+            value = wave_form::sine( pos );
             break;
         case lfo_mode::square:
-            value = func::square( pos );
+            value = wave_form::square( pos );
             break;
         case lfo_mode::saw:
-            value = func::saw( pos );
+            value = wave_form::saw( pos );
             break;
         case lfo_mode::exp:
-            value = func::exp( pos );
+            value = wave_form::exp_t{8}( pos );
+            break;
+        case lfo_mode::ramp:
+            value = wave_form::ramp_t{4.0 / 3}( pos );
+            break;
+        case lfo_mode::random:
+            value = wave_form::random();
             break;
         }
         return 0.5 * ( max + min + ( max - min ) * value );

@@ -12,6 +12,7 @@ add_library(sequencer
     type_traits.hpp
     vector.hpp
     vector_view.hpp
+    wave_form.hpp
     audio/double_buffer.hpp
     audio/fft.hpp
     audio/sample.hpp

@@ -40,6 +40,7 @@ namespace sequencer::midi
                                 type_erased_storage_t, std::decay_t< T > >::value >* = nullptr >
         type_erased_storage_t& operator=( T&& value )
         {
+            // NOLINTNEXTLINE(cppcoreguidelines-c-copy-assignment-signature)
             return *this = Storage( std::forward< T >( value ) );
         }
 
@@ -143,6 +144,7 @@ namespace sequencer::midi
                                 !std::is_constructible< trig_condition_t, T >::value >* = nullptr >
         trig_condition_t& operator=( T&& value )
         {
+            // NOLINTNEXTLINE(cppcoreguidelines-c-copy-assignment-signature)
             return *this = trig_condition_t( std::forward< T >( value ) );
         }
 
@@ -195,7 +197,7 @@ namespace sequencer::midi
             {
                 using clock = std::chrono::system_clock;
 
-                static auto seed =
+                static const auto seed =
                     clock::from_time_t( std::time( nullptr ) ).time_since_epoch().count();
                 static std::minstd_rand engine( seed );
                 static std::uniform_int_distribution< int > distribution{};

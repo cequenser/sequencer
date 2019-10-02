@@ -49,16 +49,26 @@ namespace sequencer::backend::digitakt
         return read_device_spec_cc( spec_file );
     }
 
-    template < class Clock, class Backend, class Sender >
-    class backend_t : public Sender, public Backend, public Clock
+    template < class Sender, class Receiver >
+    struct ClockComm
+    {
+        Sender clock_sender;
+        Receiver clock_receiver;
+    };
+
+    template < class Clock, class Backend, class ClockSender, class ClockReceiver, class Sender >
+    class backend_t : public ClockComm< ClockSender, ClockReceiver >,
+                      public Sender,
+                      public Backend,
+                      public Clock
     {
     public:
-        backend_t()
-            : Sender{}, Backend{get_spec( "device_spec/elektron/digitakt.txt" )},
+        template < class Callback >
+        explicit backend_t( Callback callback )
+            : ClockComm< ClockSender, ClockReceiver >{ClockSender{}, ClockReceiver{callback}},
+              Sender{}, Backend{get_spec( "device_spec/elektron/digitakt.txt" )},
               Clock( [this]( midi::message_t< 1 > message ) {
-                  using rtmidi::message_sender;
-                  Sender::sender()( message );
-                  Backend::receive_clock_message( message, Sender::sender() );
+                  ClockComm< ClockSender, ClockReceiver >::clock_sender.sender()( message );
               } )
         {
         }
@@ -280,6 +290,47 @@ namespace sequencer::backend::digitakt
         return {};
     }
 
+    class rtmidi_receiver_t
+    {
+    public:
+        template < class Callback >
+        explicit rtmidi_receiver_t( Callback callback )
+        {
+            midiin_.setCallback( callback );
+            // Don't ignore sysex, timing, or active sensing messages.
+            midiin_.ignoreTypes( false, false, false );
+        }
+
+        void select_input_port( int idx )
+        {
+            assert( idx >= 0 );
+            assert( idx <= int( midiin_.getPortCount() ) + 1 );
+
+            if ( midiin_.isPortOpen() )
+            {
+                midiin_.closePort();
+            }
+            if ( idx == 0 )
+            {
+                return;
+            }
+            midiin_.openPort( unsigned( idx - 1 ) );
+        }
+
+        std::vector< std::string > available_input_ports()
+        {
+            std::vector< std::string > ports;
+            for ( auto id = 0u; id < midiin_.getPortCount(); ++id )
+            {
+                ports.push_back( midiin_.getPortName( id ).c_str() );
+            }
+            return ports;
+        }
+
+    private:
+        RtMidiIn midiin_{};
+    };
+
     class backend_impl
     {
     public:
@@ -383,7 +434,9 @@ namespace sequencer::backend::digitakt
         {
             namespace trig_condition = sequencer::midi::trig_condition;
 
-            const auto adjust_value_for_midi = [id, &value, this] { value -= spec()[ id ].min; };
+            const auto adjust_value_for_midi = [id, &value, this] {
+                value -= spec()[ std::size_t( id ) ].min;
+            };
 
             switch ( control_mode() )
             {
@@ -411,52 +464,66 @@ namespace sequencer::backend::digitakt
                     return;
                 }
 
-                current_track().parameter()[ track_parameter_t::idx::trig ][ id ] = value;
+                current_track().parameter()[ track_parameter_t::idx::trig ][ std::size_t( id ) ] =
+                    value;
                 adjust_value_for_midi();
                 sender( midi::channel::voice::control_change(
                     current_track().channel(),
-                    device_spec_.control_parameter[ track_parameter_t::idx::trig ][ id ].cc_msb,
+                    device_spec_
+                        .control_parameter[ track_parameter_t::idx::trig ][ std::size_t( id ) ]
+                        .cc_msb,
                     value ) );
             }
                 return;
 
             case control_mode_t::source:
-                current_track().parameter()[ track_parameter_t::idx::source ][ id ] = value;
+                current_track().parameter()[ track_parameter_t::idx::source ][ std::size_t( id ) ] =
+                    value;
                 adjust_value_for_midi();
                 sender( midi::channel::voice::control_change(
                     current_track().channel(),
-                    device_spec_.control_parameter[ track_parameter_t::idx::source ][ id ].cc_msb,
+                    device_spec_
+                        .control_parameter[ track_parameter_t::idx::source ][ std::size_t( id ) ]
+                        .cc_msb,
                     value ) );
                 return;
 
             case control_mode_t::filter:
-                current_track().parameter()[ track_parameter_t::idx::filter ][ id ] = value;
+                current_track().parameter()[ track_parameter_t::idx::filter ][ std::size_t( id ) ] =
+                    value;
                 adjust_value_for_midi();
                 sender( midi::channel::voice::control_change(
                     current_track().channel(),
-                    device_spec_.control_parameter[ track_parameter_t::idx::filter ][ id ].cc_msb,
+                    device_spec_
+                        .control_parameter[ track_parameter_t::idx::filter ][ std::size_t( id ) ]
+                        .cc_msb,
                     value ) );
                 return;
 
             case control_mode_t::amp:
-                current_track().parameter()[ track_parameter_t::idx::amp ][ id ] = value;
+                current_track().parameter()[ track_parameter_t::idx::amp ][ std::size_t( id ) ] =
+                    value;
                 adjust_value_for_midi();
                 sender( midi::channel::voice::control_change(
                     current_track().channel(),
-                    device_spec_.control_parameter[ track_parameter_t::idx::amp ][ id ].cc_msb,
+                    device_spec_
+                        .control_parameter[ track_parameter_t::idx::amp ][ std::size_t( id ) ]
+                        .cc_msb,
                     value ) );
                 return;
 
             case control_mode_t::lfo:
             {
-                if ( spec()[ id ].map.empty() )
+                if ( spec()[ std::size_t( id ) ].map.empty() )
                 {
-                    current_track().parameter()[ track_parameter_t::idx::lfo ][ id ] = value;
+                    current_track()
+                        .parameter()[ track_parameter_t::idx::lfo ][ std::size_t( id ) ] = value;
                 }
                 else
                 {
-                    current_track().parameter()[ track_parameter_t::idx::lfo ][ id ] =
-                        spec()[ id ].map[ value ];
+                    current_track()
+                        .parameter()[ track_parameter_t::idx::lfo ][ std::size_t( id ) ] =
+                        spec()[ std::size_t( id ) ].map[ value ];
                 }
                 const auto dest = current_track()
                                       .parameter()[ track_parameter_t::idx::lfo ]
@@ -474,43 +541,56 @@ namespace sequencer::backend::digitakt
                         } );
                 }
                 adjust_value_for_midi();
-                if ( device_spec_.control_parameter[ track_parameter_t::idx::lfo ][ id ].cc_lsb >
-                     0 )
+                if ( device_spec_
+                         .control_parameter[ track_parameter_t::idx::lfo ][ std::size_t( id ) ]
+                         .cc_lsb > 0 )
                 {
-                    const auto [ msb, lsb ] =
-                        to_msb_lsb( value, spec()[ id ].min, spec()[ id ].max );
+                    const auto [ msb, lsb ] = to_msb_lsb( value, spec()[ std::size_t( id ) ].min,
+                                                          spec()[ std::size_t( id ) ].max );
                     sender( midi::channel::voice::control_change(
                         current_track().channel(),
-                        device_spec_.control_parameter[ track_parameter_t::idx::lfo ][ id ].cc_msb,
+                        device_spec_
+                            .control_parameter[ track_parameter_t::idx::lfo ][ std::size_t( id ) ]
+                            .cc_msb,
                         msb ) );
                     sender( midi::channel::voice::control_change(
                         current_track().channel(),
-                        device_spec_.control_parameter[ track_parameter_t::idx::lfo ][ id ].cc_lsb,
+                        device_spec_
+                            .control_parameter[ track_parameter_t::idx::lfo ][ std::size_t( id ) ]
+                            .cc_lsb,
                         lsb ) );
                     return;
                 }
                 sender( midi::channel::voice::control_change(
                     current_track().channel(),
-                    device_spec_.control_parameter[ track_parameter_t::idx::lfo ][ id ].cc_msb,
+                    device_spec_
+                        .control_parameter[ track_parameter_t::idx::lfo ][ std::size_t( id ) ]
+                        .cc_msb,
                     value ) );
                 return;
             }
 
             case control_mode_t::delay:
-                current_track().parameter()[ track_parameter_t::idx::delay ][ id ] = value;
+                current_track().parameter()[ track_parameter_t::idx::delay ][ std::size_t( id ) ] =
+                    value;
                 adjust_value_for_midi();
                 sender( midi::channel::voice::control_change(
                     current_track().channel(),
-                    device_spec_.control_parameter[ track_parameter_t::idx::delay ][ id ].cc_msb,
+                    device_spec_
+                        .control_parameter[ track_parameter_t::idx::delay ][ std::size_t( id ) ]
+                        .cc_msb,
                     value ) );
                 return;
 
             case control_mode_t::reverb:
-                current_track().parameter()[ track_parameter_t::idx::reverb ][ id ] = value;
+                current_track().parameter()[ track_parameter_t::idx::reverb ][ std::size_t( id ) ] =
+                    value;
                 adjust_value_for_midi();
                 sender( midi::channel::voice::control_change(
                     current_track().channel(),
-                    device_spec_.control_parameter[ track_parameter_t::idx::reverb ][ id ].cc_msb,
+                    device_spec_
+                        .control_parameter[ track_parameter_t::idx::reverb ][ std::size_t( id ) ]
+                        .cc_msb,
                     value ) );
                 return;
             }
@@ -521,29 +601,44 @@ namespace sequencer::backend::digitakt
             switch ( control_mode() )
             {
             case control_mode_t::trig:
-                return current_track().parameter()[ track_parameter_t::idx::trig ][ id ].load();
+                return current_track()
+                    .parameter()[ track_parameter_t::idx::trig ][ std::size_t( id ) ]
+                    .load();
             case control_mode_t::source:
-                return current_track().parameter()[ track_parameter_t::idx::source ][ id ].load();
+                return current_track()
+                    .parameter()[ track_parameter_t::idx::source ][ std::size_t( id ) ]
+                    .load();
             case control_mode_t::filter:
-                return current_track().parameter()[ track_parameter_t::idx::filter ][ id ].load();
+                return current_track()
+                    .parameter()[ track_parameter_t::idx::filter ][ std::size_t( id ) ]
+                    .load();
             case control_mode_t::amp:
-                return current_track().parameter()[ track_parameter_t::idx::amp ][ id ].load();
+                return current_track()
+                    .parameter()[ track_parameter_t::idx::amp ][ std::size_t( id ) ]
+                    .load();
             case control_mode_t::lfo:
 
-                if ( spec()[ id ].map.empty() )
+                if ( spec()[ std::size_t( id ) ].map.empty() )
                 {
-                    return current_track().parameter()[ track_parameter_t::idx::lfo ][ id ].load();
+                    return current_track()
+                        .parameter()[ track_parameter_t::idx::lfo ][ std::size_t( id ) ]
+                        .load();
                 }
-                return int(
-                    std::distance( begin( spec()[ id ].map ),
-                                   std::find( begin( spec()[ id ].map ), end( spec()[ id ].map ),
-                                              current_track()
-                                                  .parameter()[ track_parameter_t::idx::lfo ][ id ]
-                                                  .load() ) ) );
+                return int( std::distance(
+                    begin( spec()[ std::size_t( id ) ].map ),
+                    std::find( begin( spec()[ std::size_t( id ) ].map ),
+                               end( spec()[ std::size_t( id ) ].map ),
+                               current_track()
+                                   .parameter()[ track_parameter_t::idx::lfo ][ std::size_t( id ) ]
+                                   .load() ) ) );
             case control_mode_t::delay:
-                return current_track().parameter()[ track_parameter_t::idx::delay ][ id ].load();
+                return current_track()
+                    .parameter()[ track_parameter_t::idx::delay ][ std::size_t( id ) ]
+                    .load();
             case control_mode_t::reverb:
-                return current_track().parameter()[ track_parameter_t::idx::reverb ][ id ].load();
+                return current_track()
+                    .parameter()[ track_parameter_t::idx::reverb ][ std::size_t( id ) ]
+                    .load();
             default:
                 return 0;
             }

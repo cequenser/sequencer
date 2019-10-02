@@ -217,6 +217,78 @@ SCENARIO( "track_t lfo in trig mode", "[track]" )
                 }
             }
         }
+
+        WHEN( "squared lfo-filter with speed -128 for velocity is set" )
+        {
+            track.parameter()
+                .values[ track_parameter_t::idx::lfo ][ track_parameter_t::lfo_idx::speed ] = -128;
+            track.set_lfo( 0, 127, []( std::uint8_t value ) {
+                return control_change( 0, lfo_control_byte, value );
+            } );
+
+            AND_WHEN( "a start and 144 clock messages are send" )
+            {
+                std::vector< message_t< 3 > > received_messages;
+                const auto sender = [&received_messages]( const auto& msg ) {
+                    received_messages.push_back( msg );
+                };
+
+                track.send_messages( realtime_start(), sender );
+                for ( auto i = 0; i < 144; ++i )
+                {
+                    track.send_messages( realtime_clock(), sender );
+                }
+
+                THEN( "146 messages are received" )
+                {
+                    REQUIRE( received_messages.size() == 146 );
+
+                    AND_THEN( "the first half has velocity 0" )
+                    {
+                        CHECK( static_cast< std::uint8_t >( received_messages[ 0 ][ 2 ] ) == 0 );
+                        CHECK( static_cast< std::uint8_t >( received_messages[ 47 ][ 2 ] ) == 0 );
+                    }
+
+                    AND_THEN( "followed by 24 messages with velocity 127" )
+                    {
+                        CHECK( static_cast< std::uint8_t >( received_messages[ 48 ][ 2 ] ) == 127 );
+                        CHECK( static_cast< std::uint8_t >( received_messages[ 71 ][ 2 ] ) == 127 );
+                    }
+
+                    AND_THEN( "followed by a note on messages" )
+                    {
+                        CHECK( received_messages[ 72 ] ==
+                               note_on( 0, to_uint8_t( first_note ), first_velocity ) );
+                    }
+
+                    AND_THEN( "followed by 6 messages with velocity 0" )
+                    {
+                        CHECK( static_cast< std::uint8_t >( received_messages[ 73 ][ 2 ] ) == 0 );
+                        CHECK( static_cast< std::uint8_t >( received_messages[ 78 ][ 2 ] ) == 0 );
+                    }
+
+                    AND_THEN( "followed by a note off messages" )
+                    {
+                        CHECK( received_messages[ 79 ] ==
+                               note_off( 0, to_uint8_t( first_note ), 0 ) );
+                    }
+
+                    AND_THEN( "followed by 42 messages with velocity 0" )
+                    {
+                        CHECK( static_cast< std::uint8_t >( received_messages[ 80 ][ 2 ] ) == 0 );
+                        CHECK( static_cast< std::uint8_t >( received_messages[ 121 ][ 2 ] ) == 0 );
+                    }
+
+                    AND_THEN( "followed by 22 messages with velocity 127" )
+                    {
+                        CHECK( static_cast< std::uint8_t >( received_messages[ 122 ][ 2 ] ) ==
+                               127 );
+                        CHECK( static_cast< std::uint8_t >( received_messages[ 143 ][ 2 ] ) ==
+                               127 );
+                    }
+                }
+            }
+        }
     }
 }
 

@@ -12,7 +12,7 @@ namespace sequencer::wave_form
         return std::sin( 2 * M_PI * t );
     }
 
-    inline double square( double t ) noexcept
+    constexpr double square( double t ) noexcept
     {
         return t < 0.5 ? 1 : -1;
     }
@@ -24,7 +24,7 @@ namespace sequencer::wave_form
         return t < 0.5 ? value : -value;
     }
 
-    inline double saw( double t ) noexcept
+    constexpr double saw( double t ) noexcept
     {
         return 1 - 2 * t;
     }
@@ -35,7 +35,7 @@ namespace sequencer::wave_form
         {
         }
 
-        double operator()( double t ) noexcept
+        double operator()( double t ) const noexcept
         {
             return std::exp( -scale_ * t );
         }
@@ -50,7 +50,7 @@ namespace sequencer::wave_form
         {
         }
 
-        double operator()( double t ) noexcept
+        constexpr double operator()( double t ) const noexcept
         {
             return ( t > 1 / slope_ ) ? 0 : ( slope_ * t );
         }

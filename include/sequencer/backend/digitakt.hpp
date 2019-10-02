@@ -50,14 +50,14 @@ namespace sequencer::backend::digitakt
     }
 
     template < class Sender, class Receiver >
-    struct ClockComm
+    struct clock_comm_t
     {
         Sender clock_sender;
         Receiver clock_receiver;
     };
 
     template < class Clock, class Backend, class ClockSender, class ClockReceiver, class Sender >
-    class backend_t : public ClockComm< ClockSender, ClockReceiver >,
+    class backend_t : public clock_comm_t< ClockSender, ClockReceiver >,
                       public Sender,
                       public Backend,
                       public Clock
@@ -65,10 +65,10 @@ namespace sequencer::backend::digitakt
     public:
         template < class Callback >
         explicit backend_t( Callback callback )
-            : ClockComm< ClockSender, ClockReceiver >{ClockSender{}, ClockReceiver{callback}},
+            : clock_comm_t< ClockSender, ClockReceiver >{ClockSender{}, ClockReceiver{callback}},
               Sender{}, Backend{get_spec( "device_spec/elektron/digitakt.txt" )},
               Clock( [this]( midi::message_t< 1 > message ) {
-                  ClockComm< ClockSender, ClockReceiver >::clock_sender.sender()( message );
+                  clock_comm_t< ClockSender, ClockReceiver >::clock_sender.sender()( message );
               } )
         {
         }
@@ -322,7 +322,7 @@ namespace sequencer::backend::digitakt
             std::vector< std::string > ports;
             for ( auto id = 0u; id < midiin_.getPortCount(); ++id )
             {
-                ports.push_back( midiin_.getPortName( id ).c_str() );
+                ports.push_back( midiin_.getPortName( id ) );
             }
             return ports;
         }
@@ -691,6 +691,7 @@ namespace sequencer::backend::digitakt
         template < class Sender >
         void receive_clock_message( sequencer::midi::message_t< 1 > message, Sender sender )
         {
+            std::cout << "receive clock message" << std::endl;
             current_pattern().send_messages( message, sender );
         }
 

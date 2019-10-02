@@ -43,6 +43,16 @@
        <string>Clock</string>
       </property>
       <layout class="QGridLayout" name="gridLayout_2">
+       <item row="1" column="0">
+        <widget class="QComboBox" name="midi_output_port_box"/>
+       </item>
+       <item row="1" column="1">
+        <widget class="QCheckBox" name="midi_clock_slave_box">
+         <property name="text">
+          <string>slave</string>
+         </property>
+        </widget>
+       </item>
        <item row="0" column="0">
         <widget class="QComboBox" name="midi_clock_port_box"/>
        </item>
@@ -238,11 +248,11 @@
    <sender>midi_clock_port_box</sender>
    <signal>currentIndexChanged(int)</signal>
    <receiver>midi_sequencer</receiver>
-   <slot>select_port(int)</slot>
+   <slot>select_clock_port(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>22</x>
-     <y>96</y>
+     <x>63</x>
+     <y>98</y>
     </hint>
     <hint type="destinationlabel">
      <x>213</x>
@@ -337,8 +347,8 @@
    <slot>set_clock_bpm(double)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>195</x>
-     <y>93</y>
+     <x>176</x>
+     <y>113</y>
     </hint>
     <hint type="destinationlabel">
      <x>188</x>
@@ -369,8 +379,8 @@
    <slot>source_selected()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>362</x>
-     <y>205</y>
+     <x>360</x>
+     <y>224</y>
     </hint>
     <hint type="destinationlabel">
      <x>293</x>
@@ -426,9 +436,40 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>midi_output_port_box</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>midi_sequencer</receiver>
+   <slot>select_output_port(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>42</x>
+     <y>127</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-101</x>
+     <y>165</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>midi_clock_slave_box</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>midi_sequencer</receiver>
+   <slot>set_slave_mode(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>152</x>
+     <y>132</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-156</x>
+     <y>209</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
-  <slot>select_port(int)</slot>
   <slot>start_clock()</slot>
   <slot>stop_clock()</slot>
   <slot>set_clock_bpm(double)</slot>
@@ -442,5 +483,8 @@
   <slot>filter_selected()</slot>
   <slot>amp_selected()</slot>
   <slot>lfo_selected()</slot>
+  <slot>select_clock_port(int)</slot>
+  <slot>select_output_port(int)</slot>
+  <slot>set_slave_mode(bool)</slot>
  </slots>
 </ui>

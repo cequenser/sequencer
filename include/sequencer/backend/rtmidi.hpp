@@ -30,7 +30,7 @@ namespace sequencer::backend
             std::vector< std::string > ports;
             for ( auto id = 0u; id < midiout_->getPortCount(); ++id )
             {
-                ports.push_back( midiout_->getPortName( id ).c_str() );
+                ports.push_back( midiout_->getPortName( id ) );
             }
             return ports;
         }

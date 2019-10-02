@@ -45,12 +45,20 @@ namespace
     }
 } // namespace
 
-midi_sequencer::midi_sequencer( QWidget* parent )
-    : QMainWindow( parent ), ui( new Ui::midi_sequencer )
+midi_sequencer::midi_sequencer( QWidget* parent,
+                                void ( *callback )( double, std::vector< unsigned char >*, void* ) )
+    : QMainWindow( parent ), backend_{callback}, ui( new Ui::midi_sequencer )
 {
     ui->setupUi( this );
 
-    scan_available_ports();
+    update_clock_ports();
+
+    ui->midi_output_port_box->clear();
+    ui->midi_output_port_box->addItem( "select output port" );
+    for ( const auto& port : backend_.available_output_ports() )
+    {
+        ui->midi_output_port_box->addItem( port.c_str() );
+    }
 
     ui->sequencer_box->connect( this, [this]( auto i ) { sequencer_step_changed( i ); } );
     ui->sequencer_box->set_backend( backend_ );
@@ -101,9 +109,27 @@ void midi_sequencer::set_clock_bpm( int value )
     backend_.set_clock_bpm( value );
 }
 
-void midi_sequencer::select_port( int idx )
+void midi_sequencer::select_clock_port( int idx )
 {
-    backend_.select_port( idx );
+    if ( is_clock_slave_ )
+    {
+        backend_.clock_receiver.select_input_port( idx );
+        return;
+    }
+
+    backend_.clock_receiver.select_input_port( idx );
+    backend_.clock_sender.select_output_port( idx );
+}
+
+void midi_sequencer::select_output_port( int idx )
+{
+    backend_.select_output_port( idx );
+}
+
+void midi_sequencer::set_slave_mode( bool slave )
+{
+    is_clock_slave_ = slave;
+    update_clock_ports();
 }
 
 void midi_sequencer::change_bank()
@@ -207,14 +233,26 @@ void midi_sequencer::control_poti_changed( int id, int value )
     backend_.set_control( id, value );
 }
 
-void midi_sequencer::scan_available_ports()
+void midi_sequencer::update_clock_ports()
 {
+    qt::signal_blocker_t clock_box_blocker{*ui->midi_clock_port_box};
+    qt::signal_blocker_t output_box_block{*ui->midi_output_port_box};
     ui->midi_clock_port_box->clear();
-    ui->midi_clock_port_box->addItem( "select midi port" );
-    const auto ports = backend_.available_ports();
-    for ( const auto& port : ports )
+    if ( is_clock_slave_ )
     {
-        ui->midi_clock_port_box->addItem( port.c_str() );
+        ui->midi_clock_port_box->addItem( "select clock input port" );
+        for ( const auto& port : backend_.clock_receiver.available_input_ports() )
+        {
+            ui->midi_clock_port_box->addItem( port.c_str() );
+        }
+    }
+    else
+    {
+        ui->midi_clock_port_box->addItem( "select clock output port" );
+        for ( const auto& port : backend_.clock_sender.available_output_ports() )
+        {
+            ui->midi_clock_port_box->addItem( port.c_str() );
+        }
     }
 }
 

@@ -2,6 +2,8 @@
 
 #include <catch2/catch.hpp>
 
+using sequencer::operator""_beats;
+
 SCENARIO( "step construction", "[step]" )
 {
     using namespace sequencer::midi;
@@ -24,6 +26,11 @@ SCENARIO( "step construction", "[step]" )
         {
             CHECK_FALSE( step.velocity() );
         }
+
+        THEN( "step has no length" )
+        {
+            CHECK_FALSE( step.length() );
+        }
     }
 
     GIVEN( "an active constructed step" )
@@ -44,13 +51,19 @@ SCENARIO( "step construction", "[step]" )
         {
             CHECK_FALSE( step.velocity() );
         }
+
+        THEN( "step has no length" )
+        {
+            CHECK_FALSE( step.length() );
+        }
     }
 
     GIVEN( "a step with note and velocity" )
     {
         const auto note = note_t{1};
         const auto velocity = 100;
-        const auto step = step_t{note, velocity};
+        const auto length = 1_beats;
+        const auto step = step_t{note, velocity, length};
 
         THEN( "step is active" )
         {
@@ -68,13 +81,20 @@ SCENARIO( "step construction", "[step]" )
             REQUIRE( step.velocity() );
             CHECK( *step.velocity() == velocity );
         }
+
+        THEN( "step has given length" )
+        {
+            REQUIRE( step.length() );
+            CHECK( *step.length() == length );
+        }
     }
 
     GIVEN( "a step with no_note and velocity" )
     {
         const auto note = no_note();
         const auto velocity = 100;
-        const auto step = step_t{note, velocity};
+        const auto length = 1_beats;
+        const auto step = step_t{note, velocity, length};
 
         THEN( "step is active" )
         {
@@ -83,12 +103,20 @@ SCENARIO( "step construction", "[step]" )
 
         THEN( "step has given note" )
         {
-            CHECK( step.note() );
+            REQUIRE( step.note() );
+            CHECK( *step.note() == note );
         }
 
         THEN( "step has given velocity" )
         {
-            CHECK( step.velocity() );
+            REQUIRE( step.velocity() );
+            CHECK( *step.velocity() == velocity );
+        }
+
+        THEN( "step has given length" )
+        {
+            REQUIRE( step.length() );
+            CHECK( *step.length() == length );
         }
     }
 }
@@ -182,6 +210,29 @@ SCENARIO( "step set_velocity", "[step]" )
     }
 }
 
+SCENARIO( "step set_length", "[step]" )
+{
+    using namespace sequencer::midi;
+
+    GIVEN( "a default constructed step" )
+    {
+        auto step = step_t{};
+        CHECK_FALSE( step.note() );
+
+        WHEN( "length is set" )
+        {
+            const auto length = 1_beats;
+            step.set_length( length );
+
+            THEN( "step has given length" )
+            {
+                REQUIRE( step.length() );
+                CHECK( *step.length() == length );
+            }
+        }
+    }
+}
+
 SCENARIO( "step comparison", "[step]" )
 {
     using namespace sequencer::midi;
@@ -255,6 +306,18 @@ SCENARIO( "step comparison", "[step]" )
         {
             CHECK( lhs == rhs );
             CHECK_FALSE( lhs != rhs );
+        }
+    }
+
+    GIVEN( "two steps with different lengths" )
+    {
+        const auto lhs = step_t{note_t{1}, 90, 1_beats};
+        const auto rhs = step_t{note_t{1}, 90, 2_beats};
+
+        THEN( "both compare not equal" )
+        {
+            CHECK_FALSE( lhs == rhs );
+            CHECK( lhs != rhs );
         }
     }
 

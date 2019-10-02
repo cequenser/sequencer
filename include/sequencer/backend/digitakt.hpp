@@ -4,7 +4,9 @@
 #include <sequencer/midi/device_spec.hpp>
 #include <sequencer/midi/message/message_type.hpp>
 #include <sequencer/midi/pattern.hpp>
+#include <sequencer/midi/step.hpp>
 #include <sequencer/midi/track.hpp>
+#include <sequencer/midi/trig_condition.hpp>
 #include <sequencer/rtmidi/util.hpp>
 
 #include <cassert>
@@ -334,7 +336,7 @@ namespace sequencer::backend::digitakt
     class backend_impl
     {
     public:
-        using track_t = midi::track_t< track_parameter_t >;
+        using track_t = midi::track_t< midi::step_t, track_parameter_t >;
         using pattern_t = midi::pattern_t< track_t >;
         using patterns_t = std::vector< pattern_t >;
         using banks_t = std::vector< patterns_t >;
@@ -691,7 +693,6 @@ namespace sequencer::backend::digitakt
         template < class Sender >
         void receive_clock_message( sequencer::midi::message_t< 1 > message, Sender sender )
         {
-            std::cout << "receive clock message" << std::endl;
             current_pattern().send_messages( message, sender );
         }
 

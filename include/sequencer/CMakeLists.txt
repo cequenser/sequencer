@@ -26,6 +26,7 @@ add_library(sequencer
     midi/constants.hpp
     midi/device_spec.hpp
     midi/device_spec_reader.hpp
+    midi/note.hpp
     midi/lfo.hpp
     midi/pattern.hpp
     midi/percussion_key.hpp

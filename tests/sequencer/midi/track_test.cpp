@@ -1,6 +1,7 @@
 #include <sequencer/chrono/sequencer_clock.hpp>
 #include <sequencer/chrono/testing_clock.hpp>
 #include <sequencer/midi/clock.hpp>
+#include <sequencer/midi/step.hpp>
 #include <sequencer/midi/track.hpp>
 #include <sequencer/midi/util.hpp>
 
@@ -62,7 +63,7 @@ namespace
 
         constexpr beat_duration note_length() const noexcept
         {
-            return 1_beats;
+            return note_length_;
         }
 
         constexpr bool lfo_enabled() const noexcept
@@ -73,7 +74,7 @@ namespace
     private:
         int velocity_ = 100;
         note_t note_{1};
-        beat_duration note_length_{0.25};
+        beat_duration note_length_{0.25_beats};
     };
 } // namespace
 
@@ -83,7 +84,7 @@ SCENARIO( "track_t", "[track]" )
 
     GIVEN( "track_t with 16 steps" )
     {
-        auto track = track_t< track_parameter_t >{number_of_steps};
+        auto track = track_t< step_t, track_parameter_t >{number_of_steps};
         REQUIRE( track.steps() == number_of_steps );
         REQUIRE( track.channel() == 0u );
         REQUIRE( track[ 0 ] == step_t{} );
@@ -246,7 +247,7 @@ SCENARIO( "track_t with different speed multipliers", "[track]" )
 
     GIVEN( "track_t with 16 steps" )
     {
-        auto track = track_t< track_parameter_t >{number_of_steps};
+        auto track = track_t< step_t, track_parameter_t >{number_of_steps};
         const auto first_note = note_t{1};
         const auto first_velocity = std::uint8_t{80};
         const auto first_step = step_t{first_note, first_velocity};
@@ -297,6 +298,109 @@ SCENARIO( "track_t with different speed multipliers", "[track]" )
     }
 }
 
+SCENARIO( "track_t with different note lengths", "[track]" )
+{
+    constexpr auto number_of_steps = 16u;
+
+    GIVEN( "track_t with 16 steps" )
+    {
+        auto track = track_t< step_t, track_parameter_t >{number_of_steps};
+        const auto first_note = note_t{1};
+        const auto first_velocity = std::uint8_t{80};
+        const auto first_length = 1_beats;
+        const auto first_step = step_t{first_note, first_velocity, first_length};
+        const auto second_note = note_t{1};
+        const auto second_velocity = std::uint8_t{80};
+        const auto second_length = 2_beats;
+        const auto second_step = step_t{second_note, second_velocity, second_length};
+        track[ 0 ] = first_step;
+        track[ 5 ] = second_step;
+
+        AND_WHEN( "a start and one clock message are send" )
+        {
+            std::vector< message_t< 3 > > received_messages;
+            const auto sender = [&received_messages]( const auto& msg ) {
+                received_messages.push_back( msg );
+            };
+
+            track.send_messages( realtime_start(), sender );
+            track.send_messages( realtime_clock(), sender );
+
+            THEN( "one note on message is received" )
+            {
+                REQUIRE( received_messages.size() == 1 );
+                CHECK( received_messages.back() ==
+                       note_on( 0, to_uint8_t( first_note ), first_velocity ) );
+            }
+
+            AND_WHEN( "another 23 clock messages are send" )
+            {
+                for ( auto i = 0; i < 23; ++i )
+                {
+                    track.send_messages( realtime_clock(), sender );
+                }
+
+                THEN( "no messages are send" )
+                {
+                    REQUIRE( received_messages.size() == 1 );
+                }
+
+                AND_WHEN( "another clock message is send" )
+                {
+                    track.send_messages( realtime_clock(), sender );
+
+                    THEN( "one note off message is received" )
+                    {
+                        REQUIRE( received_messages.size() == 2 );
+                        CHECK( received_messages.back() ==
+                               note_off( 0, to_uint8_t( first_note ), 0 ) );
+                    }
+
+                    AND_WHEN( "another 6 clock messages are send" )
+                    {
+                        for ( auto i = 0; i < 6; ++i )
+                        {
+                            track.send_messages( realtime_clock(), sender );
+                        }
+
+                        THEN( "one note on message is received" )
+                        {
+                            REQUIRE( received_messages.size() == 3 );
+                            CHECK( received_messages.back() ==
+                                   note_on( 0, to_uint8_t( second_note ), second_velocity ) );
+                        }
+
+                        AND_WHEN( "another 47 clock messages are send" )
+                        {
+                            for ( auto i = 0; i < 47; ++i )
+                            {
+                                track.send_messages( realtime_clock(), sender );
+                            }
+
+                            THEN( "no more messages are received" )
+                            {
+                                REQUIRE( received_messages.size() == 3 );
+                            }
+
+                            AND_WHEN( "another clock message is send" )
+                            {
+                                track.send_messages( realtime_clock(), sender );
+
+                                THEN( "one note off message is received" )
+                                {
+                                    REQUIRE( received_messages.size() == 4 );
+                                    CHECK( received_messages.back() ==
+                                           note_off( 0, to_uint8_t( second_note ), 0 ) );
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 SCENARIO( "track_t with trig_condition::deterministic<1,2>", "[track]" )
 {
     namespace trig_condition = sequencer::midi::trig_condition;
@@ -304,7 +408,7 @@ SCENARIO( "track_t with trig_condition::deterministic<1,2>", "[track]" )
 
     GIVEN( "track_t with 16 steps" )
     {
-        auto track = track_t< track_parameter_t >{number_of_steps};
+        auto track = track_t< step_t, track_parameter_t >{number_of_steps};
         const auto first_note = note_t{1};
         const auto first_velocity = std::uint8_t{80};
         const auto first_step = step_t{first_note, first_velocity};
@@ -353,7 +457,7 @@ SCENARIO( "track_t with trig_condition::deterministic<2,2>", "[track2]" )
 
     GIVEN( "track_t with 16 steps" )
     {
-        auto track = track_t< track_parameter_t >{number_of_steps};
+        auto track = track_t< step_t, track_parameter_t >{number_of_steps};
         const auto first_note = note_t{1};
         const auto first_velocity = std::uint8_t{80};
         const auto first_step = step_t{first_note, first_velocity};
@@ -398,7 +502,7 @@ SCENARIO( "track_t set_steps", "[track]" )
 {
     GIVEN( "an empty track" )
     {
-        auto track = track_t< track_parameter_t >{};
+        auto track = track_t< step_t, track_parameter_t >{};
 
         WHEN( "number of steps is changed to 3" )
         {
@@ -416,7 +520,7 @@ SCENARIO( "track_t set_steps", "[track]" )
 
     GIVEN( "a track with 4 steps and second step set to note 42" )
     {
-        auto track = track_t< track_parameter_t >{4};
+        auto track = track_t< step_t, track_parameter_t >{4};
         const auto first_note = note_t{42};
         const auto first_velocity = std::uint8_t{80};
         const auto step = step_t{first_note, first_velocity};
@@ -457,7 +561,7 @@ SCENARIO( "track_t copy", "[track]" )
 {
     GIVEN( "an empty track" )
     {
-        auto track = track_t< track_parameter_t >{64, 0};
+        auto track = track_t< step_t, track_parameter_t >{64, 0};
 
         WHEN( "track is copy-constructed" )
         {
@@ -471,7 +575,7 @@ SCENARIO( "track_t copy", "[track]" )
 
         WHEN( "track is copy-assigned to empty track" )
         {
-            auto other = track_t< track_parameter_t >{64, 0};
+            auto other = track_t< step_t, track_parameter_t >{64, 0};
             other = track;
 
             THEN( "other track has 0 steps" )
@@ -483,7 +587,7 @@ SCENARIO( "track_t copy", "[track]" )
 
         WHEN( "track is copy-assigned to track with 4 steps" )
         {
-            auto other = track_t< track_parameter_t >{4};
+            auto other = track_t< step_t, track_parameter_t >{4};
             other = track;
 
             THEN( "other track has 0 steps" )
@@ -496,7 +600,7 @@ SCENARIO( "track_t copy", "[track]" )
 
     GIVEN( "a track_t with 4 steps and note on step 1" )
     {
-        auto track = track_t< track_parameter_t >{4};
+        auto track = track_t< step_t, track_parameter_t >{4};
         const auto first_note = note_t{42};
         const auto first_velocity = std::uint8_t{80};
         const auto step = step_t{first_note, first_velocity};
@@ -517,7 +621,7 @@ SCENARIO( "track_t copy", "[track]" )
 
         WHEN( "track is copy-assigned to empty track" )
         {
-            auto other = track_t< track_parameter_t >{};
+            auto other = track_t< step_t, track_parameter_t >{};
             other = track;
 
             THEN( "other track has 4 steps" )
@@ -536,7 +640,7 @@ SCENARIO( "track_t copy", "[track]" )
 
         WHEN( "track is copy-assigned to track with 5 steps" )
         {
-            auto other = track_t< track_parameter_t >{5};
+            auto other = track_t< step_t, track_parameter_t >{5};
             other = track;
 
             THEN( "other track has 4 steps" )
@@ -580,7 +684,7 @@ SCENARIO( "track_t triggered by clock", "[track]" )
 
     GIVEN( "track_t with 16 steps" )
     {
-        auto track = track_t< track_parameter_t >{number_of_steps};
+        auto track = track_t< step_t, track_parameter_t >{number_of_steps};
         const auto first_note = note_t{1};
         const auto first_velocity = std::uint8_t{80};
         const auto first_step = step_t{first_note, first_velocity};
@@ -697,7 +801,7 @@ SCENARIO( "track_t triggered by clock", "[track]" )
             track.set_pulses_per_quarter_note( 8 );
             track.set_steps_per_beat( 2 );
 
-            AND_WHEN( "a start and four clock messages are send" )
+            AND_WHEN( "a start and 2 clock messages are send" )
             {
                 std::vector< message_t< 3 > > received_messages;
                 const auto sender = [&received_messages]( const auto& msg ) {
@@ -705,7 +809,7 @@ SCENARIO( "track_t triggered by clock", "[track]" )
                 };
 
                 track.send_messages( realtime_start(), sender );
-                for ( auto i = 0; i < 4; ++i )
+                for ( auto i = 0; i < 2; ++i )
                 {
                     track.send_messages( realtime_clock(), sender );
                 }
@@ -720,21 +824,21 @@ SCENARIO( "track_t triggered by clock", "[track]" )
                     {
                         track.send_messages( realtime_clock(), sender );
 
-                        THEN( "a note off and note on message are send" )
+                        THEN( "a note off message is send" )
                         {
                             REQUIRE( received_messages.size() == 2 );
                             REQUIRE( received_messages[ 1 ] ==
                                      note_off( 0, to_uint8_t( first_note ), 0 ) );
                         }
 
-                        WHEN( "another 4 clock messages are send" )
+                        WHEN( "another 6 clock messages are send" )
                         {
-                            for ( auto i = 0; i < 4; ++i )
+                            for ( auto i = 0; i < 6; ++i )
                             {
                                 track.send_messages( realtime_clock(), sender );
                             }
 
-                            THEN( "a note off and note on message are send" )
+                            THEN( "a note on message is send" )
                             {
                                 REQUIRE( received_messages.size() == 3 );
                                 REQUIRE( received_messages[ 2 ] ==
@@ -793,14 +897,14 @@ SCENARIO( "tracks_t, that is triggered by a midi clock, plays 4 beats", "[track]
         };
 
         constexpr auto steps = 4u;
-        auto midi_track = std::vector( 1, track_t< track_parameter_t >{steps} );
+        auto midi_track = track_t< step_t, track_parameter_t >{steps};
         underlying_clock_type testing_clock;
         sequencer_clock_type sequencer_clock{testing_clock};
 
         clock_message_count_t clock_message_count{0};
         const auto clock_sender = [&midi_track, &clock_message_count,
                                    &midi_sender]( auto message ) {
-            send_messages( midi_track, message, midi_sender );
+            midi_track.send_messages( message, midi_sender );
             ++clock_message_count;
         };
         auto midi_clock = sequencer::midi::clock{sequencer_clock};
@@ -841,22 +945,22 @@ SCENARIO( "tracks_t, that is triggered by a midi clock, plays 4 beats", "[track]
         };
 
         constexpr auto steps = 16u;
-        auto midi_track = std::vector( 1, track_t< track_parameter_t >{steps} );
+        auto midi_track = track_t< step_t, track_parameter_t >{steps};
         const auto first_note = note_t{1};
         const auto first_velocity = std::uint8_t{80};
         const auto first_step = step_t{first_note, first_velocity};
         const auto second_note = note_t{2};
         const auto second_velocity = std::uint8_t{50};
         const auto second_step = step_t{second_note, second_velocity};
-        midi_track[ 0 ][ 0 ] = first_step;
-        midi_track[ 0 ][ 4 ] = second_step;
+        midi_track[ 0 ] = first_step;
+        midi_track[ 4 ] = second_step;
         underlying_clock_type testing_clock;
         sequencer_clock_type sequencer_clock{testing_clock};
 
         clock_message_count_t clock_message_count{0};
         const auto clock_sender = [&midi_track, &clock_message_count,
                                    &midi_sender]( auto message ) {
-            send_messages( midi_track, message, midi_sender );
+            midi_track.send_messages( message, midi_sender );
             ++clock_message_count;
         };
         auto midi_clock = sequencer::midi::clock{sequencer_clock};

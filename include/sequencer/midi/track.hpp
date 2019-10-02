@@ -1,13 +1,12 @@
 #pragma once
 
 #include <sequencer/assert.hpp>
-#include <sequencer/beat_duration.hpp>
 #include <sequencer/copyable_atomic.hpp>
 #include <sequencer/midi/constants.hpp>
 #include <sequencer/midi/message/channel_voice.hpp>
 #include <sequencer/midi/message/message_type.hpp>
 #include <sequencer/midi/message/realtime.hpp>
-#include <sequencer/midi/step.hpp>
+#include <sequencer/midi/note.hpp>
 #include <sequencer/vector.hpp>
 
 #include <algorithm>
@@ -18,9 +17,9 @@
 
 namespace sequencer::midi
 {
-    using track_base_t = vector< step_t >;
-
-    inline void copy_track( const track_base_t& from, track_base_t& to ) noexcept
+    template < class Track >
+    void copy_track( const Track& from,
+                     Track& to ) noexcept( std::is_nothrow_copy_assignable< Track >::value )
     {
         const auto size = std::min( from.size(), to.size() );
         for ( auto step = std::size_t{0}; step < size; ++step )
@@ -167,12 +166,13 @@ namespace sequencer::midi
         mutable bool started_{false};
     };
 
-    template < class Parameter >
+    template < class Step, class Parameter >
     class track_impl_t
     {
     public:
-        using value_type = track_base_t::value_type;
-        using size_type = track_base_t::size_type;
+        using track_base_t = vector< Step >;
+        using value_type = typename track_base_t::value_type;
+        using size_type = typename track_base_t::size_type;
 
         explicit track_impl_t( size_type size = 64, size_type initial_size = 16 )
             : track_{size, std::min( size, initial_size )}
@@ -212,7 +212,7 @@ namespace sequencer::midi
                 {
                     new_track[ new_step ] = ( copy_offset > 0 && new_step >= copy_offset )
                                                 ? new_track[ new_step - copy_offset ]
-                                                : step_t{};
+                                                : Step{};
                 }
             }
 
@@ -233,7 +233,7 @@ namespace sequencer::midi
         {
             for ( auto& step : track_ )
             {
-                step = step_t{};
+                step = Step{};
             }
         }
 
@@ -276,7 +276,7 @@ namespace sequencer::midi
                 const auto note = get_note( step );
                 sender( channel::voice::note_on( channel(), to_uint8_t( note ),
                                                  get_velocity( step ) ) );
-                current_notes_.emplace_back( note, get_length() );
+                current_notes_.emplace_back( note, get_length( step ) );
                 return true;
             }
             return false;
@@ -324,25 +324,27 @@ namespace sequencer::midi
             return false;
         }
 
-        constexpr void set_pulses_per_step( std::size_t pulses ) noexcept
+        constexpr void set_pulses_per_quarter_note( std::size_t pulses_per_quarter_note ) noexcept
         {
-            pulses_per_step_ = pulses;
+            pulses_per_quarter_note_ = pulses_per_quarter_note;
         }
 
     private:
-        note_t get_note( const step_t& step ) const noexcept
+        note_t get_note( const Step& step ) const noexcept
         {
             return step.note() ? step.note()->load() : base_note() + parameter().note_offset();
         }
 
-        std::uint8_t get_velocity( const step_t& step ) const noexcept
+        std::uint8_t get_velocity( const Step& step ) const noexcept
         {
             return step.velocity() ? step.velocity()->load() : parameter().velocity();
         }
 
-        std::size_t get_length() const noexcept
+        std::size_t get_length( const Step& step ) const noexcept
         {
-            return parameter().note_length().to_double() * pulses_per_step_;
+            return ( step.length() ? step.length()->load() : parameter().note_length() )
+                       .to_double() *
+                   pulses_per_quarter_note_;
         }
 
         void copy( const track_impl_t& from, track_impl_t& to )
@@ -350,7 +352,7 @@ namespace sequencer::midi
             to.parameter_ = from.parameter_;
             to.channel_ = from.channel();
             to.base_note_ = from.base_note();
-            to.pulses_per_step_ = from.pulses_per_step_;
+            to.pulses_per_quarter_note_ = from.pulses_per_quarter_note_;
             copy_track( from.track_, to.track_ );
         }
 
@@ -358,21 +360,21 @@ namespace sequencer::midi
         Parameter parameter_{};
         std::uint8_t channel_{0};
         note_t base_note_{36};
-        std::size_t pulses_per_step_{6};
+        std::size_t pulses_per_quarter_note_{24};
         mutable std::vector< std::pair< note_t, std::size_t /*remaining_pulses*/ > > current_notes_;
     };
 
-    template < class Parameter >
+    template < class Step, class Parameter >
     class track_t
     {
     public:
-        using size_type = typename track_impl_t< Parameter >::size_type;
-        using value_type = typename track_impl_t< Parameter >::value_type;
+        using size_type = typename track_impl_t< Step, Parameter >::size_type;
+        using value_type = typename track_impl_t< Step, Parameter >::value_type;
 
         explicit track_t( size_type size = 64, size_type initial_size = 16 )
             : impl_{size, std::min( size, initial_size )}, clock_to_step_{size}
         {
-            set_pulses_per_step();
+            impl_.set_pulses_per_quarter_note( clock_to_step_.pulses_per_quarter_note() );
         }
 
         template < class Sender >
@@ -441,13 +443,12 @@ namespace sequencer::midi
         constexpr void set_steps_per_beat( std::size_t steps ) noexcept
         {
             clock_to_step_.set_steps_per_beat( steps );
-            set_pulses_per_step();
         }
 
         constexpr void set_pulses_per_quarter_note( std::size_t pulses_per_quarter_note ) noexcept
         {
             clock_to_step_.set_pulses_per_quarter_note( pulses_per_quarter_note );
-            set_pulses_per_step();
+            impl_.set_pulses_per_quarter_note( pulses_per_quarter_note );
         }
 
         constexpr void reset_beat_counter() noexcept
@@ -523,26 +524,11 @@ namespace sequencer::midi
         }
 
     private:
-        void set_pulses_per_step() noexcept
-        {
-            impl_.set_pulses_per_step( clock_to_step_.pulses_per_quarter_note() /
-                                       clock_to_step_.steps_per_beat() );
-        }
-
-        track_impl_t< Parameter > impl_;
+        track_impl_t< Step, Parameter > impl_;
         copyable_atomic< bool > is_muted_{false};
         std::function< std::optional< message_t< 3 > >( std::size_t, bool, bool ) > lfo_;
         mutable clock_to_step_t clock_to_step_;
     };
-
-    template < class Track, class Sender >
-    void send_messages( std::vector< Track >& tracks, message_t< 1 > message, const Sender& sender )
-    {
-        for ( auto& track : tracks )
-        {
-            track.send_messages( message, sender );
-        }
-    }
 
     template < class Tracks, class Sender >
     void send_all_notes_off_message( Tracks& tracks, const Sender& sender )

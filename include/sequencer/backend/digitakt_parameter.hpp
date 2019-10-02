@@ -26,7 +26,7 @@ namespace sequencer::backend::digitakt
         const auto add_values = [&]( auto delta ) {
             for ( size_type i = start; i < end; ++i )
             {
-                length_map[ i ] = value;
+                length_map[ i ] = value / 4;
                 value += delta;
             }
             start = end;

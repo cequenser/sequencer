@@ -8,7 +8,7 @@
 
 namespace sequencer::midi
 {
-    class type_erased_storage_t
+    class type_erased_storage_t final
     {
         template < class T >
         static void delete_data( void* data ) noexcept
@@ -26,7 +26,7 @@ namespace sequencer::midi
     public:
         type_erased_storage_t() noexcept = default;
 
-        template < class T, std::enable_if_t< !std::is_base_of<
+        template < class T, std::enable_if_t< !std::is_constructible<
                                 type_erased_storage_t, std::decay_t< T > >::value >* = nullptr >
         // NOLINTNEXTLINE(bugprone-forwarding-reference-overload)
         explicit type_erased_storage_t( T&& value )
@@ -36,7 +36,7 @@ namespace sequencer::midi
         {
         }
 
-        template < class T, std::enable_if_t< !std::is_base_of<
+        template < class T, std::enable_if_t< !std::is_constructible<
                                 type_erased_storage_t, std::decay_t< T > >::value >* = nullptr >
         type_erased_storage_t& operator=( T&& value )
         {

@@ -2,6 +2,7 @@
 #include <sequencer/midi/message/channel_voice.hpp>
 #include <sequencer/midi/message/message_type.hpp>
 #include <sequencer/midi/message/realtime.hpp>
+#include <sequencer/midi/step.hpp>
 #include <sequencer/midi/track.hpp>
 
 #include <catch2/catch.hpp>
@@ -24,7 +25,7 @@ SCENARIO( "track_t lfo", "[track]" )
 
     GIVEN( "track_t with 16 steps" )
     {
-        auto track = track_t< track_parameter_t >{number_of_steps};
+        auto track = track_t< step_t, track_parameter_t >{number_of_steps};
         track.parameter().set_velocity( 100 );
         track.parameter().set_note_length_idx( 14 );
         track.parameter()
@@ -128,7 +129,7 @@ SCENARIO( "track_t lfo in trig mode", "[track]" )
 
     GIVEN( "track_t with 16 steps" )
     {
-        auto track = track_t< track_parameter_t >{number_of_steps};
+        auto track = track_t< step_t, track_parameter_t >{number_of_steps};
         track.parameter().set_velocity( 100 );
         track.parameter().set_note_length_idx( 14 );
         track.parameter()
@@ -299,7 +300,7 @@ SCENARIO( "track_t lfo in hold mode", "[track]" )
 
     GIVEN( "track_t with 16 steps" )
     {
-        auto track = track_t< track_parameter_t >{number_of_steps};
+        auto track = track_t< step_t, track_parameter_t >{number_of_steps};
         track.parameter().set_velocity( 100 );
         track.parameter().set_note_length_idx( 14 );
         track.parameter()
@@ -453,7 +454,7 @@ SCENARIO( "track_t lfo in one mode", "[track]" )
 
     GIVEN( "track_t with 16 steps" )
     {
-        auto track = track_t< track_parameter_t >{number_of_steps};
+        auto track = track_t< step_t, track_parameter_t >{number_of_steps};
         track.parameter().set_velocity( 100 );
         track.parameter().set_note_length_idx( 14 );
         track.parameter()
@@ -522,7 +523,7 @@ SCENARIO( "track_t lfo in half mode", "[track]" )
 
     GIVEN( "track_t with 16 steps" )
     {
-        auto track = track_t< track_parameter_t >{number_of_steps};
+        auto track = track_t< step_t, track_parameter_t >{number_of_steps};
         track.parameter().set_velocity( 100 );
         track.parameter().set_note_length_idx( 14 );
         track.parameter()

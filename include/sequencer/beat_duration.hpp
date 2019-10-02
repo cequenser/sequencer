@@ -27,11 +27,6 @@ namespace sequencer
             return duration_.to_double();
         }
 
-        constexpr bool operator==( beat_duration other ) const noexcept
-        {
-            return duration_ == other.duration_;
-        }
-
         constexpr beat_duration& operator+=( beat_duration other ) noexcept
         {
             duration_ += other.duration_;
@@ -56,6 +51,11 @@ namespace sequencer
     private:
         internal_rep duration_;
     };
+
+    constexpr bool operator==( beat_duration lhs, beat_duration rhs ) noexcept
+    {
+        return lhs.to_double() == rhs.to_double();
+    }
 
     constexpr beat_duration operator+( beat_duration lhs, beat_duration rhs ) noexcept
     {

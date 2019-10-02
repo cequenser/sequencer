@@ -1,6 +1,7 @@
 #include <sequencer/backend/digitakt_parameter.hpp>
 #include <sequencer/midi/message/realtime.hpp>
 #include <sequencer/midi/pattern.hpp>
+#include <sequencer/midi/step.hpp>
 #include <sequencer/midi/track.hpp>
 
 #include <catch2/catch.hpp>
@@ -16,7 +17,7 @@ SCENARIO( "loop length", "[pattern]" )
     {
         const auto tracks = 2;
         const auto steps = 4;
-        auto pattern = pattern_t< track_t< track_parameter_t > >{tracks, steps};
+        auto pattern = pattern_t< track_t< step_t, track_parameter_t > >{tracks, steps};
         pattern[ 0 ].parameter().set_note_length_idx( 14 );
         pattern[ 1 ].parameter().set_note_length_idx( 14 );
         pattern.set_steps_per_beat( 1 );
@@ -64,7 +65,7 @@ SCENARIO( "loop length", "[pattern]" )
 
                     THEN( "14 messages are received" )
                     {
-                        REQUIRE( received_messages.size() == 13 );
+                        REQUIRE( received_messages.size() == 14 );
                     }
                 }
 
@@ -111,7 +112,7 @@ SCENARIO( "loop length", "[pattern]" )
 
                         THEN( "14 messages are received" )
                         {
-                            REQUIRE( received_messages.size() == 13 );
+                            REQUIRE( received_messages.size() == 14 );
                         }
                     }
                 }

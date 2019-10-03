@@ -6,6 +6,22 @@
 
 namespace sequencer::wave_form
 {
+    class pulse_t
+    {
+    public:
+        constexpr explicit pulse_t( double pulse_width ) noexcept : pulse_width_( pulse_width )
+        {
+        }
+
+        double operator()( double t ) noexcept
+        {
+            t = std::fmod( t, 1.0 );
+            return ( t < pulse_width_ ) ? 1 : 0;
+        }
+
+    private:
+        double pulse_width_;
+    };
 
     inline double sine( double t )
     {
@@ -14,7 +30,7 @@ namespace sequencer::wave_form
 
     inline double square( double t ) noexcept
     {
-        return t < 0.5 ? 1 : -1;
+        return std::fmod( t, 1.0 ) < 0.5 ? 1 : -1;
     }
 
     inline double triangular( double t ) noexcept
@@ -26,33 +42,36 @@ namespace sequencer::wave_form
 
     inline double saw( double t ) noexcept
     {
-        return 1 - 2 * t;
+        return 1 - 2 * std::fmod( t, 1.0 );
     }
 
-    struct exp_t
+    class exp_t
     {
-        explicit exp_t( double scale ) : scale_{scale}
+    public:
+        constexpr explicit exp_t( double scale ) noexcept : scale_{scale}
         {
         }
 
         double operator()( double t ) noexcept
         {
-            return std::exp( -scale_ * t );
+            return std::exp( -scale_ * std::fmod( t, 1.0 ) );
         }
 
     private:
         double scale_{1};
     };
 
-    struct ramp_t
+    class ramp_t
     {
-        explicit ramp_t( double slope ) : slope_{slope}
+    public:
+        constexpr explicit ramp_t( double slope ) noexcept : slope_{slope}
         {
         }
 
         double operator()( double t ) noexcept
         {
-            return ( t > 1 / slope_ ) ? 0 : ( slope_ * t );
+            t = std::fmod( t, 1.0 );
+            return ( t > ( 1 / slope_ ) ) ? 0 : ( slope_ * t );
         }
 
     private:

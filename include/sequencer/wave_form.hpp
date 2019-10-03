@@ -6,6 +6,27 @@
 
 namespace sequencer::wave_form
 {
+    inline double normalize_time( double t ) noexcept
+    {
+        return std::abs( std::fmod( t, 1.0 ) );
+    }
+
+    class pulse_t
+    {
+    public:
+        constexpr explicit pulse_t( double pulse_width ) noexcept : pulse_width_( pulse_width )
+        {
+        }
+
+        double operator()( double t ) noexcept
+        {
+            t = normalize_time( t );
+            return ( t < pulse_width_ ) ? 1 : 0;
+        }
+
+    private:
+        double pulse_width_;
+    };
 
     inline double sine( double t )
     {
@@ -14,45 +35,48 @@ namespace sequencer::wave_form
 
     inline double square( double t ) noexcept
     {
-        return t < 0.5 ? 1 : -1;
+        return normalize_time( t ) < 0.5 ? 1 : -1;
     }
 
     inline double triangular( double t ) noexcept
     {
-        t = std::fmod( t + 0.25, 1.0 );
+        t = normalize_time( t + 0.25 );
         const auto value = -1 + 4 * std::fmod( t, 0.5 );
         return t < 0.5 ? value : -value;
     }
 
     inline double saw( double t ) noexcept
     {
-        return 1 - 2 * t;
+        return 1 - 2 * normalize_time( t );
     }
 
-    struct exp_t
+    class exp_t
     {
-        explicit exp_t( double scale ) : scale_{scale}
+    public:
+        constexpr explicit exp_t( double scale ) noexcept : scale_{scale}
         {
         }
 
         double operator()( double t ) noexcept
         {
-            return std::exp( -scale_ * t );
+            return std::exp( -scale_ * normalize_time( t ) );
         }
 
     private:
         double scale_{1};
     };
 
-    struct ramp_t
+    class ramp_t
     {
-        explicit ramp_t( double slope ) : slope_{slope}
+    public:
+        constexpr explicit ramp_t( double slope ) noexcept : slope_{slope}
         {
         }
 
         double operator()( double t ) noexcept
         {
-            return ( t > 1 / slope_ ) ? 0 : ( slope_ * t );
+            t = normalize_time( t );
+            return ( t > ( 1 / slope_ ) ) ? 0 : ( slope_ * t );
         }
 
     private:

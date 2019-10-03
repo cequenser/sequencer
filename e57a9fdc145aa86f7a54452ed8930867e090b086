@@ -1,0 +1,24 @@
+{
+  "comments": [
+    {
+      "robotId": "g++-8",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/psv-gcc/668/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "f54e9085_da3a48fa",
+        "filename": "include/sequencer/audio/oscillator.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-10-03T19:48:40Z",
+      "side": 1,
+      "message": "include/sequencer/audio/oscillator.hpp:49:26: error: call to non-\u0027constexpr\u0027 function \u0027sequencer::copyable_atomic\u003cT\u003e\u0026 sequencer::copyable_atomic\u003cT\u003e::operator\u003d(T) [with T \u003d sequencer::audio::oscillator_wave_form]\u0027\n             wave_form_ \u003d wave_form;\n                          ^~~~~~~~~",
+      "revId": "e57a9fdc145aa86f7a54452ed8930867e090b086",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}

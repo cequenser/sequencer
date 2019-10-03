@@ -14,13 +14,17 @@ add_library(sequencer
     vector_view.hpp
     wave_form.hpp
     audio/double_buffer.hpp
+    audio/envelope.hpp
     audio/fft.hpp
+    audio/note.hpp
+    audio/oscillator.hpp
     audio/sample.hpp
     audio/transfer_function.hpp
     backend/clock.hpp
     backend/digitakt.hpp
     backend/digitakt_parameter.hpp
     backend/rtmidi.hpp
+    backend/synth.hpp
     midi/clock.hpp
     midi/clock_base.hpp
     midi/constants.hpp

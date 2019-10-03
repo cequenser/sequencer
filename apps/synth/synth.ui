@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>synth</class>
+ <widget class="QMainWindow" name="synth">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>674</width>
+    <height>583</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>synth</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0" colspan="2">
+     <widget class="QGroupBox" name="groupBox">
+      <property name="title">
+       <string/>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_2">
+       <item row="1" column="0">
+        <widget class="QPushButton" name="play_button">
+         <property name="text">
+          <string>Play</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QPushButton" name="trig_button">
+         <property name="text">
+          <string>trig</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0" colspan="2">
+        <widget class="QComboBox" name="audio_device_box"/>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="4" column="0" colspan="2">
+     <widget class="qt::chain_t" name="osc_1_box">
+      <property name="title">
+       <string/>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="0" colspan="2">
+     <widget class="qt::chain_t" name="osc_2_box">
+      <property name="title">
+       <string/>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>674</width>
+     <height>22</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>qt::chain_t</class>
+   <extends>QGroupBox</extends>
+   <header>chain.hpp</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>play_button</sender>
+   <signal>clicked()</signal>
+   <receiver>synth</receiver>
+   <slot>play()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>333</x>
+     <y>215</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>883</x>
+     <y>200</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>audio_device_box</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>synth</receiver>
+   <slot>audio_device_changed(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>361</x>
+     <y>137</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1098</x>
+     <y>184</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>trig_button</sender>
+   <signal>clicked()</signal>
+   <receiver>synth</receiver>
+   <slot>trig()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>593</x>
+     <y>228</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>947</x>
+     <y>237</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>play()</slot>
+  <slot>audio_device_changed(int)</slot>
+  <slot>trig()</slot>
+ </slots>
+</ui>

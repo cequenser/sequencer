@@ -44,8 +44,25 @@ namespace sequencer::wave_form
     inline double sine( double t )
     {
         constexpr auto sample_rate = 4 * 44100u;
-        static const auto sine_sample = create_sine_sample< sample_rate >();
-        return sine_sample[ std::size_t( t * sample_rate ) % sample_rate ];
+        static const auto sample = create_sine_sample< sample_rate >();
+        return sample[ std::size_t( t * sample_rate ) % sample_rate ];
+    }
+
+    template < int N >
+    std::array< double, N > create_cosine_sample() noexcept
+    {
+        std::array< double, N > sample;
+        typename std::array< double, N >::size_type counter = 0;
+        std::generate( begin( sample ), end( sample ),
+                       [&counter] { return std::cos( 2 * M_PI * double( counter++ ) / N ); } );
+        return sample;
+    }
+
+    inline double cosine( double t )
+    {
+        constexpr auto sample_rate = 4 * 44100u;
+        static const auto sample = create_cosine_sample< sample_rate >();
+        return sample[ std::size_t( t * sample_rate ) % sample_rate ];
     }
 
     inline double sinc( double cutoff, int i )

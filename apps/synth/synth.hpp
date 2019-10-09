@@ -23,16 +23,16 @@ public:
                     void ( *callback )( double, std::vector< unsigned char >*, void* ) = nullptr );
     ~synth();
 
-    backend_t& backend() noexcept
-    {
-        return backend_;
-    }
+    backend_t& backend() noexcept;
 
 public slots:
     void play();
     void trig();
     void audio_device_changed( int device_id );
     void midi_port_changed( int port_id );
+    void reverb_type_changed( int id );
+    void reverb_bank_changed( int id );
+    void reverb_dry_wet_changed( int dry_wet_ratio );
 
 private:
     Ui::synth* ui;

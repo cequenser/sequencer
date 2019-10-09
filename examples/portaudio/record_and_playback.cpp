@@ -15,7 +15,6 @@ int main()
 {
     try
     {
-
         auto sample = sequencer::audio::read_write_lockable< sequencer::audio::sample_t >{
             n_seconds * sample_rate};
         sequencer::portaudio::portaudio pa;

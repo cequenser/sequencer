@@ -1,5 +1,6 @@
 #pragma once
 
+#include <sequencer/audio/dry_wet.hpp>
 #include <sequencer/audio/oscillator.hpp>
 
 #include <QGroupBox>
@@ -16,7 +17,7 @@ namespace qt
             free_mode
         };
 
-        using oscillator_t = sequencer::audio::oscillator_t;
+        using oscillator_t = sequencer::audio::dry_wet_t< sequencer::audio::oscillator_t, false >;
 
         explicit osc_freq_t( QWidget* parent = nullptr );
 

@@ -1,5 +1,6 @@
 #include "chain.hpp"
 
+#include "delay.hpp"
 #include "envelope.hpp"
 #include "osc.hpp"
 #include "osc_freq.hpp"
@@ -82,6 +83,10 @@ namespace qt
         filter_box->setLayout( filter_layout );
         layout->addWidget( filter_box );
 
+        auto delay = new qt::delay_t;
+        delay->setTitle( "delay" );
+        layout->addWidget( delay );
+
         setLayout( layout );
     }
 
@@ -96,6 +101,8 @@ namespace qt
             ->set_oscillator( &chain_->frequency_modulation );
         dynamic_cast< qt::envelope_t* >( layout()->itemAt( 3 )->widget() )
             ->set_envelope( &chain_->envelope );
+        dynamic_cast< qt::delay_t* >( layout()->itemAt( 5 )->widget() )
+            ->set_delay( &chain_->delay );
     }
 
     void chain_t::ring_modulator_mode_changed( bool is_vca )
@@ -115,7 +122,7 @@ namespace qt
 
     void chain_t::highpass_frequency_changed( int frequency )
     {
-        chain_->highpass_frequency = frequency;
+        chain_->set_highpass_frequency( frequency );
     }
 
     void chain_t::lowpass_gain_changed( int gain )
@@ -125,6 +132,6 @@ namespace qt
 
     void chain_t::lowpass_frequency_changed( int frequency )
     {
-        chain_->lowpass_frequency = frequency;
+        chain_->set_lowpass_frequency( frequency );
     }
 } // namespace qt

@@ -1,0 +1,24 @@
+{
+  "comments": [
+    {
+      "robotId": "g++-8",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/psv-gcc/674/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "36955304_1359c23a",
+        "filename": "include/sequencer/wave_form.hpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-10-09T19:54:02Z",
+      "side": 1,
+      "message": "include/sequencer/wave_form.hpp:66:30: error: call to non-\u0027constexpr\u0027 function \u0027double sequencer::wave_form::normalize_time(double)\u0027\n         return normalize_time( t ) \u003c 0.5 ? 1 : -1;\n                ~~~~~~~~~~~~~~^~~~~",
+      "revId": "7c342a8783c84278f0c1d87d19f41d82f9198137",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}

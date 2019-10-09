@@ -5,3 +5,4 @@ function(add_example name)
 endfunction()
 
 add_example(record_and_playback)
+add_example(reverb)

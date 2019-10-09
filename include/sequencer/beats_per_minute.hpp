@@ -1,5 +1,7 @@
 #pragma once
 
+#include <ostream>
+
 namespace sequencer
 {
 
@@ -30,6 +32,11 @@ namespace sequencer
     constexpr beats_per_minute operator"" _bpm( unsigned long long int value ) noexcept
     {
         return beats_per_minute( value );
+    }
+
+    inline std::ostream& operator<<( std::ostream& os, beats_per_minute bpm )
+    {
+        return os << bpm.to_double() << "bpm";
     }
 
     static_assert( ( 120.0_bpm ).to_double() == 120.0 );

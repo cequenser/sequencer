@@ -14,9 +14,14 @@ namespace sequencer::audio
         return static_cast< int >( half_note );
     }
 
-    inline auto increase_by_half_notes( double frequency, half_note_t half_notes ) noexcept
+    inline double increase_by_half_notes( double frequency, half_note_t half_notes ) noexcept
     {
         return frequency * std::pow( 2, to_int( half_notes ) / 12.0 );
+    }
+
+    inline double increase_by_half_notes( double frequency, double half_notes ) noexcept
+    {
+        return frequency * std::pow( 2, half_notes / 12 );
     }
 
     namespace base_notes

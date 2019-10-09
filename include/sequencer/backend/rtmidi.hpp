@@ -43,4 +43,45 @@ namespace sequencer::backend
     private:
         std::shared_ptr< RtMidiOut > midiout_ = std::make_shared< RtMidiOut >();
     };
+
+    class rtmidi_receiver_t
+    {
+    public:
+        template < class Callback >
+        explicit rtmidi_receiver_t( Callback callback )
+        {
+            midiin_.setCallback( callback );
+            // Don't ignore sysex, timing, or active sensing messages.
+            midiin_.ignoreTypes( false, false, false );
+        }
+
+        void select_input_port( int idx )
+        {
+            assert( idx >= 0 );
+            assert( idx <= int( midiin_.getPortCount() ) + 1 );
+
+            if ( midiin_.isPortOpen() )
+            {
+                midiin_.closePort();
+            }
+            if ( idx == 0 )
+            {
+                return;
+            }
+            midiin_.openPort( unsigned( idx - 1 ) );
+        }
+
+        std::vector< std::string > available_input_ports()
+        {
+            std::vector< std::string > ports;
+            for ( auto id = 0u; id < midiin_.getPortCount(); ++id )
+            {
+                ports.push_back( midiin_.getPortName( id ) );
+            }
+            return ports;
+        }
+
+    private:
+        RtMidiIn midiin_{};
+    };
 } // namespace sequencer::backend

@@ -106,7 +106,7 @@ void midi_sequencer::stop_clock()
 
 void midi_sequencer::set_clock_bpm( int value )
 {
-    backend_.set_clock_bpm( value );
+    backend_.set_clock_bpm( value / 10.0 );
 }
 
 void midi_sequencer::select_clock_port( int idx )

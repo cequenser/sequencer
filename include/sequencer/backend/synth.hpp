@@ -34,16 +34,14 @@ namespace sequencer::backend::synth
             {
                 rm = make_vca( rm );
             }
-            ring_modulation_dry_wet.set_dry_wet_ratio( ring_modulation.dry_wet_ratio() );
-            rm = ring_modulation_dry_wet( 1.0f, rm );
             return envelope( pos ) * rm * oscillator( pos, frequency_modulation );
         }
 
         audio::oscillator_t oscillator;
-        audio::oscillator_t ring_modulation;
-        audio::dry_wet_t ring_modulation_dry_wet;
-        audio::oscillator_t frequency_modulation;
+        audio::dry_wet_t< audio::oscillator_t > ring_modulation;
+        audio::dry_wet_t< audio::oscillator_t > frequency_modulation;
         audio::envelope_t envelope;
+        audio::dry_wet_t< audio::delay_t, true > delay{};
         copyable_atomic< bool > vca_mode{false};
         copyable_atomic< bool > vca_enabled{false};
         copyable_atomic< double > lowpass_gain{1.0};
@@ -178,10 +176,16 @@ namespace sequencer::backend::synth
                     const auto osc1 = osc_1.get();
                     for ( auto i = 0; i < N; ++i )
                     {
-                        const auto value =
-                            0.5f * float( osc0[ i ] + last_osc0[ i ] + osc1[ i ] + last_osc1[ i ] );
-                        buffer.frames[ size_type( 2 * i ) ] = value;
-                        buffer.frames[ size_type( 2 * i + 1 ) ] = value;
+                        const auto value0 = osc0[ i ] + last_osc0[ i ];
+                        const auto [ lhs0, rhs0 ] = chain( 0 ).delay( value0 );
+                        const auto value1 = osc1[ i ] + last_osc1[ i ];
+                        const auto [ lhs1, rhs1 ] = chain( 1 ).delay( value1 );
+                        //                        const auto lhs0 = osc0[i] + last_osc0[i];
+                        //                        const auto rhs0 = lhs0;
+                        //                        const auto lhs1 = osc1[1] + last_osc1[i];
+                        //                        const auto rhs1 = lhs1;
+                        buffer.frames[ size_type( 2 * i ) ] = 0.5 * ( lhs0 + lhs1 );
+                        buffer.frames[ size_type( 2 * i + 1 ) ] = 0.5 * ( rhs0 + rhs1 );
                         last_osc0[ i ] = osc0[ N + i ];
                         last_osc1[ i ] = osc1[ N + i ];
                     }

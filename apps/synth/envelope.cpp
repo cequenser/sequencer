@@ -8,6 +8,7 @@
 namespace qt
 {
     constexpr auto max_values = 1001u;
+    constexpr auto max_sustain_value = 2000u;
 
     envelope_t::envelope_t( QWidget* parent ) : QGroupBox( parent )
     {
@@ -32,10 +33,10 @@ namespace qt
         auto sustain_poti = new poti_t;
         sustain_poti->setTitle( "Sustain" );
         sustain_poti->dial().setMinimum( 0 );
-        sustain_poti->dial().setMaximum( max_values - 1 );
+        sustain_poti->dial().setMaximum( max_sustain_value );
         QObject::connect( sustain_poti, &poti_t::value_changed, this,
                           &envelope_t::sustain_changed );
-        sustain_poti->update( max_values - 1 );
+        sustain_poti->update( max_sustain_value );
         layout->addWidget( sustain_poti );
 
         setLayout( layout );
@@ -44,6 +45,12 @@ namespace qt
     void envelope_t::set_envelope( sequencer::audio::envelope_t* envelope )
     {
         envelope_ = envelope;
+
+        attack_changed(
+            dynamic_cast< poti_t* >( layout()->itemAt( 0 )->widget() )->dial().value() );
+        decay_changed( dynamic_cast< poti_t* >( layout()->itemAt( 1 )->widget() )->dial().value() );
+        sustain_changed(
+            dynamic_cast< poti_t* >( layout()->itemAt( 2 )->widget() )->dial().value() );
     }
 
     void envelope_t::attack_changed( int value )
@@ -66,7 +73,12 @@ namespace qt
     {
         if ( envelope_ )
         {
-            envelope_->set_sustain( value / 100.0 );
+            if ( value == max_sustain_value )
+            {
+                envelope_->set_sustain( std::numeric_limits< double >::max() );
+                return;
+            }
+            envelope_->set_sustain( value / 1000.0 );
         }
     }
 } // namespace qt

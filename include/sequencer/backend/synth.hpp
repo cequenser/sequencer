@@ -1,17 +1,23 @@
 #pragma once
 
+#include <sequencer/audio/delay.hpp>
 #include <sequencer/audio/double_buffer.hpp>
+#include <sequencer/audio/dry_wet.hpp>
 #include <sequencer/audio/envelope.hpp>
+#include <sequencer/audio/fft.hpp>
 #include <sequencer/audio/oscillator.hpp>
+#include <sequencer/audio/transfer_function.hpp>
+#include <sequencer/copyable_atomic.hpp>
+#include <sequencer/midi/message/byte.hpp>
+#include <sequencer/midi/message/message_type.hpp>
 #include <sequencer/portaudio/portaudio.hpp>
 
-#include <atomic>
 #include <cmath>
 #include <future>
-#include <iostream>
 #include <mutex>
 #include <string>
 #include <vector>
+
 namespace sequencer::backend::synth
 {
     constexpr double make_vca( double signal )
@@ -23,47 +29,161 @@ namespace sequencer::backend::synth
     {
         double operator()( double pos )
         {
-            auto rm = vca_enabled_ ? ring_modulation( pos ) : 1.0;
-            if ( vca_mode_ )
+            auto rm = vca_enabled ? ring_modulation( pos ) : 1.0;
+            if ( vca_mode )
             {
                 rm = make_vca( rm );
             }
+            ring_modulation_dry_wet.set_dry_wet_ratio( ring_modulation.dry_wet_ratio() );
+            rm = ring_modulation_dry_wet( 1.0f, rm );
             return envelope( pos ) * rm * oscillator( pos, frequency_modulation );
         }
 
         audio::oscillator_t oscillator;
         audio::oscillator_t ring_modulation;
+        audio::dry_wet_t ring_modulation_dry_wet;
         audio::oscillator_t frequency_modulation;
         audio::envelope_t envelope;
-        std::atomic_bool vca_mode_{false};
-        std::atomic_bool vca_enabled_{false};
+        copyable_atomic< bool > vca_mode{false};
+        copyable_atomic< bool > vca_enabled{false};
+        copyable_atomic< double > lowpass_gain{1.0};
+        copyable_atomic< double > lowpass_frequency{22000};
+        copyable_atomic< double > highpass_gain{1.0};
+        copyable_atomic< double > highpass_frequency{20};
     };
 
-    class backend_t
+    template < class LowPass, class HighPass >
+    void filter( std::vector< float >& sample, LowPass low_pass, HighPass high_pass,
+                 double base_frequency )
+    {
+        auto spectrum = audio::fft( sample );
+        audio::filter( spectrum, low_pass, high_pass, base_frequency );
+        sample = audio::inverse_fft( spectrum );
+    }
+
+    inline std::vector< float > create_blackman_table( int N )
+    {
+        std::vector< float > table( N + 1, 0 );
+        for ( auto n = 0; n <= N; ++n )
+        {
+            table[ n ] = float( audio::window::blackman( n, N ) );
+        }
+        return table;
+    }
+
+    template < int N, int M >
+    inline auto create_kernels( float lowpass_cutoff, float highpass_cutoff )
+    {
+        std::vector< float > highpass_kernel( 2 * N, 0.f );
+        std::vector< float > lowpass_kernel( 2 * N, 0.f );
+        static auto blackman_table = create_blackman_table( M );
+        for ( auto i = 0; i <= M; ++i )
+        {
+            if ( i == M / 2 )
+            {
+                highpass_kernel[ i ] =
+                    blackman_table[ M / 2 ] * ( 1.f - wave_form::sinc( highpass_cutoff, 0 ) );
+            }
+            else
+            {
+                highpass_kernel[ i ] =
+                    -blackman_table[ i ] * wave_form::sinc( highpass_cutoff, ( i - M / 2 ) );
+            }
+            lowpass_kernel[ i ] =
+                blackman_table[ i ] * wave_form::sinc( lowpass_cutoff, ( i - M / 2 ) );
+        }
+        return std::make_pair( lowpass_kernel, highpass_kernel );
+    }
+
+    template < int N, int M >
+    inline auto create_filter_response( float lowpass_cutoff, float highpass_cutoff )
+    {
+        auto [ lowpass_kernel, highpass_kernel ] =
+            create_kernels< N, M >( lowpass_cutoff, highpass_cutoff );
+        return std::make_pair( audio::fft( lowpass_kernel ), audio::fft( highpass_kernel ) );
+    }
+
+    template < class ClockReceiver >
+    class backend_t : public ClockReceiver
     {
     public:
         using size_type = std::vector< chain_t >::size_type;
 
         static constexpr auto number_of_oscillators = 2u;
 
-        backend_t() : chains_( number_of_oscillators )
+        template < class Callback >
+        explicit backend_t( Callback callback )
+            : ClockReceiver{callback}, chains_( number_of_oscillators )
         {
             generating_thread_terminated_ = std::async( std::launch::async, [this] {
                 using namespace sequencer::audio;
-                constexpr auto N = 2 * 1024;
+                constexpr auto N = 4 * 1024;
                 read_write_lockable< sample_t > buffer{N, audio::mode_t::stereo};
                 const auto initial_size = buffer.frames.size();
 
-                auto write_buffer = [this, &buffer, initial_size] {
+                constexpr auto M = N / 16;
+                static auto blackman_table = create_blackman_table( M );
+
+                std::vector< float > last_osc0( N, 0.f );
+                std::vector< float > last_osc1( N, 0.f );
+
+                auto write_buffer = [&] {
+                    auto osc_0 = std::async(
+                        std::launch::async, [frame_pos = frame_pos_.load(), this]() mutable {
+                            auto [ lowpass_filter_response, highpass_filter_response ] =
+                                create_filter_response< N, M >(
+                                    chain( 0 ).lowpass_frequency / sample_rate_,
+                                    chain( 0 ).highpass_frequency / sample_rate_ );
+
+                            std::vector< float > osc( 2 * N, 0.f );
+                            for ( auto i = 0; i < N; ++i )
+                            {
+                                const auto pos = double( frame_pos ) / sample_rate_;
+                                osc[ size_type( i ) ] = float( silent_ ? 0.0f : chain( 0 )( pos ) );
+                                ++frame_pos;
+                            }
+                            auto spectrum = audio::fft( osc );
+                            for ( auto i = 0u; i < spectrum.size(); ++i )
+                            {
+                                spectrum[ i ] *=
+                                    lowpass_filter_response[ i ] * highpass_filter_response[ i ];
+                            }
+                            return audio::inverse_fft( spectrum );
+                        } );
+                    auto osc_1 = std::async(
+                        std::launch::async, [frame_pos = frame_pos_.load(), this]() mutable {
+                            auto [ lowpass_filter_response, highpass_filter_response ] =
+                                create_filter_response< N, M >(
+                                    chain( 1 ).lowpass_frequency / sample_rate_,
+                                    chain( 1 ).highpass_frequency / sample_rate_ );
+
+                            std::vector< float > osc( 2 * N, 0.f );
+                            for ( auto i = 0; i < N; ++i )
+                            {
+                                const auto pos = double( frame_pos ) / sample_rate_;
+                                osc[ size_type( i ) ] = float( silent_ ? 0.0f : chain( 1 )( pos ) );
+                                ++frame_pos;
+                            }
+                            auto spectrum = audio::fft( osc );
+                            for ( auto i = 0u; i < spectrum.size(); ++i )
+                            {
+                                spectrum[ i ] *=
+                                    lowpass_filter_response[ i ] * highpass_filter_response[ i ];
+                            }
+                            return audio::inverse_fft( spectrum );
+                        } );
+                    frame_pos_ += N;
                     buffer.frames.resize( initial_size );
+                    const auto osc0 = osc_0.get();
+                    const auto osc1 = osc_1.get();
                     for ( auto i = 0; i < N; ++i )
                     {
-                        const auto pos = double( frame_pos_ ) / sample_rate_;
-                        const auto osc_value =
-                            0.5f * float( chain( 0 )( pos ) + chain( 1 )( pos ) );
-                        buffer.frames[ size_type( ( 2 * i ) % initial_size ) ] = osc_value;
-                        buffer.frames[ size_type( ( ( 2 * i ) % initial_size ) + 1 ) ] = osc_value;
-                        ++frame_pos_;
+                        const auto value =
+                            0.5f * float( osc0[ i ] + last_osc0[ i ] + osc1[ i ] + last_osc1[ i ] );
+                        buffer.frames[ size_type( 2 * i ) ] = value;
+                        buffer.frames[ size_type( 2 * i + 1 ) ] = value;
+                        last_osc0[ i ] = osc0[ N + i ];
+                        last_osc1[ i ] = osc1[ N + i ];
                     }
                     double_buffer_.swap_write_buffer( buffer );
                 };
@@ -88,24 +208,12 @@ namespace sequencer::backend::synth
                     }
                 }
             } );
-
-            playing_thread_terminated_ = std::async( std::launch::async, [this] {
-                while ( !stopped_ )
-                {
-                    std::lock_guard lock{stream_mutex_};
-                    if ( !running_ || !stream_.is_active() )
-                    {
-                        std::this_thread::sleep_for( std::chrono::milliseconds( 1 ) );
-                    }
-                }
-            } );
         }
 
         ~backend_t()
         {
             stopped_ = true;
             generating_thread_terminated_.wait();
-            playing_thread_terminated_.wait();
         }
 
         chain_t& chain( size_type idx ) noexcept
@@ -120,6 +228,10 @@ namespace sequencer::backend::synth
 
         void start() noexcept
         {
+            if ( device_id_ < 0 )
+            {
+                return;
+            }
             std::lock_guard lock{stream_mutex_};
             if ( stream_.is_active() )
             {
@@ -164,6 +276,25 @@ namespace sequencer::backend::synth
             return portaudio_.get_device_names();
         }
 
+        template < int N >
+        void receive_message( const midi::message_t< N >& message )
+        {
+            if constexpr ( N == 3 )
+            {
+                if ( message[ 0 ] == midi::byte::note_on )
+                {
+                    trigger();
+                    silent_ = false;
+                    return;
+                }
+                //                if( message[0] == midi::byte::note_off )
+                //                {
+                //                    silent_ = true;
+                //                    return;
+                //                }
+            }
+        }
+
     private:
         portaudio::portaudio portaudio_{};
         std::mutex stream_mutex_{};
@@ -173,12 +304,12 @@ namespace sequencer::backend::synth
         std::shared_ptr< audio::double_buffer_reader_t > double_buffer_reader_{
             std::make_shared< audio::double_buffer_reader_t >( double_buffer_ )};
         std::future< void > generating_thread_terminated_;
-        std::future< void > playing_thread_terminated_;
         int sample_rate_{44100};
         int device_id_{-1};
         std::atomic_int frame_pos_{0};
         std::size_t frames_per_buffer_{512};
         std::atomic_bool running_{false};
         std::atomic_bool stopped_{false};
+        std::atomic_bool silent_{false};
     };
 } // namespace sequencer::backend::synth

@@ -14,6 +14,8 @@ namespace qt
 
         void set_oscillator( sequencer::audio::oscillator_t* oscillator );
 
+        double frequency() const noexcept;
+
     public slots:
         void amplitude_changed( int i );
         void wave_form_changed( int i );
@@ -21,6 +23,9 @@ namespace qt
         void note_changed( int note );
         void octave_changed( int octave );
         void pulse_length_changed( int pulse_length );
+
+    signals:
+        void frequency_changed( double );
 
     private:
         void update_frequency();

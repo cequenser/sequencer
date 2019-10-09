@@ -1,5 +1,8 @@
 #pragma once
 
+#include <algorithm>
+#include <array>
+#include <cassert>
 #include <chrono>
 #include <cmath>
 #include <random>
@@ -28,9 +31,34 @@ namespace sequencer::wave_form
         double pulse_width_;
     };
 
+    template < int N >
+    std::array< double, N > create_sine_sample() noexcept
+    {
+        std::array< double, N > sample;
+        typename std::array< double, N >::size_type counter = 0;
+        std::generate( begin( sample ), end( sample ),
+                       [&counter] { return std::sin( 2 * M_PI * double( counter++ ) / N ); } );
+        return sample;
+    }
+
     inline double sine( double t )
     {
-        return std::sin( 2 * M_PI * t );
+        constexpr auto sample_rate = 4 * 44100u;
+        static const auto sine_sample = create_sine_sample< sample_rate >();
+        return sine_sample[ std::size_t( t * sample_rate ) % sample_rate ];
+    }
+
+    inline double sinc( double cutoff, int i )
+    {
+        if ( i == 0 )
+        {
+            return 2 * cutoff;
+        }
+        if ( i < 0 )
+        {
+            return -sine( cutoff * -i ) / ( M_PI * i );
+        }
+        return sine( cutoff * i ) / ( M_PI * i );
     }
 
     inline double square( double t ) noexcept

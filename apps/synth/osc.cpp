@@ -109,6 +109,15 @@ namespace qt
                 .value() );
     }
 
+    double osc_t::frequency() const noexcept
+    {
+        if ( oscillator_ )
+        {
+            return oscillator_->frequency();
+        }
+        return 0.0;
+    }
+
     void osc_t::amplitude_changed( int i )
     {
         if ( oscillator_ )
@@ -160,8 +169,11 @@ namespace qt
         static std::array< double, 12 > base_notes = {A, Ais, B, C, Cis, D, Dis, E, F, Fis, G, Gis};
         if ( oscillator_ )
         {
-            oscillator_->set_frequency(
-                note_t{base_notes[ std::size_t( note_idx_ ) ], octave_offset_}.frequency() );
+            const auto freq =
+                note_t{base_notes[ std::size_t( note_idx_ ) ], octave_offset_}.frequency();
+            oscillator_->set_frequency( freq );
+
+            emit frequency_changed( freq );
         }
     }
 } // namespace qt

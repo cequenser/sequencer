@@ -91,7 +91,97 @@ SCENARIO( "ideal low pass", "[transfer_function]" )
     }
 }
 
+SCENARIO( "low pass", "[transfer_function]" )
+{
+    using namespace sequencer::audio;
+
+    GIVEN( "a transition frequency of 50" )
+    {
+        const auto transition = 50;
+
+        AND_GIVEN( "a gain of 1" )
+        {
+            const auto gain = 1;
+
+            GIVEN( "a frequency of 0" )
+            {
+                const auto f = 0;
+
+                THEN( "transfer function returns 1" )
+                {
+                    CHECK( low_pass( f, gain, transition ) == Approx( 1 ) );
+                }
+            }
+
+            GIVEN( "a frequency of 50" )
+            {
+                const auto f = 50;
+
+                THEN( "transfer function returns 0.5" )
+                {
+                    CHECK( low_pass( f, gain, transition ) == Approx( 0.5 ) );
+                }
+            }
+
+            GIVEN( "a high frequency" )
+            {
+                const auto f = std::numeric_limits< double >::max();
+
+                THEN( "transfer function returns 0" )
+                {
+                    CHECK( std::abs( low_pass( f, gain, transition ) ) < 1e-15 );
+                }
+            }
+        }
+    }
+}
+
 SCENARIO( "low shelf", "[transfer_function]" )
+{
+    using namespace sequencer::audio;
+
+    GIVEN( "a transition frequency of 50" )
+    {
+        const auto transition = 50;
+
+        AND_GIVEN( "a gain of 1" )
+        {
+            const auto gain = 1;
+
+            GIVEN( "a frequency of 0" )
+            {
+                const auto f = 0;
+
+                THEN( "transfer function returns 2" )
+                {
+                    CHECK( low_shelf( f, gain, transition ) == Approx( 2 ) );
+                }
+            }
+
+            GIVEN( "a frequency of 50" )
+            {
+                const auto f = 50;
+
+                THEN( "transfer function returns 1.5" )
+                {
+                    CHECK( low_shelf( f, gain, transition ) == Approx( 1.5 ) );
+                }
+            }
+
+            GIVEN( "a high frequency" )
+            {
+                const auto f = std::numeric_limits< double >::max();
+
+                THEN( "transfer function returns 1" )
+                {
+                    CHECK( low_shelf( f, gain, transition ) == Approx( 1 ) );
+                }
+            }
+        }
+    }
+}
+
+SCENARIO( "high pass", "[transfer_function]" )
 {
     using namespace sequencer::audio;
 
@@ -109,17 +199,17 @@ SCENARIO( "low shelf", "[transfer_function]" )
 
                 THEN( "transfer function returns 0" )
                 {
-                    CHECK( low_shelf( f, gain, transition ) == Approx( 2 ) );
+                    CHECK( high_pass( f, gain, transition ) == Approx( 0 ) );
                 }
             }
 
-            GIVEN( "a frequency of 50" )
+            GIVEN( "a frequency of 1/50" )
             {
-                const auto f = 50;
+                const auto f = 1.0 / 50;
 
-                THEN( "transfer function returns 0" )
+                THEN( "transfer function returns 0.5" )
                 {
-                    CHECK( low_shelf( f, gain, transition ) == Approx( 1.5 ) );
+                    CHECK( high_pass( f, gain, transition ) == Approx( 0.5 ) );
                 }
             }
 
@@ -127,9 +217,9 @@ SCENARIO( "low shelf", "[transfer_function]" )
             {
                 const auto f = std::numeric_limits< double >::max();
 
-                THEN( "transfer function returns 0" )
+                THEN( "transfer function returns 1" )
                 {
-                    CHECK( low_shelf( f, gain, transition ) == Approx( 1 ) );
+                    CHECK( high_pass( f, gain, transition ) == Approx( 1 ) );
                 }
             }
         }
@@ -152,7 +242,7 @@ SCENARIO( "high shelf", "[transfer_function]" )
             {
                 const auto f = 0;
 
-                THEN( "transfer function returns 0" )
+                THEN( "transfer function returns 1" )
                 {
                     CHECK( high_shelf( f, gain, transition ) == Approx( 1 ) );
                 }
@@ -162,7 +252,7 @@ SCENARIO( "high shelf", "[transfer_function]" )
             {
                 const auto f = 1.0 / 50;
 
-                THEN( "transfer function returns 0" )
+                THEN( "transfer function returns 1.5" )
                 {
                     CHECK( high_shelf( f, gain, transition ) == Approx( 1.5 ) );
                 }
@@ -172,7 +262,7 @@ SCENARIO( "high shelf", "[transfer_function]" )
             {
                 const auto f = std::numeric_limits< double >::max();
 
-                THEN( "transfer function returns 0" )
+                THEN( "transfer function returns 2" )
                 {
                     CHECK( high_shelf( f, gain, transition ) == Approx( 2 ) );
                 }

@@ -15,14 +15,67 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0" colspan="2">
+    <item row="4" column="1" colspan="2">
+     <widget class="qt::chain_t" name="osc_1_box">
+      <property name="title">
+       <string/>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="1" colspan="2">
+     <widget class="qt::chain_t" name="osc_2_box">
+      <property name="title">
+       <string/>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="3" rowspan="2">
+     <widget class="QGroupBox" name="reverb_box">
+      <property name="title">
+       <string>Reverb</string>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_3">
+       <item row="1" column="1">
+        <widget class="QComboBox" name="reverb_type_box"/>
+       </item>
+       <item row="0" column="1">
+        <widget class="QComboBox" name="reverb_folder_box"/>
+       </item>
+       <item row="2" column="1">
+        <widget class="qt::poti_t" name="dry_wet_poti">
+         <property name="title">
+          <string>Dry/Wet</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="0" column="1" colspan="3">
      <widget class="QGroupBox" name="groupBox">
       <property name="title">
        <string/>
       </property>
       <layout class="QGridLayout" name="gridLayout_2">
-       <item row="0" column="0" colspan="2">
-        <widget class="QComboBox" name="audio_device_box"/>
+       <item row="2" column="0">
+        <widget class="QPushButton" name="play_button">
+         <property name="text">
+          <string>Play</string>
+         </property>
+        </widget>
        </item>
        <item row="2" column="1">
         <widget class="QPushButton" name="trig_button">
@@ -31,31 +84,23 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="0">
-        <widget class="QPushButton" name="play_button">
+       <item row="2" column="2">
+        <widget class="QLabel" name="bpm_label">
          <property name="text">
-          <string>Play</string>
+          <string/>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
         </widget>
        </item>
-       <item row="1" column="0" colspan="2">
+       <item row="1" column="0" colspan="3">
         <widget class="QComboBox" name="midiin_box"/>
        </item>
+       <item row="0" column="0" colspan="3">
+        <widget class="QComboBox" name="audio_device_box"/>
+       </item>
       </layout>
-     </widget>
-    </item>
-    <item row="4" column="0" colspan="2">
-     <widget class="qt::chain_t" name="osc_1_box">
-      <property name="title">
-       <string/>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="0" colspan="2">
-     <widget class="qt::chain_t" name="osc_2_box">
-      <property name="title">
-       <string/>
-      </property>
      </widget>
     </item>
    </layout>
@@ -88,6 +133,12 @@
    <header>chain.hpp</header>
    <container>1</container>
   </customwidget>
+  <customwidget>
+   <class>qt::poti_t</class>
+   <extends>QGroupBox</extends>
+   <header>poti.hpp</header>
+   <container>1</container>
+  </customwidget>
  </customwidgets>
  <resources/>
  <connections>
@@ -98,8 +149,8 @@
    <slot>play()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>333</x>
-     <y>177</y>
+     <x>227</x>
+     <y>190</y>
     </hint>
     <hint type="destinationlabel">
      <x>883</x>
@@ -130,8 +181,8 @@
    <slot>trig()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>652</x>
-     <y>177</y>
+     <x>439</x>
+     <y>190</y>
     </hint>
     <hint type="destinationlabel">
      <x>947</x>
@@ -155,11 +206,46 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>reverb_type_box</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>synth</receiver>
+   <slot>reverb_type_changed(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>652</x>
+     <y>461</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>813</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>reverb_folder_box</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>synth</receiver>
+   <slot>reverb_bank_changed(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>581</x>
+     <y>345</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1012</x>
+     <y>368</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>play()</slot>
   <slot>audio_device_changed(int)</slot>
   <slot>trig()</slot>
   <slot>midi_port_changed(int)</slot>
+  <slot>slot1()</slot>
+  <slot>reverb_type_changed(int)</slot>
+  <slot>reverb_bank_changed(int)</slot>
  </slots>
 </ui>

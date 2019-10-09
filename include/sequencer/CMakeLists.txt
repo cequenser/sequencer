@@ -20,8 +20,10 @@ add_library(sequencer
     audio/fft.hpp
     audio/note.hpp
     audio/oscillator.hpp
+    audio/ring_buffer.hpp
     audio/sample.hpp
     audio/transfer_function.hpp
+    audio/wave_reader.hpp
     backend/clock.hpp
     backend/digitakt.hpp
     backend/digitakt_parameter.hpp
@@ -51,6 +53,10 @@ add_library(sequencer
     chrono/units.hpp
     rtmidi/util.hpp
     portaudio/portaudio.hpp
+    util/callable.hpp
+    util/thread_pool.hpp
+    util/thread_safe_queue.hpp
+    util/type_erased_storage.hpp
 )
 target_compile_features(sequencer PUBLIC cxx_std_17)
 set_target_properties(sequencer PROPERTIES CXX_EXTENSIONS OFF)

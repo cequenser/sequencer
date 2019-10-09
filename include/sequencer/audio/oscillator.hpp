@@ -77,16 +77,6 @@ namespace sequencer::audio
             pulse_length_ = pulse_length;
         }
 
-        float dry_wet_ratio() const noexcept
-        {
-            return dry_wet_ratio_;
-        }
-
-        void set_dry_wet_ratio( float ratio ) noexcept
-        {
-            dry_wet_ratio_ = ratio;
-        }
-
     private:
         template < class F >
         double signal( F f, double t, double freq ) const
@@ -99,6 +89,5 @@ namespace sequencer::audio
         copyable_atomic< double > amplitude_{1};
         copyable_atomic< double > phase_{0};
         copyable_atomic< double > pulse_length_{50};
-        copyable_atomic< float > dry_wet_ratio_;
     };
 } // namespace sequencer::audio

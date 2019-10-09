@@ -11,6 +11,7 @@ add_executable(tests
     sequencer/audio/envelope_test.cpp
     sequencer/audio/fft_test.cpp
     sequencer/audio/oscillator_test.cpp
+    sequencer/audio/ring_buffer_test.cpp
     sequencer/audio/sample_test.cpp
     sequencer/audio/transfer_function_test.cpp
     sequencer/backend/digitakt_test.cpp

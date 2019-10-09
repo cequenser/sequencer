@@ -53,8 +53,14 @@ INCLUDEPATH += $$PWD/../../include \
     $$PWD/../../external/repo/rtmidi \
     $$PWD/../../external/repo/portaudio/include
 
-LIBS += -lrtmidi -lportaudio
+LIBS += -lrtmidi -lportaudio -lstdc++fs
 LIBS += -L"$$PWD/../../build4/lib"
+
+impulse_responses.commands = $(COPY_DIR) $$PWD/impulse_responses $$OUT_PWD
+synth.depends = $(synth) impulse_responses
+export(synth.depends)
+export(impulse_responses.commands)
+QMAKE_EXTRA_TARGETS += synth impulse_responses
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

@@ -23,7 +23,7 @@ class midi_sequencer : public QMainWindow
 
     using backend_t = sequencer::backend::digitakt::backend_t<
         sequencer::backend::clock_t, sequencer::backend::digitakt::backend_impl,
-        sequencer::backend::rtmidi_sender_t, sequencer::backend::digitakt::rtmidi_receiver_t,
+        sequencer::backend::rtmidi_sender_t, sequencer::backend::rtmidi_receiver_t,
         sequencer::backend::rtmidi_sender_t >;
 
 public:

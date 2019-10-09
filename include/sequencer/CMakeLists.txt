@@ -13,7 +13,9 @@ add_library(sequencer
     vector.hpp
     vector_view.hpp
     wave_form.hpp
+    audio/delay.hpp
     audio/double_buffer.hpp
+    audio/dry_wet.hpp
     audio/envelope.hpp
     audio/fft.hpp
     audio/note.hpp

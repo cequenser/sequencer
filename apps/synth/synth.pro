@@ -28,16 +28,20 @@ QMAKE_CXX = clang++-6.0
 
 SOURCES += \
         chain.cpp \
+        delay.cpp \
         envelope.cpp \
         main.cpp \
         osc.cpp \
+        osc_freq.cpp \
         poti.cpp \
         synth.cpp
 
 HEADERS += \
         chain.hpp \
+        delay.hpp \
         envelope.hpp \
         osc.hpp \
+        osc_freq.hpp \
         poti.hpp \
         signal_blocker.hpp  \
         synth.hpp

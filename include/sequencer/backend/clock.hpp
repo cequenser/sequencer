@@ -39,7 +39,7 @@ namespace sequencer::backend
             clock_.stop();
         }
 
-        void set_clock_bpm( int value )
+        void set_clock_bpm( double value )
         {
             clock_.set_tempo( beats_per_minute( value ) );
         }

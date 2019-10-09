@@ -5,7 +5,8 @@
 
 #include <QDial>
 
-synth::synth( QWidget* parent ) : QMainWindow( parent ), ui( new Ui::synth )
+synth::synth( QWidget* parent, void ( *callback )( double, std::vector< unsigned char >*, void* ) )
+    : QMainWindow( parent ), ui( new Ui::synth ), backend_{callback}
 {
     ui->setupUi( this );
 
@@ -16,6 +17,12 @@ synth::synth( QWidget* parent ) : QMainWindow( parent ), ui( new Ui::synth )
     for ( const auto& device_name : backend_.available_audio_devices() )
     {
         ui->audio_device_box->addItem( device_name.c_str() );
+    }
+
+    ui->midiin_box->addItem( "select midi input port" );
+    for ( const auto& port_name : backend_.available_input_ports() )
+    {
+        ui->midiin_box->addItem( port_name.c_str() );
     }
 }
 
@@ -42,4 +49,9 @@ void synth::audio_device_changed( int device_id )
         return;
     }
     backend_.set_device( device_id - 1 );
+}
+
+void synth::midi_port_changed( int port_id )
+{
+    backend_.select_input_port( port_id );
 }

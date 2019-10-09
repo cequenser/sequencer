@@ -21,22 +21,25 @@
        <string/>
       </property>
       <layout class="QGridLayout" name="gridLayout_2">
-       <item row="1" column="0">
-        <widget class="QPushButton" name="play_button">
-         <property name="text">
-          <string>Play</string>
-         </property>
-        </widget>
+       <item row="0" column="0" colspan="2">
+        <widget class="QComboBox" name="audio_device_box"/>
        </item>
-       <item row="1" column="1">
+       <item row="2" column="1">
         <widget class="QPushButton" name="trig_button">
          <property name="text">
           <string>trig</string>
          </property>
         </widget>
        </item>
-       <item row="0" column="0" colspan="2">
-        <widget class="QComboBox" name="audio_device_box"/>
+       <item row="2" column="0">
+        <widget class="QPushButton" name="play_button">
+         <property name="text">
+          <string>Play</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0" colspan="2">
+        <widget class="QComboBox" name="midiin_box"/>
        </item>
       </layout>
      </widget>
@@ -96,7 +99,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>333</x>
-     <y>215</y>
+     <y>177</y>
     </hint>
     <hint type="destinationlabel">
      <x>883</x>
@@ -111,8 +114,8 @@
    <slot>audio_device_changed(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>361</x>
-     <y>137</y>
+     <x>382</x>
+     <y>112</y>
     </hint>
     <hint type="destinationlabel">
      <x>1098</x>
@@ -127,12 +130,28 @@
    <slot>trig()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>593</x>
-     <y>228</y>
+     <x>652</x>
+     <y>177</y>
     </hint>
     <hint type="destinationlabel">
      <x>947</x>
      <y>237</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>midiin_box</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>synth</receiver>
+   <slot>midi_port_changed(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>605</x>
+     <y>138</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1042</x>
+     <y>141</y>
     </hint>
    </hints>
   </connection>
@@ -141,5 +160,6 @@
   <slot>play()</slot>
   <slot>audio_device_changed(int)</slot>
   <slot>trig()</slot>
+  <slot>midi_port_changed(int)</slot>
  </slots>
 </ui>

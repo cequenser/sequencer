@@ -1,5 +1,8 @@
 #pragma once
 
+#include <algorithm>
+#include <array>
+#include <cassert>
 #include <chrono>
 #include <cmath>
 #include <random>
@@ -28,12 +31,37 @@ namespace sequencer::wave_form
         double pulse_width_;
     };
 
-    inline double sine( double t )
+    template < int N >
+    std::array< double, N > create_sine_sample() noexcept
     {
-        return std::sin( 2 * M_PI * t );
+        std::array< double, N > sample;
+        typename std::array< double, N >::size_type counter = 0;
+        std::generate( begin( sample ), end( sample ),
+                       [&counter] { return std::sin( 2 * M_PI * double( counter++ ) / N ); } );
+        return sample;
     }
 
-    constexpr double square( double t ) noexcept
+    inline double sine( double t )
+    {
+        constexpr auto sample_rate = 4 * 44100u;
+        static const auto sine_sample = create_sine_sample< sample_rate >();
+        return sine_sample[ std::size_t( t * sample_rate ) % sample_rate ];
+    }
+
+    inline double sinc( double cutoff, int i )
+    {
+        if ( i == 0 )
+        {
+            return 2 * cutoff;
+        }
+        if ( i < 0 )
+        {
+            return -sine( cutoff * -i ) / ( M_PI * i );
+        }
+        return sine( cutoff * i ) / ( M_PI * i );
+    }
+
+    inline double square( double t ) noexcept
     {
         return normalize_time( t ) < 0.5 ? 1 : -1;
     }
@@ -45,7 +73,7 @@ namespace sequencer::wave_form
         return t < 0.5 ? value : -value;
     }
 
-    constexpr double saw( double t ) noexcept
+    inline double saw( double t ) noexcept
     {
         return 1 - 2 * normalize_time( t );
     }
@@ -73,7 +101,7 @@ namespace sequencer::wave_form
         {
         }
 
-        constexpr double operator()( double t ) const noexcept
+        double operator()( double t ) const noexcept
         {
             t = normalize_time( t );
             return ( t > ( 1 / slope_ ) ) ? 0 : ( slope_ * t );

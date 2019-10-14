@@ -4,11 +4,11 @@
 #include <sequencer/chrono/units.hpp>
 
 #include <chrono>
-#include <iostream>
 #include <mutex>
 #include <numeric>
 #include <thread>
 #include <vector>
+
 namespace sequencer::audio
 {
     class delay_t
@@ -25,8 +25,11 @@ namespace sequencer::audio
         {
             std::lock_guard lock{mutex_};
             buffer_.resize( frame_count, 0.0f );
-            current_ = current_ % buffer_.size();
-            reset();
+            if ( frame_count > 0 )
+            {
+                current_ = current_ % buffer_.size();
+                reset_unlocked();
+            }
         }
 
         size_type frame_count() const noexcept
@@ -35,38 +38,33 @@ namespace sequencer::audio
             return buffer_.size();
         }
 
-        std::pair< float, float > operator()( float x ) noexcept
+        float operator()( float x ) noexcept
         {
             std::lock_guard lock{mutex_};
             if ( buffer_.empty() )
             {
-                return {0.f, 0.f};
+                return 0;
             }
 
             const auto y = buffer_[ current_ ];
             buffer_[ current_ ] = x;
             current_ = ( ++current_ ) % buffer_.size();
-            return {gain_ * y, gain_ * y};
+            return gain_ * y;
         }
 
         void reset() noexcept
         {
             std::lock_guard lock{mutex_};
-            for ( auto& entry : buffer_ )
-            {
-                entry = 0;
-            }
+            reset_unlocked();
         }
 
         void set_gain( float gain ) noexcept
         {
-            std::lock_guard lock{mutex_};
             gain_ = gain;
         }
 
         float gain() const noexcept
         {
-            std::lock_guard lock{mutex_};
             return gain_;
         }
 
@@ -80,6 +78,11 @@ namespace sequencer::audio
 
         delay_t& operator=( const delay_t& other )
         {
+            if ( this == &other )
+            {
+                return *this;
+            }
+
             std::lock( mutex_, other.mutex_ );
             std::lock_guard lock{mutex_, std::adopt_lock};
             std::lock_guard lock_other{other.mutex_, std::adopt_lock};
@@ -91,10 +94,18 @@ namespace sequencer::audio
         }
 
     private:
+        void reset_unlocked() noexcept
+        {
+            for ( auto& entry : buffer_ )
+            {
+                entry = 0;
+            }
+        }
+
         mutable std::mutex mutex_;
         std::vector< float > buffer_{};
         size_type current_{0};
-        float gain_{1};
+        copyable_atomic< float > gain_{1};
     };
 
     template < class Delay >
@@ -112,9 +123,8 @@ namespace sequencer::audio
         float operator()( float x ) noexcept
         {
             std::lock_guard lock{mutex_};
-            int counter = 0;
             return std::accumulate( begin( delays_ ), end( delays_ ), float( 0 ),
-                                    [&x, &counter]( float z, auto& delay ) {
+                                    [&x]( float z, auto& delay ) {
                                         x = delay( x );
                                         return z += x;
                                     } );
@@ -149,14 +159,11 @@ namespace sequencer::audio
 
         void set_delay_count( std::vector< delay_t >::size_type count )
         {
-            std::cout << "set delay count " << count << std::endl;
             std::lock_guard lock{mutex_};
             const auto non_empty = !delays_.empty();
 
             delays_.resize( count, delay_t{non_empty ? delays_.front().frame_count() : 0,
                                            non_empty ? delays_.front().gain() : 1.0f} );
-            std::cout << "set delay count done" << std::endl;
-            std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
         }
 
     private:

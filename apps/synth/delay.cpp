@@ -4,7 +4,6 @@
 
 #include <QDial>
 #include <QVBoxLayout>
-#include <iostream>
 
 namespace qt
 {
@@ -30,6 +29,14 @@ namespace qt
                           &delay_t::delay_count_changed );
         layout->addWidget( delay_number_poti, 0, 1 );
 
+        auto gain_poti = new poti_t;
+        gain_poti->setTitle( "Gain" );
+        gain_poti->dial().setMinimum( 0 );
+        gain_poti->dial().setMaximum( 150 );
+        gain_poti->update( 50 );
+        QObject::connect( gain_poti, &poti_t::value_changed, this, &delay_t::gain_changed );
+        layout->addWidget( gain_poti, 1, 0 );
+
         auto stereo_poti = new poti_t;
         stereo_poti->setTitle( "Stereo" );
         stereo_poti->dial().setMinimum( 0 );
@@ -37,7 +44,7 @@ namespace qt
         stereo_poti->update( 50 );
         QObject::connect( stereo_poti, &poti_t::value_changed, this,
                           &delay_t::stereo_amount_changed );
-        layout->addWidget( stereo_poti, 1, 0 );
+        layout->addWidget( stereo_poti, 1, 1 );
 
         auto wet_poti = new poti_t;
         wet_poti->setTitle( "Dry/Wet" );
@@ -45,15 +52,34 @@ namespace qt
         wet_poti->dial().setMaximum( 100 );
         wet_poti->update( 0 );
         QObject::connect( wet_poti, &poti_t::value_changed, this, &delay_t::wet_amount_changed );
-        layout->addWidget( wet_poti, 1, 1 );
+        layout->addWidget( wet_poti, 2, 0 );
 
         setLayout( layout );
     }
 
-    void delay_t::set_delay(
-        sequencer::audio::dry_wet_t< sequencer::audio::delay_t, true >* delay ) noexcept
+    void delay_t::set_delay( sequencer::audio::dry_wet_t< sequencer::audio::stereo_repeated_delay_t,
+                                                          true >* delay ) noexcept
     {
         delay_ = delay;
+        auto grid_layout = dynamic_cast< QGridLayout* >( layout() );
+        delay_changed( dynamic_cast< qt::poti_t* >( grid_layout->itemAtPosition( 0, 0 )->widget() )
+                           ->dial()
+                           .value() );
+        delay_count_changed(
+            dynamic_cast< qt::poti_t* >( grid_layout->itemAtPosition( 0, 1 )->widget() )
+                ->dial()
+                .value() );
+        gain_changed( dynamic_cast< qt::poti_t* >( grid_layout->itemAtPosition( 1, 0 )->widget() )
+                          ->dial()
+                          .value() );
+        stereo_amount_changed(
+            dynamic_cast< qt::poti_t* >( grid_layout->itemAtPosition( 1, 1 )->widget() )
+                ->dial()
+                .value() );
+        wet_amount_changed(
+            dynamic_cast< qt::poti_t* >( grid_layout->itemAtPosition( 2, 0 )->widget() )
+                ->dial()
+                .value() );
     }
 
     void delay_t::set_sample_rate( int sample_rate ) noexcept
@@ -71,26 +97,35 @@ namespace qt
 
     void delay_t::delay_count_changed( int count )
     {
-        //        if(delay_)
-        //        {
-        //            std::cout << "delay count " << count << std::endl;
-        //            delay_->set_delay_count(count);
-        //        }
+        if ( delay_ )
+        {
+            delay_->set_delay_count( count );
+            delay_changed(
+                dynamic_cast< qt::poti_t* >( layout()->itemAt( 0 )->widget() )->dial().value() );
+        }
     }
 
     void delay_t::wet_amount_changed( int amount )
     {
         if ( delay_ )
         {
-            delay_->set_dry_wet_ratio( amount / 100.f );
+            delay_->set_dry_wet_ratio( ( 100 - amount ) / 100.f );
         }
     }
 
     void delay_t::stereo_amount_changed( int amount )
     {
-        //        if(delay_)
-        //        {
-        //            delay_->set_stereo_ratio(amount/100.0);
-        //        }
+        if ( delay_ )
+        {
+            delay_->set_stereo_ratio( amount / 100.0 );
+        }
+    }
+
+    void delay_t::gain_changed( int gain )
+    {
+        if ( delay_ )
+        {
+            delay_->set_gain( gain / 100.f );
+        }
     }
 } // namespace qt

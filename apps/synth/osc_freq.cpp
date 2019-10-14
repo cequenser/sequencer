@@ -59,10 +59,9 @@ namespace qt
 
         auto harmonic_poti = new poti_t;
         harmonic_poti->setTitle( "Note offset" );
-        harmonic_poti->set_decimals( 1 );
-        harmonic_poti->dial().setMinimum( -600 );
-        harmonic_poti->dial().setMaximum( 600 );
-        harmonic_poti->dial().setNotchTarget( 60 );
+        harmonic_poti->dial().setMinimum( -60 );
+        harmonic_poti->dial().setMaximum( 60 );
+        harmonic_poti->dial().setNotchTarget( 6 );
         QObject::connect( harmonic_poti, &poti_t::value_changed, this,
                           &osc_freq_t::note_offset_changed );
         harmonic_poti->update( 0, false );
@@ -154,10 +153,12 @@ namespace qt
 
     void osc_freq_t::note_offset_changed( int note_offset )
     {
+        using sequencer::audio::half_note_t;
         using sequencer::audio::increase_by_half_notes;
         if ( oscillator_ )
         {
-            const auto freq = increase_by_half_notes( carrier_frequency_, note_offset / 10.0 );
+            const auto freq =
+                increase_by_half_notes( carrier_frequency_, half_note_t{note_offset} );
             oscillator_->set_frequency( freq );
             auto freq_poti = dynamic_cast< poti_t* >(
                 dynamic_cast< QGridLayout* >( layout() )->itemAtPosition( 1, 0 )->widget() );

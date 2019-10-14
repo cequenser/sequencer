@@ -3,6 +3,8 @@
 #include "poti.hpp"
 #include "ui_synth.h"
 
+#include <sequencer/beat_duration.hpp>
+
 #include <QDial>
 
 synth::synth( QWidget* parent, void ( *callback )( double, std::vector< unsigned char >*, void* ) )
@@ -24,11 +26,34 @@ synth::synth( QWidget* parent, void ( *callback )( double, std::vector< unsigned
     {
         ui->midiin_box->addItem( port_name.c_str() );
     }
+
+    backend_.set_bpm_functor( [this]( sequencer::beat_duration bpm ) {
+        ui->bpm_label->setText( QString::number( bpm.to_double() ) + " bpm" );
+    } );
+
+    ui->reverb_folder_box->addItem( "select reverb bank" );
+    const auto reverb_types = backend_.available_reverb_banks();
+    for ( auto& reverb_type : reverb_types )
+    {
+        ui->reverb_folder_box->addItem( reverb_type.c_str() );
+    }
+
+    ui->dry_wet_poti->dial().setMinimum( 0 );
+    ui->dry_wet_poti->dial().setMaximum( 1000 );
+    ui->dry_wet_poti->set_decimals( 1 );
+    ui->dry_wet_poti->dial().setNotchTarget( 10 );
+    ui->dry_wet_poti->update( 0 );
+    connect( ui->dry_wet_poti, &qt::poti_t::value_changed, this, &synth::reverb_dry_wet_changed );
 }
 
 synth::~synth()
 {
     delete ui;
+}
+
+synth::backend_t& synth::backend() noexcept
+{
+    return backend_;
 }
 
 void synth::play()
@@ -54,4 +79,26 @@ void synth::audio_device_changed( int device_id )
 void synth::midi_port_changed( int port_id )
 {
     backend_.select_input_port( port_id );
+}
+
+void synth::reverb_type_changed( int id )
+{
+    backend_.set_reverb_type_id( id );
+}
+
+void synth::reverb_bank_changed( int id )
+{
+    backend_.set_reverb_bank_id( id );
+    ui->reverb_type_box->clear();
+    ui->reverb_type_box->addItem( "select reverb" );
+    const auto reverbs = backend_.available_reverbs();
+    for ( auto& reverb : reverbs )
+    {
+        ui->reverb_type_box->addItem( reverb.c_str() );
+    }
+}
+
+void synth::reverb_dry_wet_changed( int dry_wet_ratio )
+{
+    backend_.set_dry_wet_ratio( ( 1000 - dry_wet_ratio ) / 1000.0 );
 }

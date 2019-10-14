@@ -122,7 +122,7 @@ namespace qt
 
     void chain_t::highpass_frequency_changed( int frequency )
     {
-        chain_->highpass_frequency = frequency;
+        chain_->set_highpass_frequency( frequency );
     }
 
     void chain_t::lowpass_gain_changed( int gain )
@@ -132,6 +132,6 @@ namespace qt
 
     void chain_t::lowpass_frequency_changed( int frequency )
     {
-        chain_->lowpass_frequency = frequency;
+        chain_->set_lowpass_frequency( frequency );
     }
 } // namespace qt

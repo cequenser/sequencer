@@ -186,6 +186,32 @@ namespace sequencer::audio
     }
 
     template < class T, std::enable_if_t< !is_complex_v< T > >* = nullptr >
+    std::pair< std::vector< std::complex< T > >, std::vector< std::complex< T > > >
+    fft( const std::vector< T >& x, const std::vector< T >& y )
+    {
+        using size_type = typename std::vector< std::complex< T > >::size_type;
+
+        assert( x.size() % 2 == 0 );
+        assert( x.size() == y.size() );
+        std::vector< std::complex< T > > z( x.size() );
+        for ( size_type i = 0; i < x.size(); ++i )
+        {
+            z[ i ] = std::complex{x[ i ], y[ i ]};
+        }
+        const auto result = radix2( z );
+        std::vector< std::complex< T > > x_result( result.size() / 2 );
+        std::vector< std::complex< T > > y_result( result.size() / 2 );
+        for ( size_type k = 0; k < x_result.size(); ++k )
+        {
+            auto z = conj( result[ x.size() - k ] );
+            x_result[ k ] = ( result[ k ] + z ) / 2.f;
+            y_result[ k ] = -imag< T > * ( result[ k ] - z ) / 2.f;
+        }
+
+        return std::make_pair( x_result, y_result );
+    }
+
+    template < class T, std::enable_if_t< !is_complex_v< T > >* = nullptr >
     void fft( const std::vector< T >& x, std::vector< std::complex< T > >& result )
     {
         using size_type = typename std::vector< std::complex< T > >::size_type;

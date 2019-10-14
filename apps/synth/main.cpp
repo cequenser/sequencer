@@ -10,7 +10,7 @@ synth& get_synth()
     return syn;
 }
 
-void callback( double, std::vector< unsigned char >* message, void* )
+void callback( double dt, std::vector< unsigned char >* message, void* )
 {
     if ( message == nullptr || message->empty() )
     {
@@ -19,13 +19,13 @@ void callback( double, std::vector< unsigned char >* message, void* )
 
     if ( message->size() == 1u )
     {
-        get_synth().backend().receive_message< 1 >( {std::byte{( *message )[ 0 ]}} );
+        get_synth().backend().receive_message< 1 >( dt, {std::byte{( *message )[ 0 ]}} );
     }
     if ( message->size() == 3u )
     {
-        get_synth().backend().receive_message< 3 >( {std::byte{( *message )[ 0 ]},
-                                                     std::byte{( *message )[ 1 ]},
-                                                     std::byte{( *message )[ 2 ]}} );
+        get_synth().backend().receive_message< 3 >( dt, {std::byte{( *message )[ 0 ]},
+                                                         std::byte{( *message )[ 1 ]},
+                                                         std::byte{( *message )[ 2 ]}} );
     }
 }
 

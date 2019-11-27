@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.13)
 
+project(sequencer VERSION 0.0.1 LANGUAGES CXX)
+
 find_program(CCACHE_PROGRAM ccache)
 if(CCACHE_PROGRAM)
     set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}")
@@ -14,7 +16,6 @@ option(SEQUENCER_BuildExamples "build examples" OFF)
 option(SEQUENCER_Coverage "gather coverage data" OFF)
 option(SEQUENCER_DisableAssert "disable asserts" OFF)
 
-project(sequencer VERSION 0.0.1 LANGUAGES CXX)
 
 include(external/CMakeLists.txt)
 

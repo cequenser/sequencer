@@ -1,12 +1,12 @@
-get_filename_component(sequencer_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+get_filename_component(Sequencer_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
 include(CMakeFindDependencyMacro)
 
-list(APPEND CMAKE_MODULE_PATH ${sequencer_CMAKE_DIR})
+list(APPEND CMAKE_MODULE_PATH ${Sequencer_CMAKE_DIR})
 
 list(REMOVE_AT CMAKE_MODULE_PATH -1)
 
-if(NOT TARGET sequencer::sequencer)
-    include("${sequencer_CMAKE_DIR}/sequencerTargets.cmake")
+if(NOT TARGET Sequencer::Sequencer)
+    include("${Sequencer_CMAKE_DIR}/SequencerTargets.cmake")
 endif()
 
-set(sequencer_LIBRARIES sequencer::sequencer)
+set(Sequencer_LIBRARIES Sequencer::Sequencer)

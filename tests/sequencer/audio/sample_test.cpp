@@ -142,7 +142,7 @@ SCENARIO( "reset frame index", "[sample]" )
         {
             sample.clear();
             std::vector< float > data = {22.0f, 33.0f};
-            writer.write( data.data(), 2 );
+            writer.write( data.data(), 1 );
 
             AND_WHEN( "trim is called" )
             {
@@ -150,9 +150,9 @@ SCENARIO( "reset frame index", "[sample]" )
 
                 THEN( "read returns 8 bytes" )
                 {
-                    std::vector< float > received_data( 4, 0 );
                     auto reader = sample_reader_t{sample};
-                    reader.read( received_data.data(), 2 );
+                    std::vector< float > received_data( 4, 0 );
+                    reader.read( received_data.data(), 1 );
 
                     CHECK( received_data[ 0 ] == 22.0f );
                     CHECK( received_data[ 1 ] == 33.0f );

@@ -421,9 +421,9 @@ namespace Catch
 #define INTERNAL_CATCH_UNIQUE_NAME( name ) INTERNAL_CATCH_UNIQUE_NAME_LINE( name, __LINE__ )
 #endif
 
-#include <string>
 #include <cstdint>
 #include <iosfwd>
+#include <string>
 
 // We need a dummy global operator<< so we can bring it into Catch namespace later
 struct Catch_global_namespace_dummy
@@ -497,7 +497,7 @@ namespace Catch
     {
         return value;
     }
-}
+} // namespace Catch
 
 #define CATCH_INTERNAL_LINEINFO                                                                    \
     ::Catch::SourceLineInfo( __FILE__, static_cast< std::size_t >( __LINE__ ) )
@@ -556,14 +556,14 @@ namespace Catch
     std::vector< TestCase > filterTests( std::vector< TestCase > const& testCases,
                                          TestSpec const& testSpec, IConfig const& config );
     std::vector< TestCase > const& getAllTestCasesSorted( IConfig const& config );
-}
+} // namespace Catch
 
 // end catch_interfaces_testcase.h
 // start catch_stringref.h
 
-#include <string>
 #include <cstddef>
 #include <iosfwd>
+#include <string>
 
 namespace Catch
 {
@@ -720,7 +720,7 @@ namespace Catch
     };
 
 #endif
-}
+} // namespace Catch
 
 // end catch_type_traits.hpp
 // start catch_preprocessor.hpp
@@ -1878,10 +1878,10 @@ namespace Catch
 
 // start catch_tostring.h
 
+#include <cstddef>
 #include <string>
 #include <type_traits>
 #include <vector>
-#include <cstddef>
 // start catch_stream.h
 
 #include <cstddef>
@@ -1927,7 +1927,7 @@ namespace Catch
             return *m_oss;
         }
     };
-}
+} // namespace Catch
 
 // end catch_stream.h
 // start catch_interfaces_enum_values_registry.h
@@ -1969,7 +1969,7 @@ namespace Catch
         }
     };
 
-} // Catch
+} // namespace Catch
 
 // end catch_interfaces_enum_values_registry.h
 
@@ -2379,7 +2379,7 @@ namespace Catch
             rss << " }";
             return rss.str();
         }
-    }
+    } // namespace Detail
 
 #ifdef __OBJC__
     template <>
@@ -2440,7 +2440,7 @@ namespace Catch
             return rss.str();
         }
     };
-}
+} // namespace Catch
 #endif // CATCH_CONFIG_ENABLE_PAIR_STRINGMAKER
 
 #if defined( CATCH_CONFIG_ENABLE_OPTIONAL_STRINGMAKER ) && defined( CATCH_CONFIG_CPP17_OPTIONAL )
@@ -2464,7 +2464,7 @@ namespace Catch
             return rss.str();
         }
     };
-}
+} // namespace Catch
 #endif // CATCH_CONFIG_ENABLE_OPTIONAL_STRINGMAKER
 
 // Separate std::tuple specialization
@@ -2492,7 +2492,7 @@ namespace Catch
             {
             }
         };
-    }
+    } // namespace Detail
 
     template < typename... Types >
     struct StringMaker< std::tuple< Types... > >
@@ -2506,7 +2506,7 @@ namespace Catch
             return rss.str();
         }
     };
-}
+} // namespace Catch
 #endif // CATCH_CONFIG_ENABLE_TUPLE_STRINGMAKER
 
 #if defined( CATCH_CONFIG_ENABLE_VARIANT_STRINGMAKER ) && defined( CATCH_CONFIG_CPP17_VARIANT )
@@ -2539,7 +2539,7 @@ namespace Catch
             }
         }
     };
-}
+} // namespace Catch
 #endif // CATCH_CONFIG_ENABLE_VARIANT_STRINGMAKER
 
 namespace Catch
@@ -2757,7 +2757,7 @@ namespace Catch
             return std::string( timeStamp );
         }
     };
-}
+} // namespace Catch
 #endif // CATCH_CONFIG_ENABLE_CHRONO_STRINGMAKER
 
 #define INTERNAL_CATCH_REGISTER_ENUM( enumName, ... )                                              \
@@ -3159,7 +3159,7 @@ namespace Catch
     };
 
     IResultCapture& getResultCapture();
-}
+} // namespace Catch
 
 // end catch_interfaces_capture.h
 namespace Catch
@@ -3568,7 +3568,7 @@ namespace Catch
         Counts assertions;
         Counts testCases;
     };
-}
+} // namespace Catch
 
 // end catch_totals.h
 #include <string>
@@ -3718,7 +3718,7 @@ namespace Catch
     IMutableRegistryHub& getMutableRegistryHub();
     void cleanUp();
     std::string translateActiveException();
-}
+} // namespace Catch
 
 // end catch_interfaces_registry_hub.h
 #if defined( CATCH_CONFIG_DISABLE )
@@ -3726,9 +3726,9 @@ namespace Catch
     static std::string translatorName( signature )
 #endif
 
+#include <exception>
 #include <string>
 #include <vector>
-#include <exception>
 
 namespace Catch
 {
@@ -3790,7 +3790,7 @@ namespace Catch
                 new ExceptionTranslator< T >( translateFunction ) );
         }
     };
-}
+} // namespace Catch
 
 ///////////////////////////////////////////////////////////////////////////////
 #define INTERNAL_CATCH_TRANSLATE_EXCEPTION2( translatorName, signature )                           \
@@ -3963,9 +3963,9 @@ namespace Catch
 // end catch_approx.h
 // start catch_string_manip.h
 
+#include <iosfwd>
 #include <string>
 #include <vector>
-#include <iosfwd>
 
 namespace Catch
 {
@@ -3993,7 +3993,7 @@ namespace Catch
         std::size_t m_count;
         std::string m_label;
     };
-}
+} // namespace Catch
 
 // end catch_string_manip.h
 #ifndef CATCH_CONFIG_DISABLE_MATCHERS
@@ -4233,8 +4233,8 @@ namespace Catch
 // end catch_matchers_floating.h
 // start catch_matchers_generic.hpp
 
-#include <string>
 #include <functional>
+#include <string>
 
 namespace Catch
 {
@@ -4732,7 +4732,7 @@ namespace Catch
 {
 #if !defined( CATCH_CONFIG_DISABLE_EXCEPTIONS )
     template < typename Ex >
-    [ [noreturn] ] void throw_exception( Ex const& e )
+    [[noreturn]] void throw_exception( Ex const& e )
     {
         throw e;
     }
@@ -4744,7 +4744,7 @@ namespace Catch
     [[noreturn]] void throw_domain_error( std::string const& msg );
     [[noreturn]] void throw_runtime_error( std::string const& msg );
 
-} // namespace Catch;
+} // namespace Catch
 
 #define CATCH_MAKE_MSG( ... ) ( Catch::ReusableStringStream() << __VA_ARGS__ ).str()
 
@@ -4765,11 +4765,10 @@ namespace Catch
 
 // end catch_enforce.h
 #include <cassert>
-#include <memory>
-#include <vector>
-
-#include <utility>
 #include <exception>
+#include <memory>
+#include <utility>
+#include <vector>
 
 namespace Catch
 {
@@ -4797,7 +4796,7 @@ namespace Catch
             {
                 return std::unique_ptr< T >( new T( std::forward< Args >( args )... ) );
             }
-        }
+        } // namespace pf
 
         template < typename T >
         struct IGenerator : GeneratorUntypedBase
@@ -5355,7 +5354,7 @@ namespace Catch
     }
 
     void cleanUpContext();
-}
+} // namespace Catch
 
 // end catch_context.h
 // start catch_interfaces_config.h
@@ -5458,10 +5457,10 @@ namespace Catch
 } // end namespace Catch
 
 // end catch_option.hpp
+#include <iosfwd>
 #include <memory>
 #include <string>
 #include <vector>
-#include <iosfwd>
 
 namespace Catch
 {
@@ -5554,7 +5553,7 @@ namespace Catch
     };
 
     using IConfigPtr = std::shared_ptr< IConfig const >;
-}
+} // namespace Catch
 
 // end catch_interfaces_config.h
 #include <random>
@@ -5763,7 +5762,7 @@ namespace Catch
 
     TestCase makeTestCase( ITestInvoker* testCase, std::string const& className,
                            NameAndTags const& nameAndTags, SourceLineInfo const& lineInfo );
-}
+} // namespace Catch
 
 #ifdef __clang__
 #pragma clang diagnostic pop
@@ -5780,7 +5779,7 @@ namespace Catch
         virtual ~IRunner();
         virtual bool aborting() const = 0;
     };
-}
+} // namespace Catch
 
 // end catch_interfaces_runner.h
 
@@ -5788,7 +5787,6 @@ namespace Catch
 // start catch_objc.hpp
 
 #import <objc/runtime.h>
-
 #include <string>
 
 // NB. Any general catch headers included here must be included
@@ -5853,7 +5851,7 @@ namespace Catch
                 return [(NSString*)value UTF8String];
             return "";
         }
-    }
+    } // namespace Detail
 
     inline std::size_t registerTestMethods()
     {
@@ -6092,7 +6090,7 @@ namespace Catch
         WildcardPosition m_wildcard = NoWildcard;
         std::string m_pattern;
     };
-}
+} // namespace Catch
 
 // end catch_wildcard_pattern.h
 #include <memory>
@@ -6160,7 +6158,7 @@ namespace Catch
 
         friend class TestSpecParser;
     };
-}
+} // namespace Catch
 
 #ifdef __clang__
 #pragma clang diagnostic pop
@@ -6476,11 +6474,11 @@ namespace Catch
 #endif // CATCH_CONFIG_ENABLE_BENCHMARKING
 
 #include <algorithm>
+#include <iosfwd>
 #include <map>
 #include <memory>
 #include <set>
 #include <string>
-#include <iosfwd>
 
 namespace Catch
 {
@@ -6731,10 +6729,10 @@ namespace Catch
 // end catch_interfaces_reporter.h
 #include <algorithm>
 #include <cassert>
-#include <memory>
 #include <cfloat>
 #include <cstdio>
 #include <cstring>
+#include <memory>
 #include <ostream>
 
 namespace Catch
@@ -7163,7 +7161,7 @@ namespace Catch
             getMutableRegistryHub().registerListener( std::make_shared< ListenerFactory >() );
         }
     };
-}
+} // namespace Catch
 
 #if !defined( CATCH_CONFIG_DISABLE )
 
@@ -7400,7 +7398,7 @@ namespace Catch
         std::string m_indent;
         std::ostream& m_os;
     };
-}
+} // namespace Catch
 
 // end catch_xmlwriter.h
 namespace Catch
@@ -8001,8 +7999,8 @@ namespace Catch
 
 // Timing
 
-#include <type_traits>
 #include <tuple>
+#include <type_traits>
 
 namespace Catch
 {
@@ -8162,12 +8160,12 @@ namespace Catch
 
 #include <algorithm>
 #include <cmath>
-#include <numeric>
-#include <utility>
-#include <vector>
 #include <cstddef>
 #include <functional>
+#include <numeric>
 #include <tuple>
+#include <utility>
+#include <vector>
 
 namespace Catch
 {
@@ -8332,9 +8330,9 @@ namespace Catch
 // end catch_stats.hpp
 #include <algorithm>
 #include <cmath>
-#include <vector>
 #include <iterator>
 #include <tuple>
+#include <vector>
 
 namespace Catch
 {
@@ -8458,9 +8456,9 @@ namespace Catch
 // Benchmark results
 
 #include <algorithm>
+#include <iterator>
 #include <string>
 #include <vector>
-#include <iterator>
 
 namespace Catch
 {
@@ -8492,8 +8490,8 @@ namespace Catch
 
 // end catch_sample_analysis.hpp
 #include <algorithm>
-#include <vector>
 #include <iterator>
+#include <vector>
 
 namespace Catch
 {
@@ -8520,8 +8518,10 @@ namespace Catch
 
                     auto wrap_estimate = []( Estimate< double > e ) {
                         return Estimate< Duration >{
-                            Duration( e.point ), Duration( e.lower_bound ),
-                            Duration( e.upper_bound ), e.confidence_interval,
+                            Duration( e.point ),
+                            Duration( e.lower_bound ),
+                            Duration( e.upper_bound ),
+                            e.confidence_interval,
                         };
                     };
                     std::vector< Duration > samples2;
@@ -8562,9 +8562,9 @@ namespace Catch
 // end catch_analyse.hpp
 #include <algorithm>
 #include <cmath>
+#include <functional>
 #include <string>
 #include <vector>
-#include <functional>
 
 namespace Catch
 {
@@ -8664,7 +8664,7 @@ namespace Catch
             Detail::BenchmarkFunction fun;
             std::string name;
         };
-    }
+    } // namespace Benchmark
 } // namespace Catch
 
 #define INTERNAL_CATCH_GET_1_ARG( arg1, arg2, ... ) arg1
@@ -8845,8 +8845,8 @@ namespace Catch
     } // namespace TestCaseTracking
 
     using TestCaseTracking::ITracker;
-    using TestCaseTracking::TrackerContext;
     using TestCaseTracking::SectionTracker;
+    using TestCaseTracking::TrackerContext;
 
 } // namespace Catch
 
@@ -8862,7 +8862,7 @@ namespace Catch
         LeakDetector();
         ~LeakDetector();
     };
-}
+} // namespace Catch
 // end catch_leak_detector.h
 // Cpp files will be included in the single-header file here
 // start catch_stats.cpp
@@ -8974,7 +8974,7 @@ namespace
                           ( last - first );
         return std::sqrt( variance );
     }
-}
+} // namespace
 
 namespace Catch
 {
@@ -9119,7 +9119,7 @@ namespace
     {
         return ( lhs + margin >= rhs ) && ( rhs + margin >= lhs );
     }
-}
+} // namespace
 
 namespace Catch
 {
@@ -9328,7 +9328,7 @@ namespace Catch
     {
         void reset();
     };
-}
+} // namespace Catch
 
 #endif
 
@@ -9464,7 +9464,7 @@ namespace Catch
             expr.streamReconstructedExpression( os );
             return os;
         }
-    }
+    } // namespace
 
     LazyExpression::LazyExpression( bool isNegated ) : m_isNegated( isNegated )
     {
@@ -9771,9 +9771,9 @@ namespace Catch
 // This project is hosted at https://github.com/philsquared/textflowcpp
 
 #include <cassert>
-#include <vector>
 #include <ostream>
 #include <sstream>
+#include <vector>
 
 #ifndef CATCH_CLARA_TEXTFLOW_CONFIG_CONSOLE_WIDTH
 #define CATCH_CLARA_TEXTFLOW_CONFIG_CONSOLE_WIDTH 80
@@ -9839,8 +9839,9 @@ namespace Catch
                         assert( at > 0 );
                         assert( at <= line().size() );
 
-                        return at == line().size() || ( isWhitespace( line()[ at ] ) &&
-                                                        !isWhitespace( line()[ at - 1 ] ) ) ||
+                        return at == line().size() ||
+                               ( isWhitespace( line()[ at ] ) &&
+                                 !isWhitespace( line()[ at - 1 ] ) ) ||
                                isBreakableBefore( line()[ at ] ) ||
                                isBreakableAfter( line()[ at - 1 ] );
                     }
@@ -9937,7 +9938,7 @@ namespace Catch
                             calcLength();
                         return *this;
                     }
-                    auto operator++(int) -> iterator
+                    auto operator++( int ) -> iterator
                     {
                         iterator prev( *this );
                         operator++();
@@ -10106,7 +10107,7 @@ namespace Catch
                         }
                         return *this;
                     }
-                    auto operator++(int) -> iterator
+                    auto operator++( int ) -> iterator
                     {
                         iterator prev( *this );
                         operator++();
@@ -10166,18 +10167,18 @@ namespace Catch
                 cols += other;
                 return cols;
             }
-        }
-    }
-}
+        } // namespace TextFlow
+    }     // namespace clara
+} // namespace Catch
 
 // ----------- end of #include from clara_textflow.hpp -----------
 // ........... back in clara.hpp
 
 #include <algorithm>
+#include <cctype>
 #include <memory>
 #include <set>
 #include <string>
-#include <cctype>
 
 #if !defined( CATCH_PLATFORM_WINDOWS ) &&                                                          \
     ( defined( WIN32 ) || defined( __WIN32__ ) || defined( _WIN32 ) || defined( _MSC_VER ) )
@@ -11326,8 +11327,8 @@ namespace Catch
 
         // Result type for parser operation
         using detail::ParserResult;
-    }
-} // namespace Catch::clara
+    } // namespace clara
+} // namespace Catch
 
 // end clara.hpp
 #ifdef __clang__
@@ -11571,7 +11572,7 @@ namespace Catch
 
     NonCopyable::NonCopyable() = default;
     NonCopyable::~NonCopyable() = default;
-}
+} // namespace Catch
 // end catch_common.cpp
 // start catch_config.cpp
 
@@ -11747,7 +11748,7 @@ namespace Catch
     private:
         int m_oldErrno;
     };
-}
+} // namespace Catch
 
 // end catch_errno_guard.h
 #include <sstream>
@@ -11776,7 +11777,7 @@ namespace Catch
             }
         };
 
-    } // anon namespace
+    } // namespace
 } // namespace Catch
 
 #if !defined( CATCH_CONFIG_COLOUR_NONE ) && !defined( CATCH_CONFIG_COLOUR_WINDOWS ) &&             \
@@ -11874,7 +11875,7 @@ namespace Catch
             return colourMode == UseColour::Yes ? &s_instance : NoColourImpl::instance();
         }
 
-    } // end anon namespace
+    } // namespace
 } // end namespace Catch
 
 #elif defined( CATCH_CONFIG_COLOUR_ANSI ) //////////////////////////////////////
@@ -11967,7 +11968,7 @@ namespace Catch
                                                 : NoColourImpl::instance();
         }
 
-    } // end anon namespace
+    } // namespace
 } // end namespace Catch
 
 #else // not Windows or ANSI ///////////////////////////////////////////////
@@ -12096,7 +12097,7 @@ namespace Catch
     IContext::~IContext() = default;
     IMutableContext::~IMutableContext() = default;
     Context::~Context() = default;
-}
+} // namespace Catch
 // end catch_context.cpp
 // start catch_debug_console.cpp
 
@@ -12118,7 +12119,7 @@ namespace Catch
     {
         ::OutputDebugStringA( text.c_str() );
     }
-}
+} // namespace Catch
 
 #else
 
@@ -12129,7 +12130,7 @@ namespace Catch
         // !TBD: Need a version for Mac/ XCode and other IDEs
         Catch::cout() << text;
     }
-}
+} // namespace Catch
 
 #endif // Platform
 // end catch_debug_console.cpp
@@ -12202,8 +12203,8 @@ namespace Catch
 } // namespace Catch
 
 #elif defined( CATCH_PLATFORM_LINUX )
-#include <string>
 #include <fstream>
+#include <string>
 
 namespace Catch
 {
@@ -12243,7 +12244,7 @@ namespace Catch
     {
         return IsDebuggerPresent() != 0;
     }
-}
+} // namespace Catch
 #elif defined( __MINGW32__ )
 extern "C" __declspec( dllimport ) int __stdcall IsDebuggerPresent();
 namespace Catch
@@ -12252,7 +12253,7 @@ namespace Catch
     {
         return IsDebuggerPresent() != 0;
     }
-}
+} // namespace Catch
 #else
 namespace Catch
 {
@@ -12260,7 +12261,7 @@ namespace Catch
     {
         return false;
     }
-}
+} // namespace Catch
 #endif // Platform
 // end catch_debugger.cpp
 // start catch_decomposer.cpp
@@ -12279,7 +12280,7 @@ namespace Catch
         else
             os << lhs << "\n" << op << "\n" << rhs;
     }
-}
+} // namespace Catch
 // end catch_decomposer.cpp
 // start catch_enforce.cpp
 
@@ -12312,7 +12313,7 @@ namespace Catch
         throw_exception( std::runtime_error( msg ) );
     }
 
-} // namespace Catch;
+} // namespace Catch
 // end catch_enforce.cpp
 // start catch_enum_values_registry.cpp
 // start catch_enum_values_registry.h
@@ -12340,9 +12341,9 @@ namespace Catch
 
         std::vector< std::string > parseEnums( StringRef enums );
 
-    } // Detail
+    } // namespace Detail
 
-} // Catch
+} // namespace Catch
 
 // end catch_enum_values_registry.h
 
@@ -12412,8 +12413,8 @@ namespace Catch
             return *raw;
         }
 
-    } // Detail
-} // Catch
+    } // namespace Detail
+} // namespace Catch
 
 // end catch_enum_values_registry.cpp
 // start catch_errno_guard.cpp
@@ -12429,7 +12430,7 @@ namespace Catch
     {
         errno = m_oldErrno;
     }
-}
+} // namespace Catch
 // end catch_errno_guard.cpp
 // start catch_exception_translator_registry.cpp
 
@@ -12453,7 +12454,7 @@ namespace Catch
     private:
         std::vector< std::unique_ptr< IExceptionTranslator const > > m_translators;
     };
-}
+} // namespace Catch
 
 // end catch_exception_translator_registry.h
 #ifdef __OBJC__
@@ -12550,7 +12551,7 @@ namespace Catch
             "Attempted to use exception translators under CATCH_CONFIG_DISABLE_EXCEPTIONS!" );
     }
 #endif
-}
+} // namespace Catch
 // end catch_exception_translator_registry.cpp
 // start catch_fatal_condition.cpp
 
@@ -12568,7 +12569,7 @@ namespace
     {
         Catch::getCurrentContext().getResultCapture()->handleFatalErrorCondition( message );
     }
-}
+} // namespace
 
 #endif // signals/SEH handling
 
@@ -12736,7 +12737,7 @@ namespace Catch
     void FatalConditionHandler::reset()
     {
     }
-}
+} // namespace Catch
 
 #endif // signals/SEH handling
 
@@ -12759,7 +12760,7 @@ namespace Catch
     std::mt19937& rng();
     void seedRng( IConfig const& config );
     unsigned int rngSeed();
-}
+} // namespace Catch
 
 // end catch_random_number_generator.h
 #include <limits>
@@ -12812,7 +12813,7 @@ namespace Catch
 {
     IExceptionTranslator::~IExceptionTranslator() = default;
     IExceptionTranslatorRegistry::~IExceptionTranslatorRegistry() = default;
-}
+} // namespace Catch
 // end catch_interfaces_exception.cpp
 // start catch_interfaces_registry_hub.cpp
 
@@ -12820,7 +12821,7 @@ namespace Catch
 {
     IRegistryHub::~IRegistryHub() = default;
     IMutableRegistryHub::~IMutableRegistryHub() = default;
-}
+} // namespace Catch
 // end catch_interfaces_registry_hub.cpp
 // start catch_interfaces_reporter.cpp
 
@@ -12997,7 +12998,7 @@ namespace Catch
 {
     ITestInvoker::~ITestInvoker() = default;
     ITestCaseRegistry::~ITestCaseRegistry() = default;
-}
+} // namespace Catch
 // end catch_interfaces_testcase.cpp
 // start catch_leak_detector.cpp
 
@@ -13018,7 +13019,7 @@ namespace Catch
         // Change this to leaking allocation's number to break there
         _CrtSetBreakAlloc( -1 );
     }
-}
+} // namespace Catch
 
 #else
 
@@ -13073,8 +13074,8 @@ namespace Catch
 
 // end catch_text.h
 #include <algorithm>
-#include <limits>
 #include <iomanip>
+#include <limits>
 
 namespace Catch
 {
@@ -13266,7 +13267,7 @@ namespace Catch
 {
     bool isnan( float f );
     bool isnan( double d );
-}
+} // namespace Catch
 
 // end catch_polyfills.hpp
 // start catch_to_string.hpp
@@ -13289,11 +13290,11 @@ namespace Catch
 } // end namespace Catch
 
 // end catch_to_string.hpp
-#include <cstdlib>
-#include <limits>
 #include <cstdint>
+#include <cstdlib>
 #include <cstring>
 #include <iomanip>
+#include <limits>
 #include <sstream>
 
 namespace Catch
@@ -13308,8 +13309,8 @@ namespace Catch
                 Double
             };
         }
-    }
-}
+    } // namespace Matchers
+} // namespace Catch
 
 namespace
 {
@@ -13811,9 +13812,9 @@ namespace Catch
 #ifndef TWOBLUECUBES_CATCH_OUTPUT_REDIRECT_H
 #define TWOBLUECUBES_CATCH_OUTPUT_REDIRECT_H
 
-#include <string>
 #include <cstdio>
 #include <iosfwd>
+#include <string>
 
 namespace Catch
 {
@@ -13924,11 +13925,11 @@ namespace Catch
 
 #endif // TWOBLUECUBES_CATCH_OUTPUT_REDIRECT_H
 // end catch_output_redirect.h
-#include <stdexcept>
 #include <cstdio>
 #include <cstring>
 #include <fstream>
 #include <sstream>
+#include <stdexcept>
 
 #if defined( CATCH_CONFIG_NEW_CAPTURE )
 #if defined( _MSC_VER )
@@ -14136,16 +14137,16 @@ namespace Catch
     {
         return getCurrentContext().getConfig()->rngSeed();
     }
-}
+} // namespace Catch
 // end catch_random_number_generator.cpp
 // start catch_registry_hub.cpp
 
 // start catch_test_case_registry_impl.h
 
 #include <algorithm>
+#include <ios>
 #include <set>
 #include <vector>
-#include <ios>
 
 namespace Catch
 {
@@ -14226,7 +14227,7 @@ namespace Catch
         FactoryMap m_factories;
         Listeners m_listeners;
     };
-}
+} // namespace Catch
 
 // end catch_reporter_registry.h
 // start catch_tag_alias_registry.h
@@ -14272,8 +14273,8 @@ namespace Catch
 // end catch_tag_alias_registry.h
 // start catch_startup_exception_registry.h
 
-#include <vector>
 #include <exception>
+#include <vector>
 
 namespace Catch
 {
@@ -14406,7 +14407,7 @@ namespace Catch
             StartupExceptionRegistry m_exceptionRegistry;
             Detail::EnumValuesRegistry m_enumValuesRegistry;
         };
-    }
+    } // namespace
 
     using RegistryHubSingleton = Singleton< RegistryHub, IRegistryHub, IMutableRegistryHub >;
 
@@ -14464,7 +14465,7 @@ namespace Catch
     {
         return m_listeners;
     }
-}
+} // namespace Catch
 // end catch_reporter_registry.cpp
 // start catch_result_type.cpp
 
@@ -14580,13 +14581,15 @@ namespace Catch
         GeneratorTracker::~GeneratorTracker()
         {
         }
-    }
+    } // namespace Generators
 
     RunContext::RunContext( IConfigPtr const& _config, IStreamingReporterPtr&& reporter )
         : m_runInfo( _config->name() ), m_context( getCurrentMutableContext() ),
-          m_config( _config ), m_reporter( std::move( reporter ) ),
-          m_lastAssertionInfo{StringRef(), SourceLineInfo( "", 0 ), StringRef(),
-                              ResultDisposition::Normal},
+          m_config( _config ),
+          m_reporter( std::move( reporter ) ), m_lastAssertionInfo{StringRef(),
+                                                                   SourceLineInfo( "", 0 ),
+                                                                   StringRef(),
+                                                                   ResultDisposition::Normal},
           m_includeSuccessfulResults( m_config->includeSuccessfulResults() ||
                                       m_reporter->getPreferences().shouldReportAllAssertions )
     {
@@ -15066,7 +15069,7 @@ namespace Catch
         else
             CATCH_INTERNAL_ERROR( "No result capture instance" );
     }
-}
+} // namespace Catch
 // end catch_run_context.cpp
 // start catch_section.cpp
 
@@ -15194,7 +15197,7 @@ namespace Catch
     };
 
     Version const& libraryVersion();
-}
+} // namespace Catch
 
 // end catch_version.h
 #include <cstdlib>
@@ -15314,7 +15317,7 @@ namespace Catch
             }
         }
 
-    } // anon namespace
+    } // namespace
 
     Session::Session()
     {
@@ -15534,7 +15537,7 @@ namespace Catch
                 g_singletons = new std::vector< ISingleton* >();
             return g_singletons;
         }
-    }
+    } // namespace
 
     ISingleton::~ISingleton()
     {
@@ -15583,12 +15586,12 @@ namespace Catch
 // end catch_startup_exception_registry.cpp
 // start catch_stream.cpp
 
-#include <iostream>
-#include <memory>
-#include <vector>
 #include <cstdio>
 #include <fstream>
+#include <iostream>
+#include <memory>
 #include <sstream>
+#include <vector>
 
 namespace Catch
 {
@@ -15718,8 +15721,8 @@ namespace Catch
                     return m_os;
                 }
             };
-        }
-    } // namespace anon::detail
+        } // namespace
+    }     // namespace Detail
 
     ///////////////////////////////////////////////////////////////////////////
 
@@ -15787,7 +15790,7 @@ namespace Catch
         return static_cast< std::ostringstream* >( m_oss )->str();
     }
 
-///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 
 #ifndef CATCH_CONFIG_NOSTDOUT // If you #define this you must implement these functions
     std::ostream& cout()
@@ -15803,15 +15806,15 @@ namespace Catch
         return std::clog;
     }
 #endif
-}
+} // namespace Catch
 // end catch_stream.cpp
 // start catch_string_manip.cpp
 
 #include <algorithm>
-#include <vector>
 #include <cctype>
 #include <cstring>
 #include <ostream>
+#include <vector>
 
 namespace Catch
 {
@@ -15822,7 +15825,7 @@ namespace Catch
         {
             return static_cast< char >( std::tolower( c ) );
         }
-    }
+    } // namespace
 
     bool startsWith( std::string const& s, std::string const& prefix )
     {
@@ -15911,7 +15914,7 @@ namespace Catch
             os << 's';
         return os;
     }
-}
+} // namespace Catch
 // end catch_string_manip.cpp
 // start catch_stringref.cpp
 
@@ -15929,7 +15932,7 @@ namespace
     const uint32_t byte_2_lead = 0xC0;
     const uint32_t byte_3_lead = 0xE0;
     const uint32_t byte_4_lead = 0xF0;
-}
+} // namespace
 
 namespace Catch
 {
@@ -16063,7 +16066,7 @@ namespace Catch
         : tag( _tag ), lineInfo( _lineInfo )
     {
     }
-}
+} // namespace Catch
 // end catch_tag_alias.cpp
 // start catch_tag_alias_autoregistrar.cpp
 
@@ -16084,7 +16087,7 @@ namespace Catch
             getMutableRegistryHub().registerStartupException();
         }
     }
-}
+} // namespace Catch
 // end catch_tag_alias_autoregistrar.cpp
 // start catch_tag_alias_registry.cpp
 
@@ -16190,7 +16193,7 @@ namespace Catch
                     << "Tag names starting with non alphanumeric characters are reserved\n"
                     << _lineInfo );
         }
-    }
+    } // namespace
 
     TestCase makeTestCase( ITestInvoker* _testCase, std::string const& _className,
                            NameAndTags const& nameAndTags, SourceLineInfo const& _lineInfo )
@@ -16471,8 +16474,8 @@ namespace Catch
 #include <algorithm>
 #include <cassert>
 #include <memory>
-#include <stdexcept>
 #include <sstream>
+#include <stdexcept>
 
 #if defined( __clang__ )
 #pragma clang diagnostic push
@@ -16738,8 +16741,8 @@ namespace Catch
     } // namespace TestCaseTracking
 
     using TestCaseTracking::ITracker;
-    using TestCaseTracking::TrackerContext;
     using TestCaseTracking::SectionTracker;
+    using TestCaseTracking::TrackerContext;
 
 } // namespace Catch
 
@@ -16779,7 +16782,7 @@ namespace Catch
     }
 
     AutoReg::~AutoReg() = default;
-}
+} // namespace Catch
 // end catch_test_registry.cpp
 // start catch_test_spec.cpp
 
@@ -16846,7 +16849,7 @@ namespace Catch
                 return true;
         return false;
     }
-}
+} // namespace Catch
 // end catch_test_spec.cpp
 // start catch_test_spec_parser.cpp
 
@@ -17009,7 +17012,7 @@ namespace Catch
             // - and potentially do more iterations if there's a high variance.
             return sum / iterations;
         }
-    }
+    } // namespace
     auto getEstimatedClockResolution() -> uint64_t
     {
         static auto s_resolution = estimateClockResolution();
@@ -17086,7 +17089,7 @@ namespace Catch
                     return ( u.asChar[ sizeof( int ) - 1 ] == 1 ) ? Big : Little;
                 }
             };
-        }
+        } // namespace
 
         std::string rawMemoryToString( const void* object, std::size_t size )
         {
@@ -17105,7 +17108,7 @@ namespace Catch
                 rss << std::setw( 2 ) << static_cast< unsigned >( bytes[ i ] );
             return rss.str();
         }
-    }
+    } // namespace Detail
 
     template < typename T >
     std::string fpToString( T value, int precision )
@@ -17427,7 +17430,7 @@ namespace Catch
             ++diff.testCases.passed;
         return diff;
     }
-}
+} // namespace Catch
 // end catch_totals.cpp
 // start catch_uncaught_exceptions.cpp
 
@@ -17476,7 +17479,7 @@ namespace Catch
         static Version version( 2, 9, 1, "", 0 );
         return version;
     }
-}
+} // namespace Catch
 // end catch_version.cpp
 // start catch_wildcard_pattern.cpp
 
@@ -17522,7 +17525,7 @@ namespace Catch
     {
         return m_caseSensitivity == CaseSensitive::No ? toLower( str ) : str;
     }
-}
+} // namespace Catch
 // end catch_wildcard_pattern.cpp
 // start catch_xmlwriter.cpp
 
@@ -17847,15 +17850,15 @@ namespace Catch
             m_needsNewline = false;
         }
     }
-}
+} // namespace Catch
 // end catch_xmlwriter.cpp
 // start catch_reporter_bases.cpp
 
 #include <cassert>
-#include <memory>
 #include <cfloat>
 #include <cstdio>
 #include <cstring>
+#include <memory>
 
 namespace Catch
 {
@@ -17958,7 +17961,7 @@ namespace
         return count == 1 ? std::string() : count == 2 ? "both " : "all ";
     }
 
-} // anon namespace
+} // namespace
 
 namespace Catch
 {
@@ -17984,8 +17987,9 @@ namespace Catch
                         ? bothOrAll( totals.assertions.failed )
                         : std::string();
                 out << "Failed " << bothOrAll( totals.testCases.failed )
-                    << pluralise( totals.testCases.failed, "test case" ) << ", "
-                                                                            "failed "
+                    << pluralise( totals.testCases.failed, "test case" )
+                    << ", "
+                       "failed "
                     << qualify_assertions_failed
                     << pluralise( totals.assertions.failed, "assertion" ) << '.';
             }
@@ -17997,8 +18001,9 @@ namespace Catch
             else if ( totals.assertions.failed )
             {
                 Colour colour( Colour::ResultError );
-                out << "Failed " << pluralise( totals.testCases.failed, "test case" ) << ", "
-                                                                                         "failed "
+                out << "Failed " << pluralise( totals.testCases.failed, "test case" )
+                    << ", "
+                       "failed "
                     << pluralise( totals.assertions.failed, "assertion" ) << '.';
             }
             else
@@ -18199,7 +18204,7 @@ namespace Catch
             bool printInfoMessages;
         };
 
-    } // anon namespace
+    } // namespace
 
     std::string CompactReporter::getDescription()
     {
@@ -18558,7 +18563,7 @@ namespace Catch
                 return os << duration.value() << " " << duration.unitsAsString();
             }
         };
-    } // end anon namespace
+    } // namespace
 
     class TablePrinter
     {
@@ -19803,7 +19808,7 @@ namespace Catch
 #if defined( CATCH_CONFIG_WCHAR ) && defined( WIN32 ) && defined( _UNICODE ) &&                    \
     !defined( DO_NOT_USE_WMAIN )
 // Standard C/C++ Win32 Unicode wmain entry point
-extern "C" int wmain( int argc, wchar_t* argv[], wchar_t* [] )
+extern "C" int wmain( int argc, wchar_t* argv[], wchar_t*[] )
 {
 #else
 // Standard C/C++ main entry point
@@ -19876,8 +19881,9 @@ int main( int argc, char* const argv[] )
 #define CATCH_CHECK( ... )                                                                         \
     INTERNAL_CATCH_TEST( "CATCH_CHECK", Catch::ResultDisposition::ContinueOnFailure, __VA_ARGS__ )
 #define CATCH_CHECK_FALSE( ... )                                                                   \
-    INTERNAL_CATCH_TEST( "CATCH_CHECK_FALSE", Catch::ResultDisposition::ContinueOnFailure |        \
-                                                  Catch::ResultDisposition::FalseTest,             \
+    INTERNAL_CATCH_TEST( "CATCH_CHECK_FALSE",                                                      \
+                         Catch::ResultDisposition::ContinueOnFailure |                             \
+                             Catch::ResultDisposition::FalseTest,                                  \
                          __VA_ARGS__ )
 #define CATCH_CHECKED_IF( ... )                                                                    \
     INTERNAL_CATCH_IF( "CATCH_CHECKED_IF", Catch::ResultDisposition::ContinueOnFailure,            \
@@ -19886,8 +19892,9 @@ int main( int argc, char* const argv[] )
     INTERNAL_CATCH_ELSE( "CATCH_CHECKED_ELSE", Catch::ResultDisposition::ContinueOnFailure,        \
                          __VA_ARGS__ )
 #define CATCH_CHECK_NOFAIL( ... )                                                                  \
-    INTERNAL_CATCH_TEST( "CATCH_CHECK_NOFAIL", Catch::ResultDisposition::ContinueOnFailure |       \
-                                                   Catch::ResultDisposition::SuppressFail,         \
+    INTERNAL_CATCH_TEST( "CATCH_CHECK_NOFAIL",                                                     \
+                         Catch::ResultDisposition::ContinueOnFailure |                             \
+                             Catch::ResultDisposition::SuppressFail,                               \
                          __VA_ARGS__ )
 
 #define CATCH_CHECK_THROWS( ... )                                                                  \
@@ -20046,16 +20053,18 @@ int main( int argc, char* const argv[] )
 #define CHECK( ... )                                                                               \
     INTERNAL_CATCH_TEST( "CHECK", Catch::ResultDisposition::ContinueOnFailure, __VA_ARGS__ )
 #define CHECK_FALSE( ... )                                                                         \
-    INTERNAL_CATCH_TEST( "CHECK_FALSE", Catch::ResultDisposition::ContinueOnFailure |              \
-                                            Catch::ResultDisposition::FalseTest,                   \
+    INTERNAL_CATCH_TEST( "CHECK_FALSE",                                                            \
+                         Catch::ResultDisposition::ContinueOnFailure |                             \
+                             Catch::ResultDisposition::FalseTest,                                  \
                          __VA_ARGS__ )
 #define CHECKED_IF( ... )                                                                          \
     INTERNAL_CATCH_IF( "CHECKED_IF", Catch::ResultDisposition::ContinueOnFailure, __VA_ARGS__ )
 #define CHECKED_ELSE( ... )                                                                        \
     INTERNAL_CATCH_ELSE( "CHECKED_ELSE", Catch::ResultDisposition::ContinueOnFailure, __VA_ARGS__ )
 #define CHECK_NOFAIL( ... )                                                                        \
-    INTERNAL_CATCH_TEST( "CHECK_NOFAIL", Catch::ResultDisposition::ContinueOnFailure |             \
-                                             Catch::ResultDisposition::SuppressFail,               \
+    INTERNAL_CATCH_TEST( "CHECK_NOFAIL",                                                           \
+                         Catch::ResultDisposition::ContinueOnFailure |                             \
+                             Catch::ResultDisposition::SuppressFail,                               \
                          __VA_ARGS__ )
 
 #define CHECK_THROWS( ... )                                                                        \

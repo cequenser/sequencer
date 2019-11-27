@@ -1,7 +1,7 @@
 find_package(Threads REQUIRED)
 
 add_library(sequencer
-    Test.h
+    Test.hpp
     Test.cpp
     assert.hpp
     beat_duration.hpp
@@ -93,11 +93,13 @@ install(DIRECTORY .
 install(FILES ${PROJECT_BINARY_DIR}/include/sequencer/sequencer_export.hpp
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/sequencer
 )
+install(DIRECTORY ../../device_spec
+        DESTINATION ${CMAKE_INSTALL_LIBDIR})
 install(EXPORT sequencer-targets
   FILE
     SequencerTargets.cmake
   NAMESPACE
-    SequencerTargets::
+    Sequencer::
   DESTINATION
     ${CMAKE_INSTALL_LIBDIR}/cmake/sequencer
 )

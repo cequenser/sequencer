@@ -16,24 +16,30 @@ namespace sequencer::audio::wave
         BigEndian
     };
 
-    inline int32_t four_bytes_to_int( const std::vector< uint8_t >& source, int index,
-                                      endian_t endianness = endian_t::LittleEndian )
+    inline std::int32_t four_bytes_to_int( const std::vector< uint8_t >& source,
+                                           std::vector< uint8_t >::size_type index,
+                                           endian_t endianness = endian_t::LittleEndian )
     {
         if ( endianness == endian_t::LittleEndian )
+        {
             return ( source[ index + 3 ] << 24 ) | ( source[ index + 2 ] << 16 ) |
                    ( source[ index + 1 ] << 8 ) | source[ index ];
+        }
 
         return ( source[ index ] << 24 ) | ( source[ index + 1 ] << 16 ) |
                ( source[ index + 2 ] << 8 ) | source[ index + 3 ];
     }
 
-    inline int16_t two_bytes_to_int( const std::vector< uint8_t >& source, int index,
-                                     endian_t endianness = endian_t::LittleEndian )
+    inline std::int16_t two_bytes_to_int( const std::vector< uint8_t >& source,
+                                          std::vector< uint8_t >::size_type index,
+                                          endian_t endianness = endian_t::LittleEndian )
     {
         if ( endianness == endian_t::LittleEndian )
-            return ( source[ index + 1 ] << 8 ) | source[ index ];
+        {
+            return std::int16_t( source[ index + 1 ] << 8 ) | source[ index ];
+        }
 
-        return ( source[ index ] << 8 ) | source[ index + 1 ];
+        return std::int16_t( source[ index ] << 8 ) | source[ index + 1 ];
     }
 
     inline int audio_file_format( const std::vector< std::uint8_t >& data )
@@ -41,24 +47,31 @@ namespace sequencer::audio::wave
         std::string header( data.begin(), data.begin() + 4 );
 
         if ( header == "RIFF" )
+        {
             return 1;
-        else if ( header == "FORM" )
+        }
+        if ( header == "FORM" )
+        {
             return 2;
-        else
-            return 3;
+        }
+
+        return 3;
     }
 
-    inline int index_of( const std::vector< uint8_t >& source, const std::string& str )
+    inline std::vector< uint8_t >::difference_type index_of( const std::vector< uint8_t >& source,
+                                                             const std::string& str )
     {
         const auto length = str.length();
 
-        for ( int i = 0u; i < source.size() - length; i++ )
+        for ( decltype( source.size() - length ) i = 0; i < source.size() - length; i++ )
         {
-            std::string section( source.begin() + i, source.begin() + i + length );
+            using diff_t = std::vector< uint8_t >::difference_type;
+            std::string section( source.begin() + diff_t( i ),
+                                 source.begin() + diff_t( i + length ) );
 
             if ( section == str )
             {
-                return i;
+                return diff_t( i );
             }
         }
 
@@ -67,12 +80,12 @@ namespace sequencer::audio::wave
 
     inline float byte_to_sample( uint8_t sample )
     {
-        return ( sample - 128 ) / float( 128 );
+        return float( sample - 128 ) / float( 128 );
     }
 
     inline float two_bytes_to_sample( int16_t sample )
     {
-        return sample / float( 32768 );
+        return float( sample ) / 32768.f;
     }
 
     inline std::vector< std::vector< float > > read( const std::vector< std::uint8_t >& data )
@@ -90,14 +103,15 @@ namespace sequencer::audio::wave
             return {};
         }
 
-        const int f = index_of_format_chunk;
+        const auto f = index_of_format_chunk;
+        using size_t = std::vector< std::uint8_t >::size_type;
         const std::string format_chunk_id( data.begin() + f, data.begin() + f + 4 );
-        const auto audio_format = two_bytes_to_int( data, f + 8 );
-        const auto channel_count = two_bytes_to_int( data, f + 10 );
-        const auto sample_rate = (uint32_t)four_bytes_to_int( data, f + 12 );
-        const auto bytes_per_second = four_bytes_to_int( data, f + 16 );
-        const auto bytes_per_block = two_bytes_to_int( data, f + 20 );
-        const auto bit_depth = two_bytes_to_int( data, f + 22 );
+        const auto audio_format = two_bytes_to_int( data, size_t( f + 8 ) );
+        const auto channel_count = two_bytes_to_int( data, size_t( f + 10 ) );
+        const auto sample_rate = four_bytes_to_int( data, size_t( f + 12 ) );
+        const auto bytes_per_second = four_bytes_to_int( data, size_t( f + 16 ) );
+        const auto bytes_per_block = two_bytes_to_int( data, size_t( f + 20 ) );
+        const auto bit_depth = two_bytes_to_int( data, size_t( f + 22 ) );
 
         const int bytes_per_sample = bit_depth / 8;
 
@@ -135,7 +149,8 @@ namespace sequencer::audio::wave
 
         const auto d = index_of_data_chunk;
         const std::string data_chunk_id( data.begin() + d, data.begin() + d + 4 );
-        const auto data_chunk_size = four_bytes_to_int( data, d + 4 );
+        const auto data_chunk_size =
+            four_bytes_to_int( data, std::vector< std::uint8_t >::size_type( d + 4 ) );
 
         const auto num_samples = data_chunk_size / ( channel_count * bit_depth / 8 );
         const auto sample_start_index = index_of_data_chunk + 8;
@@ -167,11 +182,13 @@ namespace sequencer::audio::wave
                     sample_as_int = ( data[ sample_index + 2 ] << 16 ) |
                                     ( data[ sample_index + 1 ] << 8 ) | data[ sample_index ];
 
-                    if ( sample_as_int & 0x800000 ) //  if the 24th bit is set, this is a negative
-                                                    //  number in 24-bit world
+                    if ( ( sample_as_int & 0x800000 ) >
+                         0 ) //  if the 24th bit is set, this is a negative
+                    {        //  number in 24-bit world
                         sample_as_int =
                             sample_as_int |
                             ~0xFFFFFF; // so make sure sign is extended to the 32 bit float
+                    }
 
                     const auto sample = sample_as_int / 8388608.f;
                     samples[ channel ].push_back( sample );
@@ -194,8 +211,9 @@ namespace sequencer::audio::wave
         }
 
         file.unsetf( std::ios::skipws );
-        std::istream_iterator< uint8_t > begin( file ), end;
-        std::vector< uint8_t > data( begin, end );
+        std::istream_iterator< std::uint8_t > begin( file );
+        std::istream_iterator< std::uint8_t > end;
+        std::vector< std::uint8_t > data( begin, end );
 
         // get audio file format
         const auto format = audio_file_format( data );

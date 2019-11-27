@@ -1,0 +1,24 @@
+{
+  "comments": [
+    {
+      "robotId": "clang-format",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-format/657/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "d6f80d66_e2f5ba50",
+        "filename": "tests/catch2/catch.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2019-11-27T21:30:23Z",
+      "side": 1,
+      "message": " {\n #if !defined( CATCH_CONFIG_DISABLE_EXCEPTIONS )\n     template \u003c typename Ex \u003e\n-    [[noreturn]] void throw_exception( Ex const\u0026 e )\n-    {\n-        throw e;\n-    }\n+    [[noreturn]] void throw_exception( Ex const\u0026 e ) { throw e; }\n #else // ^^ Exceptions are enabled //  Exceptions are disabled vv\n     [[noreturn]] void throw_exception( std::exception const\u0026 e );\n #endif\n \n-    [[noreturn]] void throw_logic_error( std::string const\u0026 msg );\n+        [ [noreturn] ] void throw_logic_error( std::string const\u0026 msg );\n     [[noreturn]] void throw_domain_error( std::string const\u0026 msg );\n     [[noreturn]] void throw_runtime_error( std::string const\u0026 msg );\n \n {\n #if defined( CATCH_CONFIG_DISABLE_EXCEPTIONS ) \u0026\u0026                                                  \n     !defined( CATCH_CONFIG_DISABLE_EXCEPTIONS_CUSTOM_HANDLER )\n-    [[noreturn]] void throw_exception( std::exception const\u0026 e )\n-    {\n+    [[noreturn]] void throw_exception( std::exception const\u0026 e ) {\n         Catch::cerr() \u003c\u003c \"Catch will terminate because it needed to throw an exception.\n\"\n                       \u003c\u003c \"The message was: \" \u003c\u003c e.what() \u003c\u003c \u0027\n\u0027;\n         std::terminate();\n         throw_exception( std::logic_error( msg ) );\n     }\n \n-    [[noreturn]] void throw_domain_error( std::string const\u0026 msg )\n-    {\n+    [[noreturn]] void throw_domain_error( std::string const\u0026 msg ) {\n         throw_exception( std::domain_error( msg ) );\n     }\n \n #if defined( CATCH_CONFIG_WCHAR ) \u0026\u0026 defined( WIN32 ) \u0026\u0026 defined( _UNICODE ) \u0026\u0026                    \n     !defined( DO_NOT_USE_WMAIN )\n // Standard C/C++ Win32 Unicode wmain entry point\n-extern \"C\" int wmain( int argc, wchar_t* argv[], wchar_t*[] )\n+extern \"C\" int wmain( int argc, wchar_t* argv[], wchar_t* [] )\n {\n #else\n // Standard C/C++ main entry point\n",
+      "revId": "a70c617bfd52d4bb4bb3b0a44f54b3c1b3f6f7ce",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}

@@ -54,26 +54,6 @@ namespace sequencer::audio
             return *this;
         }
 
-        //        ring_buffer_iterator_t& operator-(size_type n) noexcept
-        //        {
-        //            n %= size_;
-        //            if(n>idx_)
-        //            {
-        //                idx_ += size_ - n;
-        //                t_ += size_ - n;
-        //            }
-        //            else {
-        //                idx_ -= n;
-        //                t_ -= n;
-        //            }
-        //            return *this;
-        //        }
-
-        //        std::ptrdiff_t operator-(const ring_buffer_iterator_t& other) noexcept
-        //        {
-        //            return idx_ - other.idx_;
-        //        }
-
         reference operator*() const noexcept
         {
             return *t_;
@@ -140,7 +120,7 @@ namespace sequencer::audio
 
         auto begin() noexcept
         {
-            return ring_buffer_iterator_t{&*buffer_.begin() + offset_, buffer_.size(), offset_};
+            return ring_buffer_iterator_t{&*( buffer_.begin() + offset_ ), buffer_.size(), offset_};
         }
 
         auto end() noexcept
@@ -148,20 +128,6 @@ namespace sequencer::audio
             return ring_buffer_iterator_t< float >{nullptr, buffer_.size(), buffer_.size(),
                                                    buffer_.size()};
         }
-
-        //        auto begin() const noexcept
-        //        {
-        //            return ring_buffer_iterator_t{&*buffer_.begin() + offset_, buffer_.size(),
-        //            offset_};
-        ////            return buffer_.begin() + offset_;
-        //        }
-
-        //        auto end() const noexcept
-        //        {
-        //            return ring_buffer_iterator_t{&*buffer_.begin() + offset_, buffer_.size(),
-        //            offset_};
-        ////            return buffer_.end();
-        //        }
 
     private:
         std::vector< T > buffer_;

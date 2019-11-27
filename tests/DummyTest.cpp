@@ -1,4 +1,4 @@
-#include <sequencer/Test.h>
+#include <sequencer/Test.hpp>
 
 #include <catch2/catch.hpp>
 

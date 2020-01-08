@@ -10,6 +10,8 @@ namespace sequencer
     public:
         copyable_atomic() = default;
 
+
+
         constexpr explicit copyable_atomic( T value ) noexcept : value_{value}
         {
         }

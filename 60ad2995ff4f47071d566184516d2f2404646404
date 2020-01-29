@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2e49d3cb_2bdc99ae",
+        "filename": "include/sequencer/chrono/units.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1009832
+      },
+      "writtenOn": "2020-01-29T16:30:04Z",
+      "side": 1,
+      "message": "rename variable plz",
+      "range": {
+        "startLine": 11,
+        "startChar": 15,
+        "endLine": 11,
+        "endChar": 20
+      },
+      "revId": "60ad2995ff4f47071d566184516d2f2404646404",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}

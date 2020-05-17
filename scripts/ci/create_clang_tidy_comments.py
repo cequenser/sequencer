@@ -69,7 +69,7 @@ def get_message(diagnostic, line, offset):
 def get_line_and_message(diagnostic, filename):
     file_ = open(filename, 'r')
     offset = deepcopy(diagnostic[FILE_OFFSET])
-    line_number = -1
+    line_number = 0
     for line in file_:
         line_number += 1
         if offset - len(line) < 0:

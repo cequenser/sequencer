@@ -1,0 +1,104 @@
+{
+  "comments": [
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/735/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "1980f7e5_43e3fdbd",
+        "filename": "include/sequencer/chrono/units.hpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2020-05-17T14:01:28Z",
+      "side": 1,
+      "message": "461 warnings generated.\n invalid case style for type alias \u0027TTTT\u0027 [readability-identifier-naming,-warnings-as-errors]\n    using TTTT \u003d std::chrono::duration\u003c double, std::ratio\u003c 60, 1 \u003e \u003e;\n          ^~~~\n          tttt\n",
+      "revId": "d0e8c78e3faa119921c844dcef9d26bf89783663",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/735/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "636396da_daee619a",
+        "filename": "include/sequencer/chrono/units.hpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2020-05-17T14:01:28Z",
+      "side": 1,
+      "message": "invalid case style for type alias \u0027TTTT\u0027 [readability-identifier-naming,-warnings-as-errors]\n    using TTTT \u003d std::chrono::duration\u003c double, std::ratio\u003c 60, 1 \u003e \u003e;\n          ^~~~\n          tttt\n",
+      "revId": "d0e8c78e3faa119921c844dcef9d26bf89783663",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/735/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "7c817432_1c355b1c",
+        "filename": "include/sequencer/chrono/units.hpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2020-05-17T14:01:28Z",
+      "side": 1,
+      "message": "do not use reinterpret_cast [cppcoreguidelines-pro-type-reinterpret-cast,-warnings-as-errors]\nst\u003c const void* \u003e( \u0026sssss );\n            ^\n",
+      "revId": "d0e8c78e3faa119921c844dcef9d26bf89783663",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/735/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "dcf9a6da_646d1b38",
+        "filename": "include/sequencer/chrono/units.hpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2020-05-17T14:01:28Z",
+      "side": 1,
+      "message": "do not use reinterpret_cast [cppcoreguidelines-pro-type-reinterpret-cast,-warnings-as-errors]\nt_cast\u003c const void* \u003e( \u0026sssss );\n            ^\n",
+      "revId": "d0e8c78e3faa119921c844dcef9d26bf89783663",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/735/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "94afbdb6_4fdc07cf",
+        "filename": "include/sequencer/chrono/units.hpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2020-05-17T14:01:28Z",
+      "side": 1,
+      "message": "do not use reinterpret_cast [cppcoreguidelines-pro-type-reinterpret-cast,-warnings-as-errors]\n            reinterpret_cast\u003c const void* \u003e( \u0026sssss );\n            ^\n",
+      "revId": "d0e8c78e3faa119921c844dcef9d26bf89783663",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}

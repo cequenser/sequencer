@@ -19,6 +19,106 @@
       "revId": "9b42e258dcb8535ec698488d6efd3e5b94ebadae",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/733/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "a30282b2_2b21240e",
+        "filename": "include/sequencer/chrono/units.hpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2020-05-17T12:56:33Z",
+      "side": 1,
+      "message": "invalid case style for type alias \u0027TTTT\u0027 [readability-identifier-naming,-warnings-as-errors]\n    using TTTT \u003d std::chrono::duration\u003c double, std::ratio\u003c 60, 1 \u003e \u003e;\n          ^~~~\n          tttt\n",
+      "revId": "9b42e258dcb8535ec698488d6efd3e5b94ebadae",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/733/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "f2d6c062_15b86a88",
+        "filename": "include/sequencer/chrono/units.hpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2020-05-17T12:56:33Z",
+      "side": 1,
+      "message": "invalid case style for type alias \u0027TTTT\u0027 [readability-identifier-naming,-warnings-as-errors]\n    using TTTT \u003d std::chrono::duration\u003c double, std::ratio\u003c 60, 1 \u003e \u003e;\n          ^~~~\n          tttt\nSuppressed 9583 warnings (9578 in non-user code, 5 NOLINT).\nUse -header-filter\u003d.* to display errors from all non-system headers. Use -system-headers to display errors from system headers as well.\n2 warnings treated as errors\nSuppressed 7329 warnings (7322 in non-user code, 7 NOLINT).\nUse -header-filter\u003d.* to display errors from all non-system headers. Use -system-headers to display errors from system headers as well.\n2 warnings treated as errors\nSuppressed 6686 warnings (6686 in non-user code).\nUse -header-filter\u003d.* to display errors from all non-system headers. Use -system-headers to display errors from system headers as well.\nSuppressed 6690 warnings (6690 in non-user code).\nUse -header-filter\u003d.* to display errors from all non-system headers. Use -system-headers to display errors from system headers as well.\nSuppressed 6683 warnings (6683 in non-user code).\nUse -header-filter\u003d.* to display errors from all non-system headers. Use -system-headers to display errors from system headers as well.\nSuppressed 6743 warnings (6742 in non-user code, 1 NOLINT).\nUse -header-filter\u003d.* to display errors from all non-system headers. Use -system-headers to display errors from system headers as well.\nSuppressed 6746 warnings (6746 in non-user code).\nUse -header-filter\u003d.* to display errors from all non-system headers. Use -system-headers to display errors from system headers as well.\nSuppressed 3836 warnings (3836 in non-user code).\nUse -header-filter\u003d.* to display errors from all non-system headers. Use -system-headers to display errors from system headers as well.\n2 warnings treated as errors\nSuppressed 4152 warnings (4152 in non-user code).\nUse -header-filter\u003d.* to display errors from all non-system headers. Use -system-headers to display errors from system headers as well.\n2 warnings treated as errors\n",
+      "revId": "9b42e258dcb8535ec698488d6efd3e5b94ebadae",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/733/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "eedb01c0_f35b4201",
+        "filename": "include/sequencer/chrono/units.hpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2020-05-17T12:56:33Z",
+      "side": 1,
+      "message": "461 warnings generated.\nSuppressed 9459 warnings (9459 in non-user code).\nUse -header-filter\u003d.* to display errors from all non-system headers. Use -system-headers to display errors from system headers as well.\n2 warnings treated as errors\nSuppressed 9654 warnings (9649 in non-user code, 5 NOLINT).\nUse -header-filter\u003d.* to display errors from all non-system headers. Use -system-headers to display errors from system headers as well.\n2 warnings treated as errors\nSuppressed 10032 warnings (10019 in non-user code, 5 NOLINT, 8 with check filters).\nUse -header-filter\u003d.* to display errors from all non-system headers. Use -system-headers to display errors from system headers as well.\n2 warnings treated as errors\nSuppressed 6893 warnings (6888 in non-user code, 5 NOLINT).\nUse -header-filter\u003d.* to display errors from all non-system headers. Use -system-headers to display errors from system headers as well.\n2 warnings treated as errors\nSuppressed 10162 warnings (10136 in non-user code, 5 NOLINT, 21 with check filters).\nUse -header-filter\u003d.* to display errors from all non-system headers. Use -system-headers to display errors from system headers as well.\n2 warnings treated as errors\nSuppressed 6702 warnings (6701 in non-user code, 1 NOLINT).\nUse -header-filter\u003d.* to display errors from all non-system headers. Use -system-headers to display errors from system headers as well.\n invalid case style for type alias \u0027TTTT\u0027 [readability-identifier-naming,-warnings-as-errors]\n    using TTTT \u003d std::chrono::duration\u003c double, std::ratio\u003c 60, 1 \u003e \u003e;\n          ^~~~\n          tttt\n",
+      "revId": "9b42e258dcb8535ec698488d6efd3e5b94ebadae",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/733/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "68872d7a_4469b288",
+        "filename": "include/sequencer/chrono/units.hpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2020-05-17T12:56:33Z",
+      "side": 1,
+      "message": "do not use reinterpret_cast [cppcoreguidelines-pro-type-reinterpret-cast,-warnings-as-errors]\nSuppressed 4038 warnings (4038 in non-user code).\nUse -header-filter\u003d.* to display errors from all non-system headers. Use -system-headers to display errors from system headers as well.\n2 warnings treated as errors\nSuppressed 6749 warnings (6749 in non-user code).\nUse -header-filter\u003d.* to display errors from all non-system headers. Use -system-headers to display errors from system headers as well.\nSuppressed 3652 warnings (3652 in non-user code).\nUse -header-filter\u003d.* to display errors from all non-system headers. Use -system-headers to display errors from system headers as well.\nSuppressed 6041 warnings (6037 in non-user code, 4 NOLINT).\nUse -header-filter\u003d.* to display errors from all non-system headers. Use -system-headers to display errors from system headers as well.\nst\u003c const void* \u003e( \u0026sssss );\n            ^\n",
+      "revId": "9b42e258dcb8535ec698488d6efd3e5b94ebadae",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "http://source.kaidimensional.de:8080/job/psv/job/clang-tidy/733/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "7c474261_5a3ed2aa",
+        "filename": "include/sequencer/chrono/units.hpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2020-05-17T12:56:33Z",
+      "side": 1,
+      "message": "do not use reinterpret_cast [cppcoreguidelines-pro-type-reinterpret-cast,-warnings-as-errors]\n            reinterpret_cast\u003c const void* \u003e( \u0026sssss );\n            ^\n",
+      "revId": "9b42e258dcb8535ec698488d6efd3e5b94ebadae",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }

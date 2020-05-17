@@ -22,6 +22,7 @@ add_executable(tests
     sequencer/fixed_point_type_test.cpp
     sequencer/type_traits_test.cpp
     sequencer/vector_view_test.cpp
+    sequencer/wave_form_test.cpp
     sequencer/audio/delay_test.cpp
     sequencer/audio/double_buffer_test.cpp
     sequencer/audio/envelope_test.cpp

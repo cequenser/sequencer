@@ -11,7 +11,10 @@ namespace sequencer::wave_form
 {
     inline double normalize_time( double t ) noexcept
     {
-        return std::abs( std::fmod( t, 1.0 ) );
+        auto result = std::fmod( t, 1.0 );
+        if ( result < 0.0 )
+            result += 1;
+        return result;
     }
 
     class pulse_t
@@ -21,7 +24,7 @@ namespace sequencer::wave_form
         {
         }
 
-        double operator()( double t ) noexcept
+        double operator()( double t ) const noexcept
         {
             t = normalize_time( t );
             return ( t < pulse_width_ ) ? 1 : 0;

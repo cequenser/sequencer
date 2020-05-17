@@ -1,6 +1,26 @@
 {
   "comments": [
     {
+      "robotId": "clang-format",
+      "robotRunId": "https://source.kaidimensional.de/job/psv/job/clang-format/679/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "6704d2d9_34a24e64",
+        "filename": "include/sequencer/chrono/units.hpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2020-05-17T19:49:28Z",
+      "side": 1,
+      "message": " \n #include \u003cchrono\u003e\n \n-\n namespace sequencer::chrono\n {\n \n-using milliseconds \u003d std::chrono::duration\u003c double, std::milli \u003e;\n+    using milliseconds \u003d std::chrono::duration\u003c double, std::milli \u003e;\n     using seconds \u003d std::chrono::duration\u003c double, std::ratio\u003c 1, 1 \u003e \u003e;\n-      using minutes \u003d std::chrono::duration\u003c double, std::ratio\u003c 60, 1 \u003e \u003e;\n+    using minutes \u003d std::chrono::duration\u003c double, std::ratio\u003c 60, 1 \u003e \u003e;\n     using TTTT \u003d std::chrono::duration\u003c double, std::ratio\u003c 60, 1 \u003e \u003e;\n     const auto sssss \u003d 0;\n-    const auto tttt \u003d\n-            reinterpret_cast\u003c const void* \u003e( \u0026sssss );\n+    const auto tttt \u003d reinterpret_cast\u003c const void* \u003e( \u0026sssss );\n } // namespace sequencer::chrono\n",
+      "revId": "ac21483bdba1ed9e307c374ecc15b4c19f0bffc6",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
       "robotId": "clang-tidy",
       "robotRunId": "https://source.kaidimensional.de/job/psv/job/clang-tidy/757/",
       "fixSuggestions": [],

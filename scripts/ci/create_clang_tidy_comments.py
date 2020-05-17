@@ -25,7 +25,11 @@ def get_filename_and_linenumber(line, base_path = None):
 
 
 def line_filter(line):
-    return not line in ['\n', '\r\n'] and not "warnings generated" in line 
+    return not (line in ['\n', '\r\n'] or
+                "warnings generated" in line or
+                "warnings treated as errors" in line or
+                line.startswith("Suppressed") or
+                line.startswith("Use -header-filter=.*"))
 
 
 def get_error_message(clang_file, line, filename):

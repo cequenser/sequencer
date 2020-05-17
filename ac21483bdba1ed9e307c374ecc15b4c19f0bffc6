@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "https://source.kaidimensional.de/job/psv/job/clang-tidy/757/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "93907337_882e82a8",
+        "filename": "include/sequencer/chrono/units.hpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2020-05-17T19:46:49Z",
+      "side": 1,
+      "message": "error: readability-identifier-naming\n    using TTTT \u003d std::chrono::duration\u003c double, std::ratio\u003c 60, 1 \u003e \u003e;\n          ^~~~\n          tttt",
+      "revId": "ac21483bdba1ed9e307c374ecc15b4c19f0bffc6",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-tidy",
+      "robotRunId": "https://source.kaidimensional.de/job/psv/job/clang-tidy/757/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "7ab054e6_8b3eeb60",
+        "filename": "include/sequencer/chrono/units.hpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2020-05-17T19:46:49Z",
+      "side": 1,
+      "message": "error: cppcoreguidelines-pro-type-reinterpret-cast\n            reinterpret_cast\u003c const void* \u003e( \u0026sssss );\n            ^",
+      "revId": "ac21483bdba1ed9e307c374ecc15b4c19f0bffc6",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}

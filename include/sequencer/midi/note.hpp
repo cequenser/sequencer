@@ -1,5 +1,7 @@
 #pragma once
 
+#include <sequencer/assert.hpp>
+
 #include <cassert>
 #include <cstdint>
 #include <limits>
@@ -23,7 +25,7 @@ namespace sequencer::midi
 
     constexpr note_t operator+( note_t note, std::int16_t offset )
     {
-        assert( to_uint8_t( note ) + offset < 128 );
+        SEQUENCER_ASSERT( to_uint8_t( note ) + offset < 128 )
         return note_t{std::uint8_t( to_uint8_t( note ) + offset )};
     }
 

@@ -14,8 +14,8 @@ namespace sequencer::backend
     public:
         void select_output_port( int idx )
         {
-            assert( idx >= 0 );
-            assert( idx <= int( midiout_->getPortCount() ) + 1 );
+            SEQUENCER_ASSERT( idx >= 0 )
+            SEQUENCER_ASSERT( idx <= int( midiout_->getPortCount() ) + 1 )
 
             midiout_ = std::make_shared< RtMidiOut >();
             if ( idx == 0 )
@@ -57,8 +57,8 @@ namespace sequencer::backend
 
         void select_input_port( int idx )
         {
-            assert( idx >= 0 );
-            assert( idx <= int( midiin_.getPortCount() ) + 1 );
+            SEQUENCER_ASSERT( idx >= 0 )
+            SEQUENCER_ASSERT( idx <= int( midiin_.getPortCount() ) + 1 )
 
             if ( midiin_.isPortOpen() )
             {

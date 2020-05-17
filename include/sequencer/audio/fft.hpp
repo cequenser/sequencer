@@ -1,5 +1,6 @@
 #pragma once
 
+#include <sequencer/assert.hpp>
 #include <sequencer/type_traits.hpp>
 #include <sequencer/vector_view.hpp>
 
@@ -167,7 +168,7 @@ namespace sequencer::audio
     {
         using size_type = typename std::vector< std::complex< T > >::size_type;
 
-        assert( x.size() % 2 == 0 );
+        SEQUENCER_ASSERT( x.size() % 2 == 0 )
         const auto half_result =
             // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             radix2( reinterpret_cast< const std::vector< std::complex< T > >& >( x ) );
@@ -191,8 +192,8 @@ namespace sequencer::audio
     {
         using size_type = typename std::vector< std::complex< T > >::size_type;
 
-        assert( x.size() % 2 == 0 );
-        assert( x.size() == y.size() );
+        SEQUENCER_ASSERT( x.size() % 2 == 0 )
+        SEQUENCER_ASSERT( x.size() == y.size() )
         std::vector< std::complex< T > > z( x.size() );
         for ( size_type i = 0; i < x.size(); ++i )
         {
@@ -216,7 +217,7 @@ namespace sequencer::audio
     {
         using size_type = typename std::vector< std::complex< T > >::size_type;
 
-        assert( x.size() % 2 == 0 );
+        SEQUENCER_ASSERT( x.size() % 2 == 0 )
         std::vector< std::complex< T > > half_result( x.size() / 2 );
         // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
         radix2( reinterpret_cast< const std::vector< std::complex< T > >& >( x ), half_result );
@@ -236,7 +237,7 @@ namespace sequencer::audio
     {
         using size_type = typename std::vector< std::complex< T > >::size_type;
 
-        assert( x.size() % 2 == 0 );
+        SEQUENCER_ASSERT( x.size() % 2 == 0 )
         const auto half_result =
             // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             radix2( reinterpret_cast< const std::vector< std::complex< T > >& >( x ) );
@@ -260,7 +261,7 @@ namespace sequencer::audio
     {
         using size_type = typename std::vector< std::complex< T > >::size_type;
 
-        assert( x.size() % 2 == 0 );
+        SEQUENCER_ASSERT( x.size() % 2 == 0 )
         std::vector< std::complex< T > > y( x.size() );
         for ( size_type k = 0; k < y.size(); ++k )
         {

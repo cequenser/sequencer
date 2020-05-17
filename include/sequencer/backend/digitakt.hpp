@@ -1,5 +1,6 @@
 #pragma once
 
+#include <sequencer/assert.hpp>
 #include <sequencer/backend/digitakt_parameter.hpp>
 #include <sequencer/midi/device_spec.hpp>
 #include <sequencer/midi/message/message_type.hpp>
@@ -408,21 +409,21 @@ namespace sequencer::backend::digitakt
                     switch ( id )
                     {
                     case 0:
-                        assert( current_step_ != -1 );
+                        SEQUENCER_ASSERT( current_step_ != -1 )
                         current_track()[ current_step_ ].set_note( sequencer::midi::note_t(
                             to_uint8_t( current_track().base_note() ) + std::uint8_t( value ) ) );
                         return;
                     case 1:
-                        assert( current_step_ != -1 );
+                        SEQUENCER_ASSERT( current_step_ != -1 )
                         current_track()[ current_step_ ].set_velocity( std::uint8_t( value ) );
                         return;
                     case 2:
-                        assert( current_step_ != -1 );
+                        SEQUENCER_ASSERT( current_step_ != -1 )
                         current_track()[ current_step_ ].set_length(
                             beat_duration{length_map()[ std::size_t( value ) ]} );
                         return;
                     case 3:
-                        assert( current_step_ != -1 );
+                        SEQUENCER_ASSERT( current_step_ != -1 )
                         current_track()[ current_step() ].set_trig_condition(
                             get_trig_condition( value ) );
                         return;

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <sequencer/assert.hpp>
 #include <sequencer/audio/delay.hpp>
 #include <sequencer/audio/double_buffer.hpp>
 #include <sequencer/audio/dry_wet.hpp>
@@ -156,7 +157,7 @@ namespace sequencer::backend::synth
         void filter( spectrum_t& spectrum ) const
         {
             std::lock_guard lock{filter_mutex};
-            //            assert(spectrum.size() == filter_spectrum.size());
+            //            spectrum.size() == filter_spectrum.size());
             if ( filter_spectrum.size() != spectrum.size() )
             {
                 return;
@@ -764,7 +765,7 @@ namespace sequencer::backend::synth
 
         void set_reverb_bank_id( int id )
         {
-            assert( id < reverb_banks_.size() + 1 );
+            SEQUENCER_ASSERT( id < reverb_banks_.size() + 1 )
             if ( id > 0 )
             {
                 current_reverb_bank_ = reverb_banks_[ id - 1 ];

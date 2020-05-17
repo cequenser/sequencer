@@ -1,5 +1,6 @@
 #pragma once
 
+#include <sequencer/assert.hpp>
 #include <sequencer/copyable_atomic.hpp>
 
 #include <cassert>
@@ -12,7 +13,7 @@ namespace sequencer::audio
     public:
         double operator()( double t ) const noexcept
         {
-            assert( t >= 0 );
+            SEQUENCER_ASSERT( t >= 0 )
             if ( t < attack() )
             {
                 return t / attack();

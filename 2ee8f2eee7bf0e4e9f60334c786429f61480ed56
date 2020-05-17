@@ -1,0 +1,24 @@
+{
+  "comments": [
+    {
+      "robotId": "clang-format",
+      "robotRunId": "https://source.kaidimensional.de/job/psv/job/clang-format/680/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "98cf4750_a22ace2c",
+        "filename": "include/sequencer/audio/transfer_function.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2020-05-17T20:09:36Z",
+      "side": 1,
+      "message": " #pragma once\n+\n+#include \u003csequencer/assert.hpp\u003e\n \n #include \u003calgorithm\u003e\n #include \u003ccassert\u003e\n #include \u003ccmath\u003e\n-\n-#include \u003csequencer/assert.hpp\u003e\n \n namespace sequencer::audio\n {\n",
+      "revId": "2ee8f2eee7bf0e4e9f60334c786429f61480ed56",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}

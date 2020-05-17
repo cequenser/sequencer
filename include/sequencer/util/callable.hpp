@@ -1,5 +1,6 @@
 #pragma once
 
+#include <sequencer/assert.hpp>
 #include <sequencer/util/type_erased_storage.hpp>
 
 namespace sequencer
@@ -39,8 +40,8 @@ namespace sequencer
 
         ReturnType operator()() const
         {
-            assert( call_ );
-            assert( impl_ );
+            SEQUENCER_ASSERT( call_ )
+            SEQUENCER_ASSERT( impl_ )
             return call_( impl_ );
         }
 

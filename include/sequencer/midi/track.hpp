@@ -37,12 +37,12 @@ namespace sequencer::midi
 
         explicit clock_to_step_t( std::size_t steps ) noexcept : steps_( steps )
         {
-            assert( steps_ > 0 );
+            SEQUENCER_ASSERT( steps_ > 0 )
         }
 
         constexpr void set_steps( std::size_t new_steps ) noexcept
         {
-            assert( new_steps > 0 );
+            SEQUENCER_ASSERT( new_steps > 0 )
             steps_ = new_steps;
             midi_beat_counter_ %= steps_ * pulses_per_step();
         }

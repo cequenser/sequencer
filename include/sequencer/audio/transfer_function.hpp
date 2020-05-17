@@ -4,6 +4,8 @@
 #include <cassert>
 #include <cmath>
 
+#include <sequencer/assert.hpp>
+
 namespace sequencer::audio
 {
     constexpr auto ideal_high_pass( double freq, double cutoff ) noexcept
@@ -63,16 +65,16 @@ namespace sequencer::audio
     {
         inline double hamming( int n, int N )
         {
-            assert( n >= 0 );
-            assert( n <= N );
+            SEQUENCER_ASSERT( n >= 0 )
+            SEQUENCER_ASSERT( n <= N )
 
             return 0.54 + 0.46 * std::cos( 2 * n * M_PI / N );
         }
 
         inline double blackman( int n, int N )
         {
-            assert( n >= 0 );
-            assert( n <= N );
+            SEQUENCER_ASSERT( n >= 0 )
+            SEQUENCER_ASSERT( n <= N )
 
             return 0.42 - 0.5 * std::cos( 2 * n * M_PI / N ) +
                    0.08 * std::cos( ( 4 * n * M_PI / N ) );

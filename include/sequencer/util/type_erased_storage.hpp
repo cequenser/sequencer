@@ -1,5 +1,7 @@
 #pragma once
 
+#include <sequencer/assert.hpp>
+
 #include <cassert>
 #include <type_traits>
 #include <utility>
@@ -11,7 +13,7 @@ namespace sequencer
         template < class T >
         static void delete_data( void* data ) noexcept
         {
-            assert( data );
+            SEQUENCER_ASSERT( data )
             delete static_cast< T* >( data );
         }
 
@@ -81,14 +83,14 @@ namespace sequencer
         template < class T >
         T& get() noexcept
         {
-            assert( data_ );
+            SEQUENCER_ASSERT( data_ )
             return *static_cast< T* >( data_ );
         }
 
         template < class T >
         const T& get() const noexcept
         {
-            assert( data_ );
+            SEQUENCER_ASSERT( data_ )
             return *static_cast< const T* >( data_ );
         }
 
@@ -108,7 +110,7 @@ namespace sequencer
 
         void* copy() const
         {
-            assert( data_ );
+            SEQUENCER_ASSERT( data_ )
             return copy_data_( data_ );
         }
 

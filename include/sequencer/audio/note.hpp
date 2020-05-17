@@ -1,5 +1,7 @@
 #pragma once
 
+#include <sequencer/assert.hpp>
+
 #include <cassert>
 #include <cmath>
 
@@ -75,7 +77,7 @@ namespace sequencer::audio
 
     inline double get_harmonic( double frequency, int n )
     {
-        assert( n > 0 );
+        SEQUENCER_ASSERT( n > 0 )
         return n * frequency;
     }
 } // namespace sequencer::audio

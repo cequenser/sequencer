@@ -11,3 +11,4 @@ Clone repo: git clone "ssh://cequenser@review.gerrithub.io:29418/cequenser/seque
 Add new CI images:
  * Add Dockerfile to a new empty branch
  * Configure dockerhub (https://hub.docker.com/?namespace=cequenser) to automatically generate images on pushes to the newly created branch
+1234

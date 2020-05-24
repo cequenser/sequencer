@@ -1,6 +1,26 @@
 {
   "comments": [
     {
+      "robotId": "clang-format",
+      "robotRunId": "https://source.kaidimensional.de/job/psv/job/clang-format/685/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "09c50ec5_adee84c3",
+        "filename": "include/sequencer/chrono/units.hpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2020-05-24T10:33:40Z",
+      "side": 1,
+      "message": " \n #include \u003cchrono\u003e\n \n-\n namespace sequencer::chrono\n {\n \n-using milliseconds \u003d std::chrono::duration\u003c double, std::milli \u003e;\n+    using milliseconds \u003d std::chrono::duration\u003c double, std::milli \u003e;\n     using seconds \u003d std::chrono::duration\u003c double, std::ratio\u003c 1, 1 \u003e \u003e;\n-      using minutes \u003d std::chrono::duration\u003c double, std::ratio\u003c 60, 1 \u003e \u003e;\n+    using minutes \u003d std::chrono::duration\u003c double, std::ratio\u003c 60, 1 \u003e \u003e;\n     using TTTT \u003d std::chrono::duration\u003c double, std::ratio\u003c 60, 1 \u003e \u003e;\n     const auto sssss \u003d 0;\n-    const auto tttt \u003d\n-            reinterpret_cast\u003c const void* \u003e( \u0026sssss );\n+    const auto tttt \u003d reinterpret_cast\u003c const void* \u003e( \u0026sssss );\n } // namespace sequencer::chrono\n",
+      "revId": "4f50e0abb61d0464a11a9db547961c27ad1b7230",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
       "robotId": "clang-tidy",
       "robotRunId": "https://source.kaidimensional.de/job/psv/job/clang-tidy/763/",
       "fixSuggestions": [],
@@ -36,6 +56,26 @@
       "writtenOn": "2020-05-24T10:28:17Z",
       "side": 1,
       "message": "error: cppcoreguidelines-pro-type-reinterpret-cast\n            reinterpret_cast\u003c const void* \u003e( \u0026sssss );\n            ^",
+      "revId": "4f50e0abb61d0464a11a9db547961c27ad1b7230",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "robotId": "clang-format",
+      "robotRunId": "https://source.kaidimensional.de/job/psv/job/clang-format/685/",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "0e39b425_7077e774",
+        "filename": "include/sequencer/copyable_atomic.hpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1016797
+      },
+      "writtenOn": "2020-05-24T10:33:40Z",
+      "side": 1,
+      "message": "     {\n     public:\n         copyable_atomic() \u003d default;\n-\n-\n \n         constexpr explicit copyable_atomic( T value ) noexcept : value_{value}\n         {\n",
       "revId": "4f50e0abb61d0464a11a9db547961c27ad1b7230",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
